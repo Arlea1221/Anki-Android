@@ -29,6 +29,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.ichi2.anki.AnkiActivity
 import com.ichi2.anki.R
+import com.ichi2.anki.TextContentImportActivity
 import com.ichi2.anki.analytics.UsageAnalytics
 import com.ichi2.anki.common.annotations.NeedsTest
 import com.ichi2.anki.snackbar.showSnackbar
@@ -101,6 +102,15 @@ class ImportFileSelectionFragment : DialogFragment() {
                         ),
                     )
                 }
+                if (options.importTextContent) {
+                    add(
+                        ImportEntry(
+                            R.string.import_text_content,
+                            "import_text_content",
+                            ImportFileType.TEXT_CONTENT,
+                        ),
+                    )
+                }
             }
         } ?: emptyList()
     }
@@ -121,12 +131,14 @@ class ImportFileSelectionFragment : DialogFragment() {
         val importColpkg: Boolean,
         val importApkg: Boolean,
         val importTextFile: Boolean,
+        val importTextContent: Boolean,
     ) : Parcelable
 
     enum class ImportFileType {
         APKG,
         COLPKG,
         CSV,
+        TEXT_CONTENT,
     }
 
     interface ApkgImportResultLauncherProvider {
@@ -155,6 +167,11 @@ class ImportFileSelectionFragment : DialogFragment() {
             mimeType: String = "*/*",
             extraMimes: Array<String>? = null,
         ) {
+            if (fileType == ImportFileType.TEXT_CONTENT) {
+                val intent = Intent(activity, TextContentImportActivity::class.java)
+                activity.startActivity(intent)
+                return
+            }
             Timber.d("openImportFilePicker() delegating to file picker intent")
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
             intent.addCategory(Intent.CATEGORY_OPENABLE)
