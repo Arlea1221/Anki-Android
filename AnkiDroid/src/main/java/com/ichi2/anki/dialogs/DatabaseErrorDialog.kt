@@ -479,6 +479,7 @@ class DatabaseErrorDialog : AsyncDialogFragment() {
                                 importTextFile = false,
                                 importColpkg = true,
                                 importApkg = false,
+                                importTextContent = false,
                             ),
                         )
                     }

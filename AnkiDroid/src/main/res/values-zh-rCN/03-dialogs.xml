@@ -197,6 +197,7 @@
     <string name="import_deck_package">牌组包（.apkg）</string>
     <string name="import_collection_package">集合文件（.colpkg）</string>
     <string name="import_csv">文本文件(.txt, .csv)</string>
+    <string name="import_text_content">文本内容</string>
     <!-- Deck selection dialog -->
     <string name="cannot_create_subdeck_for_all_decks">您不能为所有牌组创建子牌组</string>
     <!-- scoped storage -->

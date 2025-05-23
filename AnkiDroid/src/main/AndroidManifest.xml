@@ -679,7 +679,10 @@
             </intent-filter>
         </activity>
 
-
+        <activity
+            android:name="com.ichi2.anki.TextContentImportActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <provider
             android:name=".provider.CardContentProvider"
