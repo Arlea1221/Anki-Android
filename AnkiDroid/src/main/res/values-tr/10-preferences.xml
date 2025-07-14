@@ -116,6 +116,9 @@
     <string name="gestures_corner_tap_middle_center" maxLength="41">Orta merkeze dokun</string>
     <string name="gestures_corner_tap_bottom_left" maxLength="41">Sol alta dokun</string>
     <string name="gestures_corner_tap_bottom_right" maxLength="41">Sağ alta dokun</string>
+    <string name="gestures_two_finger_tap" maxLength="41">İki parmakla dokunma</string>
+    <string name="gestures_three_finger_tap" maxLength="41">Üç parmakla dokunma</string>
+    <string name="gestures_four_finger_tap" maxLength="41">Dört parmakla dokunma</string>
     <string name="gestures_shake" maxLength="41">Cihazı salla</string>
     <string name="card_browser_enable_external_context_menu" maxLength="41">\"%s\" Menüsü</string>
     <string name="card_browser_enable_external_context_menu_summary">\"%s\" durum menüsünü uygulama çapında etkinleştirir</string>
@@ -161,7 +164,7 @@
     <string name="disable_extended_text_ui_summ">Yatay moddayken \"boşluk doldurma\" durum menüsüne izin ver</string>
     <string name="vertical_centering" maxLength="41">Ortaya hizala</string>
     <string name="vertical_centering_summ">Kartların içeriğini dikey olarak ortala</string>
-    <string name="pref_double_tap_time_interval" maxLength="41">Çift dokunma zaman aralığı (milisaniye)</string>
+    <string name="pref_double_tap_time_interval" maxLength="41">Çift dokunma zaman aralığı</string>
     <string name="pref_double_tap_time_interval_summary">Cevaplama düğmelerine ikinci bir tıklama, bu süre geçmediyse, göz ardı edilecektir. Bu, yanlışlıkla çift tıklamayı önler</string>
     <string name="pref_show_answer_long_press_time" maxLength="41">Cevabı göster basılı tutma süresi</string>
     <string name="pref_show_answer_long_press_time_summary">Cevabı göster düğmesi dokunmayı algılayana kadar minimum basma süresi</string>
@@ -375,11 +378,12 @@
     <string name="reviewer_toolbar_top" maxLength="41" comment="Setting to put the toolbar on the top of the study screen">Üst</string>
     <string name="reviewer_toolbar_bottom" maxLength="41" comment="Setting to put the toolbar on the bottom of the study screen">Alt</string>
     <string name="reviewer_toolbar_none" maxLength="41" comment="Setting to remove the toolbar from the study screen">Hiçbiri</string>
-    <string name="toolbar" maxLength="41">Toolbar</string>
-    <string name="toolbar_actions" maxLength="41">Toolbar actions</string>
-    <string name="toolbar_position" maxLength="41">Toolbar position</string>
-    <string name="new_study_screen" maxLength="41">New study screen</string>
-    <string name="new_study_screen_summ"><![CDATA[Improved study screen that will succeed the current one. Some features of the old screen have been changed or removed. Please report any <a href="%1$s">feedback</a> or <a href="%2$s">bugs</a>.]]></string>
+    <string name="toolbar" maxLength="41">Araç çubuğu</string>
+    <string name="toolbar_actions" maxLength="41">Araç çubuğu eylemleri</string>
+    <string name="toolbar_position" maxLength="41">Araç çubuğu konumu</string>
+    <string name="new_study_screen" maxLength="41">Yeni çalışma ekranı</string>
+    <string name="new_study_screen_summ"><![CDATA[Şu anda varolan çalışma ekranının yerine geçecek olan ekran. Eski ekranın belirli özellikleri değiştirilmiş veya silinmiş bulunuyor. Lütfen herhangi bir <a href="%1$s">geri bildiriminizi</a> veya <a href="%2$s">bulduğunuz hataları</a> bildirin.]]></string>
+    <string name="show_answer_feedback" maxLength="41">Cevap geribildirimini göster</string>
     <!--Keyboard shortcuts dialog-->
     <string name="open_settings" comment="Description of the shortcut that opens the app settings">Ayarları aç</string>
 </resources>

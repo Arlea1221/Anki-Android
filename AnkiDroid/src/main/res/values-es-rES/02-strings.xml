@@ -47,6 +47,7 @@
     <!-- Navigation drawer strings -->
     <string name="drawer_open">Abrir cajón</string>
     <string name="drawer_close">Cerrar cajón</string>
+    <string name="note_message">Note saved</string>
     <string name="CardEditorCardDeck">Mazo de tarjetas:</string>
     <string name="CardEditorNoteDeck">Mazo:</string>
     <string name="CardEditorModel">Tipo:</string>
@@ -107,6 +108,11 @@
     <string name="confirm_map_cards_to_nothing">Las tarjetas asignadas a nada se eliminarán. Si una nota no tiene cartas restantes, se perderán. ¿Seguro que deseas continuar?</string>
     <string name="missing_note_type">No se encontró ningún tipo de nota</string>
     <string name="card_previewer_empty_front_indicator" comment="Extra text appended onto a tab title in the card previewer so that the user can see at a glance whether a card has no front.">%1$s (vacío)</string>
+    <!-- Image cropper -->
+    <string name="image_cropper_action_rotate" maxLength="28" comment="Action in image cropper screen">Rotate</string>
+    <string name="image_cropper_action_flip" maxLength="28" comment="Action in image cropper screen">Flip</string>
+    <string name="image_cropper_action_flip_horizontally" maxLength="28" comment="Submenu action in image cropper screen">Flip horizontally</string>
+    <string name="image_cropper_action_flip_vertically" maxLength="28" comment="Submenu action in image cropper screen">Flip vertically</string>
     <!-- Timebox -->
     <string name="timebox_reached_title">Límite de tiempo alcanzado</string>
     <plurals name="timebox_reached">
@@ -196,7 +202,7 @@
     <string name="restore_default" maxLength="28">Restablecer Predefinidos</string>
     <string name="reviewer_tts_cloze_spoken_replacement">En blanco</string>
     <!-- Whiteboard eraser mode toggle message in Reviewer -->
-    <string name="white_board_eraser_enabled">Eraser mode activated</string>
+    <string name="white_board_eraser_enabled">Modo borrador activado</string>
     <string name="white_board_eraser_disabled">Eraser mode deactivated</string>
     <!-- Whiteboard save image message in the Study Screen -->
     <string name="white_board_image_save_failed">No se pudo guardar la imagen de pizarra. %s</string>

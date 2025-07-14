@@ -22,26 +22,43 @@ globalThis.ankidroid.showAllHints = function () {
     document.querySelectorAll("a.hint").forEach(el => el.click());
 };
 
+/**
+ * @param {InputEvent} event - the oninput event of the type answer <input>
+ */
+globalThis.ankidroid.onTypeAnswerInput = function (event) {
+    const encodedValue = encodeURIComponent(event.target.value);
+    window.location.href = `ankidroid://typeinput/${encodedValue}`;
+};
+
+document.addEventListener("focusin", event => {
+    window.location.href = `ankidroid://focusin`;
+});
+
+document.addEventListener("focusout", event => {
+    window.location.href = `ankidroid://focusout`;
+});
+
+globalThis.ankidroid.doubleTapTimeout = 200;
+
 (() => {
-    const DOUBLE_TAP_TIMEOUT = 250; // Max ms between taps for a double tap.
     const SCHEME = "gesture";
 
     let startX = 0,
         startY = 0,
-        tapTimer = null,
-        isSingleTouch = false;
+        touchCount = 0,
+        touchStartTime = 0,
+        tapTimer = null;
 
     document.addEventListener(
         "touchstart",
         event => {
-            // Ignore multi-touch gestures (like two-finger taps)
-            if (event.touches.length > 1) {
-                isSingleTouch = false;
-                return;
-            }
-            isSingleTouch = true;
+            touchCount = event.touches.length;
             startX = event.touches[0].pageX;
             startY = event.touches[0].pageY;
+            // start counting from the first finger touch
+            if (touchCount == 1) {
+                touchStartTime = new Date().getTime();
+            }
         },
         { passive: true },
     );
@@ -49,9 +66,26 @@ globalThis.ankidroid.showAllHints = function () {
     document.addEventListener(
         "touchend",
         event => {
-            if (!isSingleTouch || isTextSelected() || isInteractable(event)) return;
-            event.preventDefault();
+            // Only process after the final finger is lifted
+            if (
+                event.touches.length > 0 ||
+                touchCount > 4 ||
+                isTextSelected() ||
+                isInteractable(event)
+            )
+                return;
 
+            // Multi-finger detection. Takes priority over double taps
+            if (touchCount > 1) {
+                const params = new URLSearchParams({
+                    touchCount: touchCount,
+                    deltaTime: new Date().getTime() - touchStartTime,
+                });
+                window.location.href = `${SCHEME}://multiFingerTap/?${params.toString()}`;
+                return;
+            }
+
+            // Double tap detection
             if (tapTimer != null) {
                 clearTimeout(tapTimer);
                 tapTimer = null;
@@ -59,6 +93,7 @@ globalThis.ankidroid.showAllHints = function () {
                 return;
             }
 
+            // Swipes and single tap detection
             const endX = event.changedTouches[0].pageX;
             const endY = event.changedTouches[0].pageY;
             const scrollDirection = getScrollDirection(event.target);
@@ -72,35 +107,32 @@ globalThis.ankidroid.showAllHints = function () {
                 params.append("scrollDirection", scrollDirection);
             }
             const requestUrl = `${SCHEME}://tapOrSwipe/?${params.toString()}`;
-
             tapTimer = setTimeout(() => {
                 window.location.href = requestUrl;
                 tapTimer = null;
-            }, DOUBLE_TAP_TIMEOUT);
+            }, ankidroid.doubleTapTimeout);
         },
-        { passive: false },
+        { passive: true },
     );
 
     /**
      * Checks if the target element or its parents are interactive.
-     * @param {HTMLElement} target
+     * @param {TouchEvent} event
      * @returns {boolean}
      */
-    function isInteractable(e) {
-        let node = e.target;
+    function isInteractable(event) {
+        let node = event.target;
         while (node && node !== document) {
-            const res =
+            if (
                 node.nodeName === "A" ||
                 node.onclick ||
                 node.nodeName === "BUTTON" ||
                 node.nodeName === "VIDEO" ||
                 node.nodeName === "SUMMARY" ||
                 node.nodeName === "INPUT" ||
-                node.getAttribute("contentEditable");
-            if (res) {
-                return true;
-            }
-            if (node.classList && node.classList.contains("tappable")) {
+                node.getAttribute("contentEditable") ||
+                (node.classList && node.classList.contains("tappable"))
+            ) {
                 return true;
             }
             node = node.parentNode;

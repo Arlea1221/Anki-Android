@@ -35,11 +35,11 @@ import com.ichi2.anki.R
 import com.ichi2.anki.SingleFragmentActivity
 import com.ichi2.anki.common.annotations.NeedsTest
 import com.ichi2.anki.launchCatchingTask
+import com.ichi2.anki.libanki.DeckId
+import com.ichi2.anki.libanki.updateDeckConfigsRaw
 import com.ichi2.anki.observability.undoableOp
 import com.ichi2.anki.utils.openUrl
 import com.ichi2.anki.withProgress
-import com.ichi2.libanki.DeckId
-import com.ichi2.libanki.updateDeckConfigsRaw
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -76,6 +76,12 @@ class DeckOptions : PageFragment() {
                         //  * A 'discard changes' dialog may be shown, using confirm()
                         //  * if no changes, or changes discarded, `deckOptionsRequireClose` is called
                         //    which PostRequestHandler handles and calls on this fragment
+
+                        // Used to handle an edge-case when the page could not be fully loaded and therefore the anki-call is unavailable
+                        value ->
+                        if (value == "null") {
+                            actuallyClose()
+                        }
                     }
                 } else {
                     // The webview is not yet loaded, no change could have occurred, we can safely close it.

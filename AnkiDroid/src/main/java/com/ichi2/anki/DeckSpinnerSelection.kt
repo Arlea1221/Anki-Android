@@ -31,11 +31,11 @@ import com.ichi2.anki.dialogs.DeckSelectionDialog
 import com.ichi2.anki.dialogs.DeckSelectionDialog.DeckCreationListener
 import com.ichi2.anki.dialogs.DeckSelectionDialog.SelectableDeck
 import com.ichi2.anki.dialogs.DeckSelectionDialog.SelectableDeck.Companion.fromCollection
+import com.ichi2.anki.libanki.Collection
+import com.ichi2.anki.libanki.DeckId
+import com.ichi2.anki.libanki.DeckNameId
 import com.ichi2.anki.utils.showDialogFragmentImpl
 import com.ichi2.anki.widgets.DeckDropDownAdapter
-import com.ichi2.libanki.Collection
-import com.ichi2.libanki.DeckId
-import com.ichi2.libanki.DeckNameId
 import com.ichi2.utils.FragmentManagerSupplier
 import com.ichi2.utils.asFragmentManagerSupplier
 import timber.log.Timber
@@ -129,6 +129,39 @@ class DeckSpinnerSelection(
             val noteDeckAdapter: ArrayAdapter<String?> =
                 object :
                     ArrayAdapter<String?>(context, layoutResource, deckNames as List<String?>) {
+                    override fun getDropDownView(
+                        position: Int,
+                        convertView: View?,
+                        parent: ViewGroup,
+                    ): View {
+                        // Cast the drop down items (popup items) as text view
+                        val tv = super.getDropDownView(position, convertView, parent) as TextView
+
+                        // If this item is selected
+                        if (position == spinner.selectedItemPosition) {
+                            tv.setBackgroundColor(context.getColor(R.color.note_editor_selected_item_background))
+                            tv.setTextColor(context.getColor(R.color.note_editor_selected_item_text))
+                        }
+
+                        // Return the modified view
+                        return tv
+                    }
+                }
+            spinner.adapter = noteDeckAdapter
+            setSpinnerListener()
+        }
+    }
+
+    @MainThread // spinner.adapter
+    suspend fun initializeScheduleRemindersDeckSpinner() {
+        withCol {
+            decks.allNamesAndIds(includeFiltered = showFilteredDecks, skipEmptyDefault = true)
+        }.toMutableList().let { decks ->
+            dropDownDecks = decks
+            val deckNames = decks.map { it.name }
+            val noteDeckAdapter: ArrayAdapter<String?> =
+                object :
+                    ArrayAdapter<String?>(context, R.layout.multiline_spinner_item, deckNames as List<String?>) {
                     override fun getDropDownView(
                         position: Int,
                         convertView: View?,

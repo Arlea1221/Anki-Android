@@ -44,7 +44,6 @@ enum class Gesture(
     @get:JvmName("getResourceId") val resourceId: Int,
     private val displayPrefix: String = GESTURE_PREFIX,
 ) {
-    SHAKE(R.string.gestures_shake, SHAKE_GESTURE_PREFIX),
     SWIPE_UP(R.string.gestures_swipe_up),
     SWIPE_DOWN(R.string.gestures_swipe_down),
     SWIPE_LEFT(R.string.gestures_swipe_left),
@@ -59,6 +58,10 @@ enum class Gesture(
     TAP_BOTTOM_LEFT(R.string.gestures_corner_tap_bottom_left),
     TAP_BOTTOM(R.string.gestures_tap_bottom),
     TAP_BOTTOM_RIGHT(R.string.gestures_corner_tap_bottom_right),
+    TWO_FINGER_TAP(R.string.gestures_two_finger_tap),
+    THREE_FINGER_TAP(R.string.gestures_three_finger_tap),
+    FOUR_FINGER_TAP(R.string.gestures_four_finger_tap),
+    SHAKE(R.string.gestures_shake, SHAKE_GESTURE_PREFIX),
     ;
 
     fun toDisplayString(context: Context): String =

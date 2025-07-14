@@ -23,7 +23,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import com.ichi2.anki.R
-import com.ichi2.libanki.DeckNameId
+import com.ichi2.anki.libanki.DeckNameId
 
 class DeckDropDownAdapter(
     private val context: Context,
@@ -87,7 +87,7 @@ class DeckDropDownAdapter(
             val deckName = deck.name
             deckNameView!!.text = deckName
         }
-        deckCountsView!!.text = (context as SubtitleListener).subtitleText
+        deckCountsView!!.text = (context as? SubtitleListener)?.subtitleText ?: ""
         return convertView
     }
 

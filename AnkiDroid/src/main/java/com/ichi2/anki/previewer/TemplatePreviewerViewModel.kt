@@ -26,14 +26,14 @@ import com.ichi2.anki.NotetypeFile
 import com.ichi2.anki.asyncIO
 import com.ichi2.anki.cardviewer.CardMediaPlayer
 import com.ichi2.anki.launchCatchingIO
+import com.ichi2.anki.libanki.Card
+import com.ichi2.anki.libanki.Consts.DEFAULT_DECK_ID
+import com.ichi2.anki.libanki.DeckId
+import com.ichi2.anki.libanki.Note
+import com.ichi2.anki.libanki.NoteId
+import com.ichi2.anki.libanki.NotetypeJson
 import com.ichi2.anki.pages.AnkiServer
 import com.ichi2.anki.reviewer.CardSide
-import com.ichi2.libanki.Card
-import com.ichi2.libanki.Consts.DEFAULT_DECK_ID
-import com.ichi2.libanki.DeckId
-import com.ichi2.libanki.Note
-import com.ichi2.libanki.NoteId
-import com.ichi2.libanki.NotetypeJson
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -213,10 +213,7 @@ class TemplatePreviewerViewModel(
     }
 
     // https://github.com/ankitects/anki/blob/df70564079f53e587dc44f015c503fdf6a70924f/qt/aqt/clayout.py#L579
-    override suspend fun typeAnsFilter(
-        text: String,
-        typedAnswer: String?,
-    ): String =
+    override suspend fun typeAnsFilter(text: String): String =
         if (showingAnswer.value) {
             val typeAnswer = TypeAnswer.getInstance(currentCard.await(), text)
             if (typeAnswer?.expectedAnswer?.isEmpty() == true) {

@@ -8,7 +8,7 @@ compileSdk = "35"
 # minSdk. It is critical to update those version codes when you change this.
 minSdk = "24"  # also in testlib/build.gradle.kts
 
-targetSdk = "34"  # also in  ../robolectricDownloader.gradle
+targetSdk = "35"  # also in  ../robolectricDownloader.gradle
 acra = '5.12.0'
 ktlint = '1.5.0'
 # AGP is included in Android Studio and changelogs are not well maintained/at a stable URL
@@ -18,7 +18,7 @@ ktlint = '1.5.0'
 #
 # Old changelogs - See 'Table of Contents' in sidebar
 # https://developer.android.com/build/releases/past-releases
-androidGradlePlugin = "8.11.0"
+androidGradlePlugin = "8.11.1"
 # https://developer.android.com/jetpack/androidx/releases/activity
 androidxActivity = "1.10.1"
 # https://developer.android.com/jetpack/androidx/releases/annotation
@@ -59,7 +59,7 @@ androidxViewpager2 = "1.1.0"
 androidxWebkit = "1.14.0"
 # https://developer.android.com/jetpack/androidx/releases/work
 androidxWork = "2.10.2"
-ankiBackend = '0.1.56-anki25.06b6'
+ankiBackend = '0.1.58-anki25.07.2'
 autoService = "1.1.1"
 autoServiceAnnotations = "1.1.1"
 colorpicker = "1.2.0"
@@ -83,15 +83,16 @@ json = "20250517"
 jsoup = "1.21.1"
 androidTestJunit = "1.2.1"
 # https://github.com/junit-team/junit5/releases/
-junitJupiter = "5.13.2"
+junitJupiter = "5.13.3"
 # https://github.com/junit-team/junit5/releases/ - version numbers differ; changelogs in bundle
-junitPlatformLauncher = "1.13.2"
+junitPlatformLauncher = "1.13.3"
 # https://github.com/JetBrains/kotlin/releases/
 kotlin = '2.2.0'
-kotlinxSerializationJson = "1.8.1"
-ktlintGradlePlugin = "12.3.0"
+# https://github.com/Kotlin/kotlinx.serialization/releases
+kotlinxSerializationJson = "1.9.0"
+ktlintGradlePlugin = "13.0.0"
 leakcanaryAndroid = "2.14"
-lint = '31.11.0'
+lint = '31.11.1'
 material = "1.12.0"
 materialTapTargetPrompt = "3.3.2"
 
@@ -101,7 +102,7 @@ mockitoInline = "5.2.0"
 mockitoKotlin = "5.4.0" # maybe can remove mockitoCore and its usage with release > 5.4.0
 mockk = "1.14.4"
 nanohttpd = "2.3.1"
-okhttp = "4.12.0"
+okhttp = "5.1.0"
 # https://github.com/protocolbuffers/protobuf/releases
 protobufKotlinLite = "4.31.1"
 # ../AnkiDroid/robolectricDownload.gradle may need changes - read instructions in that file

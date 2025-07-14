@@ -25,8 +25,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.ichi2.anki.CardTemplateEditor.CardTemplateFragment.CardTemplate
 import com.ichi2.anki.CollectionManager.withCol
 import com.ichi2.anki.dialogs.DeckSelectionDialog.SelectableDeck
+import com.ichi2.anki.libanki.NotetypeJson
 import com.ichi2.anki.previewer.CardViewerActivity
-import com.ichi2.libanki.NotetypeJson
 import com.ichi2.testutils.assertFalse
 import com.ichi2.testutils.ext.addNote
 import org.hamcrest.MatcherAssert
@@ -703,11 +703,12 @@ class CardTemplateEditorTest : RobolectricTest() {
         advanceRobolectricLooperWithSleep()
         val cardTemplateFragment = testEditor.currentFragment
         val tempNoteType = testEditor.tempNoteType
+        val cardId = 0
         // set Bottom Navigation View to Style
-        cardTemplateFragment!!.setCurrentEditorView(R.id.styling_edit, tempNoteType!!.css)
+        cardTemplateFragment!!.setCurrentEditorView(R.id.styling_edit, cardId, tempNoteType!!.css)
 
         // set Bottom Navigation View to Front
-        cardTemplateFragment.setCurrentEditorView(R.id.front_edit, tempNoteType.getTemplate(0).qfmt)
+        cardTemplateFragment.setCurrentEditorView(R.id.front_edit, cardId, tempNoteType.getTemplate(0).qfmt)
 
         // check if current content is updated or not
         assumeThat(templateEditText.text.toString(), Matchers.equalTo(updatedFrontContent))
@@ -741,8 +742,9 @@ class CardTemplateEditorTest : RobolectricTest() {
         assumeThat(templateEditText.text.toString(), Matchers.equalTo(tempNoteType!!.getTemplate(0).qfmt))
         assumeThat(cardTemplateFragment!!.currentEditorViewId, Matchers.equalTo(R.id.front_edit))
 
+        val cardId = 0
         // set Bottom Navigation View to Style
-        cardTemplateFragment.setCurrentEditorView(R.id.styling_edit, tempNoteType.css)
+        cardTemplateFragment.setCurrentEditorView(R.id.styling_edit, cardId, tempNoteType.css)
 
         // check if current view is changed or not
         assumeThat(templateEditText.text.toString(), Matchers.equalTo(tempNoteType.css))

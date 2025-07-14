@@ -17,41 +17,36 @@ package com.ichi2.anki.preferences
 
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
 import com.bytehamster.lib.preferencesearch.SearchConfiguration
 import com.bytehamster.lib.preferencesearch.SearchPreference
+import com.google.android.material.appbar.MaterialToolbar
 import com.ichi2.anki.BuildConfig
 import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.R
+import com.ichi2.anki.preferences.reviewer.ReviewerMenuSettingsFragment
+import com.ichi2.anki.reviewreminders.ReviewReminderScope
 import com.ichi2.anki.reviewreminders.ScheduleReminders
 import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.ui.internationalization.toSentenceCase
 import com.ichi2.anki.utils.ext.sharedPrefs
-import com.ichi2.anki.utils.isWindowCompact
 import com.ichi2.compat.CompatHelper
 import com.ichi2.preferences.HeaderPreference
 import com.ichi2.utils.AdaptionUtil
 import timber.log.Timber
 
-class HeaderFragment :
-    PreferenceFragmentCompat(),
-    TitleProvider {
-    override val title: CharSequence
-        get() = getString(R.string.settings)
+class HeaderFragment : SettingsFragment() {
+    override val analyticsScreenNameConstant: String
+        get() = "prefs.initialPage"
+    override val preferenceResource: Int
+        get() = R.xml.preference_headers
 
     private var highlightedPreferenceKey: String = ""
 
-    override fun onCreatePreferences(
-        savedInstanceState: Bundle?,
-        rootKey: String?,
-    ) {
-        setPreferencesFromResource(R.xml.preference_headers, rootKey)
-
+    override fun initSubscreen() {
         requirePreference<HeaderPreference>(R.string.pref_backup_limits_screen_key)
             .title = TR.preferencesBackups()
 
@@ -70,47 +65,18 @@ class HeaderFragment :
         requirePreference<HeaderPreference>(R.string.pref_review_reminders_screen_key)
             .setOnPreferenceClickListener {
                 Timber.i("HeaderFragment:: edit review reminders button pressed")
-                val intent = ScheduleReminders.getIntent(requireContext(), true)
+                val intent = ScheduleReminders.getIntent(requireContext(), ReviewReminderScope.Global)
                 startActivity(intent)
                 true
             }
 
-        val reviewRemindersEnabled = requireContext().sharedPrefs().getBoolean(getString(R.string.pref_new_notifications), false)
-        requirePreference<HeaderPreference>(R.string.pref_review_reminders_screen_key)
-            .isVisible = reviewRemindersEnabled
-        requirePreference<HeaderPreference>(R.string.pref_notifications_screen_key)
-            .isVisible = !reviewRemindersEnabled
+        requirePreference<HeaderPreference>(R.string.pref_review_reminders_screen_key).isVisible = Prefs.newReviewRemindersEnabled
+        requirePreference<HeaderPreference>(R.string.pref_notifications_screen_key).isVisible = !Prefs.newReviewRemindersEnabled
 
         configureSearchBar(
             requireActivity() as AppCompatActivity,
             requirePreference<SearchPreference>(R.string.search_preference_key).searchConfiguration,
         )
-
-        if (settingsIsSplit) {
-            parentFragmentManager.findFragmentById(R.id.settings_container)?.let {
-                val key = getHeaderKeyForFragment(it) ?: return@let
-                highlightPreference(key)
-            }
-
-            parentFragmentManager.addOnBackStackChangedListener {
-                if (!isAdded) return@addOnBackStackChangedListener
-                val fragment =
-                    parentFragmentManager.findFragmentById(R.id.settings_container)
-                        ?: return@addOnBackStackChangedListener
-
-                val key = getHeaderKeyForFragment(fragment) ?: return@addOnBackStackChangedListener
-                highlightPreference(key)
-            }
-        }
-    }
-
-    private fun highlightPreference(
-        @StringRes keyRes: Int,
-    ) {
-        val key = getString(keyRes)
-        findPreference<HeaderPreference>(highlightedPreferenceKey)?.setHighlighted(false)
-        findPreference<HeaderPreference>(key)?.setHighlighted(true)
-        highlightedPreferenceKey = key
     }
 
     override fun onViewCreated(
@@ -118,10 +84,18 @@ class HeaderFragment :
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        // use the same fragment container to search in case there is a navigation container
-        requirePreference<SearchPreference>(R.string.search_preference_key)
-            .searchConfiguration
-            .setFragmentContainerViewId((view.parent as? ViewGroup)?.id ?: R.id.settings_container)
+        view.findViewById<MaterialToolbar>(R.id.toolbar).setNavigationOnClickListener {
+            requireActivity().finish()
+        }
+    }
+
+    fun highlightPreference(
+        @StringRes keyRes: Int,
+    ) {
+        val key = getString(keyRes)
+        findPreference<HeaderPreference>(highlightedPreferenceKey)?.setHighlighted(false)
+        findPreference<HeaderPreference>(key)?.setHighlighted(true)
+        highlightedPreferenceKey = key
     }
 
     companion object {
@@ -135,6 +109,7 @@ class HeaderFragment :
                 setBreadcrumbsEnabled(true)
                 setFuzzySearchEnabled(false)
                 setHistoryEnabled(true)
+                setFragmentContainerViewId(android.R.id.list_container)
 
                 index(R.xml.preferences_general)
                 index(R.xml.preferences_reviewing)
@@ -142,7 +117,7 @@ class HeaderFragment :
                 index(R.xml.preferences_custom_sync_server)
                     .addBreadcrumb(R.string.pref_cat_sync)
 
-                if (activity.sharedPrefs().getBoolean(activity.getString(R.string.pref_new_notifications), false)) {
+                if (Prefs.newReviewRemindersEnabled) {
                     searchConfiguration
                         .indexItem()
                         .withKey(activity.getString(R.string.pref_review_reminders_screen_key))
@@ -264,18 +239,10 @@ class HeaderFragment :
                 is AccessibilitySettingsFragment -> R.string.pref_accessibility_screen_key
                 is BackupLimitsSettingsFragment -> R.string.pref_backup_limits_screen_key
                 is AdvancedSettingsFragment -> R.string.pref_advanced_screen_key
-                is ReviewerOptionsFragment -> R.string.new_reviewer_options_key
+                is ReviewerOptionsFragment, is ReviewerMenuSettingsFragment -> R.string.new_reviewer_options_key
                 is DevOptionsFragment -> R.string.pref_dev_options_screen_key
                 is AboutFragment -> R.string.about_screen_key
                 else -> null
             }
     }
 }
-
-/**
- * Whether the Settings view is split in two.
- * If so, the left side contains the list of all preference categories, and the right side contains the category currently opened.
- * Otherwise, the same view is used to show the list of categories first, and then one specific category.
- */
-val Fragment.settingsIsSplit
-    get() = !resources.isWindowCompact()

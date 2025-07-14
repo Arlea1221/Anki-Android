@@ -27,12 +27,12 @@ import com.ichi2.anki.NoteFieldsCheckResult
 import com.ichi2.anki.OnErrorListener
 import com.ichi2.anki.checkNoteFieldsResponse
 import com.ichi2.anki.instantnoteeditor.InstantNoteEditorActivity.DialogType
+import com.ichi2.anki.libanki.DeckId
+import com.ichi2.anki.libanki.Decks
+import com.ichi2.anki.libanki.Note
+import com.ichi2.anki.libanki.NotetypeJson
 import com.ichi2.anki.observability.undoableOp
 import com.ichi2.anki.utils.ext.getAllClozeTextFields
-import com.ichi2.libanki.DeckId
-import com.ichi2.libanki.Decks
-import com.ichi2.libanki.Note
-import com.ichi2.libanki.NotetypeJson
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -173,13 +173,14 @@ class InstantEditorViewModel :
     private fun shouldResetClozeNumber(number: Int) {
         intClozeList.remove(number)
 
-        // Reset cloze number if the list is empty
-        if (intClozeList.isEmpty()) {
-            _currentClozeNumber.value = 1
-        } else {
-            // not null for sure
-            _currentClozeNumber.value = intClozeList.maxOrNull()!! + 1
-        }
+        _currentClozeNumber.value =
+            when {
+                // Reset cloze number if the list is empty
+                intClozeList.isEmpty() -> 1
+                currentClozeMode.value == InstantNoteEditorActivity.ClozeMode.INCREMENT ->
+                    (intClozeList.maxOrNull() ?: 0) + 1
+                else -> _currentClozeNumber.value
+            }
     }
 
     /**

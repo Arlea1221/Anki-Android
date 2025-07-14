@@ -18,12 +18,15 @@ package com.ichi2.anki.reviewreminders
 
 import android.content.Context
 import android.content.Intent
+import com.ichi2.anki.libanki.DeckId
 import com.ichi2.anki.utils.Destination
-import com.ichi2.libanki.DeckId
 
 class ScheduleRemindersDestination(
-    private val isInGlobalScope: Boolean,
-    private val did: DeckId? = null,
+    private val did: DeckId,
 ) : Destination {
-    override fun toIntent(context: Context): Intent = ScheduleReminders.getIntent(context, isInGlobalScope, did)
+    override fun toIntent(context: Context): Intent =
+        ScheduleReminders.getIntent(
+            context,
+            ReviewReminderScope.DeckSpecific(did),
+        )
 }

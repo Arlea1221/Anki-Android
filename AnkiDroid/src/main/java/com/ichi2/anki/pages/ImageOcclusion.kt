@@ -30,7 +30,7 @@ import com.ichi2.anki.R
 import com.ichi2.anki.SingleFragmentActivity
 import com.ichi2.anki.common.annotations.NeedsTest
 import com.ichi2.anki.dialogs.DiscardChangesDialog
-import com.ichi2.libanki.DeckId
+import com.ichi2.anki.libanki.DeckId
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
@@ -117,7 +117,7 @@ class ImageOcclusion : PageFragment(R.layout.image_occlusion) {
         private const val ARG_KEY_EDITOR_DECK_ID = "arg_key_editor_deck_id"
 
         /**
-         * @param editorWorkingDeckId the current deck id that [com.ichi2.anki.NoteEditor] is using
+         * @param editorWorkingDeckId the current deck id that [com.ichi2.anki.NoteEditorFragment] is using
          */
         fun getIntent(
             context: Context,

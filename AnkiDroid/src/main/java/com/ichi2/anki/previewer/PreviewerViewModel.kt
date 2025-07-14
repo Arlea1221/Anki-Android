@@ -26,7 +26,9 @@ import com.ichi2.anki.cardviewer.CardMediaPlayer
 import com.ichi2.anki.cardviewer.SingleCardSide
 import com.ichi2.anki.common.annotations.NeedsTest
 import com.ichi2.anki.launchCatchingIO
+import com.ichi2.anki.libanki.Card
 import com.ichi2.anki.noteeditor.NoteEditorLauncher
+import com.ichi2.anki.observability.ChangeManager
 import com.ichi2.anki.observability.undoableOp
 import com.ichi2.anki.pages.AnkiServer
 import com.ichi2.anki.reviewer.CardSide
@@ -36,8 +38,6 @@ import com.ichi2.anki.utils.ext.collectIn
 import com.ichi2.anki.utils.ext.flag
 import com.ichi2.anki.utils.ext.require
 import com.ichi2.anki.utils.ext.setUserFlagForCards
-import com.ichi2.libanki.Card
-import com.ichi2.libanki.ChangeManager
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -234,10 +234,7 @@ class PreviewerViewModel(
     }
 
     /** From the [desktop code](https://github.com/ankitects/anki/blob/1ff55475b93ac43748d513794bcaabd5d7df6d9d/qt/aqt/reviewer.py#L671) */
-    override suspend fun typeAnsFilter(
-        text: String,
-        typedAnswer: String?,
-    ): String =
+    override suspend fun typeAnsFilter(text: String): String =
         if (showingAnswer.value) {
             val typeAnswer = TypeAnswer.getInstance(currentCard.await(), text)
             typeAnswer?.answerFilter() ?: text

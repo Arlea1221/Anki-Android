@@ -116,6 +116,9 @@
     <string name="gestures_corner_tap_middle_center" maxLength="41">Frapeti centron</string>
     <string name="gestures_corner_tap_bottom_left" maxLength="41">Frapeti suban maldekstron</string>
     <string name="gestures_corner_tap_bottom_right" maxLength="41">Frapeti suban dekstron</string>
+    <string name="gestures_two_finger_tap" maxLength="41">Du-fingra frapeto</string>
+    <string name="gestures_three_finger_tap" maxLength="41">Tri-fingra frapeto</string>
+    <string name="gestures_four_finger_tap" maxLength="41">Kvar-fingra frapeto</string>
     <string name="gestures_shake" maxLength="41">Skui aparaton</string>
     <string name="card_browser_enable_external_context_menu" maxLength="41">Menuo “%s”</string>
     <string name="card_browser_enable_external_context_menu_summary">Aktivigi la kuntekstan menuon “%s” tutaplikaĵe</string>
@@ -161,7 +164,7 @@
     <string name="disable_extended_text_ui_summ">Montri la kuntekstan menuon “truteksta malpleno” kiam en horizontala orientiĝo.</string>
     <string name="vertical_centering" maxLength="41">Centrigi vertikale</string>
     <string name="vertical_centering_summ">Centrigi enhavon de kartoj vertikale</string>
-    <string name="pref_double_tap_time_interval" maxLength="41">Ignori duan frapeton antaŭ ol (milisekundoj)</string>
+    <string name="pref_double_tap_time_interval" maxLength="41">Ignori duan frapeton antaŭ ol</string>
     <string name="pref_double_tap_time_interval_summary">La dua frapeto sur la butonoj de respondoj estos ignorita, se ĝi okazos antaŭ la agordita tempo Tio ĉi preventas de fari neatenditajn duoblaj frapetojn</string>
     <string name="pref_show_answer_long_press_time" maxLength="41">Montri respondon post frapetadi</string>
     <string name="pref_show_answer_long_press_time_summary">Minimuma tempo de frapetado post kiu la butono “Montri respondon” registras frapeton.</string>
@@ -371,7 +374,8 @@ Vi povas restarigi el sekurkopio aŭ elporti vian kolekton per la menuo de listo
     <string name="toolbar_actions" maxLength="41">Agoj de ilarstrio</string>
     <string name="toolbar_position" maxLength="41">Pozicio de ilarstrio</string>
     <string name="new_study_screen" maxLength="41">Nova lernada ekrano</string>
-    <string name="new_study_screen_summ"><![CDATA[Improved study screen that will succeed the current one. Some features of the old screen have been changed or removed. Please report any <a href="%1$s">feedback</a> or <a href="%2$s">bugs</a>.]]></string>
+    <string name="new_study_screen_summ"><![CDATA[Plibonigita lernada ekrano, kiu anstataŭigos la nunan. Kelkaj ebloj de la malnova ekrano estas ŝanĝitaj aŭ forigitaj. Bonvolu sendi <a href="%1$s">rimarkojn</a> aŭ raporti <a href="%2$s">erarojn</a>.]]></string>
+    <string name="show_answer_feedback" maxLength="41">Montri movbildon de respondo</string>
     <!--Keyboard shortcuts dialog-->
     <string name="open_settings" comment="Description of the shortcut that opens the app settings">Malfermi agordojn</string>
 </resources>

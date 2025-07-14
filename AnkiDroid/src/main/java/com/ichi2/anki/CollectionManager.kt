@@ -20,11 +20,12 @@ import android.annotation.SuppressLint
 import androidx.annotation.VisibleForTesting
 import androidx.annotation.WorkerThread
 import anki.backend.backendError
+import com.ichi2.anki.backend.createDatabaseUsingRustBackend
 import com.ichi2.anki.common.utils.android.isRobolectric
-import com.ichi2.libanki.Collection
-import com.ichi2.libanki.CollectionFiles
-import com.ichi2.libanki.Storage.collection
-import com.ichi2.libanki.importCollectionPackage
+import com.ichi2.anki.libanki.Collection
+import com.ichi2.anki.libanki.CollectionFiles
+import com.ichi2.anki.libanki.Storage.collection
+import com.ichi2.anki.libanki.importCollectionPackage
 import com.ichi2.utils.Threads
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -250,7 +251,11 @@ object CollectionManager {
         if (collection == null || collection!!.dbClosed) {
             val collectionPath = collectionPathInValidFolder()
             collection =
-                collection(collectionPath, backend)
+                collection(
+                    collectionFiles = collectionPath,
+                    databaseBuilder = { backend -> createDatabaseUsingRustBackend(backend) },
+                    backend = backend,
+                )
         }
     }
 
@@ -431,3 +436,6 @@ object CollectionManager {
         }
     }
 }
+
+fun Collection.reopen(afterFullSync: Boolean = false) =
+    this.reopen(afterFullSync = afterFullSync) { backend -> createDatabaseUsingRustBackend(backend) }

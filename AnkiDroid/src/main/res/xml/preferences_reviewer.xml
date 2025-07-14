@@ -44,6 +44,18 @@
         />
 
     <SwitchPreferenceCompat
+        android:key="@string/show_answer_feedback_key"
+        android:title="@string/show_answer_feedback"
+        android:defaultValue="true"
+        />
+
+    <SwitchPreferenceCompat
+        android:key="@string/show_progress_preference"
+        tools:title="Show remaining card count"
+        android:defaultValue="true"
+        />
+
+    <SwitchPreferenceCompat
         android:key="@string/show_audio_play_buttons_key"
         android:defaultValue="true"
         tools:title="Show play buttons on cards with audio"
@@ -71,15 +83,29 @@
         android:title="@string/answer_buttons">
 
         <SwitchPreferenceCompat
-            android:key="@string/show_estimates_preference"
-            android:summary="@string/show_estimates_summ"
-            android:title="@string/show_estimates" />
-
-        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="@string/hide_answer_buttons_key"
             android:title="@string/hide_answer_buttons"
             />
+
+        <SwitchPreferenceCompat
+            android:key="@string/show_estimates_preference"
+            android:summary="@string/show_estimates_summ"
+            android:title="@string/show_estimates" />
+
+        <com.ichi2.preferences.SliderPreference
+            android:title="@string/button_size"
+            android:key="@string/answer_button_size_pref_key"
+            android:defaultValue="100"
+            android:valueFrom="100"
+            android:valueTo="200"
+            android:stepSize="10"
+            app:displayFormat="@string/percentage"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="@string/addons_category_key"
+        tools:title="Add-ons">
 
         <SwitchPreferenceCompat
             android:defaultValue="false"
@@ -87,13 +113,5 @@
             android:title="@string/hide_hard_and_easy"
             />
 
-        <com.ichi2.preferences.SliderPreference
-            android:title="@string/button_size"
-            android:key="@string/answer_button_size_preference"
-            android:defaultValue="100"
-            android:valueFrom="10"
-            android:valueTo="200"
-            android:stepSize="10"
-            app:displayFormat="@string/percentage"/>
     </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

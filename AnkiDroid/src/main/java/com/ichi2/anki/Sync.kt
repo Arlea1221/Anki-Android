@@ -31,16 +31,16 @@ import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.CollectionManager.withCol
 import com.ichi2.anki.common.time.TimeManager
 import com.ichi2.anki.dialogs.SyncErrorDialog
+import com.ichi2.anki.libanki.createBackup
+import com.ichi2.anki.libanki.fullUploadOrDownload
+import com.ichi2.anki.libanki.syncCollection
+import com.ichi2.anki.libanki.syncLogin
+import com.ichi2.anki.observability.ChangeManager.notifySubscribersAllValuesChanged
 import com.ichi2.anki.preferences.sharedPrefs
 import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.snackbar.showSnackbar
 import com.ichi2.anki.ui.internationalization.toSentenceCase
 import com.ichi2.anki.worker.SyncMediaWorker
-import com.ichi2.libanki.ChangeManager.notifySubscribersAllValuesChanged
-import com.ichi2.libanki.createBackup
-import com.ichi2.libanki.fullUploadOrDownload
-import com.ichi2.libanki.syncCollection
-import com.ichi2.libanki.syncLogin
 import com.ichi2.preferences.VersatileTextWithASwitchPreference
 import com.ichi2.utils.NetworkUtils
 import com.ichi2.utils.dismissSafely
@@ -99,7 +99,10 @@ fun DeckPicker.syncAuth(): SyncAuth? {
 
 fun getEndpoint(context: Context): String? {
     val preferences = context.sharedPrefs()
-    val currentEndpoint = preferences.getString(SyncPreferences.CURRENT_SYNC_URI, null)
+    val currentEndpoint =
+        preferences.getString(SyncPreferences.CURRENT_SYNC_URI, null)?.ifEmpty {
+            null
+        }
     val customEndpoint =
         if (preferences.getBoolean(SyncPreferences.CUSTOM_SYNC_ENABLED, false)) {
             preferences.getString(SyncPreferences.CUSTOM_SYNC_URI, null)

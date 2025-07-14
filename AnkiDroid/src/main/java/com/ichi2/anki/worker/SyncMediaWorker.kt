@@ -90,12 +90,14 @@ class SyncMediaWorker(
             Timber.w(throwable)
             notify {
                 setContentTitle(CollectionManager.TR.syncMediaFailed())
+                throwable.localizedMessage?.let { message ->
+                    setContentText(message)
+                }
             }
             return Result.failure()
-        } finally {
-            Timber.d("SyncMediaWorker: cancelling notification")
-            notificationManager?.cancel(NotificationId.SYNC_MEDIA)
         }
+        Timber.d("SyncMediaWorker: cancelling notification")
+        notificationManager?.cancel(NotificationId.SYNC_MEDIA)
 
         Timber.d("SyncMediaWorker: success")
         return Result.success()
@@ -154,7 +156,6 @@ class SyncMediaWorker(
                 setSmallIcon(R.drawable.ic_star_notify)
                 setCategory(NotificationCompat.CATEGORY_PROGRESS)
                 setSilent(true)
-                contentView
                 block()
             }.build()
 

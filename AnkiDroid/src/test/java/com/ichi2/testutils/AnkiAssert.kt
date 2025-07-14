@@ -15,58 +15,7 @@
  */
 package com.ichi2.testutils
 
-import com.ichi2.libanki.Card
-import com.ichi2.utils.ListUtil.Companion.assertListEquals
 import kotlin.test.junit5.JUnit5Asserter
-
-/** Assertion methods that aren't currently supported by our dependencies  */
-object AnkiAssert {
-    /** Helper to sort out "JUnit tests should include assert() or fail()" quality check  */
-    fun assertDoesNotThrow(
-        message: String,
-        runnable: Runnable,
-    ) {
-        try {
-            runnable.run()
-        } catch (e: Exception) {
-            throw AssertionError("$message\nmethod should not throw", e)
-        }
-    }
-
-    /** Helper to sort out "JUnit tests should include assert() or fail()" quality check  */
-    fun assertDoesNotThrow(runnable: Runnable) {
-        try {
-            runnable.run()
-        } catch (e: Exception) {
-            throw AssertionError("method should not throw", e)
-        }
-    }
-
-    // suspend variant of [assertDoesNotThrow]
-
-    /** Helper to sort out "JUnit tests should include assert() or fail()" quality check  */
-    suspend fun assertDoesNotThrowSuspend(block: suspend () -> Unit) {
-        try {
-            block()
-        } catch (e: Exception) {
-            throw AssertionError("method should not throw", e)
-        }
-    }
-
-    fun <T> assertEqualsArrayList(
-        expected: Array<T>,
-        actual: List<T>?,
-    ) {
-        assertListEquals(expected.toList(), actual)
-    }
-
-    fun without_unicode_isolation(s: String): String = s.replace("\u2068", "").replace("\u2069", "")
-
-    fun checkRevIvl(
-        c: Card,
-        targetIvl: Int,
-    ): Boolean = c.ivl == targetIvl
-}
 
 /** Asserts that the expression is `false` with an optional [message]. */
 fun assertFalse(

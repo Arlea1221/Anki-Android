@@ -37,27 +37,27 @@ import com.ichi2.anki.CrashReportService
 import com.ichi2.anki.FlashCardsContract
 import com.ichi2.anki.common.time.TimeManager
 import com.ichi2.anki.common.utils.annotation.KotlinCleanup
+import com.ichi2.anki.libanki.Card
+import com.ichi2.anki.libanki.CardId
+import com.ichi2.anki.libanki.CardTemplate
+import com.ichi2.anki.libanki.Collection
+import com.ichi2.anki.libanki.Deck
+import com.ichi2.anki.libanki.DeckId
+import com.ichi2.anki.libanki.Decks
+import com.ichi2.anki.libanki.Note
+import com.ichi2.anki.libanki.NoteId
+import com.ichi2.anki.libanki.NoteTypeId
+import com.ichi2.anki.libanki.NoteTypeKind
+import com.ichi2.anki.libanki.NotetypeJson
+import com.ichi2.anki.libanki.Notetypes
+import com.ichi2.anki.libanki.Sound.replaceWithSoundTags
+import com.ichi2.anki.libanki.TemplateManager.TemplateRenderContext.TemplateRenderOutput
+import com.ichi2.anki.libanki.Utils
+import com.ichi2.anki.libanki.exception.ConfirmModSchemaException
+import com.ichi2.anki.libanki.exception.EmptyMediaException
+import com.ichi2.anki.libanki.sched.DeckNode
+import com.ichi2.anki.libanki.sched.Ease
 import com.ichi2.anki.utils.ext.description
-import com.ichi2.libanki.Card
-import com.ichi2.libanki.CardId
-import com.ichi2.libanki.CardTemplate
-import com.ichi2.libanki.Collection
-import com.ichi2.libanki.Deck
-import com.ichi2.libanki.DeckId
-import com.ichi2.libanki.Decks
-import com.ichi2.libanki.Note
-import com.ichi2.libanki.NoteId
-import com.ichi2.libanki.NoteTypeId
-import com.ichi2.libanki.NoteTypeKind
-import com.ichi2.libanki.NotetypeJson
-import com.ichi2.libanki.Notetypes
-import com.ichi2.libanki.Sound.replaceWithSoundTags
-import com.ichi2.libanki.TemplateManager.TemplateRenderContext.TemplateRenderOutput
-import com.ichi2.libanki.Utils
-import com.ichi2.libanki.exception.ConfirmModSchemaException
-import com.ichi2.libanki.exception.EmptyMediaException
-import com.ichi2.libanki.sched.DeckNode
-import com.ichi2.libanki.sched.Ease
 import com.ichi2.utils.FileUtil
 import com.ichi2.utils.FileUtil.internalizeUri
 import com.ichi2.utils.Permissions.arePermissionsDefinedInManifest
@@ -196,14 +196,17 @@ class CardContentProvider : ContentProvider() {
         }
     }
 
-    /** Only enforce permissions for queries and inserts on Android M and above, or if its a 'rogue client'  */
-    private fun shouldEnforceQueryOrInsertSecurity(): Boolean = knownRogueClient()
+    /**
+     * Enforce permissions for queries and inserts on Android M and above.
+     * @see knownRogueClient
+     */
+    private fun shouldEnforceQueryOrInsertSecurity(): Boolean = true
 
-    /** Enforce permissions for all updates on Android M and above. Otherwise block depending on URI and client app  */
-    private fun shouldEnforceUpdateSecurity(uri: Uri): Boolean {
-        val whitelist = listOf(NOTES_ID_CARDS_ORD, NOTE_TYPES_ID, NOTE_TYPES_ID_TEMPLATES_ID, SCHEDULE, DECK_SELECTED)
-        return !whitelist.contains(sUriMatcher.match(uri)) || knownRogueClient()
-    }
+    /**
+     * Enforce permissions for all updates on Android M and above.
+     * @see knownRogueClient
+     */
+    private fun shouldEnforceUpdateSecurity(uri: Uri): Boolean = true
 
     override fun query(
         uri: Uri,
@@ -234,7 +237,7 @@ class CardContentProvider : ContentProvider() {
                 if (noteIds.isNotEmpty()) {
                     val sel = "id in (${noteIds.joinToString(",")})"
                     val sql = SQLiteQueryBuilder.buildQueryString(false, "notes", proj, sel, null, null, order, null)
-                    col.db.database.query(sql)
+                    col.db.query(sql)
                 } else {
                     null
                 }

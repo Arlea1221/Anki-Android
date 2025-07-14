@@ -40,17 +40,18 @@ import androidx.lifecycle.lifecycleScope
 import anki.collection.OpChanges
 import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.CollectionManager.withCol
+import com.ichi2.anki.backend.stripHTMLScriptAndStyleTags
 import com.ichi2.anki.dialogs.customstudy.CustomStudyDialog
-import com.ichi2.anki.preferences.sharedPrefs
+import com.ichi2.anki.libanki.Collection
+import com.ichi2.anki.libanki.Decks
+import com.ichi2.anki.observability.ChangeManager
+import com.ichi2.anki.reviewreminders.ReviewReminderScope
 import com.ichi2.anki.reviewreminders.ScheduleReminders
+import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.snackbar.showSnackbar
 import com.ichi2.anki.ui.internationalization.toSentenceCase
 import com.ichi2.anki.utils.ext.description
 import com.ichi2.anki.utils.ext.showDialogFragment
-import com.ichi2.libanki.ChangeManager
-import com.ichi2.libanki.Collection
-import com.ichi2.libanki.Decks
-import com.ichi2.libanki.Utils
 import com.ichi2.utils.HtmlUtils.convertNewlinesToHtml
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -286,8 +287,7 @@ class StudyOptionsFragment :
                 val intent =
                     ScheduleReminders.getIntent(
                         requireContext(),
-                        false,
-                        col!!.decks.current().id,
+                        ReviewReminderScope.DeckSpecific(col!!.decks.current().id),
                     )
                 startActivity(intent)
                 return true
@@ -365,8 +365,7 @@ class StudyOptionsFragment :
                 menu.findItem(R.id.action_custom_study).isVisible = false
             }
             // Use new review reminders system if enabled
-            val enableNewReviewReminders = requireContext().sharedPrefs().getBoolean(getString(R.string.pref_new_notifications), false)
-            menu.findItem(R.id.action_schedule_reminders).isVisible = enableNewReviewReminders
+            menu.findItem(R.id.action_schedule_reminders).isVisible = Prefs.newReviewRemindersEnabled
             // Switch on or off unbury depending on if there are cards to unbury
             menu.findItem(R.id.action_unbury).isVisible = col != null && col!!.sched.haveBuried()
         } catch (e: IllegalStateException) {
@@ -726,7 +725,7 @@ class StudyOptionsFragment :
         ): Spanned {
             // #5715: In deck description, ignore what is in style and script tag
             // Since we don't currently execute the JS/CSS, it's not worth displaying.
-            val withStrippedTags = Utils.stripHTMLScriptAndStyleTags(desc)
+            val withStrippedTags = stripHTMLScriptAndStyleTags(desc)
             // #5188 - fromHtml displays newlines as " "
             val withFixedNewlines = convertNewlinesToHtml(withStrippedTags)
             return HtmlCompat.fromHtml(withFixedNewlines!!, HtmlCompat.FROM_HTML_MODE_LEGACY)

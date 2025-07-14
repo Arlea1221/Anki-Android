@@ -43,13 +43,13 @@ import androidx.drawerlayout.widget.ClosableDrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.navigation.NavigationView
-import com.ichi2.anki.NoteEditor.Companion.NoteEditorCaller
+import com.ichi2.anki.NoteEditorFragment.Companion.NoteEditorCaller
 import com.ichi2.anki.dialogs.help.HelpDialog
+import com.ichi2.anki.libanki.CardId
 import com.ichi2.anki.preferences.PreferencesActivity
 import com.ichi2.anki.preferences.sharedPrefs
 import com.ichi2.anki.utils.ext.showDialogFragment
 import com.ichi2.anki.workarounds.FullDraggableContainerFix
-import com.ichi2.libanki.CardId
 import com.ichi2.utils.HandlerUtils
 import com.ichi2.utils.IntentUtil
 import timber.log.Timber
@@ -453,24 +453,30 @@ abstract class NavigationDrawerActivity :
                 return
             }
             // Review Cards Shortcut
-            val intentReviewCards = Reviewer.getIntent(context)
-            intentReviewCards.action = Intent.ACTION_VIEW
-            intentReviewCards.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-            intentReviewCards.putExtra(EXTRA_STARTED_WITH_SHORTCUT, true)
+            val intentReviewCards =
+                Reviewer.getIntent(context).apply {
+                    action = Intent.ACTION_VIEW
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    putExtra(EXTRA_STARTED_WITH_SHORTCUT, true)
+                }
+            val deckPickerIntent =
+                Intent(context, IntentHandler::class.java).apply {
+                    action = Intent.ACTION_VIEW
+                }
             val reviewCardsShortcut =
                 ShortcutInfoCompat
                     .Builder(context, "reviewCardsShortcutId")
                     .setShortLabel(context.getString(R.string.studyoptions_start))
                     .setLongLabel(context.getString(R.string.studyoptions_start))
                     .setIcon(IconCompat.createWithResource(context, R.drawable.review_shortcut))
-                    .setIntent(intentReviewCards)
+                    .setIntents(arrayOf(deckPickerIntent, intentReviewCards))
                     .build()
 
             // Add Shortcut
             val intentAddNote = Intent(context, IntentHandler2::class.java)
             intentAddNote.action = Intent.ACTION_VIEW
             intentAddNote.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-            intentAddNote.putExtra(NoteEditor.EXTRA_CALLER, NoteEditorCaller.DECKPICKER.value)
+            intentAddNote.putExtra(NoteEditorFragment.EXTRA_CALLER, NoteEditorCaller.DECKPICKER.value)
             val noteEditorShortcut =
                 ShortcutInfoCompat
                     .Builder(context, "noteEditorShortcutId")

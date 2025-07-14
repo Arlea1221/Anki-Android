@@ -170,10 +170,30 @@ object Prefs {
     var username by stringPref(R.string.username_key)
     var hkey by stringPref(R.string.hkey_key)
 
+    // ************************************** Review Reminders ********************************** //
+
+    /**
+     * Whether to enable the new review reminders notification system.
+     */
+    var newReviewRemindersEnabled by booleanPref(R.string.pref_new_review_reminders, false)
+
+    /**
+     * Review reminder IDs are unique, starting at 0 and climbing upwards by one each time a new one is created.
+     */
+    var reviewReminderNextFreeId by intPref(R.string.review_reminders_next_free_id, defaultValue = 0)
+
     // **************************************** Reviewer **************************************** //
 
     val ignoreDisplayCutout by booleanPref(R.string.ignore_display_cutout_key, false)
     val autoFocusTypeAnswer by booleanPref(R.string.type_in_answer_focus_key, true)
+    val showAnswerFeedback by booleanPref(R.string.show_answer_feedback_key, defaultValue = true)
+    val hideAnswerButtons by booleanPref(R.string.hide_answer_buttons_key, false)
+
+    val doubleTapInterval by intPref(R.string.double_tap_timeout_pref_key, defaultValue = 200)
+    val newStudyScreenAnswerButtonSize by intPref(R.string.answer_button_size_pref_key, defaultValue = 100)
+
+    val swipeSensitivity: Float
+        get() = getInt(R.string.pref_swipe_sensitivity_key, 100) / 100F
 
     val frameStyle: FrameStyle
         get() = getEnum(R.string.reviewer_frame_style_key, FrameStyle.CARD)
@@ -186,11 +206,12 @@ object Prefs {
 
     // ************************************** Accessibility ************************************* //
 
-    val answerButtonsSize: Int
-        get() = getInt(R.string.answer_button_size_preference, 100)
+    val answerButtonsSize: Int by intPref(R.string.answer_button_size_preference, 100)
+    val cardZoom: Int by intPref(R.string.card_zoom_preference, 100)
 
     // **************************************** Advanced **************************************** //
 
+    val isHtmlTypeAnswerEnabled by booleanPref(R.string.use_input_tag_key, defaultValue = false)
     var useFixedPortInReviewer by booleanPref(R.string.use_fixed_port_pref_key, false)
 
     var reviewerPort by intPref(R.string.reviewer_port_pref_key, defaultValue = 0)
@@ -208,6 +229,9 @@ object Prefs {
 
     val isNewStudyScreenEnabled: Boolean
         get() = getBoolean(R.string.new_reviewer_pref_key, false) && getBoolean(R.string.new_reviewer_options_key, false)
+
+    val devIsCardBrowserFragmented: Boolean
+        get() = getBoolean(R.string.dev_card_browser_fragmented, false)
 
     // **************************************** UI Config *************************************** //
 

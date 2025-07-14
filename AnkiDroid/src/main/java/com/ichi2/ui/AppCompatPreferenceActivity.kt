@@ -26,6 +26,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceActivity
 import android.view.KeyEvent
@@ -33,6 +34,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.window.OnBackInvokedDispatcher.PRIORITY_OVERLAY
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
@@ -42,10 +44,10 @@ import androidx.core.content.ContextCompat
 import com.ichi2.anki.CollectionManager
 import com.ichi2.anki.R
 import com.ichi2.anki.common.utils.annotation.KotlinCleanup
+import com.ichi2.anki.libanki.Collection
+import com.ichi2.anki.libanki.Deck
 import com.ichi2.anki.receiver.SdCardReceiver
 import com.ichi2.compat.CompatHelper.Companion.registerReceiverCompat
-import com.ichi2.libanki.Collection
-import com.ichi2.libanki.Deck
 import com.ichi2.utils.HashUtil
 import com.ichi2.utils.message
 import com.ichi2.utils.positiveButton
@@ -228,6 +230,13 @@ abstract class AppCompatPreferenceActivity<PreferenceHack : AppCompatPreferenceA
         delegate.onCreate(savedInstanceState)
         super.onCreate(savedInstanceState)
         this.col = CollectionManager.getColUnsafe()
+        // HACK: PreferenceActivity does not have a back dispatcher
+        // on API <= 32, onKeyDown is called; on API 33+, this is needed
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(PRIORITY_OVERLAY) {
+                tryCloseWithResult()
+            }
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

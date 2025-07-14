@@ -85,6 +85,7 @@ import com.ichi2.anki.AbstractFlashcardViewer.Signal.Companion.toSignal
 import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.CollectionManager.withCol
 import com.ichi2.anki.android.back.exitViaDoubleTapBackCallback
+import com.ichi2.anki.backend.stripHTMLAndSpecialFields
 import com.ichi2.anki.cardviewer.AndroidCardRenderContext
 import com.ichi2.anki.cardviewer.AndroidCardRenderContext.Companion.createInstance
 import com.ichi2.anki.cardviewer.CardMediaPlayer
@@ -107,12 +108,24 @@ import com.ichi2.anki.dialogs.TtsVoicesDialogFragment
 import com.ichi2.anki.dialogs.tags.TagsDialog
 import com.ichi2.anki.dialogs.tags.TagsDialogFactory
 import com.ichi2.anki.dialogs.tags.TagsDialogListener
+import com.ichi2.anki.libanki.Card
+import com.ichi2.anki.libanki.CardId
+import com.ichi2.anki.libanki.Collection
+import com.ichi2.anki.libanki.DeckId
+import com.ichi2.anki.libanki.Decks
+import com.ichi2.anki.libanki.SoundOrVideoTag
+import com.ichi2.anki.libanki.TTSTag
+import com.ichi2.anki.libanki.sched.Ease
 import com.ichi2.anki.model.CardStateFilter
+import com.ichi2.anki.multimedia.getAvTag
 import com.ichi2.anki.noteeditor.NoteEditorLauncher
+import com.ichi2.anki.observability.ChangeManager
 import com.ichi2.anki.observability.undoableOp
 import com.ichi2.anki.pages.AnkiServer
 import com.ichi2.anki.pages.CongratsPage
 import com.ichi2.anki.pages.PostRequestHandler
+import com.ichi2.anki.preferences.AccessibilitySettingsFragment
+import com.ichi2.anki.preferences.PreferencesActivity
 import com.ichi2.anki.preferences.sharedPrefs
 import com.ichi2.anki.reviewer.AutomaticAnswer
 import com.ichi2.anki.reviewer.AutomaticAnswer.AutomaticallyAnswered
@@ -129,23 +142,13 @@ import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.snackbar.BaseSnackbarBuilderProvider
 import com.ichi2.anki.snackbar.SnackbarBuilder
 import com.ichi2.anki.snackbar.showSnackbar
-import com.ichi2.anki.ui.windows.reviewer.ReviewerFragment
+import com.ichi2.anki.ui.windows.reviewer.StudyScreenRepository
 import com.ichi2.anki.utils.OnlyOnce.Method.ANSWER_CARD
 import com.ichi2.anki.utils.OnlyOnce.preventSimultaneousExecutions
+import com.ichi2.anki.utils.ext.isTouchWithinBounds
 import com.ichi2.anki.utils.ext.showDialogFragment
 import com.ichi2.compat.CompatHelper.Companion.resolveActivityCompat
 import com.ichi2.compat.ResolveInfoFlagsCompat
-import com.ichi2.libanki.Card
-import com.ichi2.libanki.CardId
-import com.ichi2.libanki.ChangeManager
-import com.ichi2.libanki.Collection
-import com.ichi2.libanki.DeckId
-import com.ichi2.libanki.Decks
-import com.ichi2.libanki.Sound.getAvTag
-import com.ichi2.libanki.SoundOrVideoTag
-import com.ichi2.libanki.TTSTag
-import com.ichi2.libanki.Utils
-import com.ichi2.libanki.sched.Ease
 import com.ichi2.themes.Themes
 import com.ichi2.themes.Themes.getResFromAttr
 import com.ichi2.ui.FixedEditText
@@ -352,7 +355,7 @@ abstract class AbstractFlashcardViewer :
                The card could have been rescheduled, the deck could have changed, or a change of
                note type could have lead to the card being deleted */
             val reloadRequired =
-                result.data?.getBooleanExtra(NoteEditor.RELOAD_REQUIRED_EXTRA_KEY, false) == true
+                result.data?.getBooleanExtra(NoteEditorFragment.RELOAD_REQUIRED_EXTRA_KEY, false) == true
             if (reloadRequired) {
                 performReload()
             }
@@ -551,7 +554,7 @@ abstract class AbstractFlashcardViewer :
 
         setContentView(getContentViewAttr(fullscreenMode))
 
-        val port = ReviewerFragment.getServerPort()
+        val port = StudyScreenRepository.getServerPort()
         server = AnkiServer(this, port).also { it.start() }
         // Make ACTION_PROCESS_TEXT for in-app searching possible on > Android 4.0
         delegate.isHandleNativeActionModesEnabled = true
@@ -797,7 +800,7 @@ abstract class AbstractFlashcardViewer :
                 text =
                     resources.getString(
                         R.string.delete_note_message,
-                        Utils.stripHTMLAndSpecialFields(currentCard!!.question(getColUnsafe, true)).trim(),
+                        stripHTMLAndSpecialFields(currentCard!!.question(getColUnsafe, true)).trim(),
                     ),
             )
             positiveButton(R.string.dialog_positive_delete) {
@@ -914,12 +917,21 @@ abstract class AbstractFlashcardViewer :
                 layout.setOnClickListener(flipCardListener)
             } else {
                 val handler = Handler(Looper.getMainLooper())
-                layout.setOnTouchListener { _, event ->
+                layout.setOnTouchListener { view, event ->
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
                             handler.postDelayed({
                                 flipCardListener.onClick(layout)
                             }, minimalClickSpeed.toLong())
+
+                            showMinimalClickHint()
+                            false
+                        }
+
+                        MotionEvent.ACTION_MOVE -> {
+                            if (!view.isTouchWithinBounds(event)) {
+                                handler.removeCallbacksAndMessages(null)
+                            }
                             false
                         }
 
@@ -1829,6 +1841,31 @@ abstract class AbstractFlashcardViewer :
         }
     }
 
+    private fun showMinimalClickHint() {
+        if (minimalClickPrefHintShown) {
+            return
+        }
+
+        minimalClickPrefHintShown = true
+
+        showSnackbar(
+            getString(
+                R.string.show_answer_hint_long_press,
+                getString(R.string.pref_show_answer_long_press_time),
+            ),
+            minimalClickSpeed + Reviewer.ACTION_SNACKBAR_TIME,
+        ) {
+            setAction(R.string.settings) {
+                val settingsIntent =
+                    PreferencesActivity.getIntent(
+                        this@AbstractFlashcardViewer,
+                        AccessibilitySettingsFragment::class,
+                    )
+                startActivity(settingsIntent)
+            }
+        }
+    }
+
     // ----------------------------------------------------------------------------
     // INNER CLASSES
     // ----------------------------------------------------------------------------
@@ -2702,6 +2739,8 @@ abstract class AbstractFlashcardViewer :
 
         // maximum screen distance from initial touch where we will consider a click related to the touch
         private const val CLICK_ACTION_THRESHOLD = 200
+
+        private var minimalClickPrefHintShown = false
 
         /**
          * @return if [gesture] is a swipe, a transition to the same direction of the swipe

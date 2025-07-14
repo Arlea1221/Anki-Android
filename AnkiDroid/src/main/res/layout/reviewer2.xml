@@ -22,7 +22,10 @@
             android:id="@+id/tools_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="?actionBarSize">
+            android:minHeight="?actionBarSize"
+            android:gravity="center_vertical"
+            android:layout_marginHorizontal="4dp"
+            >
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/back_button"
@@ -40,10 +43,18 @@
                 android:id="@+id/counts_flow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="new_count,lrn_count,rev_count"
+                app:constraint_referenced_ids="new_count,lrn_count,rev_count,timer"
+                app:flow_wrapMode="chain"
+                app:flow_verticalStyle="packed"
+                app:flow_horizontalStyle="packed"
+                app:flow_horizontalAlign="start"
+                app:flow_verticalGap="4dp"
+                app:flow_maxElementsWrap="3"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/back_button"
-                app:layout_constraintBottom_toTopOf="@id/timer"
+                app:layout_constraintEnd_toStartOf="@id/reviewer_menu_view"
+                android:layout_marginEnd="12dp"
                 />
 
             <com.google.android.material.textview.MaterialTextView
@@ -77,10 +88,6 @@
                 android:id="@+id/timer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/counts_flow"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/counts_flow"
-                app:layout_constraintStart_toStartOf="@id/counts_flow"
                 android:visibility="gone"
                 tools:visibility="visible"
                 />
@@ -89,10 +96,9 @@
                 android:id="@+id/reviewer_menu_view"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/rev_count"
+                app:layout_constraintStart_toEndOf="@id/counts_flow"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -111,6 +117,49 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:backgroundTint="@color/white" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/mark_icon"
+                android:layout_width="@dimen/reviewer_mark_flag"
+                android:layout_height="@dimen/reviewer_mark_flag"
+                app:srcCompat="@drawable/ic_mark"
+                android:layout_margin="6dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/flag_icon"
+                android:layout_width="@dimen/reviewer_mark_flag"
+                android:layout_height="@dimen/reviewer_mark_flag"
+                android:layout_gravity="end"
+                android:layout_margin="6dp"
+                tools:srcCompat="@drawable/ic_flag_red"
+                android:visibility="gone"
+                tools:visibility="visible"
+                />
+
+            <com.ichi2.anki.ui.windows.reviewer.AnswerFeedbackView
+                android:id="@+id/wrong_answer_feedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_margin="6dp"
+                app:srcCompat="@drawable/ic_ease_again"
+                android:visibility="gone"
+                tools:visibility="visible"
+                />
+
+            <com.ichi2.anki.ui.windows.reviewer.AnswerFeedbackView
+                android:id="@+id/correct_answer_feedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="6dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:srcCompat="@drawable/ic_ease_good"
+                />
         </com.google.android.material.card.MaterialCardView>
 
         <!-- Use the same card style of the WebView -->
@@ -146,19 +195,22 @@
             android:id="@+id/answer_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginHorizontal="@dimen/reviewer_side_margin"
             tools:visibility="visible">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/show_answer"
+                style="@style/AnswerButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/show_answer"
                 android:textSize="@dimen/reviewer_answer_button_textSize"
                 app:cornerRadius="12dp"
+                android:textColor="@color/white"
                 android:backgroundTint="?showAnswerButtonBackground"
-                tools:visibility="visible"
+                tools:visibility="invisible"
                 />
 
             <LinearLayout
@@ -167,55 +219,60 @@
                 android:layout_width="match_parent"
                 android:minHeight="?minTouchTargetSize"
                 android:visibility="invisible"
-                tools:visibility="invisible"
+                tools:visibility="visible"
                 >
 
-                <com.google.android.material.button.MaterialButton
+                <com.ichi2.anki.ui.windows.reviewer.AnswerButton
                     android:id="@+id/again_button"
                     style="@style/AnswerButton"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="@dimen/answer_button_margin_horizontal"
-                    android:backgroundTint="@color/again_button_bg"
-                    android:text="@string/ease_button_again"
-                    android:textColor="@color/again_button_text"
+                    android:textColor="?againTextColor"
+                    android:backgroundTint="?againBackgroundColor"
                     android:layout_weight="1"
+                    app:easeName="@string/ease_button_again"
+                    tools:nextTime="&lt;1m"
                     />
 
-                <com.google.android.material.button.MaterialButton
+                <com.ichi2.anki.ui.windows.reviewer.AnswerButton
                     android:id="@+id/hard_button"
                     style="@style/AnswerButton"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="@dimen/answer_button_margin_horizontal"
-                    android:backgroundTint="@color/hard_button_bg"
-                    android:text="@string/ease_button_hard"
-                    android:textColor="@color/hard_button_text"
+                    android:textColor="?hardTextColor"
+                    android:backgroundTint="?hardBackgroundColor"
                     android:layout_weight="1"
+                    app:easeName="@string/ease_button_hard"
+                    tools:nextTime="&lt;6m"
+
                     />
 
-                <com.google.android.material.button.MaterialButton
+                <com.ichi2.anki.ui.windows.reviewer.AnswerButton
                     android:id="@+id/good_button"
                     style="@style/AnswerButton"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="@dimen/answer_button_margin_horizontal"
-                    android:backgroundTint="@color/good_button_bg"
-                    android:text="@string/ease_button_good"
-                    android:textColor="@color/good_button_text"
+                    app:easeName="@string/ease_button_good"
+                    android:textColor="?goodTextColor"
+                    android:backgroundTint="?goodBackgroundColor"
                     android:layout_weight="1"
+                    tools:nextTime="&lt;10m"
                     />
 
-                <com.google.android.material.button.MaterialButton
+                <com.ichi2.anki.ui.windows.reviewer.AnswerButton
                     android:id="@+id/easy_button"
                     style="@style/AnswerButton"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/answer_button_margin_horizontal"
-                    android:backgroundTint="@color/easy_button_bg"
-                    android:text="@string/ease_button_easy"
-                    android:textColor="@color/easy_button_text"
+                    app:easeName="@string/ease_button_easy"
+                    android:textColor="?easyTextColor"
+                    android:backgroundTint="?easyBackgroundColor"
                     android:layout_weight="1"
+                    tools:nextTime="4d"
                     />
             </LinearLayout>
         </FrameLayout>

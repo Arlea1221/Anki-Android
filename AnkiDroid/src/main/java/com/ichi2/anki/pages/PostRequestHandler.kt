@@ -24,28 +24,27 @@ import androidx.lifecycle.lifecycleScope
 import anki.collection.OpChanges
 import com.ichi2.anki.CollectionManager
 import com.ichi2.anki.CollectionManager.withCol
-import com.ichi2.anki.NoteEditor
+import com.ichi2.anki.NoteEditorFragment
 import com.ichi2.anki.importAnkiPackageUndoable
 import com.ichi2.anki.importCsvRaw
 import com.ichi2.anki.launchCatchingTask
+import com.ichi2.anki.libanki.Collection
+import com.ichi2.anki.libanki.completeTagRaw
+import com.ichi2.anki.libanki.getCsvMetadataRaw
+import com.ichi2.anki.libanki.getDeckConfigsForUpdateRaw
+import com.ichi2.anki.libanki.getDeckNamesRaw
+import com.ichi2.anki.libanki.getFieldNamesRaw
+import com.ichi2.anki.libanki.getImportAnkiPackagePresetsRaw
+import com.ichi2.anki.libanki.getNotetypeNamesRaw
+import com.ichi2.anki.libanki.sched.computeFsrsParamsRaw
+import com.ichi2.anki.libanki.sched.computeOptimalRetentionRaw
+import com.ichi2.anki.libanki.sched.simulateFsrsReviewRaw
+import com.ichi2.anki.libanki.stats.cardStatsRaw
+import com.ichi2.anki.libanki.stats.getGraphPreferencesRaw
+import com.ichi2.anki.libanki.stats.graphsRaw
+import com.ichi2.anki.libanki.stats.setGraphPreferencesRaw
 import com.ichi2.anki.observability.undoableOp
 import com.ichi2.anki.searchInBrowser
-import com.ichi2.libanki.Collection
-import com.ichi2.libanki.completeTagRaw
-import com.ichi2.libanki.getCsvMetadataRaw
-import com.ichi2.libanki.getDeckConfigsForUpdateRaw
-import com.ichi2.libanki.getDeckNamesRaw
-import com.ichi2.libanki.getFieldNamesRaw
-import com.ichi2.libanki.getImportAnkiPackagePresetsRaw
-import com.ichi2.libanki.getNotetypeNamesRaw
-import com.ichi2.libanki.sched.computeFsrsParamsRaw
-import com.ichi2.libanki.sched.computeOptimalRetentionRaw
-import com.ichi2.libanki.sched.evaluateParamsRaw
-import com.ichi2.libanki.sched.simulateFsrsReviewRaw
-import com.ichi2.libanki.stats.cardStatsRaw
-import com.ichi2.libanki.stats.getGraphPreferencesRaw
-import com.ichi2.libanki.stats.graphsRaw
-import com.ichi2.libanki.stats.setGraphPreferencesRaw
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -82,7 +81,7 @@ val collectionMethods =
         "getDeckConfigsForUpdate" to { bytes -> getDeckConfigsForUpdateRaw(bytes) },
         "computeOptimalRetention" to { bytes -> computeOptimalRetentionRaw(bytes) },
         "computeFsrsParams" to { bytes -> computeFsrsParamsRaw(bytes) },
-        "evaluateParams" to { bytes -> evaluateParamsRaw(bytes) },
+        "evaluateParamsLegacy" to { bytes -> evaluateParamsLegacyRaw(bytes) },
         "simulateFsrsReview" to { bytes -> simulateFsrsReviewRaw(bytes) },
         "getImageForOcclusion" to { bytes -> getImageForOcclusionRaw(bytes) },
         "getImageOcclusionNote" to { bytes -> getImageOcclusionNoteRaw(bytes) },
@@ -91,6 +90,7 @@ val collectionMethods =
         "setSchedulingStates" to { bytes -> setSchedulingStatesRaw(bytes) },
         "getChangeNotetypeInfo" to { bytes -> getChangeNotetypeInfoRaw(bytes) },
         "changeNotetype" to { bytes -> changeNotetypeRaw(bytes) },
+        "importJsonString" to { bytes -> importJsonStringRaw(bytes) },
         "importJsonFile" to { bytes -> importJsonFileRaw(bytes) },
         "congratsInfo" to { bytes -> congratsInfoRaw(bytes) },
         "getImageOcclusionFields" to { bytes -> getImageOcclusionFieldsRaw(bytes) },
@@ -176,7 +176,7 @@ suspend fun FragmentActivity?.handleUiPostRequest(
             launchCatchingTask {
                 // Allow time for toast message to appear before closing editor
                 delay(1000)
-                setResult(NoteEditor.RESULT_UPDATED_IO_NOTE)
+                setResult(NoteEditorFragment.RESULT_UPDATED_IO_NOTE)
                 finish()
             }
         }

@@ -17,6 +17,7 @@ package com.ichi2.anki.ui.windows.reviewer
 
 import android.net.Uri
 import com.ichi2.anki.cardviewer.Gesture
+import com.ichi2.anki.cardviewer.TapGestureMode
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Test
@@ -32,15 +33,19 @@ class GestureParserTest {
         y: Int? = 100,
         deltaX: Int? = 0,
         deltaY: Int? = 0,
+        deltaTime: Int? = 10,
+        touchCount: Int? = 1,
         scrollDirection: String? = null,
     ): Uri =
         mockk {
             every { this@mockk.host } returns host
-            every { getQueryParameter("x") } returns x?.toString()
-            every { getQueryParameter("y") } returns y?.toString()
-            every { getQueryParameter("deltaX") } returns deltaX?.toString()
-            every { getQueryParameter("deltaY") } returns deltaY?.toString()
-            every { getQueryParameter("scrollDirection") } returns scrollDirection
+            every { getQueryParameter(GestureParser.PARAM_X) } returns x?.toString()
+            every { getQueryParameter(GestureParser.PARAM_Y) } returns y?.toString()
+            every { getQueryParameter(GestureParser.PARAM_DELTA_X) } returns deltaX?.toString()
+            every { getQueryParameter(GestureParser.PARAM_DELTA_Y) } returns deltaY?.toString()
+            every { getQueryParameter(GestureParser.PARAM_DELTA_TIME) } returns deltaTime?.toString()
+            every { getQueryParameter(GestureParser.PARAM_TOUCH_COUNT) } returns touchCount?.toString()
+            every { getQueryParameter(GestureParser.PARAM_SCROLL_DIRECTION) } returns scrollDirection
         }
 
     private fun parseGesture(
@@ -51,15 +56,19 @@ class GestureParserTest {
         scrollY: Int = 0,
         measuredWidth: Int = 900,
         measuredHeight: Int = 1500,
+        swipeSensitivity: Float = 1F,
+        gestureMode: TapGestureMode = TapGestureMode.NINE_POINT,
     ): Gesture? =
         GestureParser.parse(
-            uri,
-            isScrolling,
-            scale,
-            scrollX,
-            scrollY,
-            measuredWidth,
-            measuredHeight,
+            uri = uri,
+            isScrolling = isScrolling,
+            scale = scale,
+            scrollX = scrollX,
+            scrollY = scrollY,
+            measuredWidth = measuredWidth,
+            measuredHeight = measuredHeight,
+            swipeSensitivity = swipeSensitivity,
+            gestureMode = gestureMode,
         )
 
     @Test
@@ -71,9 +80,37 @@ class GestureParserTest {
 
     @Test
     fun `parse returns DOUBLE_TAP for doubleTap host`() {
-        val uri = createMockUri(host = "doubleTap")
+        val uri = createMockUri(host = GestureParser.DOUBLE_TAP_HOST)
         val gesture = parseGesture(uri = uri)
         assertEquals(Gesture.DOUBLE_TAP, gesture)
+    }
+
+    @Test
+    fun `Two-finger tap`() {
+        val uri = createMockUri(host = GestureParser.MULTI_FINGER_HOST, touchCount = 2)
+        val gesture = parseGesture(uri = uri)
+        assertEquals(Gesture.TWO_FINGER_TAP, gesture)
+    }
+
+    @Test
+    fun `Three-finger tap`() {
+        val uri = createMockUri(host = GestureParser.MULTI_FINGER_HOST, touchCount = 3)
+        val gesture = parseGesture(uri = uri)
+        assertEquals(Gesture.THREE_FINGER_TAP, gesture)
+    }
+
+    @Test
+    fun `Four-finger tap`() {
+        val uri = createMockUri(host = GestureParser.MULTI_FINGER_HOST, touchCount = 4)
+        val gesture = parseGesture(uri = uri)
+        assertEquals(Gesture.FOUR_FINGER_TAP, gesture)
+    }
+
+    @Test
+    fun `Five+ finger taps are ignored`() {
+        val uri = createMockUri(host = GestureParser.MULTI_FINGER_HOST, touchCount = 5)
+        val gesture = parseGesture(uri = uri)
+        assertEquals(expected = null, actual = gesture)
     }
 
     @Test
@@ -87,116 +124,169 @@ class GestureParserTest {
 
     @Test
     fun `parse detects SWIPE_RIGHT`() {
-        val uri = createMockUri(deltaX = 20, deltaY = 5)
+        val uri = createMockUri(deltaX = 150, deltaY = 5)
         val gesture = parseGesture(uri = uri)
         assertEquals(Gesture.SWIPE_RIGHT, gesture)
     }
 
     @Test
     fun `parse detects SWIPE_LEFT`() {
-        val uri = createMockUri(deltaX = -25, deltaY = 10)
+        val uri = createMockUri(deltaX = -150, deltaY = 10)
         val gesture = parseGesture(uri = uri)
         assertEquals(Gesture.SWIPE_LEFT, gesture)
     }
 
     @Test
     fun `parse detects SWIPE_DOWN`() {
-        val uri = createMockUri(deltaX = 5, deltaY = 20)
+        val uri = createMockUri(deltaX = 5, deltaY = 125)
         val gesture = parseGesture(uri = uri)
         assertEquals(Gesture.SWIPE_DOWN, gesture)
     }
 
     @Test
     fun `parse detects SWIPE_UP`() {
-        val uri = createMockUri(deltaX = 10, deltaY = -25)
+        val uri = createMockUri(deltaX = 10, deltaY = -150)
         val gesture = parseGesture(uri = uri)
         assertEquals(Gesture.SWIPE_UP, gesture)
     }
 
     @Test
     fun `parse ignores horizontal swipe if content can scroll horizontally`() {
-        val uri = createMockUri(deltaX = 25, scrollDirection = "h")
+        val uri = createMockUri(deltaX = 150, scrollDirection = "h")
         val gesture = parseGesture(uri = uri)
         assertNull(gesture, "Horizontal swipe should be ignored")
     }
 
     @Test
     fun `parse ignores vertical swipe if content can scroll vertically`() {
-        val uri = createMockUri(deltaY = 25, scrollDirection = "v")
+        val uri = createMockUri(deltaY = 150, scrollDirection = "v")
         val gesture = parseGesture(uri = uri)
         assertNull(gesture, "Vertical swipe should be ignored")
     }
 
     @Test
     fun `parse swipe threshold is adjusted by scale`() {
-        val uri = createMockUri(x = 50, y = 50, deltaX = 10)
+        val uri = createMockUri(x = 50, y = 50, deltaX = 100)
         val gesture = parseGesture(uri = uri, scale = 2.0f)
         assertEquals(Gesture.SWIPE_RIGHT, gesture)
     }
 
-    // Tap tests
-
+    // Nine points tests
     @Test
-    fun `parse detects TAP_TOP_LEFT`() {
+    fun `parse detects nine points TAP_TOP_LEFT`() {
         val uri = createMockUri(x = 150, y = 250)
         val gesture = parseGesture(uri = uri)
         assertEquals(Gesture.TAP_TOP_LEFT, gesture)
     }
 
     @Test
-    fun `parse detects TAP_TOP`() {
+    fun `parse detects nine points TAP_TOP`() {
         val uri = createMockUri(x = 450, y = 250)
         val gesture = parseGesture(uri = uri)
         assertEquals(Gesture.TAP_TOP, gesture)
     }
 
     @Test
-    fun `parse detects TAP_TOP_RIGHT`() {
+    fun `parse detects nine points TAP_TOP_RIGHT`() {
         val uri = createMockUri(x = 750, y = 250)
         val gesture = parseGesture(uri = uri)
         assertEquals(Gesture.TAP_TOP_RIGHT, gesture)
     }
 
     @Test
-    fun `parse detects TAP_LEFT`() {
+    fun `parse detects nine points TAP_LEFT`() {
         val uri = createMockUri(x = 150, y = 750)
         val gesture = parseGesture(uri = uri)
         assertEquals(Gesture.TAP_LEFT, gesture)
     }
 
     @Test
-    fun `parse detects TAP_CENTER`() {
+    fun `parse detects nine points TAP_CENTER`() {
         val uri = createMockUri(x = 450, y = 750)
         val gesture = parseGesture(uri = uri)
         assertEquals(Gesture.TAP_CENTER, gesture)
     }
 
     @Test
-    fun `parse detects TAP_RIGHT`() {
+    fun `parse detects nine points TAP_RIGHT`() {
         val uri = createMockUri(x = 750, y = 750)
         val gesture = parseGesture(uri = uri)
         assertEquals(Gesture.TAP_RIGHT, gesture)
     }
 
     @Test
-    fun `parse detects TAP_BOTTOM_LEFT`() {
+    fun `parse detects nine points TAP_BOTTOM_LEFT`() {
         val uri = createMockUri(x = 150, y = 1250)
         val gesture = parseGesture(uri = uri)
         assertEquals(Gesture.TAP_BOTTOM_LEFT, gesture)
     }
 
     @Test
-    fun `parse detects TAP_BOTTOM`() {
+    fun `parse detects nine points TAP_BOTTOM`() {
         val uri = createMockUri(x = 450, y = 1250)
         val gesture = parseGesture(uri = uri)
         assertEquals(Gesture.TAP_BOTTOM, gesture)
     }
 
     @Test
-    fun `parse detects TAP_BOTTOM_RIGHT`() {
+    fun `parse detects nine points TAP_BOTTOM_RIGHT`() {
         val uri = createMockUri(x = 750, y = 1250)
         val gesture = parseGesture(uri = uri)
         assertEquals(Gesture.TAP_BOTTOM_RIGHT, gesture)
+    }
+
+    // Four points tests
+
+    @Test
+    fun `parse detects four points TAP_TOP`() {
+        val uri = createMockUri(x = 750, y = 100)
+        val gesture =
+            parseGesture(
+                uri = uri,
+                measuredWidth = 1000,
+                measuredHeight = 1000,
+                gestureMode = TapGestureMode.FOUR_POINT,
+            )
+        assertEquals(Gesture.TAP_TOP, gesture)
+    }
+
+    @Test
+    fun `parse detects four points TAP_RIGHT`() {
+        val uri = createMockUri(x = 900, y = 750)
+        val gesture =
+            parseGesture(
+                uri = uri,
+                measuredWidth = 1000,
+                measuredHeight = 1000,
+                gestureMode = TapGestureMode.FOUR_POINT,
+            )
+        assertEquals(Gesture.TAP_RIGHT, gesture)
+    }
+
+    @Test
+    fun `parse detects four points TAP_BOTTOM`() {
+        val uri = createMockUri(x = 250, y = 900)
+        val gesture =
+            parseGesture(
+                uri = uri,
+                measuredWidth = 1000,
+                measuredHeight = 1000,
+                gestureMode = TapGestureMode.FOUR_POINT,
+            )
+        assertEquals(Gesture.TAP_BOTTOM, gesture)
+    }
+
+    @Test
+    fun `parse detects four points TAP_LEFT`() {
+        val uri = createMockUri(x = 100, y = 250)
+        val gesture =
+            parseGesture(
+                uri = uri,
+                measuredWidth = 1000,
+                measuredHeight = 1000,
+                gestureMode = TapGestureMode.FOUR_POINT,
+            )
+        assertEquals(Gesture.TAP_LEFT, gesture)
     }
 
     // Tap with scroll & scale
@@ -214,4 +304,26 @@ class GestureParserTest {
         val gesture = parseGesture(uri = uri, scale = 2.0f)
         assertEquals(Gesture.TAP_CENTER, gesture)
     }
+
+    // region Swipe sensitivity
+    @Test
+    fun `reduced swipe sensitivity`() {
+        val uri = createMockUri(x = 450, y = 0, deltaY = -150)
+        val gesture1 = parseGesture(uri = uri)
+        assertEquals(Gesture.SWIPE_UP, gesture1)
+
+        val gesture2 = parseGesture(uri = uri, swipeSensitivity = 0.2F)
+        assertEquals(Gesture.TAP_TOP, gesture2)
+    }
+
+    @Test
+    fun `increased swipe sensitivity`() {
+        val uri = createMockUri(x = 450, y = 0, deltaY = -90)
+        val gesture1 = parseGesture(uri = uri)
+        assertEquals(Gesture.TAP_TOP, gesture1)
+
+        val gesture2 = parseGesture(uri = uri, swipeSensitivity = 1.8F)
+        assertEquals(Gesture.SWIPE_UP, gesture2)
+    }
+    //endregion
 }

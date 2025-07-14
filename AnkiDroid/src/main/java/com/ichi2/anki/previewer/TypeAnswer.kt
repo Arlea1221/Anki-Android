@@ -18,10 +18,10 @@ package com.ichi2.anki.previewer
 import android.os.LocaleList
 import com.ichi2.anki.CollectionManager.withCol
 import com.ichi2.anki.common.annotations.NeedsTest
+import com.ichi2.anki.libanki.Card
+import com.ichi2.anki.libanki.Field
 import com.ichi2.anki.servicelayer.LanguageHintService
 import com.ichi2.anki.servicelayer.LanguageHintService.languageHint
-import com.ichi2.libanki.Card
-import com.ichi2.libanki.Field
 import org.intellij.lang.annotations.Language
 import org.jetbrains.annotations.VisibleForTesting
 
@@ -41,6 +41,9 @@ class TypeAnswer private constructor(
     private val field: Field,
     var expectedAnswer: String,
 ) {
+    val font = field.font
+    val fontSize = field.fontSize
+
     /** a field property specific to AnkiDroid that allows to automatically select
      *   a language for the keyboard. @see [LanguageHintService] */
     val imeHintLocales: LocaleList? by lazy {
@@ -48,12 +51,10 @@ class TypeAnswer private constructor(
     }
 
     suspend fun answerFilter(typedAnswer: String = ""): String {
-        val typeFont = field.font
-        val typeSize = field.fontSize
         val answerComparison = withCol { compareAnswer(expectedAnswer, provided = typedAnswer, combining = combining) }
 
         @Language("HTML")
-        val repl = """<div style="font-family: '$typeFont'; font-size: ${typeSize}px">$answerComparison</div>"""
+        val repl = """<div style="font-family: '$font'; font-size: ${fontSize}px">$answerComparison</div>"""
         return typeAnsRe.replace(text, repl)
     }
 

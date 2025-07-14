@@ -17,23 +17,21 @@
 package com.ichi2.testutils
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatDelegate
 import com.ichi2.anki.CollectionManager
 import com.ichi2.anki.ioDispatcher
 import com.ichi2.anki.isCollectionEmpty
-import com.ichi2.libanki.Card
-import com.ichi2.libanki.CardType
-import com.ichi2.libanki.Collection
-import com.ichi2.libanki.Consts
-import com.ichi2.libanki.DeckConfig
-import com.ichi2.libanki.DeckId
-import com.ichi2.libanki.Note
-import com.ichi2.libanki.NotetypeJson
-import com.ichi2.libanki.Notetypes
-import com.ichi2.libanki.QueueType
-import com.ichi2.libanki.exception.ConfirmModSchemaException
+import com.ichi2.anki.libanki.Card
+import com.ichi2.anki.libanki.CardType
+import com.ichi2.anki.libanki.Collection
+import com.ichi2.anki.libanki.Consts
+import com.ichi2.anki.libanki.DeckConfig
+import com.ichi2.anki.libanki.DeckId
+import com.ichi2.anki.libanki.Note
+import com.ichi2.anki.libanki.NotetypeJson
+import com.ichi2.anki.libanki.Notetypes
+import com.ichi2.anki.libanki.QueueType
+import com.ichi2.anki.libanki.exception.ConfirmModSchemaException
 import com.ichi2.testutils.ext.addNote
-import com.ichi2.utils.LanguageUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
@@ -192,20 +190,6 @@ interface TestClass {
     /** Ensures [isCollectionEmpty] returns `false` */
     fun ensureNonEmptyCollection() {
         addNotes(1)
-    }
-
-    /**
-     * Closes and reopens the backend using the provided [language], typically for
-     * [CollectionManager.TR] calls
-     *
-     * This does not set the [application locales][AppCompatDelegate.setApplicationLocales]
-     *
-     * @param language tag in the form: `de` or `zh-CN`
-     */
-    suspend fun Collection.reopenWithLanguage(language: String) {
-        LanguageUtil.setDefaultBackendLanguages(language)
-        CollectionManager.discardBackend()
-        CollectionManager.getColUnsafe()
     }
 
     fun selectDefaultDeck() {

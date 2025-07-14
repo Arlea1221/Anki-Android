@@ -27,12 +27,14 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.parseAsHtml
 import androidx.fragment.app.Fragment
+import com.google.android.material.appbar.MaterialToolbar
 import com.ichi2.anki.AnkiActivity
 import com.ichi2.anki.AnkiDroidApp
 import com.ichi2.anki.BuildConfig
 import com.ichi2.anki.Info
 import com.ichi2.anki.R
 import com.ichi2.anki.launchCatchingTask
+import com.ichi2.anki.scheduling.Fsrs
 import com.ichi2.anki.servicelayer.DebugInfoService
 import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.showThemedToast
@@ -47,16 +49,15 @@ import java.util.Date
 import java.util.Locale
 import net.ankiweb.rsdroid.BuildConfig as BackendBuildConfig
 
-class AboutFragment :
-    Fragment(R.layout.about_layout),
-    TitleProvider {
-    override val title: CharSequence
-        get() = getString(R.string.pref_cat_about_title)
-
+class AboutFragment : Fragment(R.layout.about_layout) {
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
+        view.findViewById<MaterialToolbar>(R.id.toolbar).apply {
+            setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
+        }
+
         // Version date
         val apkBuildDate =
             SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), "d MMM yyyy"))
@@ -72,7 +73,9 @@ class AboutFragment :
             "(anki " + BackendBuildConfig.ANKI_DESKTOP_VERSION + " / " + BackendBuildConfig.ANKI_COMMIT_HASH.subSequence(0, 8) + ")"
 
         // FSRS version text
-        view.findViewById<TextView>(R.id.about_fsrs).text = "(FSRS ${BackendBuildConfig.FSRS_VERSION})"
+        view.findViewById<TextView>(R.id.about_fsrs).text = Fsrs.displayVersion ?.let { version ->
+            "($version)"
+        } ?: ""
 
         // Logo secret
         view

@@ -29,11 +29,12 @@ import com.ichi2.anki.cardviewer.MediaErrorBehavior
 import com.ichi2.anki.cardviewer.MediaErrorHandler
 import com.ichi2.anki.cardviewer.MediaErrorListener
 import com.ichi2.anki.launchCatchingIO
+import com.ichi2.anki.libanki.Card
+import com.ichi2.anki.libanki.TtsPlayer
+import com.ichi2.anki.multimedia.getAvTag
+import com.ichi2.anki.multimedia.replaceAvRefsWithPlayButtons
 import com.ichi2.anki.pages.AnkiServer
 import com.ichi2.anki.pages.PostRequestHandler
-import com.ichi2.libanki.Card
-import com.ichi2.libanki.Sound
-import com.ichi2.libanki.TtsPlayer
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -90,7 +91,7 @@ abstract class CardViewerViewModel(
 
     fun playSoundFromUrl(url: String) {
         launchCatchingIO {
-            Sound.getAvTag(currentCard.await(), url)?.let {
+            getAvTag(currentCard.await(), url)?.let {
                 cardMediaPlayer.playOne(it)
             }
         }
@@ -106,21 +107,15 @@ abstract class CardViewerViewModel(
      *************************************** Internal methods ***************************************
      ********************************************************************************************* */
 
-    protected abstract suspend fun typeAnsFilter(
-        text: String,
-        typedAnswer: String? = null,
-    ): String
+    protected abstract suspend fun typeAnsFilter(text: String): String
 
-    private suspend fun bodyClass(): String = bodyClassForCardOrd(currentCard.await().ord)
+    private suspend fun bodyClass() = bodyClassForCardOrd(currentCard.await().ord)
 
     /** From the [desktop code](https://github.com/ankitects/anki/blob/1ff55475b93ac43748d513794bcaabd5d7df6d9d/qt/aqt/reviewer.py#L358) */
-    private suspend fun mungeQA(
-        text: String,
-        typedAnswer: String? = null,
-    ): String = typeAnsFilter(prepareCardTextForDisplay(text), typedAnswer)
+    private suspend fun mungeQA(text: String) = typeAnsFilter(prepareCardTextForDisplay(text))
 
     private suspend fun prepareCardTextForDisplay(text: String): String =
-        Sound.addPlayButtons(
+        replaceAvRefsWithPlayButtons(
             text = withCol { media.escapeMediaFilenames(text) },
             renderOutput = currentCard.await().let { card -> withCol { card.renderOutput(this) } },
         )
@@ -146,13 +141,13 @@ abstract class CardViewerViewModel(
      *
      * @see [stdHtml]
      */
-    protected open suspend fun showAnswer(typedAnswer: String? = null) {
+    protected open suspend fun showAnswer() {
         Timber.v("showAnswer()")
         showingAnswer.emit(true)
 
         val card = currentCard.await()
         val answerData = withCol { card.answer(this) }
-        val answer = mungeQA(answerData, typedAnswer)
+        val answer = mungeQA(answerData)
 
         eval.emit("_showAnswer(${Json.encodeToString(answer)}, '${bodyClass()}');")
     }
