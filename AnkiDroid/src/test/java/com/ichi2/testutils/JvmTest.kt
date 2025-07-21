@@ -21,11 +21,16 @@ import androidx.annotation.CallSuper
 import com.ichi2.anki.CollectionManager
 import com.ichi2.anki.common.time.MockTime
 import com.ichi2.anki.common.time.TimeManager
+import com.ichi2.anki.ioDispatcher
 import com.ichi2.anki.libanki.Collection
 import com.ichi2.anki.libanki.Storage
+import com.ichi2.anki.libanki.testutils.AnkiTest
 import com.ichi2.anki.observability.ChangeManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import net.ankiweb.rsdroid.BackendException
 import net.ankiweb.rsdroid.testing.RustBackendLoader
@@ -39,7 +44,7 @@ import org.robolectric.junit.rules.TimeoutRule
 import timber.log.Timber
 import timber.log.Timber.Forest.plant
 
-open class JvmTest : TestClass {
+open class JvmTest : AnkiTest {
     @get:Rule
     val timeoutRule: TimeoutRule = TimeoutRule.seconds(60)
 
@@ -49,6 +54,9 @@ open class JvmTest : TestClass {
     private fun maybeSetupBackend() {
         RustBackendLoader.ensureSetup()
     }
+
+    override val collectionManager: CollectionManagerTestAdapter
+        get() = CollectionManagerTestAdapter
 
     override val col: Collection
         get() {
@@ -115,10 +123,20 @@ open class JvmTest : TestClass {
         println("""-- completed test "${testName.methodName}"""")
     }
 
+    override fun setupTestDispatcher(dispatcher: TestDispatcher) {
+        super.setupTestDispatcher(dispatcher)
+        ioDispatcher = dispatcher
+    }
+
     fun <T> assumeThat(
         actual: T,
         matcher: Matcher<T>?,
     ) {
         Assume.assumeThat(actual, matcher)
+    }
+
+    override suspend fun TestScope.runTestInner(testBody: suspend TestScope.() -> Unit) {
+        collectionManager.setTestDispatcher(UnconfinedTestDispatcher(testScheduler))
+        testBody()
     }
 }

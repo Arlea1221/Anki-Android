@@ -46,19 +46,23 @@ import com.ichi2.anki.libanki.Collection
 import com.ichi2.anki.libanki.Note
 import com.ichi2.anki.libanki.NotetypeJson
 import com.ichi2.anki.libanki.Storage
+import com.ichi2.anki.libanki.testutils.AnkiTest
 import com.ichi2.anki.observability.ChangeManager
 import com.ichi2.anki.observability.undoableOp
 import com.ichi2.anki.preferences.sharedPrefs
 import com.ichi2.compat.customtabs.CustomTabActivityHelper
 import com.ichi2.testutils.AndroidTest
+import com.ichi2.testutils.CollectionManagerTestAdapter
 import com.ichi2.testutils.TaskSchedulerRule
-import com.ichi2.testutils.TestClass
 import com.ichi2.testutils.common.FailOnUnhandledExceptionRule
 import com.ichi2.testutils.common.IgnoreFlakyTestsInCIRule
 import com.ichi2.testutils.filter
 import com.ichi2.utils.InMemorySQLiteOpenHelperFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import net.ankiweb.rsdroid.BackendException
 import net.ankiweb.rsdroid.testing.RustBackendLoader
@@ -84,7 +88,7 @@ import timber.log.Timber
 import kotlin.test.assertNotNull
 
 open class RobolectricTest :
-    TestClass,
+    AnkiTest,
     AndroidTest {
     @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
     private fun Any.wait(timeMs: Long) = (this as Object).wait(timeMs)
@@ -112,6 +116,9 @@ open class RobolectricTest :
 
     @get:Rule
     val timeoutRule: TimeoutRule = TimeoutRule.seconds(60)
+
+    override val collectionManager: CollectionManagerTestAdapter
+        get() = CollectionManagerTestAdapter
 
     @Before
     @CallSuper
@@ -520,6 +527,16 @@ open class RobolectricTest :
             }
             throw e
         }
+    }
+
+    override fun setupTestDispatcher(dispatcher: TestDispatcher) {
+        super.setupTestDispatcher(dispatcher)
+        ioDispatcher = dispatcher
+    }
+
+    override suspend fun TestScope.runTestInner(testBody: suspend TestScope.() -> Unit) {
+        collectionManager.setTestDispatcher(UnconfinedTestDispatcher(testScheduler))
+        testBody()
     }
 }
 

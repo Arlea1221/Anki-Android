@@ -17,6 +17,7 @@
 package com.ichi2.anki.browser
 
 import androidx.core.content.edit
+import androidx.lifecycle.SavedStateHandle
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.TurbineTestContext
 import app.cash.turbine.test
@@ -25,8 +26,8 @@ import com.ichi2.anki.CardBrowser
 import com.ichi2.anki.CollectionManager
 import com.ichi2.anki.DeckSpinnerSelection
 import com.ichi2.anki.Flag
+import com.ichi2.anki.NoteEditorActivity
 import com.ichi2.anki.NoteEditorFragment
-import com.ichi2.anki.SingleFragmentActivity
 import com.ichi2.anki.browser.CardBrowserColumn.ANSWER
 import com.ichi2.anki.browser.CardBrowserColumn.CARD
 import com.ichi2.anki.browser.CardBrowserColumn.CHANGED
@@ -48,6 +49,11 @@ import com.ichi2.anki.browser.CardBrowserColumn.SFLD
 import com.ichi2.anki.browser.CardBrowserColumn.TAGS
 import com.ichi2.anki.browser.CardBrowserLaunchOptions.DeepLink
 import com.ichi2.anki.browser.CardBrowserLaunchOptions.SystemContextMenu
+import com.ichi2.anki.browser.CardBrowserViewModel.ChangeMultiSelectMode.SingleSelectCause
+import com.ichi2.anki.browser.CardBrowserViewModel.Companion.STATE_MULTISELECT_VALUES
+import com.ichi2.anki.browser.CardBrowserViewModel.RowSelection
+import com.ichi2.anki.browser.CardBrowserViewModel.ToggleSelectionState.SELECT_ALL
+import com.ichi2.anki.browser.CardBrowserViewModel.ToggleSelectionState.SELECT_NONE
 import com.ichi2.anki.browser.RepositionCardsRequest.ContainsNonNewCardsError
 import com.ichi2.anki.browser.RepositionCardsRequest.RepositionData
 import com.ichi2.anki.export.ExportDialogFragment
@@ -58,6 +64,7 @@ import com.ichi2.anki.libanki.Note
 import com.ichi2.anki.libanki.QueueType
 import com.ichi2.anki.libanki.QueueType.ManuallyBuried
 import com.ichi2.anki.libanki.QueueType.New
+import com.ichi2.anki.libanki.testutils.AnkiTest
 import com.ichi2.anki.model.CardsOrNotes
 import com.ichi2.anki.model.SortType
 import com.ichi2.anki.model.SortType.NO_SORTING
@@ -67,7 +74,6 @@ import com.ichi2.anki.setFlagFilterSync
 import com.ichi2.anki.utils.ext.ifNotZero
 import com.ichi2.testutils.IntentAssert
 import com.ichi2.testutils.JvmTest
-import com.ichi2.testutils.TestClass
 import com.ichi2.testutils.createTransientDirectory
 import com.ichi2.testutils.ensureNoOpsExecuted
 import com.ichi2.testutils.ensureOpsExecuted
@@ -160,7 +166,7 @@ class CardBrowserViewModelTest : JvmTest() {
             assertThat("All decks should be selected", hasSelectedAllDecks())
 
             val addIntent = CardBrowser.createAddNoteLauncher(this).toIntent(mockIt())
-            val bundle = addIntent.getBundleExtra(SingleFragmentActivity.FRAGMENT_ARGS_EXTRA)
+            val bundle = addIntent.getBundleExtra(NoteEditorActivity.FRAGMENT_ARGS_EXTRA)
             IntentAssert.doesNotHaveExtra(bundle, NoteEditorFragment.EXTRA_DID)
         }
 
@@ -1025,6 +1031,119 @@ class CardBrowserViewModelTest : JvmTest() {
             )
         }
 
+    @Test
+    fun `toggle is 'deselect' if only row is selected`() =
+        runViewModelTest(notes = 1) {
+            this.toggleRowSelectionAtPosition(0)
+            assertThat("toggle selection", flowOfToggleSelectionState.value, equalTo(SELECT_NONE))
+            assertThat("multiselect after toggle", isInMultiSelectMode, equalTo(true))
+        }
+
+    @Test
+    fun `toggle is 'select all' after deselection - multi note`() =
+        runViewModelTest(notes = 2) {
+            this.toggleRowSelectionAtPosition(0)
+            assertThat("toggle selection", flowOfToggleSelectionState.value, equalTo(SELECT_NONE))
+        }
+
+    @Test
+    fun `toggle all - multi note`() =
+        runViewModelTest(notes = 2) {
+            flowOfToggleSelectionState.test {
+                assertThat(awaitItem(), equalTo(SELECT_NONE))
+
+                // select all
+                selectAll()?.join()
+                expectNoEvents()
+                assertThat("multiselect after toggle", isInMultiSelectMode, equalTo(true))
+
+                // select none
+                toggleSelectAllOrNone()?.join()
+                assertThat("toggle selection after select none", awaitItem(), equalTo(SELECT_ALL))
+                assertThat("multiselect after toggle 2", isInMultiSelectMode, equalTo(true))
+
+                // select all manually
+                toggleRowSelectionAtPosition(0).join()
+                expectNoEvents() // remains 'select all'
+
+                // select the last row - emits 'select none'
+                toggleRowSelectionAtPosition(1).join()
+                assertThat("toggle selection after select all manually", awaitItem(), equalTo(SELECT_NONE))
+
+                // end select mode
+                endMultiSelectMode(SingleSelectCause.NavigateBack)
+                assertThat("multiselect after toggle 3", isInMultiSelectMode, equalTo(false))
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `toggleSelectAllOrNone - SELECT_ALL if partial selection`() =
+        runViewModelTest(notes = 3) {
+            flowOfToggleSelectionState.test {
+                assertThat("toggle selection defaults to 'none' before selection", awaitItem(), equalTo(SELECT_NONE))
+                toggleRowSelectionAtPosition(0).join()
+                assertThat("toggle selection defaults to 'all' if 1/3 selected", awaitItem(), equalTo(SELECT_ALL))
+                toggleRowSelectionAtPosition(2).join()
+                expectNoEvents() // "toggle selection remains at 'all' if 2/3 selected"
+
+                toggleSelectAllOrNone()?.join()
+                assertThat(selectedRowCount(), equalTo(3))
+                assertThat("toggle selection defaults to 'none' if 3/3 selected", awaitItem(), equalTo(SELECT_NONE))
+            }
+        }
+
+    @Test
+    fun `tap disables selection mode`() {
+        // although a user can 'select 0' with SELECT_NONE and stay in selection mode,
+        // it felt unintuitive to tap a row/checkbox and not have it disable the selection mode
+
+        runViewModelTest(notes = 3) {
+            this.toggleRowSelectionAtPosition(2)
+            this.toggleRowSelectionAtPosition(1)
+            this.toggleRowSelectionAtPosition(0)
+            this.toggleRowSelectionAtPosition(0)
+            this.toggleRowSelectionAtPosition(1)
+            assertThat("selection -> in multiselect", isInMultiSelectMode, equalTo(true))
+            this.toggleRowSelectionAtPosition(2)
+            assertThat("tap last row -> disable multiselect", isInMultiSelectMode, equalTo(false))
+        }
+    }
+
+    @Test
+    fun `multiselect toggle state is restored`() {
+        val handle = SavedStateHandle()
+        runViewModelTest(savedStateHandle = handle, notes = 1) {
+            assertThat(isInMultiSelectMode, equalTo(false))
+            assertThat("initial multiselect state", handle.get<Boolean>("multiselect"), equalTo(false))
+            selectAll()
+            assertThat("multiselect after select all", handle.get<Boolean>("multiselect"), equalTo(true))
+        }
+
+        runViewModelTest(savedStateHandle = handle) {
+            assertThat("multiselect state restoration", isInMultiSelectMode, equalTo(true))
+            endMultiSelectMode(SingleSelectCause.NavigateBack)
+            assertThat("multiselect after 'end multiselect'", handle.get<Boolean>("multiselect"), equalTo(false))
+        }
+    }
+
+    @Test
+    fun `multiselect checked state is restored`() {
+        val handle = SavedStateHandle()
+        var idOfSelectedRow: CardOrNoteId? = null
+        runViewModelTest(savedStateHandle = handle, notes = 2, manualInit = false) {
+            selectRowAtPosition(1)
+            idOfSelectedRow = selectedRows.single()
+            // HACK: easiest way to add it to the bundle. This is called on destruction
+            handle[STATE_MULTISELECT_VALUES] = generateExpensiveSavedState()
+        }
+
+        runViewModelTest(savedStateHandle = handle, manualInit = false) {
+            assertThat("row is still selected", selectedRows, hasSize(1))
+            assertThat("same row is selected", selectedRows.single(), equalTo(idOfSelectedRow))
+        }
+    }
+
     private fun assertDate(str: String?) {
         // 2025-01-09 @ 18:06
         assertNotNull(str)
@@ -1057,6 +1176,7 @@ class CardBrowserViewModelTest : JvmTest() {
                 preferences = AnkiDroidApp.sharedPreferencesProvider,
                 isFragmented = false,
                 manualInit = manualInit,
+                savedStateHandle = SavedStateHandle(),
             )
         // makes ignoreValuesFromViewModelLaunch work under test
         if (manualInit) {
@@ -1068,6 +1188,7 @@ class CardBrowserViewModelTest : JvmTest() {
     private fun runViewModelTest(
         notes: Int = 0,
         manualInit: Boolean = true,
+        savedStateHandle: SavedStateHandle = SavedStateHandle(),
         testBody: suspend CardBrowserViewModel.() -> Unit,
     ) = runTest {
         for (i in 0 until notes) {
@@ -1082,12 +1203,14 @@ class CardBrowserViewModelTest : JvmTest() {
                 preferences = AnkiDroidApp.sharedPreferencesProvider,
                 isFragmented = false,
                 manualInit = manualInit,
+                savedStateHandle = savedStateHandle,
             )
         // makes ignoreValuesFromViewModelLaunch work under test
         if (manualInit) {
             viewModel.manualInit()
         }
         testBody(viewModel)
+        Timber.d("end runViewModelTest")
     }
 
     companion object {
@@ -1116,6 +1239,7 @@ class CardBrowserViewModelTest : JvmTest() {
                 options = intent,
                 isFragmented = false,
                 preferences = AnkiDroidApp.sharedPreferencesProvider,
+                savedStateHandle = SavedStateHandle(),
             ).apply {
                 invokeInitialSearch()
             }
@@ -1163,7 +1287,7 @@ internal suspend fun CardBrowserViewModel.invokeInitialSearch() {
     Timber.v("initial search completed")
 }
 
-private fun TestClass.assertAllSuspended(context: String) {
+private fun AnkiTest.assertAllSuspended(context: String) {
     val cards = col.findCards("").map { col.getCard(it) }
     assertThat("performance", cards.size, lessThan(10))
 
@@ -1176,7 +1300,7 @@ private fun TestClass.assertAllSuspended(context: String) {
     }
 }
 
-private fun TestClass.assertAllUnsuspended(context: String) {
+private fun AnkiTest.assertAllUnsuspended(context: String) {
     val cards = col.findCards("").map { col.getCard(it) }
     assertThat("performance", cards.size, lessThan(10))
 
@@ -1189,18 +1313,18 @@ private fun TestClass.assertAllUnsuspended(context: String) {
     }
 }
 
-private fun TestClass.suspendAll() {
+private fun AnkiTest.suspendAll() {
     col.findCards("").also { cards ->
         col.sched.suspendCards(col.findCards(""))
         Timber.d("suspended %d cards", cards.size)
     }
 }
 
-private fun TestClass.suspendCards(vararg cardIds: CardId) {
+private fun AnkiTest.suspendCards(vararg cardIds: CardId) {
     col.sched.suspendCards(ids = cardIds.toList())
 }
 
-private fun TestClass.suspendNote(note: Note) {
+private fun AnkiTest.suspendNote(note: Note) {
     col.sched.suspendCards(note.cardIds(col))
 }
 
@@ -1222,3 +1346,12 @@ fun CardBrowserViewModel.setColumn(
 
 val Pair<List<ColumnWithSample>, List<ColumnWithSample>>.allColumns
     get() = this.first + this.second
+
+private fun CardBrowserViewModel.toggleRowSelectionAtPosition(position: Int) = toggleRowSelection(cards[position].toRowSelection())
+
+fun CardBrowserViewModel.selectRowAtPosition(position: Int) {
+    val rowId = this.getRowAtPosition(position)
+    this.selectRowAtPosition(position, rowId.toRowSelection())
+}
+
+fun CardOrNoteId.toRowSelection() = RowSelection(rowId = this, topOffset = 0)

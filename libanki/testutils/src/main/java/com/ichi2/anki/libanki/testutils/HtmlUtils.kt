@@ -14,22 +14,6 @@
  *  this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ichi2.testutils.ext
+package com.ichi2.anki.libanki.testutils
 
-import anki.collection.OpChanges
-import com.ichi2.anki.libanki.Consts
-import com.ichi2.anki.libanki.Note
-import com.ichi2.anki.libanki.NotetypeJson
-import com.ichi2.anki.observability.undoableOp
-import com.ichi2.testutils.TestClass
-
-suspend fun TestClass.addBasicNoteWithOp(
-    fields: List<String> = listOf("foo", "bar"),
-    noteType: NotetypeJson = col.notetypes.byName("Basic")!!,
-): Note =
-    col.newNote(noteType).also { note ->
-        for ((i, field) in fields.withIndex()) {
-            note.setField(i, field)
-        }
-        undoableOp<OpChanges> { col.addNote(note, Consts.DEFAULT_DECK_ID) }
-    }
+fun clozeClass(): String = "class=\"cloze\""
