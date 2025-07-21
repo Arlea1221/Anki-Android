@@ -153,7 +153,6 @@
     <string name="text_content_import_hint">请输入或粘贴文本内容\n爸爸爱你们哦\n你们要加油哦</string>
     <string name="clipboard_auto_filled">已自动填充剪贴板内容</string>
     <string name="please_enter_text_content">请输入文本内容</string>
-    <string name="export_preparation_in_progress">正在准备导出&#8230;</string>
     <string name="export_ready_title">已准备好导出</string>
     <string name="export_send_no_handlers">没有可用处理 apkg 的应用程序。正在保存&#8230;</string>
     <string name="export_save_apkg_successful">已成功保存 apkg 文件</string>
