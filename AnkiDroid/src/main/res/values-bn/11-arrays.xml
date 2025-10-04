@@ -46,19 +46,6 @@
     <string name="error_reporting_choice_always_report">সব সংবাদ</string>
     <string name="error_reporting_choice_never_report">কখনো রিপোর্ট করবেন না</string>
     <string name="error_reporting_choice_ask_user">আমাকে জিজ্ঞাসা করুন</string>
-    <!-- leech_action_labels -->
-    <!-- 01-core:menu_suspend_card -->
-    <!-- new_order_labels -->
-    <!-- cram_deck_conf_order_labels -->
-    <string name="cram_deck_conf_order_oldest_seen_first">প্রাচীনতম প্রথম দেখা</string>
-    <string name="cram_deck_conf_order_random">এলোমেলো</string>
-    <string name="cram_deck_conf_order_increasing_intervals">ক্রমবর্ধমান ব্যবধান</string>
-    <string name="cram_deck_conf_order_decreasing_intervals">Decreasing intervals</string>
-    <string name="cram_deck_conf_order_most_lapsed">বেশিরভাগই ল্যাপসড</string>
-    <string name="cram_deck_conf_order_order_added">অর্ডার যোগ করা হয়েছে</string>
-    <string name="cram_deck_conf_order_order_due">অর্ডার পেন্ডিং</string>
-    <string name="cram_deck_conf_order_latest_added_first">শেষ প্রথম যোগ করা হয়েছে</string>
-    <string name="cram_deck_conf_order_relative_overdueness">আপেক্ষিক অতিরিক্ত ঘনত্ব</string>
     <!-- add_to_cur_labels -->
     <string name="add_to_deck_use_current_deck">বর্তমান ডেক ব্যবহার করুন</string>
     <string name="add_to_deck_decide_by_note_type">নোট টাইপ দ্বারা সিদ্ধান্ত</string>
@@ -93,7 +80,7 @@
     <string name="gesture_flag_purple" maxLength="41">বেগুনি পতাকা টগল করুন</string>
     <string name="gesture_flag_remove" maxLength="41">পতাকা সরান</string>
     <string name="gesture_page_up" maxLength="41">পৃষ্ঠা আপ</string>
-    <string name="gesture_page_down" maxLength="41">Page Down</string>
+    <string name="gesture_page_down" maxLength="41">Page down</string>
     <string name="gesture_toggle_whiteboard" maxLength="41">হোয়াইটবোর্ড টগল করুন</string>
     <string name="gesture_toggle_eraser" maxLength="41">Toggle eraser</string>
     <string name="gesture_show_hint" maxLength="41">ইঙ্গিত দেখান</string>

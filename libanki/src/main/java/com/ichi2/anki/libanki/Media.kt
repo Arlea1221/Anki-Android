@@ -35,13 +35,24 @@ import java.io.File
 open class Media(
     private val col: Collection,
 ) {
-    val dir = col.collectionFiles.mediaFolder
+    /**
+     * The on-disk `collection.media` folder
+     *
+     * @throws UnsupportedOperationException The collection is in-memory
+     */
+    val dir: File by lazy {
+        // Tests are in-memory with no disk access by default
+        // `lazy` enables initialization of the class, failing when the media folder is required
+        col.requireMediaFolder()
+    }
 
     init {
-        Timber.v("dir %s", dir)
-        val file = dir
-        if (!file.exists()) {
-            file.mkdirs()
+        Timber.v("dir %s", col.mediaFolder)
+        col.mediaFolder?.let {
+            if (!it.exists()) {
+                Timber.i("Creating collection.media")
+                it.mkdirs()
+            }
         }
     }
 
@@ -141,7 +152,8 @@ open class Media(
 
     /** Move provided files to the trash. */
     @LibAnkiAlias("trash_files")
-    fun trashFiles(fnames: Iterable<String>) {
+    fun trashFiles(fnames: List<String>) {
+        Timber.i("Deleting %d file(s) from %s", fnames.size, dir)
         col.backend.trashMediaFiles(fnames = fnames)
     }
 

@@ -23,8 +23,8 @@ import com.ichi2.anki.AnkiDroidJsAPI.Companion.SUCCESS_KEY
 import com.ichi2.anki.AnkiDroidJsAPI.Companion.VALUE_KEY
 import com.ichi2.anki.common.time.TimeManager
 import com.ichi2.anki.libanki.CardType
-import com.ichi2.anki.utils.ext.CardExt.setFlag
-import com.ichi2.utils.BASIC_NOTE_TYPE_NAME
+import com.ichi2.anki.libanki.testutils.ext.BASIC_NOTE_TYPE_NAME
+import com.ichi2.anki.libanki.testutils.ext.setFlag
 import net.ankiweb.rsdroid.withoutUnicodeIsolation
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -37,6 +37,8 @@ import kotlin.test.assertEquals
 
 @RunWith(AndroidJUnit4::class)
 class AnkiDroidJsAPITest : RobolectricTest() {
+    override fun getCollectionStorageMode() = CollectionStorageMode.IN_MEMORY_WITH_MEDIA
+
     @Test
     fun ankiGetNextTimeTest() =
         runTest {
@@ -50,7 +52,7 @@ class AnkiDroidJsAPITest : RobolectricTest() {
 
             reviewer.displayCardAnswer()
 
-            waitForAsyncTasksToComplete()
+            advanceRobolectricLooper()
 
             assertThat(
                 getDataFromRequest("nextTime1", jsapi).withoutUnicodeIsolation(),
@@ -82,7 +84,7 @@ class AnkiDroidJsAPITest : RobolectricTest() {
             val jsapi = reviewer.jsApi
             reviewer.displayCardAnswer()
 
-            waitForAsyncTasksToComplete()
+            advanceRobolectricLooper()
 
             val currentCard = reviewer.currentCard!!
 
@@ -191,7 +193,7 @@ class AnkiDroidJsAPITest : RobolectricTest() {
             val reviewer: Reviewer = startReviewer()
             val jsapi = reviewer.jsApi
 
-            waitForAsyncTasksToComplete()
+            advanceRobolectricLooper()
 
             // Displaying question
             assertThat(
@@ -233,7 +235,7 @@ class AnkiDroidJsAPITest : RobolectricTest() {
             val reviewer: Reviewer = startReviewer()
             val jsapi = reviewer.jsApi
 
-            waitForAsyncTasksToComplete()
+            advanceRobolectricLooper()
 
             // ---------------
             // Card mark test
@@ -360,7 +362,7 @@ class AnkiDroidJsAPITest : RobolectricTest() {
             addBasicNote("baz", "bak")
 
             val reviewer: Reviewer = startReviewer()
-            waitForAsyncTasksToComplete()
+            advanceRobolectricLooper()
 
             val jsapi = reviewer.jsApi
             // get card id for testing due
@@ -370,7 +372,7 @@ class AnkiDroidJsAPITest : RobolectricTest() {
 
             // test that card rescheduled for 15 days interval and returned true
             assertThat(getDataFromRequest("setCardDue", jsapi, "15"), equalTo(formatApiResult(true)))
-            waitForAsyncTasksToComplete()
+            advanceRobolectricLooper()
 
             // verify that it did get rescheduled
             // --------------------------------
@@ -397,13 +399,13 @@ class AnkiDroidJsAPITest : RobolectricTest() {
             assertEquals(CardType.Rev, c.type, "Card type before reset")
 
             val reviewer: Reviewer = startReviewer()
-            waitForAsyncTasksToComplete()
+            advanceRobolectricLooper()
 
             val jsapi = reviewer.jsApi
 
             // test that card reset
             assertThat(getDataFromRequest("resetProgress", jsapi), equalTo(formatApiResult(true)))
-            waitForAsyncTasksToComplete()
+            advanceRobolectricLooper()
 
             // verify that card progress reset
             // --------------------------------
@@ -422,7 +424,7 @@ class AnkiDroidJsAPITest : RobolectricTest() {
                 }
 
             val reviewer: Reviewer = startReviewer()
-            waitForAsyncTasksToComplete()
+            advanceRobolectricLooper()
 
             val jsapi = reviewer.jsApi
 

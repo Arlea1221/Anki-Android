@@ -124,6 +124,8 @@
     <string name="multimedia_editor_failed">Не може да отвори редактор на мультимедия</string>
     <!-- Multimedia - Audio View -->
     <string name="multimedia_editor_audio_permission_denied">Разрешението за аудиозапис е отменено</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="recording_permission_denied_message">Microphone permission is necessary for the “Record voice” feature. Please grant it in the app settings.</string>
     <!-- Database Integrity Check -->
     <string name="integrity_check_startup_title">AnkiDroid е обновен</string>
     <string name="integrity_check_startup_content">AnkiDroid се надгради. Това надграждане включва поправки за възможни проблеми с базата данни и ви съветваме да започнете проверка на базата данни сега.</string>
@@ -201,8 +203,6 @@
     <string name="import_deck_package">Пакет тесте (.apkg)</string>
     <string name="import_collection_package">Пакет на колекция (.colpkg)</string>
     <string name="import_csv">Текстов файл (.txt, .csv)</string>
-    <!-- Deck selection dialog -->
-    <string name="cannot_create_subdeck_for_all_decks">You cannot create a subdeck for all decks</string>
     <!-- scoped storage -->
     <string name="backup_your_collection">Резервно копие на колекцията ви</string>
     <string name="backup_collection_message">Не сте правили резервно копие на колекцията си от известно време. Трябва да направите това сега, за да предотвратите загуба на данни</string>

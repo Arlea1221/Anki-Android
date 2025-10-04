@@ -121,6 +121,8 @@
     <string name="multimedia_editor_failed">打开多媒体编辑器失败</string>
     <!-- Multimedia - Audio View -->
     <string name="multimedia_editor_audio_permission_denied">录音权限被拒绝</string>
+    <string name="permission_denied">权限被拒绝</string>
+    <string name="recording_permission_denied_message">麦克风权限是\"录制声音\"功能所必需的。请在应用程序设置中授予它。</string>
     <!-- Database Integrity Check -->
     <string name="integrity_check_startup_title">AnkiDroid 已升级</string>
     <string name="integrity_check_startup_content">AnkiDroid 已升级。此升级可能修复了一些数据库问题，我们建议您现在开始检查数据库。</string>
@@ -163,7 +165,7 @@
     <string name="help_title_get_help">获取帮助</string>
     <string name="help_item_mailing_list">邮件列表</string>
     <string name="help_item_reddit">Reddit</string>
-    <string name="help_item_report_bug">报告 Bug</string>
+    <string name="help_item_report_bug">报告程序缺陷</string>
     <string name="help_title_support_ankidroid" maxLength="28">支持 AnkiDroid</string>
     <string name="help_item_support_opencollective_donate">捐赠</string>
     <string name="help_item_support_develop_ankidroid">开发</string>
@@ -197,9 +199,7 @@
     <string name="import_deck_package">牌组包（.apkg）</string>
     <string name="import_collection_package">集合文件（.colpkg）</string>
     <string name="import_csv">文本文件(.txt, .csv)</string>
-    <string name="import_text_content">文本内容</string>
-    <!-- Deck selection dialog -->
-    <string name="cannot_create_subdeck_for_all_decks">您不能为所有牌组创建子牌组</string>
+
     <!-- scoped storage -->
     <string name="backup_your_collection">备份你的集合</string>
     <string name="backup_collection_message">您有一段时间没有备份您的集合了。您应该立即备份以防止数据丢失。</string>

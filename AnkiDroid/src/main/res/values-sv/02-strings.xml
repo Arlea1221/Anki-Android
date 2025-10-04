@@ -65,6 +65,18 @@
     <string name="save_whiteboard" maxLength="28">Spara whiteboarden</string>
     <string name="enable_stylus" maxLength="28">Aktivera pekpenna</string>
     <string name="disable_stylus">Inaktivera pekpenna</string>
+    <string name="eraser" maxLength="28">Eraser</string>
+    <string name="add_brush" maxLength="28">Add brush</string>
+    <string name="whiteboard_align_left" comment="Option to align the whiteboard toolbar on the left" maxLength="28">Left</string>
+    <string name="whiteboard_align_bottom" comment="Option to align the whiteboard toolbar on the bottom" maxLength="28">Bottom</string>
+    <string name="whiteboard_align_right" comment="Option to align the whiteboard toolbar on the right" maxLength="28">Right</string>
+    <string name="whiteboard_clear" comment="Button text to clear the whiteboard" maxLength="28">Clear</string>
+    <string name="whiteboard_more_options" comment="Tooltip of the whiteboard \'More\' button" maxLength="28">More options</string>
+    <string name="whiteboard_remove_brush_message">Are you sure you want to remove this brush from your palette?</string>
+    <string name="whiteboard_ink_eraser" comment="Title of the whiteboard Ink eraser">Ink</string>
+    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">Stroke</string>
+    <string name="stylus_mode" comment="Title of the menu item that toggles the whiteboard stylus mode" maxLength="28">Stylus mode</string>
+    <string name="cannot_remove_last_brush_message">The last brush may not be removed</string>
     <string name="enable_whiteboard" maxLength="28">Aktivera whiteboard</string>
     <string name="disable_whiteboard">Avaktivera whiteboard</string>
     <string name="show_whiteboard">Aktivera whiteboard</string>
@@ -83,6 +95,7 @@
     <string name="webview_crash_fatal">Kritiskt fel: WebViewern kraschade. Orsak: %s</string>
     <string name="webview_crash_loop_dialog_title">Systemfel hos WebViewern</string>
     <string name="webview_crash_loop_dialog_content">WebViewern kunde inte hämta kortet \'%1$s\'.\n %2$s</string>
+    <string name="slide_to_cancel" comment="Message shown when pressing the record button">Slide to cancel</string>
     <string name="filter_by_flags" maxLength="41">Flaggor</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">Building list of tags&#8230;</string>
@@ -107,7 +120,7 @@
     <string name="field_remapping">%1$s (från \"%2$s\")</string>
     <string name="confirm_map_cards_to_nothing">Alla kort som inte kopplar till något kommer att tas bort. Om en not inte har några kvarvarande kort, kommer den att försvinna. Är du säker på att du vill fortsätta?</string>
     <string name="missing_note_type">Anteckningstyp saknas</string>
-    <string name="card_previewer_empty_front_indicator" comment="Extra text appended onto a tab title in the card previewer so that the user can see at a glance whether a card has no front.">%1$s (empty)</string>
+    <string name="card_previewer_empty_front_indicator" comment="Extra text appended onto a tab title in the card previewer so that the user can see at a glance whether a card has no front.">%1$s (tom)</string>
     <!-- Image cropper -->
     <string name="image_cropper_action_rotate" maxLength="28" comment="Action in image cropper screen">Rotate</string>
     <string name="image_cropper_action_flip" maxLength="28" comment="Action in image cropper screen">Flip</string>
@@ -180,11 +193,6 @@
     <string name="tag_editor_add_feedback">Tryck på “%2$s” för att bekräfta att lägga till “%1$s”</string>
     <string name="tag_editor_add_feedback_existing">Befintlig etikett “%1$s” vald</string>
     <!-- Time spans -->
-    <string name="reminder_title">Glöm inte att studera idag!</string>
-    <plurals name="reminder_text">
-        <item quantity="one">%2$d kort att repetera i %1$s</item>
-        <item quantity="other">%2$d kort att repetera i %1$s</item>
-    </plurals>
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">Fel vid delning av apkg-fil</string>
     <!-- Import and export v2 feedback -->
@@ -261,7 +269,7 @@
     <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
     <string name="percentage">%s%%</string>
     <string name="download_deck">Hämta kortlek</string>
-    <string name="open_in_browser" comment="Label of a button inviting to open ankiweb\'s shared deck page if automated download failed">Open in Browser</string>
+    <string name="open_in_browser" comment="Label of a button inviting to open ankiweb\'s shared deck page if automated download failed">Öppna i webbläsare</string>
     <string name="try_again">Försök igen</string>
     <string name="cancel_download">Avbryt hämtning</string>
     <string name="cancel_download_question_title">Avbryt hämtning?</string>
@@ -321,14 +329,17 @@
     <string name="deleting_selected_notes">Raderar markerade noter</string>
     <string name="tts_voices_default_text" comment="The default text to speak when selecting     Text to speech voices">Tap a voice to listen</string>
     <string name="tts_voices_selected_voice_should_be_installed" comment="If a voice has been tapped, is installable but not installed, we want to inform the user that they should install it for the best experience There will also be an option to use it without downloading">Voice should be installed before use</string>
-    <string name="tts_voices_use_selected_voice_without_install" comment="A user has been informed that a voice should be installed before use. This is text on a snackbar button which allows them to use the voice without installing it">Use anyway</string>
+    <string name="tts_voices_use_selected_voice_without_install" comment="A user has been informed that a voice should be installed before use. This is text on a snackbar button which allows them to use the voice without installing it">Använd ändå</string>
     <string name="tts_voices_playback_error_new" comment="an error occurred when playing a text to speech voice. The parameter is a technical error code such as \'ERROR_NOT_INSTALLED_YET\' or \'ERROR_NETWORK_TIMEOUT\'">Fel (%s) text-till-tal</string>
     <!-- Chips should probably be in a separate file, due to the additional length req -->
     <string name="tts_voices_chip_filter_to_internet" comment="     Filters a list of text to speech voices, to enable/disable voices which require the internet to     function.     This is on a chip control, so keep the text short, ideally one word">Internet</string>
-    <string name="tts_voices_chip_filter_to_installable_audio" comment="     Displays a list of Text to Speech voices which should be downloaded/installed before use     This is on a chip control, so keep the text short, ideally one word">Install</string>
+    <string name="tts_voices_chip_filter_to_installable_audio" comment="     Displays a list of Text to Speech voices which should be downloaded/installed before use     This is on a chip control, so keep the text short, ideally one word">Installera</string>
     <string name="tts_voices_failed_opening_tts_system_settings" comment="error message if opening the system text to speech settings fails">Failed to open text to speech settings</string>
     <string name="shared_decks_login_required">Logga in för att ladda ner fler kortlekar</string>
     <string name="deck_description_field_hint">Beskrivning</string>
+    <string name="deck_description_saved">Description updated</string>
+    <string name="format_deck_description_as_markdown">Format as Markdown</string>
+    <string name="help_button_content_description">Open help for ‘%s’</string>
     <string name="failed_to_copy">Misslyckades att kopiera</string>
     <string name="card_browser_unavailable_when_notes_mode">Ej tillgängligt i ”Noter”-läget</string>
     <plurals name="unbury_cards_feedback">
@@ -336,8 +347,8 @@
         <item quantity="other">%d kort slutade gömmas</item>
     </plurals>
     <string name="card_template_reposition_template" comment="move a card template to a new position" maxLength="28">Flytta på</string>
-    <string name="previewer_next" comment="Name of the next button in the previewer" maxLength="28">Next</string>
-    <string name="previewer_back" comment="Name of the back button in the previewer" maxLength="28">Back</string>
+    <string name="previewer_next" comment="Name of the next button in the previewer" maxLength="28">Nästa</string>
+    <string name="previewer_back" comment="Name of the back button in the previewer" maxLength="28">Tillbaka</string>
     <string name="start_recording">Spela in</string>
     <string name="stop_recording">Stoppa</string>
     <string name="play_recording">Spela upp</string>

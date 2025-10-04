@@ -65,6 +65,18 @@
     <string name="save_whiteboard" maxLength="28">وائٹ بورڈ کو محفوظ کریں</string>
     <string name="enable_stylus" maxLength="28">اسٹائلس تحریر کو فعال کریں۔</string>
     <string name="disable_stylus">اسٹائلس تحریر کو غیر فعال کریں</string>
+    <string name="eraser" maxLength="28">Eraser</string>
+    <string name="add_brush" maxLength="28">Add brush</string>
+    <string name="whiteboard_align_left" comment="Option to align the whiteboard toolbar on the left" maxLength="28">Left</string>
+    <string name="whiteboard_align_bottom" comment="Option to align the whiteboard toolbar on the bottom" maxLength="28">Bottom</string>
+    <string name="whiteboard_align_right" comment="Option to align the whiteboard toolbar on the right" maxLength="28">Right</string>
+    <string name="whiteboard_clear" comment="Button text to clear the whiteboard" maxLength="28">Clear</string>
+    <string name="whiteboard_more_options" comment="Tooltip of the whiteboard \'More\' button" maxLength="28">More options</string>
+    <string name="whiteboard_remove_brush_message">Are you sure you want to remove this brush from your palette?</string>
+    <string name="whiteboard_ink_eraser" comment="Title of the whiteboard Ink eraser">Ink</string>
+    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">Stroke</string>
+    <string name="stylus_mode" comment="Title of the menu item that toggles the whiteboard stylus mode" maxLength="28">Stylus mode</string>
+    <string name="cannot_remove_last_brush_message">The last brush may not be removed</string>
     <string name="enable_whiteboard" maxLength="28">وائٹ بورڈ فعال کریں</string>
     <string name="disable_whiteboard">وائٹ بورڈ غیرفعال کریں</string>
     <string name="show_whiteboard">وائٹ بورڈ دکھائیں</string>
@@ -83,6 +95,7 @@
     <string name="webview_crash_fatal">مہلک خرابی: WebView پیش کنندہ کریش ہو گیا۔ وجہ: %s</string>
     <string name="webview_crash_loop_dialog_title">سسٹم ویب ویو رینڈرنگ میں ناکامی۔</string>
     <string name="webview_crash_loop_dialog_content">سسٹم WebView کارڈ \'%1$s\' رینڈر کرنے میں ناکام رہا۔\n %2$s</string>
+    <string name="slide_to_cancel" comment="Message shown when pressing the record button">Slide to cancel</string>
     <string name="filter_by_flags" maxLength="41">جھنڈے</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">Building list of tags&#8230;</string>
@@ -150,7 +163,7 @@
     <string name="import_error_handle_exception">فائل درآمد کرنے میں ناکام\n\n%s</string>
     <string name="import_error_not_apkg_extension">فائل نام \"%s\" میں .apkg یا .colpkg ایکسٹینشن نہیں ہے۔</string>
     <string name="import_error_load_imported_database">Anki ڈیٹا بیس (.anki2) کی تبدیلی ابھی تک تعاون یافتہ نہیں ہے۔ براہ کرم متبادل ہدایات کے لیے دستی دیکھیں۔</string>
-    <string name="import_error_content_provider">منتخب فائل کو AnkiDroid کے ذریعے خود بخود درآمد نہیں کیا جا سکتا۔ براہ کرم انکی فائلوں کو دستی طور پر درآمد کرنے کے طریقہ کار کے لیے یوزر مینوئل دیکھیں: \n%s</string>
+    <string name="import_error_content_provider">The selected file couldn’t be imported automatically by AnkiDroid. Please see the user manual for how to manually import Anki files: \n%s</string>
     <string name="import_error_copy_to_cache">فائل کو کیش کرنے میں ناکام (ممکنہ طور پر اسٹوریج کی جگہ سے باہر)</string>
     <string name="import_interrupted">درآمد میں رکاوٹ: AnkiDroid بند تھا۔</string>
     <string name="export_ready_title">ایکسپورٹ تیار ہے۔</string>
@@ -181,11 +194,6 @@
     <string name="tag_editor_add_feedback">\"%1$s\" کو شامل کرنے کی تصدیق کرنے کے لیے \"%2$s\" کو ٹچ کریں</string>
     <string name="tag_editor_add_feedback_existing">موجودہ ٹیگ \"%1$s\" کو منتخب کیا گیا۔</string>
     <!-- Time spans -->
-    <string name="reminder_title">آج مطالعہ کرنا نہ بھولیں!</string>
-    <plurals name="reminder_text">
-        <item quantity="one">%1$s میں جائزہ لینے کے لیے %2$d کارڈ</item>
-        <item quantity="other">%1$s میں جائزہ لینے کے لیے %2$d کارڈز</item>
-    </plurals>
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">apkg فائل کا اشتراک کرنے میں خرابی۔</string>
     <!-- Import and export v2 feedback -->
@@ -262,7 +270,7 @@
     <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
     <string name="percentage">%s%%</string>
     <string name="download_deck">ڈیک ڈاؤن لوڈ کریں۔</string>
-    <string name="open_in_browser" comment="Label of a button inviting to open ankiweb\'s shared deck page if automated download failed">Open in Browser</string>
+    <string name="open_in_browser" comment="Label of a button inviting to open ankiweb\'s shared deck page if automated download failed">Open in browser</string>
     <string name="try_again">دوبارہ کوشش کریں</string>
     <string name="cancel_download">ڈاؤن لوڈ منسوخ کریں۔</string>
     <string name="cancel_download_question_title">ڈاؤن لوڈ منسوخ کریں؟</string>
@@ -329,6 +337,9 @@
     <string name="tts_voices_failed_opening_tts_system_settings" comment="error message if opening the system text to speech settings fails">Failed to open text to speech settings</string>
     <string name="shared_decks_login_required">مزید ڈیک ڈاؤن لوڈ کرنے کے لیے براہ کرم لاگ ان کریں</string>
     <string name="deck_description_field_hint">تفصیل</string>
+    <string name="deck_description_saved">Description updated</string>
+    <string name="format_deck_description_as_markdown">Format as Markdown</string>
+    <string name="help_button_content_description">Open help for ‘%s’</string>
     <string name="failed_to_copy">کاپی کرنے میں ناکام</string>
     <string name="card_browser_unavailable_when_notes_mode">\'نوٹس\' موڈ میں دستیاب نہیں ہے</string>
     <plurals name="unbury_cards_feedback">

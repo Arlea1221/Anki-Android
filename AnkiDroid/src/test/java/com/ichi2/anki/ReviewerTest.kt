@@ -25,6 +25,7 @@ import androidx.core.view.iterator
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import anki.scheduler.CardAnswer.Rating
 import com.ichi2.anim.ActivityTransitionAnimation
 import com.ichi2.anki.AnkiDroidJsAPITest.Companion.formatApiResult
 import com.ichi2.anki.AnkiDroidJsAPITest.Companion.getDataFromRequest
@@ -43,9 +44,9 @@ import com.ichi2.anki.libanki.NotetypeJson
 import com.ichi2.anki.libanki.Notetypes
 import com.ichi2.anki.libanki.QueueType
 import com.ichi2.anki.libanki.exception.ConfirmModSchemaException
-import com.ichi2.anki.libanki.newNote
-import com.ichi2.anki.libanki.sched.Ease
+import com.ichi2.anki.libanki.testutils.ext.BASIC_NOTE_TYPE_NAME
 import com.ichi2.anki.libanki.testutils.ext.addNote
+import com.ichi2.anki.libanki.testutils.ext.newNote
 import com.ichi2.anki.model.CardStateFilter
 import com.ichi2.anki.observability.undoableOp
 import com.ichi2.anki.preferences.PreferenceTestUtils
@@ -53,7 +54,6 @@ import com.ichi2.anki.preferences.sharedPrefs
 import com.ichi2.anki.reviewer.ActionButtonStatus
 import com.ichi2.testutils.common.Flaky
 import com.ichi2.testutils.common.OS
-import com.ichi2.utils.BASIC_NOTE_TYPE_NAME
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
@@ -63,6 +63,7 @@ import org.hamcrest.Matchers.empty
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
 import org.json.JSONArray
+import org.junit.Assume.assumeTrue
 import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -72,9 +73,10 @@ import kotlin.test.junit5.JUnit5Asserter.assertNotNull
 
 @RunWith(AndroidJUnit4::class)
 class ReviewerTest : RobolectricTest() {
+    override fun getCollectionStorageMode() = CollectionStorageMode.IN_MEMORY_WITH_MEDIA
+
     @Ignore("flaky")
     @Test
-    @RunInBackground
     fun verifyNormalStartup() {
         ActivityScenario.launch(Reviewer::class.java).use { scenario ->
             scenario.onActivity { reviewer: Reviewer ->
@@ -208,11 +210,11 @@ class ReviewerTest : RobolectricTest() {
             val time = collectionTime
             new.delays = JSONArray(intArrayOf(1, 10, 60, 120))
 
-            waitForAsyncTasksToComplete()
+            advanceRobolectricLooper()
 
             val reviewer = startReviewer()
 
-            waitForAsyncTasksToComplete()
+            advanceRobolectricLooper()
 
             assertCounts(reviewer, 3, 0, 0)
             answerCardOrdinalAsGood(reviewer, 1) // card 1 is shown
@@ -244,31 +246,31 @@ class ReviewerTest : RobolectricTest() {
                     addBasicNote("2", "bar").firstCard(),
                     addBasicNote("3", "bar").firstCard(),
                 )
-            waitForAsyncTasksToComplete()
+            advanceRobolectricLooper()
 
             val reviewer = startReviewer()
 
-            waitForAsyncTasksToComplete()
+            advanceRobolectricLooper()
 
             equalFirstField(cards[0], reviewer.currentCard!!)
-            reviewer.answerCard(Ease.AGAIN)
-            waitForAsyncTasksToComplete()
+            reviewer.answerCard(Rating.AGAIN)
+            advanceRobolectricLooper()
 
             equalFirstField(cards[1], reviewer.currentCard!!)
-            reviewer.answerCard(Ease.AGAIN)
-            waitForAsyncTasksToComplete()
+            reviewer.answerCard(Rating.AGAIN)
+            advanceRobolectricLooper()
 
             undo(reviewer)
-            waitForAsyncTasksToComplete()
+            advanceRobolectricLooper()
 
             equalFirstField(cards[1], reviewer.currentCard!!)
-            reviewer.answerCard(Ease.GOOD)
-            waitForAsyncTasksToComplete()
+            reviewer.answerCard(Rating.GOOD)
+            advanceRobolectricLooper()
 
             equalFirstField(cards[2], reviewer.currentCard!!)
             time.addM(2)
-            reviewer.answerCard(Ease.GOOD)
-            advanceRobolectricLooperWithSleep()
+            reviewer.answerCard(Rating.GOOD)
+            advanceRobolectricLooper()
             equalFirstField(
                 cards[0],
                 reviewer.currentCard!!,
@@ -288,7 +290,7 @@ class ReviewerTest : RobolectricTest() {
             val reviewer = startReviewer()
             val jsApi = reviewer.jsApi
 
-            waitForAsyncTasksToComplete()
+            advanceRobolectricLooper()
             assertThat(
                 jsApi
                     .handleJsApiRequest("deckName", jsApiContract(), false)
@@ -304,7 +306,7 @@ class ReviewerTest : RobolectricTest() {
         runTest {
             val reviewer = startReviewer()
 
-            waitForAsyncTasksToComplete()
+            advanceRobolectricLooper()
 
             // #6587
             addBasicNote("Hello", "World")
@@ -314,7 +316,7 @@ class ReviewerTest : RobolectricTest() {
             val cardBeforeUndo = sched.card
             val countsBeforeUndo = sched.counts()
 
-            sched.answerCard(cardBeforeUndo!!, Ease.GOOD)
+            sched.answerCard(cardBeforeUndo!!, Rating.GOOD)
 
             reviewer.undoAndShowSnackbar()
 
@@ -356,15 +358,15 @@ class ReviewerTest : RobolectricTest() {
         runReviewer(cards = listOf("One", "Two")) {
             val nonDefaultDeck = addDeck("Hello")
             assertThat("first card is shown", this.cardContent, containsString("One"))
-            flipOrAnswerCard(Ease.GOOD)
-            // answer good, 'Ease.GOOD' should now be < 10m
+            flipOrAnswerCard(Rating.GOOD)
+            // answer good, 'Rating.GOOD' should now be < 10m
             assertThat("initial time is 10m", this.getCardDataForJsApi().nextTime3, equalTo("<\u206810\u2069m"))
-            flipOrAnswerCard(Ease.GOOD)
+            flipOrAnswerCard(Rating.GOOD)
             assertThat("next card is shown", this.cardContent, containsString("Two"))
 
             undoableOp { col.setDeck(listOf(currentCard!!.id), nonDefaultDeck) }
 
-            flipOrAnswerCard(Ease.GOOD)
+            flipOrAnswerCard(Rating.GOOD)
             assertThat("buttons should be updated", this.getCardDataForJsApi().nextTime3, equalTo("\u20681\u2069d"))
             assertThat("content should be updated", this.cardContent, containsString("One"))
         }
@@ -374,7 +376,7 @@ class ReviewerTest : RobolectricTest() {
 
         assumeTrue("Whiteboard should now be enabled", reviewer.prefWhiteboard)
 
-        advanceRobolectricLooperWithSleep()
+        advanceRobolectricLooper()
     }
 
     private fun disableAllReviewerAppBarButtons() {
@@ -393,7 +395,7 @@ class ReviewerTest : RobolectricTest() {
         r: Reviewer,
         @Suppress("SameParameterValue") i: Int,
     ) {
-        waitForAsyncTasksToComplete()
+        advanceRobolectricLooper()
         val ord = r.currentCard!!.ord
 
         assertThat("Unexpected card ord", ord + 1, not(equalTo(i)))
@@ -435,16 +437,16 @@ class ReviewerTest : RobolectricTest() {
     ) {
         assertCurrentOrdIs(r, i)
 
-        r.answerCard(Ease.GOOD)
+        r.answerCard(Rating.GOOD)
 
-        waitForAsyncTasksToComplete()
+        advanceRobolectricLooper()
     }
 
     private fun assertCurrentOrdIs(
         r: Reviewer,
         i: Int,
     ) {
-        waitForAsyncTasksToComplete()
+        advanceRobolectricLooper()
         val ord = r.currentCard!!.ord
 
         assertThat("Unexpected card ord", ord + 1, equalTo(i))

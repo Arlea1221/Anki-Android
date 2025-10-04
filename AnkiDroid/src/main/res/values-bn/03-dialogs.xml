@@ -124,6 +124,8 @@
     <string name="multimedia_editor_failed">মাল্টিমিডিয়া সম্পাদক খুলতে ব্যর্থ হয়েছে৷</string>
     <!-- Multimedia - Audio View -->
     <string name="multimedia_editor_audio_permission_denied">অডিও রেকর্ডিং অনুমতি অস্বীকার করা হয়েছে</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="recording_permission_denied_message">Microphone permission is necessary for the “Record voice” feature. Please grant it in the app settings.</string>
     <!-- Database Integrity Check -->
     <string name="integrity_check_startup_title">AnkiDroid আপগ্রেড করা হয়েছে</string>
     <string name="integrity_check_startup_content">AnkiDroid has been upgraded. This upgrade includes fixes for possible database problems, and we advise you to run check database now.</string>
@@ -161,7 +163,7 @@
     <!-- Help Dialog -->
     <string name="help_title_using_ankidroid">AnkiDroid ব্যবহার করে</string>
     <string name="help_item_ankidroid_manual">AnkiDroid ম্যানুয়াল</string>
-    <string name="help_item_anki_manual">Anki Manual</string>
+    <string name="help_item_anki_manual">Anki manual</string>
     <string name="help_item_ankidroid_faq">AnkiDroid FAQ</string>
     <string name="help_title_get_help">সাহায্য পান</string>
     <string name="help_item_mailing_list">মেইলিং তালিকা</string>
@@ -174,7 +176,7 @@
     <string name="help_item_support_other_ankidroid">অন্যান্য</string>
     <string name="multimedia_editor_trans_translate">অনুবাদ করুন</string>
     <string name="help_title_community">সম্প্রদায়</string>
-    <string name="help_item_anki_forums">আঁকি ফোরাম</string>
+    <string name="help_item_anki_forums">Anki forums</string>
     <string name="help_item_discord">Discord</string>
     <string name="help_item_facebook">ফেসবুক</string>
     <string name="help_item_twitter">টুইটার</string>
@@ -201,8 +203,6 @@
     <string name="import_deck_package">ডেক প্যাকেজ (.apkg)</string>
     <string name="import_collection_package">সংগ্রহ প্যাকেজ (.colpkg)</string>
     <string name="import_csv">টেক্সট ফাইল (.txt, .csv)</string>
-    <!-- Deck selection dialog -->
-    <string name="cannot_create_subdeck_for_all_decks">আপনি সমস্ত ডেকের জন্য একটি সাবডেক তৈরি করতে পারবেন না</string>
     <!-- scoped storage -->
     <string name="backup_your_collection">আপনার সংগ্রহ ব্যাকআপ</string>
     <string name="backup_collection_message">আপনি কিছু সময়ের মধ্যে আপনার সংগ্রহের ব্যাক আপ করেননি ডেটা ক্ষতি রোধ করতে আপনার এখনই এটি করা উচিত৷</string>

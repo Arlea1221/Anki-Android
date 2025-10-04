@@ -82,7 +82,7 @@
     <string name="button_size" maxLength="41">उत्तर बटणाचा आकार</string>
     <string name="card_browser_font_size" maxLength="41">कार्ड ब्राउझर फॉन्ट स्केलिंग</string>
     <string name="card_browser_hide_media" maxLength="41">कार्ड ब्राउझरमध्ये फाइलनावे प्रदर्शित करा</string>
-    <string name="card_browser_hide_media_summary">कार्ड ब्राउझर प्रश्न / उत्तर फील्डमध्ये मीडिया फाइलनावे प्रदर्शित करा</string>
+    <string name="card_browser_hide_media_summary">Display audio filenames in the card browser question/answer fields</string>
     <string name="col_path" maxLength="41">AnkiDroid निर्देशिका</string>
     <string name="fullscreen_review" maxLength="41">पूर्णस्क्रीन मोड</string>
     <string name="full_screen_off">बंद</string>
@@ -238,7 +238,6 @@
     <string name="studyoptions_limit_select_tags">टॅग निवडा</string>
     <!-- Deck configurations -->
     <string name="deck_conf_general" maxLength="41" comment="Label of the submenu for the general options of new deck">सामान्य</string>
-    <string name="deck_conf_reminders" maxLength="41">स्मरणपत्रे</string>
     <string name="deck_conf_cram_filter" maxLength="41">फिल्टर करा</string>
     <string name="deck_conf_cram_search" maxLength="41" comment="Label of a text field that contains a search query.">शोधा</string>
     <string name="deck_conf_cram_limit" maxLength="41">मर्यादित</string>
@@ -258,7 +257,7 @@
     <string name="type_in_answer_focus" maxLength="41">लक्ष द्या ‘उत्तर टाइप करा’</string>
     <string name="type_in_answer_focus_summ">Automatically focus the ‘type in answer’ field in the study screen</string>
     <!-- About -->
-    <string name="open_changelog">चेंजलॉग उघडा</string>
+    <string name="open_changelog">Open changelog</string>
     <string name="pref_cat_about_title" maxLength="41">बद्दल</string>
     <string name="contributors_title">योगदानकर्ते</string>
     <string name="about_contributors_description"><![CDATA[हे आमचे उत्कृष्ट <a href=\"%1$s\">योगदानकर्ते</a> आहेत. तुम्ही प्रोग्रामिंग, भाषांतर, देणगी आणि <a href=\"%2$s\">अधिक</a> करून देखील AnkiDroid ला मदत करू शकता!]]></string>
@@ -370,7 +369,7 @@
     <string name="hide_system_bars_navigation_bar" comment="Setting option to hide the system navigation bar (the bottom one that can go back, to home, etc)">नेव्हिगेशन बार</string>
     <string name="hide_system_bars_all_bars" comment="Setting option to hide all the system bars">सर्व</string>
     <string name="ignore_display_cutout" maxLength="41">डिस्प्ले कटआउटकडे दुर्लक्ष करा</string>
-    <string name="hide_answer_buttons" maxLength="41">उत्तर बटणे लपवा</string>
+    <string name="show_answer_buttons" maxLength="41">Show answer buttons</string>
     <string name="hide_hard_and_easy" maxLength="41">Hide ‘Hard’ and ‘Easy’ buttons</string>
     <string name="reviewer_frame_style" maxLength="41">Frame style</string>
     <string name="reviewer_frame_style_card" maxLength="41" comment="Style name of the \'Card\' card frame of the Study Screen">Card</string>
@@ -380,10 +379,11 @@
     <string name="reviewer_toolbar_none" maxLength="41" comment="Setting to remove the toolbar from the study screen">None</string>
     <string name="toolbar" maxLength="41">Toolbar</string>
     <string name="toolbar_actions" maxLength="41">Toolbar actions</string>
-    <string name="toolbar_position" maxLength="41">Toolbar position</string>
+    <string name="toolbar_position" maxLength="28">Toolbar position</string>
     <string name="new_study_screen" maxLength="41">New study screen</string>
     <string name="new_study_screen_summ"><![CDATA[Improved study screen that will succeed the current one. Some features of the old screen have been changed or removed. Please report any <a href="%1$s">feedback</a> or <a href="%2$s">bugs</a>.]]></string>
     <string name="show_answer_feedback" maxLength="41">Show answer feedback</string>
+    <string name="screen" maxLength="41">Screen</string>
     <!--Keyboard shortcuts dialog-->
     <string name="open_settings" comment="Description of the shortcut that opens the app settings">Open settings</string>
 </resources>

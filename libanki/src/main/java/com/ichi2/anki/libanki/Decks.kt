@@ -172,7 +172,6 @@ class Decks(
             null
         }
 
-    @Suppress("unused")
     fun have(id: DeckId): Boolean = getLegacy(id) != null
 
     @RustCleanup("implement and make public")
@@ -236,28 +235,27 @@ class Decks(
         TODO()
     }
 
-    @RustCleanup("implement and make public")
     @LibAnkiAlias("set_collapsed")
-    @Suppress("unused", "unused_parameter")
-    private fun setCollapsed(
+    fun setCollapsed(
         deckId: DeckId,
         collapsed: Boolean,
         scope: SetDeckCollapsedRequest.Scope,
-    ): OpChanges {
-        TODO()
-    }
+    ): OpChanges = col.backend.setDeckCollapsed(deckId, collapsed, scope)
 
+    @LibAnkiAlias("collapse")
     fun collapse(did: DeckId) {
         val deck = this.getLegacy(did) ?: return
         deck.collapsed = !deck.collapsed
         this.save(deck)
     }
 
-    @RustCleanup("implement and make public")
     @LibAnkiAlias("collapse_browser")
-    @Suppress("unused", "unused_parameter")
-    private fun collapseBrowser(deckId: DeckId) {
-        TODO()
+    @Suppress("unused")
+    fun collapseBrowser(deckId: DeckId) {
+        val deck = this.getLegacy(deckId) ?: return
+        val collapsed = deck.browserCollapsed
+        deck.browserCollapsed = !collapsed
+        this.save(deck)
     }
 
     fun count(): Int = len(this.allNamesAndIds())
@@ -482,14 +480,15 @@ class Decks(
 
     fun current(): Deck = this.getLegacy(this.selected()) ?: this.getLegacy(1)!!
 
-    /** The currently active dids. */
+    /** The currently active dids. Returned list is never empty. */
     @RustCleanup("Probably better as a queue")
-    @RustCleanup("should not return an empty list")
     fun active(): LinkedList<DeckId> {
-        val activeDecks = col.config.get<List<DeckId>>(ACTIVE_DECKS) ?: listOf()
-        val result = LinkedList<Long>()
-        result.addAll(activeDecks.asIterable())
-        return result
+        val active = col.sched.activeDecks()
+        return if (active.isNotEmpty()) {
+            LinkedList<DeckId>().apply { addAll(active.asIterable()) }
+        } else {
+            LinkedList<DeckId>().apply { add(1L) }
+        }
     }
 
     /** Select a new branch. */

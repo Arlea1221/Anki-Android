@@ -76,6 +76,7 @@
     <string name="card_browser_list_my_searches_new_name">Назва для пошукового запиту</string>
     <string name="card_browser_list_my_searches_new_search_error_empty_name">Не можна зберегти пошуковий запит без назви</string>
     <string name="card_browser_list_my_searches_new_search_error_dup">Така назва вже існує!</string>
+    <string name="card_browser_list_my_searches_successful_save">Search was saved</string>
     <string name="no_note_to_edit">Немає записів для редагування</string>
     <string name="card_browser_list_my_searches_remove_content">Видалити «%1$s»?</string>
     <string name="card_browser_change_display_order" maxLength="28">Сортувати за</string>
@@ -94,10 +95,10 @@
         <item>За складністю</item>
         <item>За кількістю повторень</item>
         <item>За кількістю забувань</item>
-        <item>By deck name</item>
+        <item>За назвою колоди</item>
     </string-array>
-    <string name="chane_browser_column">Change column</string>
-    <string name="no_columns_available">No columns available</string>
+    <string name="manage_browser_column">Manage column</string>
+    <string name="no_columns_available">Немає доступних стовпців</string>
     <string name="card_browser_select_all" maxLength="28">Обрати все</string>
     <string name="card_browser_select_none" maxLength="28">Зняти виділення</string>
     <string name="card_browser_no_cards_in_deck">Не знайдено жодної картки в колоді «%s»</string>
@@ -133,6 +134,6 @@
     <string name="user_potential_columns">Доступні</string>
     <string name="include_column">Включити стовпець</string>
     <string name="exclude_column">Виключити стовпець</string>
-    <string name="save_changes_message">Please save your changes first</string>
+    <string name="save_changes_message">Будь ласка, спочатку збережіть ваші зміни</string>
     <string name="browser_find_replace_loading_fields">Пошук назв полів&#8230;</string>
 </resources>

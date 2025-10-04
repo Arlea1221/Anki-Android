@@ -18,6 +18,7 @@ package com.ichi2.anki.ui
 
 import android.content.SharedPreferences
 import android.view.MotionEvent
+import android.view.PointerIcon
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.content.edit
@@ -52,12 +53,36 @@ class ResizablePaneManager(
         var initialLeftWeight = 0f
         var initialRightWeight = 0f
 
+        divider.setOnHoverListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_HOVER_ENTER -> {
+                    divider.pointerIcon =
+                        PointerIcon.getSystemIcon(
+                            divider.context,
+                            PointerIcon.TYPE_HORIZONTAL_DOUBLE_ARROW,
+                        )
+                    true
+                }
+                MotionEvent.ACTION_HOVER_EXIT -> {
+                    divider.pointerIcon = null
+                    true
+                }
+                else -> false
+            }
+        }
+
         divider.setOnTouchListener { v, event ->
             val leftParams = leftPane.layoutParams as LinearLayout.LayoutParams
             val rightParams = rightPane.layoutParams as LinearLayout.LayoutParams
 
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
+                    /*
+                        Request parent to not intercept touch events so that the divider does not get intercepted by
+                        the parent layout, when Full screen navigation drawer setting is enabled
+                     */
+                    v.parent.requestDisallowInterceptTouchEvent(true)
+
                     v.setBackgroundColor(dragColor)
                     initialTouchX = event.rawX
                     initialLeftWeight = leftParams.weight
@@ -65,6 +90,8 @@ class ResizablePaneManager(
                     true
                 }
                 MotionEvent.ACTION_MOVE -> {
+                    v.parent.requestDisallowInterceptTouchEvent(true)
+
                     val deltaX = event.rawX - initialTouchX
                     val totalParentWidth = parentLayout.width.toFloat()
 

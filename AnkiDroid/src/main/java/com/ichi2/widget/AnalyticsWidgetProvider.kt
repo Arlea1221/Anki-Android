@@ -19,6 +19,7 @@ package com.ichi2.widget
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
+import android.content.Intent
 import androidx.annotation.CallSuper
 import com.ichi2.anki.IntentHandler
 import com.ichi2.anki.analytics.UsageAnalytics
@@ -63,6 +64,15 @@ abstract class AnalyticsWidgetProvider : AppWidgetProvider() {
         UsageAnalytics.sendAnalyticsEvent(this.javaClass.simpleName, "disabled")
     }
 
+    @CallSuper
+    override fun onReceive(
+        context: Context,
+        intent: Intent,
+    ) {
+        super.onReceive(context, intent)
+        Timber.v("${this.javaClass.name}: onReceive: %s", intent.action)
+    }
+
     /**
      * Called to update the widget. Checks storage permissions and delegates to [performUpdate].
      *
@@ -82,7 +92,7 @@ abstract class AnalyticsWidgetProvider : AppWidgetProvider() {
         }
         // Pass usageAnalytics to performUpdate
         Timber.d("${this.javaClass.name}: performUpdate")
-        performUpdate(context, appWidgetManager, appWidgetIds, UsageAnalytics)
+        performUpdate(context, appWidgetManager, AppWidgetIds(appWidgetIds), UsageAnalytics)
     }
 
     /**
@@ -101,7 +111,7 @@ abstract class AnalyticsWidgetProvider : AppWidgetProvider() {
     abstract fun performUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray,
+        appWidgetIds: AppWidgetIds,
         usageAnalytics: UsageAnalytics,
     )
 }

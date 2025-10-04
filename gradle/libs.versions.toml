@@ -1,5 +1,5 @@
 [versions]
-compileSdk = "35"
+compileSdk = "36"
 
 # Changing minSdk means newer AnkiDroid versions will not support older devices.
 # However the Play Store will keep old AnkiDroid versions available for older
@@ -18,7 +18,7 @@ ktlint = '1.5.0'
 #
 # Old changelogs - See 'Table of Contents' in sidebar
 # https://developer.android.com/build/releases/past-releases
-androidGradlePlugin = "8.11.1"
+androidGradlePlugin = "8.12.2"
 # https://developer.android.com/jetpack/androidx/releases/activity
 androidxActivity = "1.10.1"
 # https://developer.android.com/jetpack/androidx/releases/annotation
@@ -26,21 +26,21 @@ androidxAnnotation = "1.9.1"
 # https://developer.android.com/jetpack/androidx/releases/appcompat
 androidxAppCompat = "1.7.1"
 # https://developer.android.com/jetpack/androidx/releases/browser
-androidxBrowser = "1.8.0"
+androidxBrowser = "1.9.0"
 # https://developer.android.com/jetpack/androidx/releases/constraintlayout
 androidxConstraintlayout = "2.2.1"
 # https://developer.android.com/jetpack/androidx/releases/core
-androidxCoreKtx = "1.16.0"
+androidxCoreKtx = "1.17.0"
 # https://developer.android.com/jetpack/androidx/releases/draganddrop
 androidxDragAndDrop = "1.0.0"
 # https://developer.android.com/jetpack/androidx/releases/exifinterface
 androidxExifinterface = "1.4.1"
 # https://developer.android.com/jetpack/androidx/releases/fragment
-androidxFragmentKtx = "1.8.8"
+androidxFragmentKtx = "1.8.9"
 # https://developer.android.com/jetpack/androidx/releases/media
-androidxMedia = "1.7.0"
+androidxMedia = "1.7.1"
 # https://developer.android.com/jetpack/androidx/releases/media3
-androidxMedia3 = "1.7.1"
+androidxMedia3 = "1.8.0"
 # https://developer.android.com/jetpack/androidx/releases/preference
 androidxPreferenceKtx = "1.2.1"
 # https://developer.android.com/jetpack/androidx/releases/recyclerview
@@ -50,7 +50,7 @@ androidxSqlite = "2.5.2"
 # https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout
 androidxSwipeRefreshLayout = "1.1.0"
 # https://developer.android.com/jetpack/androidx/releases/test
-androidxTest = "1.6.1"
+androidxTest = "1.7.0"
 # https://developer.android.com/jetpack/androidx/releases/test-uiautomator
 androidxTestUiAutomator = "2.3.0"
 # https://developer.android.com/jetpack/androidx/releases/viewpager2
@@ -58,21 +58,21 @@ androidxViewpager2 = "1.1.0"
 # https://developer.android.com/jetpack/androidx/releases/webkit
 androidxWebkit = "1.14.0"
 # https://developer.android.com/jetpack/androidx/releases/work
-androidxWork = "2.10.2"
-ankiBackend = '0.1.58-anki25.07.2'
+androidxWork = "2.10.3"
+ankiBackend = '0.1.61-anki25.09'
 autoService = "1.1.1"
 autoServiceAnnotations = "1.1.1"
 colorpicker = "1.2.0"
 # https://commons.apache.org/proper/commons-collections/changes.html
 commonsCollections4 = "4.5.0"
 # https://commons.apache.org/proper/commons-compress/changes-report.html
-commonsCompress = "1.27.1"
+commonsCompress = "1.28.0"
 # https://commons.apache.org/proper/commons-io/changes.html
-commonsIo = "2.19.0"
+commonsIo = "2.20.0"
 coroutines = '1.10.2'
 desugar-jdk-libs-nio = "2.1.5"
 drawer = "1.0.3"
-espresso = '3.6.1'
+espresso = '3.7.0'
 mikehardyGoogleAnalyticsJava7 = "2.0.13"
 hamcrest = "3.0"
 imageCropper = "4.6.0"
@@ -80,33 +80,33 @@ jacoco = "0.8.13"
 javaSemver = "0.10.2"
 jetbrainsAnnotations = "26.0.2"
 json = "20250517"
-jsoup = "1.21.1"
-androidTestJunit = "1.2.1"
+jsoup = "1.21.2"
+androidTestJunit = "1.3.0"
 # https://github.com/junit-team/junit5/releases/
-junitJupiter = "5.13.3"
+junitJupiter = "5.13.4"
 # https://github.com/junit-team/junit5/releases/ - version numbers differ; changelogs in bundle
-junitPlatformLauncher = "1.13.3"
+junitPlatformLauncher = "1.13.4"
 # https://github.com/JetBrains/kotlin/releases/
-kotlin = '2.2.0'
+kotlin = '2.2.10'
 # https://github.com/Kotlin/kotlinx.serialization/releases
 kotlinxSerializationJson = "1.9.0"
-ktlintGradlePlugin = "13.0.0"
+ktlintGradlePlugin = "13.1.0"
 leakcanaryAndroid = "2.14"
-lint = '31.11.1'
+lint = '31.12.2'
 material = "1.12.0"
 materialTapTargetPrompt = "3.3.2"
 
 # Only needed until mockito kotlin updates this transitive itself
-mockitoCore = "5.18.0"
+mockitoCore = "5.19.0"
 mockitoInline = "5.2.0"
-mockitoKotlin = "5.4.0" # maybe can remove mockitoCore and its usage with release > 5.4.0
-mockk = "1.14.4"
+mockitoKotlin = "6.0.0" # maybe can remove mockitoCore and its usage with release > 5.4.0
+mockk = "1.14.5"
 nanohttpd = "2.3.1"
 okhttp = "5.1.0"
 # https://github.com/protocolbuffers/protobuf/releases
-protobufKotlinLite = "4.31.1"
+protobufKotlinLite = "4.32.0"
 # ../AnkiDroid/robolectricDownload.gradle may need changes - read instructions in that file
-robolectric = "4.15.1"
+robolectric = "4.16"
 searchpreference = "2.7.3"
 seismic = "1.0.3"
 sharedPreferencesMock = "1.2.4"

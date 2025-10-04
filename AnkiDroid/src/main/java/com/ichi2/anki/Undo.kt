@@ -16,12 +16,13 @@
 
 package com.ichi2.anki
 
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import anki.collection.OpChangesAfterUndo
 import com.google.android.material.snackbar.Snackbar
 import com.ichi2.anki.CollectionManager.TR
-import com.ichi2.anki.libanki.redo
-import com.ichi2.anki.libanki.undo
+import com.ichi2.anki.libanki.redoAvailable
+import com.ichi2.anki.libanki.undoAvailable
 import com.ichi2.anki.observability.undoableOp
 import com.ichi2.anki.snackbar.showSnackbar
 
@@ -44,6 +45,11 @@ suspend fun FragmentActivity.undoAndShowSnackbar(duration: Int = Snackbar.LENGTH
             }
         showSnackbar(message, duration)
     }
+}
+
+/** If there's an action pending in the review queue, undo it and show a snackbar */
+suspend fun Fragment.undoAndShowSnackbar(duration: Int = Snackbar.LENGTH_SHORT) {
+    requireActivity().undoAndShowSnackbar(duration)
 }
 
 suspend fun FragmentActivity.redoAndShowSnackbar(duration: Int = Snackbar.LENGTH_SHORT) {

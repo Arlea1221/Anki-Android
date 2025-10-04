@@ -41,6 +41,7 @@ import androidx.core.view.get
 import androidx.core.view.size
 import androidx.drawerlayout.widget.ClosableDrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.navigation.NavigationView
 import com.ichi2.anki.NoteEditorFragment.Companion.NoteEditorCaller
@@ -124,7 +125,7 @@ abstract class NavigationDrawerActivity :
 
     // Navigation drawer initialisation
     @Suppress("deprecation", "API35 properly handle edge-to-edge")
-    protected fun initNavigationDrawer(mainView: View) {
+    protected fun initNavigationDrawer(mainView: View = findViewById(android.R.id.content)) {
         // Create inherited navigation drawer layout here so that it can be used by parent class
         drawerLayout = mainView.findViewById(R.id.drawer_layout)
         // set a custom shadow that overlays the main content when the drawer opens
@@ -275,6 +276,10 @@ abstract class NavigationDrawerActivity :
                 REQUEST_PREFERENCES_UPDATE,
                 result.resultCode,
             )
+
+            // We trigger a notifications channel set-up since the user may have changed the locale set
+            // from within the app, which should cause the notification channel names to be reloaded to
+            // match the new locale
             setupNotificationChannels(applicationContext)
             // Restart the activity on preference change
             // collection path hasn't been changed so just restart the current activity
@@ -509,3 +514,5 @@ abstract class NavigationDrawerActivity :
         }
     }
 }
+
+fun Fragment.requireNavigationDrawerActivity() = (requireActivity() as NavigationDrawerActivity)

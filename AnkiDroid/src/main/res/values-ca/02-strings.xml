@@ -65,6 +65,18 @@
     <string name="save_whiteboard" maxLength="28">Desar pissarra</string>
     <string name="enable_stylus" maxLength="28">Activa el mode de llapis</string>
     <string name="disable_stylus">Desactiva el mode de llapis</string>
+    <string name="eraser" maxLength="28">Eraser</string>
+    <string name="add_brush" maxLength="28">Add brush</string>
+    <string name="whiteboard_align_left" comment="Option to align the whiteboard toolbar on the left" maxLength="28">Left</string>
+    <string name="whiteboard_align_bottom" comment="Option to align the whiteboard toolbar on the bottom" maxLength="28">Bottom</string>
+    <string name="whiteboard_align_right" comment="Option to align the whiteboard toolbar on the right" maxLength="28">Right</string>
+    <string name="whiteboard_clear" comment="Button text to clear the whiteboard" maxLength="28">Clear</string>
+    <string name="whiteboard_more_options" comment="Tooltip of the whiteboard \'More\' button" maxLength="28">More options</string>
+    <string name="whiteboard_remove_brush_message">Are you sure you want to remove this brush from your palette?</string>
+    <string name="whiteboard_ink_eraser" comment="Title of the whiteboard Ink eraser">Ink</string>
+    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">Stroke</string>
+    <string name="stylus_mode" comment="Title of the menu item that toggles the whiteboard stylus mode" maxLength="28">Stylus mode</string>
+    <string name="cannot_remove_last_brush_message">The last brush may not be removed</string>
     <string name="enable_whiteboard" maxLength="28">Activar pissarra</string>
     <string name="disable_whiteboard">Desactiva la pissarra</string>
     <string name="show_whiteboard">Mostra la pissarra</string>
@@ -83,6 +95,7 @@
     <string name="webview_crash_fatal">Error Fatal: El renderitzador de WebView s\'ha penjat. Causa: %s</string>
     <string name="webview_crash_loop_dialog_title">Error al sistema de renderització de WebView</string>
     <string name="webview_crash_loop_dialog_content">El sistema WebView ha fallat al renderitzar la carta \'%1$s.\n%2$s</string>
+    <string name="slide_to_cancel" comment="Message shown when pressing the record button">Slide to cancel</string>
     <string name="filter_by_flags" maxLength="41">Bandera</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">Building list of tags&#8230;</string>
@@ -150,7 +163,7 @@
     <string name="import_error_handle_exception">No ha estat possible importar el paquet\n\n%s</string>
     <string name="import_error_not_apkg_extension">El nom del fitxer \"%s\" no té l\'extensió .apkg o .colpkg</string>
     <string name="import_error_load_imported_database">Les substitucions a la base de dades Anki (.anki2) encara no són suportades. Consulteu el manual per obtenir instruccions de substitució.</string>
-    <string name="import_error_content_provider">El fitxer seleccionat no s\'ha importat automàticament per AnkiDroid. Consulteu el manual d\'usuari per com importar arxius anki manualment: \n%s</string>
+    <string name="import_error_content_provider">El fitxer seleccionat no s\'ha importat automàticament per AnkiDroid. Consulteu el manual d\'usuari per com importar arxius Anki manualment: \n%s</string>
     <string name="import_error_copy_to_cache">No ha estat possible copiar el fitxer a la memòria cau (segurament falta espai)</string>
     <string name="import_interrupted">Importació interrompuda: AnkiDroid s\'ha tancat</string>
     <string name="export_ready_title">Export ready</string>
@@ -180,11 +193,6 @@
     <string name="tag_editor_add_feedback">Prem \"%2$s\" per confirmar afegir \"%1$s\"</string>
     <string name="tag_editor_add_feedback_existing">Etiqueta existent \"%1$s\" seleccionada</string>
     <!-- Time spans -->
-    <string name="reminder_title">No t\'oblidis d\'estudiar avui!</string>
-    <plurals name="reminder_text">
-        <item quantity="one">%2$d carta per revisar a %1$s</item>
-        <item quantity="other">%2$d cartes per revisar a %1$s</item>
-    </plurals>
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">Error en compartir l\'arxiu apkg</string>
     <!-- Import and export v2 feedback -->
@@ -261,7 +269,7 @@
     <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
     <string name="percentage">%s%%</string>
     <string name="download_deck">Baixar paquet</string>
-    <string name="open_in_browser" comment="Label of a button inviting to open ankiweb\'s shared deck page if automated download failed">Open in Browser</string>
+    <string name="open_in_browser" comment="Label of a button inviting to open ankiweb\'s shared deck page if automated download failed">Open in browser</string>
     <string name="try_again">Torneu-ho a provar</string>
     <string name="cancel_download">Cancel·lar baixada</string>
     <string name="cancel_download_question_title">Cancel·lo la baixada?</string>
@@ -328,6 +336,9 @@
     <string name="tts_voices_failed_opening_tts_system_settings" comment="error message if opening the system text to speech settings fails">Failed to open text to speech settings</string>
     <string name="shared_decks_login_required">Please log in to download more decks</string>
     <string name="deck_description_field_hint">Descripció</string>
+    <string name="deck_description_saved">Description updated</string>
+    <string name="format_deck_description_as_markdown">Format as Markdown</string>
+    <string name="help_button_content_description">Open help for ‘%s’</string>
     <string name="failed_to_copy">No s\'ha pogut copiar!</string>
     <string name="card_browser_unavailable_when_notes_mode">Unavailable in ‘Notes’ mode</string>
     <plurals name="unbury_cards_feedback">

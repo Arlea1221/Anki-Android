@@ -65,6 +65,18 @@
     <string name="save_whiteboard" maxLength="28">വൈറ്റ്ബോർഡ് സംരക്ഷിക്കുക</string>
     <string name="enable_stylus" maxLength="28">സ്റ്റൈലസ് എഴുത്ത് പ്രവർത്തനക്ഷമമാക്കുക</string>
     <string name="disable_stylus">Disable stylus writing</string>
+    <string name="eraser" maxLength="28">Eraser</string>
+    <string name="add_brush" maxLength="28">Add brush</string>
+    <string name="whiteboard_align_left" comment="Option to align the whiteboard toolbar on the left" maxLength="28">Left</string>
+    <string name="whiteboard_align_bottom" comment="Option to align the whiteboard toolbar on the bottom" maxLength="28">Bottom</string>
+    <string name="whiteboard_align_right" comment="Option to align the whiteboard toolbar on the right" maxLength="28">Right</string>
+    <string name="whiteboard_clear" comment="Button text to clear the whiteboard" maxLength="28">Clear</string>
+    <string name="whiteboard_more_options" comment="Tooltip of the whiteboard \'More\' button" maxLength="28">More options</string>
+    <string name="whiteboard_remove_brush_message">Are you sure you want to remove this brush from your palette?</string>
+    <string name="whiteboard_ink_eraser" comment="Title of the whiteboard Ink eraser">Ink</string>
+    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">Stroke</string>
+    <string name="stylus_mode" comment="Title of the menu item that toggles the whiteboard stylus mode" maxLength="28">Stylus mode</string>
+    <string name="cannot_remove_last_brush_message">The last brush may not be removed</string>
     <string name="enable_whiteboard" maxLength="28">വൈറ്റ്ബോർഡ് പ്രവർത്തനക്ഷമമാക്കുക</string>
     <string name="disable_whiteboard">വൈറ്റ്ബോർഡ് അപ്രാപ്തമാക്കുക</string>
     <string name="show_whiteboard">വൈറ്റ്ബോർഡ് കാണിക്കുക</string>
@@ -83,6 +95,7 @@
     <string name="webview_crash_fatal">മാരകമായ പിശക്: വെബ്‌വ്യൂ റെൻഡറർ തകർന്നു. കാരണം:%s</string>
     <string name="webview_crash_loop_dialog_title">സിസ്റ്റം വെബ്‌വ്യൂ റെൻഡറിംഗ് പരാജയം</string>
     <string name="webview_crash_loop_dialog_content">\'%1$s\' കാർഡ് റെൻഡർ ചെയ്യുന്നതിൽ സിസ്റ്റം വെബ്‌വ്യൂ പരാജയപ്പെട്ടു. \n%2$s</string>
+    <string name="slide_to_cancel" comment="Message shown when pressing the record button">Slide to cancel</string>
     <string name="filter_by_flags" maxLength="41">പതാകകൾ</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">Building list of tags&#8230;</string>
@@ -150,7 +163,7 @@
     <string name="import_error_handle_exception">ഫയൽ ഇറക്കുമതി ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു\n\n%s</string>
     <string name="import_error_not_apkg_extension">“%s” എന്ന ഫയലിന്റെ പേരിന് .apkg അല്ലെങ്കിൽ .colpkg വിപുലീകരണം ഇല്ല</string>
     <string name="import_error_load_imported_database">അങ്കി ഡാറ്റാബേസ് (.anki2) മാറ്റിസ്ഥാപിക്കൽ ഇതുവരെ പിന്തുണയ്‌ക്കുന്നില്ല. മാറ്റിസ്ഥാപിക്കാനുള്ള നിർദ്ദേശങ്ങൾക്കായി മാനുവൽ കാണുക.</string>
-    <string name="import_error_content_provider">തിരഞ്ഞെടുത്ത ഫയൽ AnkiDroid സ്വപ്രേരിതമായി ഇറക്കുമതി ചെയ്യാൻ കഴിയില്ല. അങ്കി ഫയലുകൾ എങ്ങനെ സ്വമേധയാ ഇറക്കുമതി ചെയ്യാമെന്നതിനുള്ള ഉപയോക്തൃ മാനുവൽ കാണുക: \n%s</string>
+    <string name="import_error_content_provider">The selected file couldn’t be imported automatically by AnkiDroid. Please see the user manual for how to manually import Anki files: \n%s</string>
     <string name="import_error_copy_to_cache">ഫയൽ കാഷെ ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു (ഒരുപക്ഷേ സ്റ്റോറേജ് ഇടം തീർന്നിരിക്കാം)</string>
     <string name="import_interrupted">ഇറക്കുമതി തടസ്സപ്പെട്ടു: അങ്കിഡ്രോയിഡ് അടച്ചു</string>
     <string name="export_ready_title">കയറ്റുമതി തയ്യാറാണ്</string>
@@ -180,11 +193,6 @@
     <string name="tag_editor_add_feedback">“%1$s” ചേർക്കുന്നത് സ്ഥിരീകരിക്കുന്നതിന് “%2$s” സ്‌പർശിക്കുക.</string>
     <string name="tag_editor_add_feedback_existing">നിലവിലുള്ള ടാഗ് “%1$s” തിരഞ്ഞെടുത്തു</string>
     <!-- Time spans -->
-    <string name="reminder_title">ഇന്ന് പഠിക്കാൻ മറക്കരുത്!</string>
-    <plurals name="reminder_text">
-        <item quantity="one">%1$s ൽ അവലോകനം ചെയ്യുന്നതിന് %2$d കാർഡ്</item>
-        <item quantity="other">%1$s ൽ അവലോകനം ചെയ്യുന്നതിന് %2$d കാർഡുകൾ</item>
-    </plurals>
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">apkg ഫയൽ പങ്കിടുന്നതിൽ പിശക്</string>
     <!-- Import and export v2 feedback -->
@@ -261,7 +269,7 @@
     <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
     <string name="percentage">%s%%</string>
     <string name="download_deck">Download deck</string>
-    <string name="open_in_browser" comment="Label of a button inviting to open ankiweb\'s shared deck page if automated download failed">Open in Browser</string>
+    <string name="open_in_browser" comment="Label of a button inviting to open ankiweb\'s shared deck page if automated download failed">Open in browser</string>
     <string name="try_again">വീണ്ടും ശ്രമിക്കുക</string>
     <string name="cancel_download">ഡൗൺലോഡ് റദ്ദാക്കുക</string>
     <string name="cancel_download_question_title">ഡൗൺലോഡ് റദ്ദാക്കണോ?</string>
@@ -328,6 +336,9 @@
     <string name="tts_voices_failed_opening_tts_system_settings" comment="error message if opening the system text to speech settings fails">Failed to open text to speech settings</string>
     <string name="shared_decks_login_required">കൂടുതൽ ഡെക്കുകൾ ഡൗൺലോഡ് ചെയ്യാൻ ലോഗിൻ ചെയ്യുക</string>
     <string name="deck_description_field_hint">വിവരണം</string>
+    <string name="deck_description_saved">Description updated</string>
+    <string name="format_deck_description_as_markdown">Format as Markdown</string>
+    <string name="help_button_content_description">Open help for ‘%s’</string>
     <string name="failed_to_copy">പകർത്തുന്നതിൽ പരാജയപ്പെട്ടു</string>
     <string name="card_browser_unavailable_when_notes_mode">\'കുറിപ്പുകൾ\' മോഡിൽ ലഭ്യമല്ല</string>
     <plurals name="unbury_cards_feedback">

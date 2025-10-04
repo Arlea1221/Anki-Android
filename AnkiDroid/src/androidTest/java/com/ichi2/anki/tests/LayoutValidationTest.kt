@@ -103,8 +103,9 @@ class LayoutValidationTest : InstrumentedTest() {
             //   a FragmentActivity to use android:name="..."
             val ignoredLayoutIds =
                 listOf(
-                    com.ichi2.anki.R.layout.activity_manage_space,
                     com.ichi2.anki.R.layout.introduction_activity,
+                    com.ichi2.anki.R.layout.reviewer2,
+                    com.ichi2.anki.R.layout.preferences,
                 ) +
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
                         listOf(com.ichi2.anki.R.layout.widget_small_unthemed)

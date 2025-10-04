@@ -65,7 +65,6 @@ import androidx.core.content.FileProvider
 import androidx.core.content.IntentCompat
 import androidx.core.content.edit
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.net.toUri
 import androidx.core.os.BundleCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.util.component1
@@ -97,7 +96,6 @@ import com.ichi2.anki.common.annotations.NeedsTest
 import com.ichi2.anki.common.utils.annotation.KotlinCleanup
 import com.ichi2.anki.dialogs.ConfirmationDialog
 import com.ichi2.anki.dialogs.DeckSelectionDialog.DeckSelectionListener
-import com.ichi2.anki.dialogs.DeckSelectionDialog.SelectableDeck
 import com.ichi2.anki.dialogs.DiscardChangesDialog
 import com.ichi2.anki.dialogs.IntegerDialog
 import com.ichi2.anki.dialogs.tags.TagsDialog
@@ -116,7 +114,9 @@ import com.ichi2.anki.libanki.NotetypeJson
 import com.ichi2.anki.libanki.Notetypes
 import com.ichi2.anki.libanki.Notetypes.Companion.NOT_FOUND_NOTE_TYPE
 import com.ichi2.anki.libanki.Utils
+import com.ichi2.anki.libanki.clozeNumbersInNote
 import com.ichi2.anki.model.CardStateFilter
+import com.ichi2.anki.model.SelectableDeck
 import com.ichi2.anki.multimedia.AudioRecordingFragment
 import com.ichi2.anki.multimedia.AudioVideoFragment
 import com.ichi2.anki.multimedia.MultimediaActivity.Companion.MULTIMEDIA_RESULT
@@ -154,6 +154,7 @@ import com.ichi2.anki.ui.setupNoteTypeSpinner
 import com.ichi2.anki.utils.ext.sharedPrefs
 import com.ichi2.anki.utils.ext.showDialogFragment
 import com.ichi2.anki.utils.ext.window
+import com.ichi2.anki.utils.openUrl
 import com.ichi2.compat.CompatHelper.Companion.getSerializableCompat
 import com.ichi2.compat.setTooltipTextCompat
 import com.ichi2.imagecropper.ImageCropper
@@ -288,8 +289,8 @@ class NoteEditorFragment :
      * Whether this is displayed in a fragment view.
      * If true, this fragment is on the trailing side of the card browser.
      */
-    private val inFragmentedActivity
-        get() = requireArguments().getBoolean(IN_FRAGMENTED_ACTIVITY)
+    private val inCardBrowserActivity
+        get() = requireArguments().getBoolean(IN_CARD_BROWSER_ACTIVITY)
 
     private val requestAddLauncher =
         registerForActivityResult(
@@ -430,6 +431,7 @@ class NoteEditorFragment :
         if (deck == null) {
             return
         }
+        require(deck is SelectableDeck.Deck)
         deckId = deck.deckId
         // this is called because DeckSpinnerSelection.onDeckAdded doesn't update the list
         deckSpinnerSelection!!.initializeNoteEditorDeckSpinner(getColUnsafe)
@@ -1431,7 +1433,7 @@ class NoteEditorFragment :
         } else {
             // Hide add note item if fragment is in fragmented activity
             // because this item is already present in CardBrowser
-            menu.findItem(R.id.action_add_note_from_note_editor).isVisible = !inFragmentedActivity
+            menu.findItem(R.id.action_add_note_from_note_editor).isVisible = !inCardBrowserActivity
         }
         if (editFields != null) {
             for (i in editFields!!.indices) {
@@ -1464,6 +1466,7 @@ class NoteEditorFragment :
         }
 
     override fun onMenuItemSelected(item: MenuItem): Boolean {
+        Timber.d("NoteEditor::onMenuItemSelected")
         when (item.itemId) {
             R.id.action_preview -> {
                 Timber.i("NoteEditor:: Preview button pressed")
@@ -1663,7 +1666,7 @@ class NoteEditorFragment :
             CardTemplateNotetype.clearTempNoteTypeFiles()
 
             // Don't close this fragment if it is in fragmented activity
-            if (inFragmentedActivity) {
+            if (inCardBrowserActivity) {
                 Timber.i("not closing activity: fragmented")
                 return
             }
@@ -2561,7 +2564,7 @@ class NoteEditorFragment :
             AlertDialog
                 .Builder(requireContext())
                 .neutralButton(R.string.help) {
-                    requireAnkiActivity().openUrl(getString(R.string.link_manual_note_format_toolbar).toUri())
+                    requireContext().openUrl(R.string.link_manual_note_format_toolbar)
                 }.negativeButton(R.string.dialog_cancel)
 
     private fun displayAddToolbarDialog() {
@@ -2971,7 +2974,7 @@ class NoteEditorFragment :
         const val NOTE_CHANGED_EXTRA_KEY = "noteChanged"
         const val RELOAD_REQUIRED_EXTRA_KEY = "reloadRequired"
         const val EXTRA_IMG_OCCLUSION = "image_uri"
-        const val IN_FRAGMENTED_ACTIVITY = "inFragmentedActivity"
+        const val IN_CARD_BROWSER_ACTIVITY = "inCardBrowserActivity"
 
         // calling activity
         enum class NoteEditorCaller(

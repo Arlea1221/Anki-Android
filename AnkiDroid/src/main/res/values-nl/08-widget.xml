@@ -45,7 +45,6 @@
 -->
 <resources>
     <!-- Widget -->
-    <string name="widget_minimum_cards_due_notification_ticker_title">Kaarten te doen</string>
     <plurals name="widget_minimum_cards_due_notification_ticker_text">
         <item quantity="one">%d AnkiDroid kaart te doen</item>
         <item quantity="other">%d AnkiDroid kaarten te doen</item>
@@ -59,7 +58,7 @@
         <item quantity="one">%d minuut resterend</item>
         <item quantity="other">%d minuten resterend</item>
     </plurals>
-    <string name="widget_add_note_button">Nieuwe Ankidroid-memo toevoegen</string>
+    <string name="widget_add_note_button">Nieuwe AnkiDroid-memo toevoegen</string>
     <string name="deck_picker_widget_description" comment="Title of the Deck Picker Widget. Displayed to the user in Android\'s Widget Selection menu">Set kiezer</string>
     <string name="card_analysis_extra_widget_description">Kaartanalyse</string>
     <!-- Strings to explain usage in Deck Picker and Card Analysis Widget Configuration screen -->

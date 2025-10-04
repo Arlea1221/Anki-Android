@@ -26,15 +26,15 @@ import androidx.annotation.VisibleForTesting
 import androidx.core.app.TaskStackBuilder
 import androidx.core.content.FileProvider
 import androidx.core.content.IntentCompat
+import androidx.work.WorkManager
 import com.ichi2.anki.common.annotations.NeedsTest
 import com.ichi2.anki.common.utils.trimToLength
 import com.ichi2.anki.dialogs.DialogHandler.Companion.storeMessage
 import com.ichi2.anki.dialogs.DialogHandlerMessage
+import com.ichi2.anki.dialogs.requireDeckPickerOrShowError
 import com.ichi2.anki.libanki.DeckId
 import com.ichi2.anki.noteeditor.NoteEditorLauncher
-import com.ichi2.anki.preferences.sharedPrefs
 import com.ichi2.anki.servicelayer.ScopedStorageService
-import com.ichi2.anki.services.ReminderService
 import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.ui.windows.reviewer.ReviewerFragment
 import com.ichi2.anki.utils.MimeTypeUtils
@@ -77,7 +77,10 @@ class IntentHandler : AbstractIntentHandler() {
         val launchType = getLaunchType(intent)
         // TODO block the UI with some kind of ProgressDialog instead of cancelling the sync work
         if (requiresCollectionAccess(launchType)) {
-            SyncWorker.cancel(this)
+            // # 18899
+            if (WorkManager.isInitialized()) {
+                SyncWorker.cancel(this)
+            }
         }
         when (launchType) {
             LaunchType.FILE_IMPORT ->
@@ -158,7 +161,7 @@ class IntentHandler : AbstractIntentHandler() {
         reloadIntent: Intent,
         reviewerIntent: Intent,
     ) {
-        val deckId = intent.getLongExtra(ReminderService.EXTRA_DECK_ID, 0)
+        val deckId = intent.getLongExtra(REVIEW_DECK_INTENT_EXTRA_DECK_ID, 0)
         Timber.i("Handling intent to review deck '%d'", deckId)
 
         val reviewIntent =
@@ -332,6 +335,7 @@ class IntentHandler : AbstractIntentHandler() {
     }
 
     companion object {
+        const val REVIEW_DECK_INTENT_EXTRA_DECK_ID = "EXTRA_DECK_ID"
         private const val CLIPBOARD_INTENT = "com.ichi2.anki.COPY_DEBUG_INFO"
         private const val CLIPBOARD_INTENT_EXTRA_DATA = "clip_data"
 
@@ -379,7 +383,7 @@ class IntentHandler : AbstractIntentHandler() {
                 }
             } else if ("com.ichi2.anki.DO_SYNC" == action) {
                 LaunchType.SYNC
-            } else if (intent.hasExtra(ReminderService.EXTRA_DECK_ID)) {
+            } else if (intent.hasExtra(REVIEW_DECK_INTENT_EXTRA_DECK_ID)) {
                 LaunchType.REVIEW
             } else if (action == CLIPBOARD_INTENT) {
                 LaunchType.COPY_DEBUG_INFO
@@ -426,24 +430,12 @@ class IntentHandler : AbstractIntentHandler() {
             ) {
             override fun handleAsyncMessage(activity: AnkiActivity) {
                 // we may be called via any AnkiActivity but sync is a DeckPicker thing
-                if (activity !is DeckPicker) {
-                    showError(
-                        activity,
-                        activity.getString(R.string.something_wrong),
-                        ClassCastException(activity.javaClass.simpleName + " is not " + DeckPicker::class.java.simpleName),
-                        true,
-                    )
-                    return
-                }
-                // let's be clear about the type now that we've checked
-                val deckPicker = activity
-
-                val preferences = deckPicker.sharedPrefs()
+                val deckPicker = activity.requireDeckPickerOrShowError() ?: return
                 val res = deckPicker.resources
-                val hkey = preferences.getString("hkey", "")
-                val millisecondsSinceLastSync = millisecondsSinceLastSync(preferences)
+                val hkey = Prefs.hkey
+                val millisecondsSinceLastSync = millisecondsSinceLastSync()
                 val limited = millisecondsSinceLastSync < INTENT_SYNC_MIN_INTERVAL
-                if (!limited && hkey!!.isNotEmpty() && NetworkUtils.isOnline) {
+                if (!limited && !hkey.isNullOrEmpty() && NetworkUtils.isOnline) {
                     deckPicker.sync()
                 } else {
                     val err = res.getString(R.string.sync_error)
@@ -482,16 +474,27 @@ class IntentHandler : AbstractIntentHandler() {
 
         /**
          * Returns an intent to review a specific deck.
+         *
+         * @param context
+         * @param deckId the deck ID of the deck to review
+         */
+        fun getReviewDeckIntent(
+            context: Context,
+            deckId: DeckId,
+        ): Intent = Intent(context, IntentHandler::class.java).putExtra(REVIEW_DECK_INTENT_EXTRA_DECK_ID, deckId)
+
+        /**
+         * Returns an intent to review a specific deck.
          * This does not states which reviewer to use, instead IntentHandler will choose whether to use the
          * legacy or the new reviewer based on the "newReviewer" preference.
          * It is expected to be used from widget, shortcut, reminders but not from ankidroid directly because of the CLEAR_TOP flag.
          */
-        fun intentToReviewDeckFromShorcuts(
+        fun intentToReviewDeckFromShortcuts(
             context: Context,
             deckId: DeckId,
         ) = Intent(context, IntentHandler::class.java).apply {
             setAction(Intent.ACTION_VIEW)
-            putExtra(ReminderService.EXTRA_DECK_ID, deckId)
+            putExtra(REVIEW_DECK_INTENT_EXTRA_DECK_ID, deckId)
         }
     }
 }

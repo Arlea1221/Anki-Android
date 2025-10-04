@@ -82,7 +82,7 @@
     <string name="button_size" maxLength="41">సమాధానం బటన్ పరిమాణం</string>
     <string name="card_browser_font_size" maxLength="41">కార్డ్ బ్రౌజర్ ఫాంట్ స్కేలింగ్</string>
     <string name="card_browser_hide_media" maxLength="41">కార్డ్ బ్రౌజర్‌లో ఫైల్ పేర్లను ప్రదర్శించండి</string>
-    <string name="card_browser_hide_media_summary">కార్డ్ బ్రౌజర్ ప్రశ్న/జవాబు ఫీల్డ్‌లలో మీడియా ఫైల్ పేర్లను ప్రదర్శించండి</string>
+    <string name="card_browser_hide_media_summary">Display audio filenames in the card browser question/answer fields</string>
     <string name="col_path" maxLength="41">AnkiDroid డైరెక్టరీ</string>
     <string name="fullscreen_review" maxLength="41">పూర్తి స్క్రీన్ మోడ్</string>
     <string name="full_screen_off">ఆఫ్</string>
@@ -238,7 +238,6 @@
     <string name="studyoptions_limit_select_tags">ట్యాగ్లను ఎంచుకోండి</string>
     <!-- Deck configurations -->
     <string name="deck_conf_general" maxLength="41" comment="Label of the submenu for the general options of new deck">సాధారణం</string>
-    <string name="deck_conf_reminders" maxLength="41">జ్ఞాపికలు</string>
     <string name="deck_conf_cram_filter" maxLength="41">వడపోత</string>
     <string name="deck_conf_cram_search" maxLength="41" comment="Label of a text field that contains a search query.">శోధన</string>
     <string name="deck_conf_cram_limit" maxLength="41">పరిమితి</string>
@@ -258,7 +257,7 @@
     <string name="type_in_answer_focus" maxLength="41">\'టైప్ ఇన్ ఆన్సర్\'పై దృష్టి పెట్టండి</string>
     <string name="type_in_answer_focus_summ">Automatically focus the ‘type in answer’ field in the study screen</string>
     <!-- About -->
-    <string name="open_changelog">చేంజ్లాగ్ తెరవండి</string>
+    <string name="open_changelog">Open changelog</string>
     <string name="pref_cat_about_title" maxLength="41">గురించి</string>
     <string name="contributors_title">సహకారులు</string>
     <string name="about_contributors_description"><![CDATA[వీరు మా అద్భుతమైన <a href=\"%1$s\">కంట్రిబ్యూటర్లు</a>. మీరు ప్రోగ్రామింగ్, అనువాదం, విరాళం మరియు <a href=\"%2$s\">మరిన్ని</a> ద్వారా కూడా AnkiDroidకి సహాయం చేయవచ్చు!]]></string>
@@ -370,7 +369,7 @@
     <string name="hide_system_bars_navigation_bar" comment="Setting option to hide the system navigation bar (the bottom one that can go back, to home, etc)">నావిగేషన్ బార్</string>
     <string name="hide_system_bars_all_bars" comment="Setting option to hide all the system bars">అన్నీ</string>
     <string name="ignore_display_cutout" maxLength="41">డిస్‌ప్లే కటౌట్‌ను విస్మరించండి</string>
-    <string name="hide_answer_buttons" maxLength="41">జవాబు బటన్లను దాచండి</string>
+    <string name="show_answer_buttons" maxLength="41">Show answer buttons</string>
     <string name="hide_hard_and_easy" maxLength="41">\'హార్డ్\' మరియు \'ఈజీ\' బటన్లను దాచండి</string>
     <string name="reviewer_frame_style" maxLength="41">Frame style</string>
     <string name="reviewer_frame_style_card" maxLength="41" comment="Style name of the \'Card\' card frame of the Study Screen">Card</string>
@@ -380,10 +379,11 @@
     <string name="reviewer_toolbar_none" maxLength="41" comment="Setting to remove the toolbar from the study screen">None</string>
     <string name="toolbar" maxLength="41">Toolbar</string>
     <string name="toolbar_actions" maxLength="41">Toolbar actions</string>
-    <string name="toolbar_position" maxLength="41">Toolbar position</string>
+    <string name="toolbar_position" maxLength="28">Toolbar position</string>
     <string name="new_study_screen" maxLength="41">New study screen</string>
     <string name="new_study_screen_summ"><![CDATA[Improved study screen that will succeed the current one. Some features of the old screen have been changed or removed. Please report any <a href="%1$s">feedback</a> or <a href="%2$s">bugs</a>.]]></string>
     <string name="show_answer_feedback" maxLength="41">Show answer feedback</string>
+    <string name="screen" maxLength="41">Screen</string>
     <!--Keyboard shortcuts dialog-->
     <string name="open_settings" comment="Description of the shortcut that opens the app settings">సెట్టింగ్‌లను తెరవండి</string>
 </resources>

@@ -46,19 +46,6 @@
     <string name="error_reporting_choice_always_report">Comunicar sempre</string>
     <string name="error_reporting_choice_never_report">Nunca comunicar</string>
     <string name="error_reporting_choice_ask_user">Perguntar-me</string>
-    <!-- leech_action_labels -->
-    <!-- 01-core:menu_suspend_card -->
-    <!-- new_order_labels -->
-    <!-- cram_deck_conf_order_labels -->
-    <string name="cram_deck_conf_order_oldest_seen_first">Mais antigas primeiro</string>
-    <string name="cram_deck_conf_order_random">Aleatória</string>
-    <string name="cram_deck_conf_order_increasing_intervals">Intervalos crescentes</string>
-    <string name="cram_deck_conf_order_decreasing_intervals">Intervalos decrescentes</string>
-    <string name="cram_deck_conf_order_most_lapsed">Mais falhadas</string>
-    <string name="cram_deck_conf_order_order_added">Ordem de adição</string>
-    <string name="cram_deck_conf_order_order_due">Ordem de revisão</string>
-    <string name="cram_deck_conf_order_latest_added_first">Primeiro, a última adicionada</string>
-    <string name="cram_deck_conf_order_relative_overdueness">Atrasos relativos</string>
     <!-- add_to_cur_labels -->
     <string name="add_to_deck_use_current_deck">Usar o baralho atual</string>
     <string name="add_to_deck_decide_by_note_type">Decidir por tipo de nota</string>
@@ -84,21 +71,21 @@
     <string name="answer_good" maxLength="41">Responder \"Bom\"</string>
     <string name="answer_easy" maxLength="41">Responder \"Fácil\"</string>
     <string name="gesture_abort_learning" maxLength="41">Fechar Ecrã de Estudo</string>
-    <string name="gesture_flag_red" maxLength="41">Activar/Desactivar Bandeira Vermelha</string>
-    <string name="gesture_flag_orange" maxLength="41">Activar/Desactivar Bandeira Laranja</string>
-    <string name="gesture_flag_green" maxLength="41">Activar/Desactivar Bandeira Verde</string>
-    <string name="gesture_flag_blue" maxLength="41">Activar/Desactivar Bandeira Azul</string>
-    <string name="gesture_flag_pink" maxLength="41">Activar/Desactivar Bandeira Rosa</string>
-    <string name="gesture_flag_turquoise" maxLength="41">Activar/Desactivar Bandeira Turquesa</string>
-    <string name="gesture_flag_purple" maxLength="41">Activar/Desactivar Bandeira Roxa</string>
-    <string name="gesture_flag_remove" maxLength="41">Remover Bandeira</string>
-    <string name="gesture_page_up" maxLength="41">Página Acima</string>
-    <string name="gesture_page_down" maxLength="41">Página Abaixo</string>
+    <string name="gesture_flag_red" maxLength="41">Toggle red flag</string>
+    <string name="gesture_flag_orange" maxLength="41">Toggle orange flag</string>
+    <string name="gesture_flag_green" maxLength="41">Toggle green flag</string>
+    <string name="gesture_flag_blue" maxLength="41">Toggle blue flag</string>
+    <string name="gesture_flag_pink" maxLength="41">Toggle pink flag</string>
+    <string name="gesture_flag_turquoise" maxLength="41">Toggle turquoise flag</string>
+    <string name="gesture_flag_purple" maxLength="41">Toggle purple flag</string>
+    <string name="gesture_flag_remove" maxLength="41">Remover bandeira</string>
+    <string name="gesture_page_up" maxLength="41">Page up</string>
+    <string name="gesture_page_down" maxLength="41">Page down</string>
     <string name="gesture_toggle_whiteboard" maxLength="41">Activar/Desactivar quadro de escrita</string>
     <string name="gesture_toggle_eraser" maxLength="41">Toggle eraser</string>
-    <string name="gesture_show_hint" maxLength="41">Mostrar Dica</string>
-    <string name="gesture_show_all_hints" maxLength="41">Mostrar todas as dicas</string>
-    <string name="record_voice" maxLength="41">Gravar Voz</string>
-    <string name="replay_voice" maxLength="41">Reproduzir Voz</string>
+    <string name="gesture_show_hint" maxLength="41">Revelar dica</string>
+    <string name="gesture_show_all_hints" maxLength="41">Revelar todas as dicas</string>
+    <string name="record_voice" maxLength="41">Gravar voz</string>
+    <string name="replay_voice" maxLength="41">Reproduzir voz</string>
     <string name="save_voice" maxLength="41">Guardar gravação</string>
 </resources>

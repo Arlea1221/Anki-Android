@@ -130,6 +130,8 @@
     <string name="multimedia_editor_failed">Nepodarilo sa otvoriť editor multimédií</string>
     <!-- Multimedia - Audio View -->
     <string name="multimedia_editor_audio_permission_denied">Povolenie pre audio nahrávanie bolo zamietnuté</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="recording_permission_denied_message">Microphone permission is necessary for the “Record voice” feature. Please grant it in the app settings.</string>
     <!-- Database Integrity Check -->
     <string name="integrity_check_startup_title">AnkiDroid aktualizovaný</string>
     <string name="integrity_check_startup_content">AnkiDroid bol aktualizovaný. Táto aktualizácia zahŕňa opravy súvisiace s možnými databázovými problémami, a preto teraz odporúčame vykonať kontrolu databázy.</string>
@@ -166,8 +168,8 @@
     <string name="locale_selection_dialog_summary">Niektoré multimediálne klávesnice, akými sú GBoard podporujú zmenu jazyka pri úprave textu\n\nProsím, vyžiadajte si od svojho výrobcu klávesnice prvok “setImeHintLocales”, ak vaša klávesnica nemení jazyk.</string>
     <!-- Help Dialog -->
     <string name="help_title_using_ankidroid">Používanie AnkiDroid-u</string>
-    <string name="help_item_ankidroid_manual">AnkiDroid Manual</string>
-    <string name="help_item_anki_manual">Anki Manual</string>
+    <string name="help_item_ankidroid_manual">AnkiDroid manual</string>
+    <string name="help_item_anki_manual">Anki manual</string>
     <string name="help_item_ankidroid_faq">AnkiDroid FAQ</string>
     <string name="help_title_get_help">Vyhľadať pomoc</string>
     <string name="help_item_mailing_list">Zoznam adries</string>
@@ -186,7 +188,7 @@
     <string name="help_item_twitter">Twitter</string>
     <string name="help_title_privacy">Súkromie</string>
     <string name="help_item_ankidroid_privacy_policy">Zásady ochrany osobných údajov AnkiDroid</string>
-    <string name="help_item_ankiweb_privacy_policy">Zásady ochrany osobných údajov Ankiweb</string>
+    <string name="help_item_ankiweb_privacy_policy">Zásady ochrany osobných údajov AnkiWeb</string>
     <string name="help_item_ankiweb_terms_and_conditions">Podmienky AnkiWeb</string>
     <string name="help_title_send_exception">Odoslať správu o riešení problémov</string>
     <string name="help_dialog_exception_report_debounce">Správa bola odoslaná</string>
@@ -209,8 +211,6 @@
     <string name="import_deck_package">Súbor balíčka</string>
     <string name="import_collection_package">Súbor zbierky</string>
     <string name="import_csv">Textový súbor (.txt .csv)</string>
-    <!-- Deck selection dialog -->
-    <string name="cannot_create_subdeck_for_all_decks">Nie je možné vytvoriť podbalíček pre všetky balíčky naraz</string>
     <!-- scoped storage -->
     <string name="backup_your_collection">Zálohovať zbierku</string>
     <string name="backup_collection_message">Už nejaký čas ste nezálohovali svoju zbierku. Ak sa chcete vyhnúť strate údajov, zálohujte si ju.</string>

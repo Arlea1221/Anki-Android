@@ -65,6 +65,18 @@
     <string name="save_whiteboard" maxLength="28">დაფის შენახვა</string>
     <string name="enable_stylus" maxLength="28">სტილუსის რეჟიმის ჩართვა</string>
     <string name="disable_stylus">სტილუსის რეჟიმის გამორთვა</string>
+    <string name="eraser" maxLength="28">Eraser</string>
+    <string name="add_brush" maxLength="28">Add brush</string>
+    <string name="whiteboard_align_left" comment="Option to align the whiteboard toolbar on the left" maxLength="28">Left</string>
+    <string name="whiteboard_align_bottom" comment="Option to align the whiteboard toolbar on the bottom" maxLength="28">Bottom</string>
+    <string name="whiteboard_align_right" comment="Option to align the whiteboard toolbar on the right" maxLength="28">Right</string>
+    <string name="whiteboard_clear" comment="Button text to clear the whiteboard" maxLength="28">Clear</string>
+    <string name="whiteboard_more_options" comment="Tooltip of the whiteboard \'More\' button" maxLength="28">More options</string>
+    <string name="whiteboard_remove_brush_message">Are you sure you want to remove this brush from your palette?</string>
+    <string name="whiteboard_ink_eraser" comment="Title of the whiteboard Ink eraser">Ink</string>
+    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">Stroke</string>
+    <string name="stylus_mode" comment="Title of the menu item that toggles the whiteboard stylus mode" maxLength="28">Stylus mode</string>
+    <string name="cannot_remove_last_brush_message">The last brush may not be removed</string>
     <string name="enable_whiteboard" maxLength="28">დაფის ჩართვა</string>
     <string name="disable_whiteboard">დაფის გამორთვა</string>
     <string name="show_whiteboard">დაფის ჩვენება</string>
@@ -83,6 +95,7 @@
     <string name="webview_crash_fatal">ფატალური შეცდომა: WebView მიმღები ავარიულად გაითიშა. მიზეზი: %s</string>
     <string name="webview_crash_loop_dialog_title">შეცდომა WebView სისტემის დამუშავებისას</string>
     <string name="webview_crash_loop_dialog_content">WebView სისტემამ ვერ დაამუშავა ბარათი „%1$s“.\n %2$s</string>
+    <string name="slide_to_cancel" comment="Message shown when pressing the record button">Slide to cancel</string>
     <string name="filter_by_flags" maxLength="41">დროშები</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">იქმნება იარლიყების სია&#8230;</string>
@@ -161,7 +174,7 @@
     <string name="export_email_subject">AnkiDroid-მა წარმატებით განახორციელა ბარათების ექსპორტი: %s</string>
     <string name="export_email_text"><![CDATA[        გამარჯობა!
         <br/><br/>
-        ეს არის Ankidroid-ის მიერ გამოგზავნილი ბარათების დასტა[1].
+        ეს არის AnkiDroid-ის მიერ გამოგზავნილი ბარათების დასტა[1].
         სცადეთ მისი გახსნა Anki-ს ნებისმიერი ხელმისაწვდომი ვერსიით[2] და ისიამოვნეთ ადვილი და შედეგიანი სწავლებით!<br/><br/>
         [1] %1$s<br/>
         [2] %2$s
@@ -180,11 +193,6 @@
     <string name="tag_editor_add_feedback">„%1$s-ის“ დამატების დასადასტურებლად შეეხეთ „%2$s-ს“</string>
     <string name="tag_editor_add_feedback_existing">მოინიშნა არსებული იარლიყი „%1$s“</string>
     <!-- Time spans -->
-    <string name="reminder_title">დღესაც ვიმეცადინოთ!</string>
-    <plurals name="reminder_text">
-        <item quantity="one">%2$d ბარათია გადასახედი %1$s-ში</item>
-        <item quantity="other">%2$d ბარათია გადასახედი %1$s-ში</item>
-    </plurals>
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">შეცდომა APKG ფაილის გაზიარებისას</string>
     <!-- Import and export v2 feedback -->
@@ -261,7 +269,7 @@
     <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
     <string name="percentage">%s%%</string>
     <string name="download_deck">დასტის ჩამოტვირთვა</string>
-    <string name="open_in_browser" comment="Label of a button inviting to open ankiweb\'s shared deck page if automated download failed">ბრაუზერში გახსნა</string>
+    <string name="open_in_browser" comment="Label of a button inviting to open ankiweb\'s shared deck page if automated download failed">Open in browser</string>
     <string name="try_again">ხელახლა სცადეთ</string>
     <string name="cancel_download">ჩამოტვირთვის გაუქმება</string>
     <string name="cancel_download_question_title">გაუქმდეს ჩამოტვირთვა?</string>
@@ -328,6 +336,9 @@
     <string name="tts_voices_failed_opening_tts_system_settings" comment="error message if opening the system text to speech settings fails">Failed to open text to speech settings</string>
     <string name="shared_decks_login_required">მეტი დასტის გადმოსაწერად, გთხოვთ, გაიაროთ ავტორიზაცია</string>
     <string name="deck_description_field_hint">აღწერა</string>
+    <string name="deck_description_saved">Description updated</string>
+    <string name="format_deck_description_as_markdown">Format as Markdown</string>
+    <string name="help_button_content_description">Open help for ‘%s’</string>
     <string name="failed_to_copy">კოპირება ვერ მოხერხდა</string>
     <string name="card_browser_unavailable_when_notes_mode">„შენიშვნების“ რეჟიმში ვერ გამოიყენებთ</string>
     <plurals name="unbury_cards_feedback">

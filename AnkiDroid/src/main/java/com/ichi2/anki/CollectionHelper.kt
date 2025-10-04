@@ -251,10 +251,11 @@ object CollectionHelper {
     fun getAppSpecificInternalAnkiDroidDirectory(context: Context): String = context.filesDir.absolutePath
 
     /**
-     *
      * @return the path to the actual [Collection] file
+     *
+     * @throws UnsupportedOperationException if the collection is in-memory
      */
-    fun getCollectionPath(context: Context) = getCollectionPaths(context).colDb
+    fun getCollectionPath(context: Context) = getCollectionPaths(context).requireDiskBasedCollection().colDb
 
     /** A temporary override for [getCurrentAnkiDroidDirectory] */
     var ankiDroidDirectoryOverride: File? = null
@@ -265,9 +266,10 @@ object CollectionHelper {
     fun getCurrentAnkiDroidDirectory(context: Context): File =
         getCurrentAnkiDroidDirectoryOptionalContext(context.sharedPrefs()) { context }
 
-    fun getCollectionPaths(context: Context): CollectionFiles = CollectionFiles(getCurrentAnkiDroidDirectory(context))
+    fun getCollectionPaths(context: Context): CollectionFiles = CollectionFiles.FolderBasedCollection(getCurrentAnkiDroidDirectory(context))
 
-    fun getMediaDirectory(context: Context) = getCollectionPaths(context).mediaFolder
+    // TODO: Duplicates collection.mediaFolder
+    fun getMediaDirectory(context: Context) = getCollectionPaths(context).requireMediaFolder()
 
     /**
      * An accessor which makes [Context] optional in the case that [PREF_COLLECTION_PATH] is set

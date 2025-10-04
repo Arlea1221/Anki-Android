@@ -105,7 +105,7 @@
     <string name="check_media_title">Kontrollera media?</string>
     <string name="check_media_warning">Det här kan ta lång tid för stora mediasamlingar</string>
     <string name="check_media_message">Kontrollerar media&#8230;</string>
-    <string name="check_media_adding_missing_tag">Adding tags&#8230;</string>
+    <string name="check_media_adding_missing_tag">Lägger till taggar&#8230;</string>
     <string name="check_media_tags_added">Tags added</string>
     <string name="delete_media_message">Tar bort media&#8230;</string>
     <string name="delete_media_result_title">Raderingsresultat</string>
@@ -124,6 +124,8 @@
     <string name="multimedia_editor_failed">Det gick inte att öppna Multimedia Editor</string>
     <!-- Multimedia - Audio View -->
     <string name="multimedia_editor_audio_permission_denied">Behörighet för ljudinspelning nekad</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="recording_permission_denied_message">Microphone permission is necessary for the “Record voice” feature. Please grant it in the app settings.</string>
     <!-- Database Integrity Check -->
     <string name="integrity_check_startup_title">AnkiDroid uppgraderat</string>
     <string name="integrity_check_startup_content">AnkiDroid har uppgraderats. Denna uppgradering innehåller rättelser för eventuella databasproblem, och vi rekommenderar dig att köra databaskontrollen nu.</string>
@@ -160,8 +162,8 @@
     <string name="locale_selection_dialog_summary">Vissa flerspråkiga tangentbord, till exempel GBoard har stöd för att ändra språk vid redigering av text\n\nVänligen begär funktionen ”setImeHintLocales” från din tangentbordstillverkare om ditt tangentbord inte ändrar språk.</string>
     <!-- Help Dialog -->
     <string name="help_title_using_ankidroid">Hur man använder AnkiDroid</string>
-    <string name="help_item_ankidroid_manual">AnkiDroid Manual</string>
-    <string name="help_item_anki_manual">Anki Manual</string>
+    <string name="help_item_ankidroid_manual">AnkiDroid manual</string>
+    <string name="help_item_anki_manual">Anki manual</string>
     <string name="help_item_ankidroid_faq">AnkiDroid FAQ</string>
     <string name="help_title_get_help">Få hjälp</string>
     <string name="help_item_mailing_list">E-postlista</string>
@@ -181,7 +183,7 @@
     <string name="help_title_privacy">Sekretess</string>
     <string name="help_item_ankidroid_privacy_policy">AnkiDroid Sekretesspolicy</string>
     <string name="help_item_ankiweb_privacy_policy">AnkiWeb Sekretesspolicy</string>
-    <string name="help_item_ankiweb_terms_and_conditions">AnikWeb Användarvillkor</string>
+    <string name="help_item_ankiweb_terms_and_conditions">AnkiWeb terms and conditions</string>
     <string name="help_title_send_exception">Skicka felsökningsrapport</string>
     <string name="help_dialog_exception_report_debounce">Rapporten har redan skickats</string>
     <string name="help_dialog_exception_report_sent">Rapporten har skickats!</string>
@@ -201,8 +203,6 @@
     <string name="import_deck_package">Kortlekspaket (.apkg)</string>
     <string name="import_collection_package">Samlingspaket (.colpkg)</string>
     <string name="import_csv">Textfil (.txt, .csv)</string>
-    <!-- Deck selection dialog -->
-    <string name="cannot_create_subdeck_for_all_decks">Du kan inte skapa en underkortlek för alla kortlekar</string>
     <!-- scoped storage -->
     <string name="backup_your_collection">Säkerhetskopiera din samling</string>
     <string name="backup_collection_message">Du har inte säkerhetskopierat din samling på ett tag. Du bör göra detta nu för att förhindra dataförlust</string>

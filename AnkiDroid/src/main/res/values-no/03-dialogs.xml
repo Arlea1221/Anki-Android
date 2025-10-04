@@ -124,6 +124,8 @@
     <string name="multimedia_editor_failed">Failed to open Multimedia Editor</string>
     <!-- Multimedia - Audio View -->
     <string name="multimedia_editor_audio_permission_denied">Audio recording permission denied</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="recording_permission_denied_message">Microphone permission is necessary for the “Record voice” feature. Please grant it in the app settings.</string>
     <!-- Database Integrity Check -->
     <string name="integrity_check_startup_title">AnkiDroid oppgradert</string>
     <string name="integrity_check_startup_content">AnkiDroid has been upgraded. This upgrade includes fixes for possible database problems, and we advise you to run check database now.</string>
@@ -164,7 +166,7 @@
     <string name="help_item_anki_manual">Anki brukerveiledning</string>
     <string name="help_item_ankidroid_faq">AnkiDroid FAQ</string>
     <string name="help_title_get_help">Få hjelp</string>
-    <string name="help_item_mailing_list">Mailing List</string>
+    <string name="help_item_mailing_list">Mailing list</string>
     <string name="help_item_reddit">Reddit</string>
     <string name="help_item_report_bug">Rapporter feil</string>
     <string name="help_title_support_ankidroid" maxLength="28">Støtt AnkiDroid</string>
@@ -179,9 +181,9 @@
     <string name="help_item_facebook">Facebook</string>
     <string name="help_item_twitter">Twitter</string>
     <string name="help_title_privacy">Personvern</string>
-    <string name="help_item_ankidroid_privacy_policy">AnkiDroid Privacy Policy</string>
-    <string name="help_item_ankiweb_privacy_policy">AnkiWeb Privacy Policy</string>
-    <string name="help_item_ankiweb_terms_and_conditions">AnkiWeb Vilkår og betingelser</string>
+    <string name="help_item_ankidroid_privacy_policy">AnkiDroid privacy policy</string>
+    <string name="help_item_ankiweb_privacy_policy">AnkiWeb privacy policy</string>
+    <string name="help_item_ankiweb_terms_and_conditions">AnkiWeb terms and conditions</string>
     <string name="help_title_send_exception">Send feilsøkingsrapport</string>
     <string name="help_dialog_exception_report_debounce">Rapporten er allerede sendt inn</string>
     <string name="help_dialog_exception_report_sent">Report was sent!</string>
@@ -201,8 +203,6 @@
     <string name="import_deck_package">Kortstokkpakke (.apkg)</string>
     <string name="import_collection_package">Samlingspakke (.colpkg)</string>
     <string name="import_csv">Tekstfil (.txt, .csv)</string>
-    <!-- Deck selection dialog -->
-    <string name="cannot_create_subdeck_for_all_decks">You cannot create a subdeck for all decks</string>
     <!-- scoped storage -->
     <string name="backup_your_collection">Lag en sikkerhetskopi for din samling</string>
     <string name="backup_collection_message">Du har ikke laget sikkerhetskopi av samlingen din på en stund. Gjør dette nå for å unngå å miste dine data.</string>

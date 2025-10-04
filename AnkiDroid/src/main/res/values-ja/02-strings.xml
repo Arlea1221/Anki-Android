@@ -47,7 +47,7 @@
     <!-- Navigation drawer strings -->
     <string name="drawer_open">ナビゲーションドロワーを開く</string>
     <string name="drawer_close">ナビゲーションドロワーを閉じる</string>
-    <string name="note_message">Note saved</string>
+    <string name="note_message">ノートを保存しました</string>
     <string name="CardEditorCardDeck">カードデッキ:</string>
     <string name="CardEditorNoteDeck">デッキ:</string>
     <string name="CardEditorModel">ノートタイプ:</string>
@@ -65,6 +65,18 @@
     <string name="save_whiteboard" maxLength="28">ホワイトボードの内容を保存</string>
     <string name="enable_stylus" maxLength="28">スタイラスモードをオン</string>
     <string name="disable_stylus">スタイラスモードをオフ</string>
+    <string name="eraser" maxLength="28">描線を消す</string>
+    <string name="add_brush" maxLength="28">ブラシを追加</string>
+    <string name="whiteboard_align_left" comment="Option to align the whiteboard toolbar on the left" maxLength="28">左</string>
+    <string name="whiteboard_align_bottom" comment="Option to align the whiteboard toolbar on the bottom" maxLength="28">下</string>
+    <string name="whiteboard_align_right" comment="Option to align the whiteboard toolbar on the right" maxLength="28">右</string>
+    <string name="whiteboard_clear" comment="Button text to clear the whiteboard" maxLength="28">全体</string>
+    <string name="whiteboard_more_options" comment="Tooltip of the whiteboard \'More\' button" maxLength="28">その他のオプション</string>
+    <string name="whiteboard_remove_brush_message">このブラシをパレットから削除してもよろしいですか？</string>
+    <string name="whiteboard_ink_eraser" comment="Title of the whiteboard Ink eraser">部分</string>
+    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">線</string>
+    <string name="stylus_mode" comment="Title of the menu item that toggles the whiteboard stylus mode" maxLength="28">スタイラス モード</string>
+    <string name="cannot_remove_last_brush_message">最後のブラシは削除できません</string>
     <string name="enable_whiteboard" maxLength="28">ホワイトボード機能をオン</string>
     <string name="disable_whiteboard">ホワイトボード機能をオフ</string>
     <string name="show_whiteboard">ホワイトボードを表示</string>
@@ -83,6 +95,7 @@
     <string name="webview_crash_fatal">重大なエラー: WebViewレンダラーがクラッシュしました。原因: %s</string>
     <string name="webview_crash_loop_dialog_title">システムのWebViewのレンダリング失敗</string>
     <string name="webview_crash_loop_dialog_content">AndroidシステムのWebViewがカード \'%1$s\' のレンダリングに失敗しました。\n %2$s</string>
+    <string name="slide_to_cancel" comment="Message shown when pressing the record button">左にｽﾗｲﾄﾞでｷｬﾝｾﾙ</string>
     <string name="filter_by_flags" maxLength="41">フラグ</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">タグのリストを作成しています&#8230;</string>
@@ -108,10 +121,10 @@
     <string name="missing_note_type">ノートタイプが見つかりませんでした</string>
     <string name="card_previewer_empty_front_indicator" comment="Extra text appended onto a tab title in the card previewer so that the user can see at a glance whether a card has no front.">%1$s (空)</string>
     <!-- Image cropper -->
-    <string name="image_cropper_action_rotate" maxLength="28" comment="Action in image cropper screen">Rotate</string>
-    <string name="image_cropper_action_flip" maxLength="28" comment="Action in image cropper screen">Flip</string>
-    <string name="image_cropper_action_flip_horizontally" maxLength="28" comment="Submenu action in image cropper screen">Flip horizontally</string>
-    <string name="image_cropper_action_flip_vertically" maxLength="28" comment="Submenu action in image cropper screen">Flip vertically</string>
+    <string name="image_cropper_action_rotate" maxLength="28" comment="Action in image cropper screen">回転</string>
+    <string name="image_cropper_action_flip" maxLength="28" comment="Action in image cropper screen">反転</string>
+    <string name="image_cropper_action_flip_horizontally" maxLength="28" comment="Submenu action in image cropper screen">左右反転</string>
+    <string name="image_cropper_action_flip_vertically" maxLength="28" comment="Submenu action in image cropper screen">上下反転</string>
     <!-- Timebox -->
     <string name="timebox_reached_title">タイムボックスの時間です</string>
     <plurals name="timebox_reached">
@@ -147,7 +160,7 @@
     <string name="import_error_handle_exception">ファイル\n\n%s\n\nのインポートに失敗しました</string>
     <string name="import_error_not_apkg_extension">ファイル名 \"%s\" は拡張子が .apkg か .colpkg ではありません。</string>
     <string name="import_error_load_imported_database">Anki Database (.anki2) の置換はまだサポートされていません。マニュアルを参照してください。</string>
-    <string name="import_error_content_provider">選択されたファイルをAnkiDroidによって自動的にインポートできませんでした。Ankiファイルを手動でインポートする方法については、マニュアルをご覧ください: \n %s</string>
+    <string name="import_error_content_provider">選択したファイルを自動インポートできませんでした。手動でインポートする方法については、ユーザーマニュアルを参照してください。\n%s</string>
     <string name="import_error_copy_to_cache">一時ファイルの作成に失敗しました（ストレージの空き容量が不足している可能性があります）</string>
     <string name="import_interrupted">インポートが中断されました: AnkiDroidが閉じられました</string>
     <string name="export_ready_title">エクスポートの準備完了</string>
@@ -177,10 +190,6 @@
     <string name="tag_editor_add_feedback">「%1$s」の追加を確定するには「%2$s」をタップしてください</string>
     <string name="tag_editor_add_feedback_existing">既存のタグ「%1$s」を選択しました</string>
     <!-- Time spans -->
-    <string name="reminder_title">今日も学習しましょう！</string>
-    <plurals name="reminder_text">
-        <item quantity="other">課題: %2$d枚 （%1$s）</item>
-    </plurals>
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">Ankiファイル（*.apkg）の共有中にエラーが発生しました</string>
     <!-- Import and export v2 feedback -->
@@ -323,6 +332,9 @@
     <string name="tts_voices_failed_opening_tts_system_settings" comment="error message if opening the system text to speech settings fails">テキスト読み上げの設定を開けませんでした</string>
     <string name="shared_decks_login_required">さらにデッキをダウンロードするにはログインしてください</string>
     <string name="deck_description_field_hint">デッキ説明文</string>
+    <string name="deck_description_saved">説明を更新しました</string>
+    <string name="format_deck_description_as_markdown">Markdown形式でフォーマット</string>
+    <string name="help_button_content_description">「%s」のヘルプを開く</string>
     <string name="failed_to_copy">コピーに失敗しました</string>
     <string name="card_browser_unavailable_when_notes_mode">「ノート」モードでは使用できません</string>
     <plurals name="unbury_cards_feedback">

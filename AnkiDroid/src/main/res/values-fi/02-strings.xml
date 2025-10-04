@@ -65,6 +65,18 @@
     <string name="save_whiteboard" maxLength="28">Tallenna tussitaulu</string>
     <string name="enable_stylus" maxLength="28">Ota käyttöön kynäkirjoitus</string>
     <string name="disable_stylus">Poista kynäkirjoitus käytöstä</string>
+    <string name="eraser" maxLength="28">Eraser</string>
+    <string name="add_brush" maxLength="28">Add brush</string>
+    <string name="whiteboard_align_left" comment="Option to align the whiteboard toolbar on the left" maxLength="28">Left</string>
+    <string name="whiteboard_align_bottom" comment="Option to align the whiteboard toolbar on the bottom" maxLength="28">Bottom</string>
+    <string name="whiteboard_align_right" comment="Option to align the whiteboard toolbar on the right" maxLength="28">Right</string>
+    <string name="whiteboard_clear" comment="Button text to clear the whiteboard" maxLength="28">Clear</string>
+    <string name="whiteboard_more_options" comment="Tooltip of the whiteboard \'More\' button" maxLength="28">More options</string>
+    <string name="whiteboard_remove_brush_message">Are you sure you want to remove this brush from your palette?</string>
+    <string name="whiteboard_ink_eraser" comment="Title of the whiteboard Ink eraser">Ink</string>
+    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">Stroke</string>
+    <string name="stylus_mode" comment="Title of the menu item that toggles the whiteboard stylus mode" maxLength="28">Stylus mode</string>
+    <string name="cannot_remove_last_brush_message">The last brush may not be removed</string>
     <string name="enable_whiteboard" maxLength="28">Ota kirjoitustaulu käyttöön</string>
     <string name="disable_whiteboard">Poista kirjoitustaulu käytöstä</string>
     <string name="show_whiteboard">Näytä kirjoitustaulu</string>
@@ -83,6 +95,7 @@
     <string name="webview_crash_fatal">Kriittinen virhe: WebView-renderöijä kaatui. Syy: %s</string>
     <string name="webview_crash_loop_dialog_title">Järjestelmän WebView Renderöinti Epäonnistui</string>
     <string name="webview_crash_loop_dialog_content">Järjestelmän WebView ei pystynyt näyttämään korttia \'%1$s\'.\n %2$s</string>
+    <string name="slide_to_cancel" comment="Message shown when pressing the record button">Slide to cancel</string>
     <string name="filter_by_flags" maxLength="41">Liput</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">Building list of tags&#8230;</string>
@@ -150,7 +163,7 @@
     <string name="import_error_handle_exception">Tiedoston tuonti epäonnistui\n\n%s</string>
     <string name="import_error_not_apkg_extension">Tiedostolla ”%s” ei ole .apkg tai .colpkg päätettä</string>
     <string name="import_error_load_imported_database">Ankin tietokannan (.anki2) korvaamista ei vielä tueta. Katso korvausohjeet käyttöoppaasta.</string>
-    <string name="import_error_content_provider">Valittua tiedostoa ei voitu tuoda automaattisesti AnkiDroidiin. Katso käyttöohjeesta, kuinka tuoda manuaalisesti anki-tiedostoja: \n%s</string>
+    <string name="import_error_content_provider">Valittua tiedostoa ei voitu tuoda automaattisesti AnkiDroidiin. Katso käyttöohjeesta, kuinka tuoda manuaalisesti Anki-tiedostoja: \n%s</string>
     <string name="import_error_copy_to_cache">Tiedoston tallentaminen välimuistiin epäonnistui (tallennustila on mahdollisesti loppunut).</string>
     <string name="import_interrupted">Tuonti keskeytyi: AnkiDroid suljettiin</string>
     <string name="export_ready_title">Vienti valmis</string>
@@ -180,11 +193,6 @@
     <string name="tag_editor_add_feedback">Paina ”%2$s” vahvistaaksesi ”%1$s”:n lisääminen</string>
     <string name="tag_editor_add_feedback_existing">Olemassa oleva tunniste ”%1$s” valittu</string>
     <!-- Time spans -->
-    <string name="reminder_title">Älä unohda opiskella tänään!</string>
-    <plurals name="reminder_text">
-        <item quantity="one">%2$d kortti kerrattavana %1$s :ssa</item>
-        <item quantity="other">%2$d korttia kerrattavana %1$s :ssa</item>
-    </plurals>
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">Virhe jaettaessa apkg-tiedostoa</string>
     <!-- Import and export v2 feedback -->
@@ -261,7 +269,7 @@
     <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
     <string name="percentage">%s%%</string>
     <string name="download_deck">Lataa pakka</string>
-    <string name="open_in_browser" comment="Label of a button inviting to open ankiweb\'s shared deck page if automated download failed">Open in Browser</string>
+    <string name="open_in_browser" comment="Label of a button inviting to open ankiweb\'s shared deck page if automated download failed">Open in browser</string>
     <string name="try_again">Yritä uudelleen</string>
     <string name="cancel_download">Peruuta lataus</string>
     <string name="cancel_download_question_title">Peruutetaanko lataus?</string>
@@ -328,6 +336,9 @@
     <string name="tts_voices_failed_opening_tts_system_settings" comment="error message if opening the system text to speech settings fails">Failed to open text to speech settings</string>
     <string name="shared_decks_login_required">Kirjaudu sisään ladataksesi lisää pakkoja</string>
     <string name="deck_description_field_hint">Kuvaus</string>
+    <string name="deck_description_saved">Description updated</string>
+    <string name="format_deck_description_as_markdown">Format as Markdown</string>
+    <string name="help_button_content_description">Open help for ‘%s’</string>
     <string name="failed_to_copy">Kopiointi epäonnistui</string>
     <string name="card_browser_unavailable_when_notes_mode">Ei saatavilla ”Muistiinpanot” -tilassa</string>
     <plurals name="unbury_cards_feedback">

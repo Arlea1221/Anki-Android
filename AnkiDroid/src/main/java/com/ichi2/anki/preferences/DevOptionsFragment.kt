@@ -28,7 +28,6 @@ import com.ichi2.anki.CrashReportService
 import com.ichi2.anki.R
 import com.ichi2.anki.analytics.UsageAnalytics
 import com.ichi2.anki.launchCatchingTask
-import com.ichi2.anki.libanki.newNote
 import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.showThemedToast
 import com.ichi2.anki.snackbar.showSnackbar
@@ -37,6 +36,7 @@ import com.ichi2.preferences.IncrementerNumberRangePreferenceCompat
 import com.ichi2.utils.show
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import timber.log.Timber
 import java.io.File
 
@@ -91,6 +91,26 @@ class DevOptionsFragment : SettingsFragment() {
             launchCatchingTask { withCol { Thread.sleep(1000 * 86400) } }
             false
         }
+        // Apply invalid FSRS Parameters (DeckConfigId 1)
+        requirePreference<Preference>(R.string.pref_corrupt_fsrs_params).setOnPreferenceClickListener {
+            Timber.w("Corrupting FSRS parameters for default deck config")
+            launchCatchingTask {
+                withCol {
+                    val defaultConfig = decks.getConfig(1)
+                    val invalidFsrsConfig =
+                        JSONArray().apply {
+                            put(0.4197)
+                        }
+                    defaultConfig.jsonObject.put("fsrsWeights", invalidFsrsConfig)
+                    defaultConfig.jsonObject.put("fsrsParams5", invalidFsrsConfig)
+                    defaultConfig.jsonObject.put("fsrsParams6", invalidFsrsConfig)
+                    decks.save(defaultConfig)
+                }
+                showThemedToast(requireContext(), "Parameters corrupted. Optimize to fix", false)
+            }
+            false
+        }
+
         // Make it possible to test crash reporting
         requirePreference<Preference>(R.string.pref_set_database_path_debug_key).setOnPreferenceClickListener {
             AlertDialog.Builder(requireContext()).show {
@@ -170,13 +190,6 @@ class DevOptionsFragment : SettingsFragment() {
             ActivityCompat.recreate(requireActivity())
             true
         }
-
-        requirePreference<Preference>(R.string.new_reviewer_pref_key).setOnPreferenceChangeListener { pref, newValue ->
-            val boolValue = newValue as? Boolean ?: return@setOnPreferenceChangeListener false
-            pref.sharedPreferences?.edit { putBoolean("newReviewerOptions", boolValue) }
-            ActivityCompat.recreate(requireActivity())
-            true
-        }
     }
 
     /**
@@ -196,7 +209,7 @@ class DevOptionsFragment : SettingsFragment() {
                     withCol {
                         val deck = decks.addNormalDeckWithName(deckName(i))
                         addNote(
-                            newNote().apply { setField(0, "$i") },
+                            newNote(notetypes.current()).apply { setField(0, "$i") },
                             deck.id,
                         )
                     }

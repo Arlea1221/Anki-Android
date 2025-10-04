@@ -65,6 +65,18 @@
     <string name="save_whiteboard" maxLength="28">حفظ السبورة</string>
     <string name="enable_stylus" maxLength="28">تفعيل وضع القلم</string>
     <string name="disable_stylus">تعطيل وضع القلم</string>
+    <string name="eraser" maxLength="28">ممحاة</string>
+    <string name="add_brush" maxLength="28">إضافة فرشة</string>
+    <string name="whiteboard_align_left" comment="Option to align the whiteboard toolbar on the left" maxLength="28">شمال</string>
+    <string name="whiteboard_align_bottom" comment="Option to align the whiteboard toolbar on the bottom" maxLength="28">أسفل</string>
+    <string name="whiteboard_align_right" comment="Option to align the whiteboard toolbar on the right" maxLength="28">يمين</string>
+    <string name="whiteboard_clear" comment="Button text to clear the whiteboard" maxLength="28">محو</string>
+    <string name="whiteboard_more_options" comment="Tooltip of the whiteboard \'More\' button" maxLength="28">مزيد من الخيارات</string>
+    <string name="whiteboard_remove_brush_message">أواثق أنك تود إزالة هذه الفرشة من لوحة الألوان خاصتك؟</string>
+    <string name="whiteboard_ink_eraser" comment="Title of the whiteboard Ink eraser">حبر</string>
+    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">خط</string>
+    <string name="stylus_mode" comment="Title of the menu item that toggles the whiteboard stylus mode" maxLength="28">وضع القلم</string>
+    <string name="cannot_remove_last_brush_message">لا يمكن إزالة آخر فرشة</string>
     <string name="enable_whiteboard" maxLength="28">تفعيل السبورة</string>
     <string name="disable_whiteboard">تعطيل السبورة</string>
     <string name="show_whiteboard">إظهار السبورة</string>
@@ -83,6 +95,7 @@
     <string name="webview_crash_fatal">خلل فادح: تَعطَّل معالج الويب فيو. المسبب: %s</string>
     <string name="webview_crash_loop_dialog_title">فَشَلٌ في معالجة الويب فيو الخاص بالنظام</string>
     <string name="webview_crash_loop_dialog_content">فَشِلَ ويب فيو الخاص بالنظام في عرض البطاقة %1$s.\n %2$s</string>
+    <string name="slide_to_cancel" comment="Message shown when pressing the record button">اسحب للإلغاء</string>
     <string name="filter_by_flags" maxLength="41">الأعلام</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">يتم بناء مجموعة الوسوم&#8230;</string>
@@ -98,7 +111,7 @@
     <string name="studyoptions_total_new_label">مجموع البطاقات الجديدة</string>
     <string name="studyoptions_total_label">مجموع البطاقات</string>
     <!-- Card editor -->
-    <string name="cardeditor_title_edit_card" maxLength="28">حرر الملحوظة</string>
+    <string name="cardeditor_title_edit_card" maxLength="28">تحرير الملحوظة</string>
     <string name="discard">تجاهل</string>
     <string name="note_editor_no_cards_created">لم تُنشَأ أي بطاقات. الرجاء تعبئة مزيد من الحقول</string>
     <string name="note_editor_no_cards_created_all_fields">لا يولِّد نوع الملحوظة الحالية أي بطاقات.\nالرجاء اختيار نوع آخر، أو الضغط على «بطاقات» وإضافة بديل حقل</string>
@@ -162,7 +175,7 @@
     <string name="import_error_handle_exception">فشِل استيراد الملف\n\n%s</string>
     <string name="import_error_not_apkg_extension">لا يحتوي اسم الملف «%s» على ملحق «.apkg» أو «.colpkg»</string>
     <string name="import_error_load_imported_database">استبدالات قاعدة بيانات آنكي «.anki2» ليست مدعومة بعد. الرجاء الاطلاع على الدليل حول تعليمات الاستبدال.</string>
-    <string name="import_error_content_provider">لا يمكن استيراد الملف المحدد تلقائيًا بواسطة آنكي درويد. الرجاء الإطلاع على دليل المستخدم لكيفية استيراد ملفات آنكي يدويًا: \n%s</string>
+    <string name="import_error_content_provider">تعذر استيراد المِلَفّ المحدد تلقائيًا بواسطة آنكي درويد. الرجاء الاطّلاع على دليل المستخدم لكيفية استيراد ملفات آنكي يدويًا: \n%s</string>
     <string name="import_error_copy_to_cache">فشل تخزين الملف مؤقتًا (ربما بسبب نفاد مساحة التخزين)</string>
     <string name="import_interrupted">تمت مقاطعة الاستيراد: لقد أُغلق آنكي درويد</string>
     <string name="export_ready_title">المُصَدَّر مُعدّ</string>
@@ -192,15 +205,6 @@
     <string name="tag_editor_add_feedback">انقر «%2$s» لتُأكِّد إضافة «%1$s»</string>
     <string name="tag_editor_add_feedback_existing">تم تحديد الوسم الموجود «%1$s»</string>
     <!-- Time spans -->
-    <string name="reminder_title">لا تنسَ أن تدرس اليوم!</string>
-    <plurals name="reminder_text">
-        <item quantity="zero">%2$d بطاقة بانتظار المراجعة في %1$s</item>
-        <item quantity="one">%2$d بطاقة بانتظار المراجعة في %1$s</item>
-        <item quantity="two">%2$d بطاقة بانتظار المراجعة في %1$s</item>
-        <item quantity="few">%2$d بطاقات بانتظار المراجعة في %1$s</item>
-        <item quantity="many">%2$d بطاقة بانتظار المراجعة في %1$s</item>
-        <item quantity="other">%2$d بطاقة بانتظار المراجعة في %1$s</item>
-    </plurals>
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">حدث خطأ أثناء مشاركة ملف «apkg»</string>
     <!-- Import and export v2 feedback -->
@@ -348,6 +352,9 @@
     <string name="tts_voices_failed_opening_tts_system_settings" comment="error message if opening the system text to speech settings fails">فشل فتح إعدادات تحويل النص إلى كلام</string>
     <string name="shared_decks_login_required">الرجاء تسجيل الدخول لتنزيل المزيد من المجموعات</string>
     <string name="deck_description_field_hint">الوصف</string>
+    <string name="deck_description_saved">تم تعديل الوصف</string>
+    <string name="format_deck_description_as_markdown">تنسيق كـ Markdown</string>
+    <string name="help_button_content_description">مساعدة حول «%s»</string>
     <string name="failed_to_copy">فشل النسخ</string>
     <string name="card_browser_unavailable_when_notes_mode">غير متوفر في وضع الملحوظات</string>
     <plurals name="unbury_cards_feedback">
@@ -373,7 +380,7 @@
     <string name="deck_picker_group" comment="Label for the group of shortcuts related to the deck picker">مُخيِّر الرِزم</string>
     <string name="delete_deck_without_confirmation" comment="Description of the shortcut that deletes the deck without asking for confirmation">إحذف الرزم بلا تأكيد</string>
     <string name="note_editor_group" comment="Label for the group of shortcuts related to the note editor">محرر الملحوظات</string>
-    <string name="select_deck" comment="Description of the shortcut that opens the deck selection dialog">اختر رزمة</string>
+    <string name="select_deck" comment="Description of the shortcut that opens the deck selection dialog">اختيار رِزمة</string>
     <string name="select_note_type" comment="Description of the shortcut that shows the note selection spinner">إختر نوع الملحوظة</string>
     <string name="tag_editor" comment="Description of the shortcut that opens the tags dialog">محرر الوسوم</string>
     <string name="card_template_editor_group" comment="Label for the group of shortcuts related to the card template editor">محرر قوالب البطاقات</string>

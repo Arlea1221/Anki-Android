@@ -38,16 +38,14 @@ document.addEventListener("focusout", event => {
     window.location.href = `ankidroid://focusout`;
 });
 
-globalThis.ankidroid.doubleTapTimeout = 200;
-
 (() => {
     const SCHEME = "gesture";
+    const MULTI_TOUCH_TIMEOUT = 300;
 
     let startX = 0,
         startY = 0,
         touchCount = 0,
-        touchStartTime = 0,
-        tapTimer = null;
+        touchStartTime = 0;
 
     document.addEventListener(
         "touchstart",
@@ -57,7 +55,7 @@ globalThis.ankidroid.doubleTapTimeout = 200;
             startY = event.touches[0].pageY;
             // start counting from the first finger touch
             if (touchCount == 1) {
-                touchStartTime = new Date().getTime();
+                touchStartTime = Date.now();
             }
         },
         { passive: true },
@@ -75,25 +73,16 @@ globalThis.ankidroid.doubleTapTimeout = 200;
             )
                 return;
 
-            // Multi-finger detection. Takes priority over double taps
+            // Multi-finger detection
             if (touchCount > 1) {
-                const params = new URLSearchParams({
-                    touchCount: touchCount,
-                    deltaTime: new Date().getTime() - touchStartTime,
-                });
-                window.location.href = `${SCHEME}://multiFingerTap/?${params.toString()}`;
+                if (Date.now() - touchStartTime > MULTI_TOUCH_TIMEOUT) {
+                    return;
+                }
+                window.location.href = `${SCHEME}://multiFingerTap/?touchCount=${touchCount}`;
                 return;
             }
 
-            // Double tap detection
-            if (tapTimer != null) {
-                clearTimeout(tapTimer);
-                tapTimer = null;
-                window.location.href = `${SCHEME}://doubleTap`;
-                return;
-            }
-
-            // Swipes and single tap detection
+            // Swipes and tap detection
             const endX = event.changedTouches[0].pageX;
             const endY = event.changedTouches[0].pageY;
             const scrollDirection = getScrollDirection(event.target);
@@ -102,15 +91,12 @@ globalThis.ankidroid.doubleTapTimeout = 200;
                 y: Math.round(endY),
                 deltaX: Math.round(endX - startX),
                 deltaY: Math.round(endY - startY),
+                time: Date.now(),
             });
             if (scrollDirection !== null) {
                 params.append("scrollDirection", scrollDirection);
             }
-            const requestUrl = `${SCHEME}://tapOrSwipe/?${params.toString()}`;
-            tapTimer = setTimeout(() => {
-                window.location.href = requestUrl;
-                tapTimer = null;
-            }, ankidroid.doubleTapTimeout);
+            window.location.href = `${SCHEME}://tapOrSwipe/?${params.toString()}`;
         },
         { passive: true },
     );

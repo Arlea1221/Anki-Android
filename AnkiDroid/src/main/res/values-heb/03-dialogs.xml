@@ -131,6 +131,8 @@
     <string name="multimedia_editor_failed">נכשל בפתיחת עורך מדיה.</string>
     <!-- Multimedia - Audio View -->
     <string name="multimedia_editor_audio_permission_denied">הרשאת הקלטת שמע נדחתה</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="recording_permission_denied_message">Microphone permission is necessary for the “Record voice” feature. Please grant it in the app settings.</string>
     <!-- Database Integrity Check -->
     <string name="integrity_check_startup_title">שדרוג ל־AnkiDroid</string>
     <string name="integrity_check_startup_content">AnkiDroid שודרג. שדרוג זה כולל תיקונים לבעיות אפשריות במסד הנתונים, ואנו ממליצים לך להפעיל את מסד הנתונים לבדוק כעת.</string>
@@ -154,7 +156,7 @@
     <string name="error_deleting_image">שגיאה במחיקת התמונה</string>
     <string name="failed_to_apply_background_image">החלת תמונת הרקע %s נכשלה</string>
     <string name="background_image_too_large">רקע בוחר החפיסות גדול מדי</string>
-    <string name="image_max_size_allowed" comment="Consider keeping the unbreakable space after the digit">Maximum image size %d MB allowed</string>
+    <string name="image_max_size_allowed" comment="Consider keeping the unbreakable space after the digit">גודל תמונה מקסימלי המותר הוא %d MB</string>
     <string name="image_dimensions_too_large">ממדי התמונה גדולים מדי (%1$d × %2$d)</string>
     <!-- Global Intent handler -->
     <!-- Also used by Card Browser, not renaming to save translators effort -->
@@ -194,10 +196,10 @@
     <string name="help_dialog_exception_report_sent">הדוח נשלח!</string>
     <!--Sync-->
     <plurals name="sync_automatic_sync_needs_more_time">
-        <item quantity="one" comment="Consider keeping the unbreakable space after the digit">An automatic sync may be triggered in %d second</item>
-        <item quantity="two">An automatic sync may be triggered in %d seconds</item>
-        <item quantity="many">An automatic sync may be triggered in %d seconds</item>
-        <item quantity="other" comment="Consider keeping the unbreakable space after the digit">An automatic sync may be triggered in %d seconds</item>
+        <item quantity="one" comment="Consider keeping the unbreakable space after the digit">ייתכן שסנכרון אוטומטי יופעל בעוד %d שניה</item>
+        <item quantity="two">ייתכן שסנכרון אוטומטי יופעל בעוד %d שניות</item>
+        <item quantity="many">ייתכן שסנכרון אוטומטי יופעל בעוד %d שניות</item>
+        <item quantity="other" comment="Consider keeping the unbreakable space after the digit">ייתכן שסנכרון אוטומטי יופעל בעוד %d שניות</item>
     </plurals>
     <string name="metered_sync_data_warning">ספק האינטרנט שלך עשוי לגבות כסף עבור שימוש בנתונים</string>
     <string name="deck_picker_new">מספר הכרטיסים החדשים שניתן לראות היום בחפיסה זו.</string>
@@ -210,8 +212,6 @@
     <string name="import_deck_package">חבילת חפיסות(.apkg)</string>
     <string name="import_collection_package">חבילת אוסף (.colpkg)</string>
     <string name="import_csv">קובץ טקסט (.txt, .csv)</string>
-    <!-- Deck selection dialog -->
-    <string name="cannot_create_subdeck_for_all_decks">לא ניתן ליצור תת-חפיסה עבור כל החפיסות</string>
     <!-- scoped storage -->
     <string name="backup_your_collection">גבה את האוסף שלך</string>
     <string name="backup_collection_message">לא גיבית את האוסף שלך זמן מה.  עליך לעשות זאת כעת כדי למנוע אובדן נתונים</string>
@@ -246,10 +246,10 @@
         <item quantity="other">ימים</item>
     </plurals>
     <plurals name="set_due_date_current_interval">
-        <item quantity="one">Current interval: %d day</item>
-        <item quantity="two">Current interval: %d days</item>
-        <item quantity="many">Current interval: %d days</item>
-        <item quantity="other">Current interval: %d days</item>
+        <item quantity="one">מרווח נוכחי: %d יום</item>
+        <item quantity="two">מרווח נוכחי: %d ימים</item>
+        <item quantity="many">מרווח נוכחי: %d ימים</item>
+        <item quantity="other">מרווח נוכחי: %d ימים</item>
     </plurals>
     <string name="range_delimiter" comment="Placed between two input boxes to denote a range">-</string>
     <string name="set_due_date_range_start" comment="\'Set Due Date\' may change the due date of a card to a random number of days in the future. This labels the \'minimum\' value of this range (inclusive)">מ</string>

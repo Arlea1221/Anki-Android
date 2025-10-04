@@ -124,6 +124,8 @@
     <string name="multimedia_editor_failed">મલ્ટીમીડિયા એડિટર ખોલવામાં નિષ્ફળ</string>
     <!-- Multimedia - Audio View -->
     <string name="multimedia_editor_audio_permission_denied">ઑડિયો રેકોર્ડિંગની પરવાનગી નકારી</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="recording_permission_denied_message">Microphone permission is necessary for the “Record voice” feature. Please grant it in the app settings.</string>
     <!-- Database Integrity Check -->
     <string name="integrity_check_startup_title">AnkiDroid અપગ્રેડ કર્યું</string>
     <string name="integrity_check_startup_content">AnkiDroid ને અપગ્રેડ કરવામાં આવ્યું છે. આ અપગ્રેડમાં સંભવિત ડેટાબેઝ સમસ્યાઓ માટેના ફિક્સેસનો સમાવેશ થાય છે, અને અમે તમને હમણાં જ ડેટાબેઝ ચેક કરવા માટે સલાહ આપીએ છીએ.</string>
@@ -160,13 +162,13 @@
     <string name="locale_selection_dialog_summary">કેટલાક બહુભાષી કીબોર્ડ, જેમ કે GBoard ટેક્સ્ટને સંપાદિત કરતી વખતે ભાષા બદલવાનું સમર્થન કરે છે\n\nજો તમારું કીબોર્ડ ભાષા બદલતું નથી, તો કૃપા કરીને તમારા કીબોર્ડ ઉત્પાદક પાસેથી “setImeHintLocales” સુવિધાની વિનંતી કરો.</string>
     <!-- Help Dialog -->
     <string name="help_title_using_ankidroid">AnkiDroid નો ઉપયોગ કરવો</string>
-    <string name="help_item_ankidroid_manual">AnkiDroid મેન્યુઅલ</string>
-    <string name="help_item_anki_manual">અંકી મેન્યુઅલ</string>
+    <string name="help_item_ankidroid_manual">AnkiDroid manual</string>
+    <string name="help_item_anki_manual">Anki manual</string>
     <string name="help_item_ankidroid_faq">AnkiDroid FAQ</string>
-    <string name="help_title_get_help">મદદ મેળવો</string>
-    <string name="help_item_mailing_list">ટપાલ યાદી</string>
+    <string name="help_title_get_help">Get help</string>
+    <string name="help_item_mailing_list">Mailing list</string>
     <string name="help_item_reddit">રેડિટ</string>
-    <string name="help_item_report_bug">બગની જાણ કરો</string>
+    <string name="help_item_report_bug">Report a bug</string>
     <string name="help_title_support_ankidroid" maxLength="28">AnkiDroid ને સપોર્ટ કરો</string>
     <string name="help_item_support_opencollective_donate">દાન કરો</string>
     <string name="help_item_support_develop_ankidroid">વિકાસ</string>
@@ -174,14 +176,14 @@
     <string name="help_item_support_other_ankidroid">અન્ય</string>
     <string name="multimedia_editor_trans_translate">અનુવાદ કરો</string>
     <string name="help_title_community">સમુદાય</string>
-    <string name="help_item_anki_forums">Anki ફોરમ્સ</string>
+    <string name="help_item_anki_forums">Anki forums</string>
     <string name="help_item_discord">Discord</string>
     <string name="help_item_facebook">ફેસબુક</string>
     <string name="help_item_twitter">Twitter</string>
     <string name="help_title_privacy">પ્રીવસી</string>
-    <string name="help_item_ankidroid_privacy_policy">AnkiDroid ગોપનીયતા નીતિ</string>
-    <string name="help_item_ankiweb_privacy_policy">AnkiWeb ગોપનીયતા નીતિ</string>
-    <string name="help_item_ankiweb_terms_and_conditions">AnkiWeb નિયમો અને શરતો</string>
+    <string name="help_item_ankidroid_privacy_policy">AnkiDroid privacy policy</string>
+    <string name="help_item_ankiweb_privacy_policy">AnkiWeb privacy policy</string>
+    <string name="help_item_ankiweb_terms_and_conditions">AnkiWeb terms and conditions</string>
     <string name="help_title_send_exception">મુશ્કેલીનિવારણ રિપોર્ટ મોકલો</string>
     <string name="help_dialog_exception_report_debounce">રિપોર્ટ પહેલેથી જ સબમિટ કર્યો છે</string>
     <string name="help_dialog_exception_report_sent">રિપોર્ટ મોકલવામાં આવ્યો હતો!</string>
@@ -201,8 +203,6 @@
     <string name="import_deck_package">ડેક પેકેજ (.apkg)</string>
     <string name="import_collection_package">સંગ્રહ પેકેજ (.colpkg)</string>
     <string name="import_csv">ટેક્સ્ટ ફાઇલ (.txt, .csv)</string>
-    <!-- Deck selection dialog -->
-    <string name="cannot_create_subdeck_for_all_decks">તમે બધા ડેક માટે સબડેક બનાવી શકતા નથી</string>
     <!-- scoped storage -->
     <string name="backup_your_collection">તમારા સંગ્રહનો બેકઅપ લો</string>
     <string name="backup_collection_message">તમે થોડા સમયથી તમારા સંગ્રહનું બેકઅપ લીધું નથી. ડેટા નુકશાન અટકાવવા માટે તમારે આ હવે કરવું જોઈએ</string>

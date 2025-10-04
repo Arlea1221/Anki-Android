@@ -124,6 +124,8 @@
     <string name="multimedia_editor_failed">A Multimédia Szerkesztő megnyitása sikertelen</string>
     <!-- Multimedia - Audio View -->
     <string name="multimedia_editor_audio_permission_denied">Audió felvétel engedély megtagadva</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="recording_permission_denied_message">Microphone permission is necessary for the “Record voice” feature. Please grant it in the app settings.</string>
     <!-- Database Integrity Check -->
     <string name="integrity_check_startup_title">Frissített AnkiDroid</string>
     <string name="integrity_check_startup_content">Az AnkiDroid frissítve lett. Ez a frissítés lehetséges adatbázis problémákat orvosol, javasoljuk, hogy most futtassátok az adatbázis ellenőrzést.</string>
@@ -179,9 +181,9 @@
     <string name="help_item_facebook">Facebook</string>
     <string name="help_item_twitter">Twitter</string>
     <string name="help_title_privacy">Adatvédelem</string>
-    <string name="help_item_ankidroid_privacy_policy">AnkiDroid Adatvédelmi Irányelvek</string>
-    <string name="help_item_ankiweb_privacy_policy">AnkiWeb Adatvédelmi Irányelvek</string>
-    <string name="help_item_ankiweb_terms_and_conditions">AnkiWeb Általános Szerződési Feltételek</string>
+    <string name="help_item_ankidroid_privacy_policy">AnkiDroid privacy policy</string>
+    <string name="help_item_ankiweb_privacy_policy">AnkiWeb privacy policy</string>
+    <string name="help_item_ankiweb_terms_and_conditions">AnkiWeb terms and conditions</string>
     <string name="help_title_send_exception">Hibajelentés küldése</string>
     <string name="help_dialog_exception_report_debounce">A jelentést már elküldte</string>
     <string name="help_dialog_exception_report_sent">Report was sent!</string>
@@ -201,8 +203,6 @@
     <string name="import_deck_package">Pakli telepítőcsomag (.apkg)</string>
     <string name="import_collection_package">Gyűjtemény telepítő csomag (.colpkg)</string>
     <string name="import_csv">Szöveges fájl (.txt, .csv)</string>
-    <!-- Deck selection dialog -->
-    <string name="cannot_create_subdeck_for_all_decks">Nem hozhatsz létre alpaklit minden paklihoz</string>
     <!-- scoped storage -->
     <string name="backup_your_collection">Biztonsági mentés a gyűjteményről</string>
     <string name="backup_collection_message">Nem készült biztonsági mentés a gyűjteményedről egy ideje. Az adatvesztés elkerülése érdekében ennek itt az ideje</string>

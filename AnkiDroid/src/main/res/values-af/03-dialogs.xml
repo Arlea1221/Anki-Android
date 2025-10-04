@@ -124,6 +124,8 @@
     <string name="multimedia_editor_failed">Kon nie Multimedia-Redakteur oopmaak nie</string>
     <!-- Multimedia - Audio View -->
     <string name="multimedia_editor_audio_permission_denied">Toestemming vir klankopname geweier</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="recording_permission_denied_message">Microphone permission is necessary for the “Record voice” feature. Please grant it in the app settings.</string>
     <!-- Database Integrity Check -->
     <string name="integrity_check_startup_title">AnkiDroid Opgegradeer</string>
     <string name="integrity_check_startup_content">AnkiDroid is opgegradeer. Hierdie opgradering sluit regstellings vir moontlike databasisprobleme in, en ons beveel aan dat jy nou kontroleer databasis laat loop.</string>
@@ -181,7 +183,7 @@
     <string name="help_title_privacy">Privaatheid</string>
     <string name="help_item_ankidroid_privacy_policy">AnkiDroid Privaatheid-Sbeleid</string>
     <string name="help_item_ankiweb_privacy_policy">AnkiWeb Privaatheid-Sbeleid</string>
-    <string name="help_item_ankiweb_terms_and_conditions">AnkiWeb Bepalings en Voorwaardes</string>
+    <string name="help_item_ankiweb_terms_and_conditions">AnkiWeb terms and conditions</string>
     <string name="help_title_send_exception">Stuur foutsporingsverslag</string>
     <string name="help_dialog_exception_report_debounce">Verslag reeds ingedien</string>
     <string name="help_dialog_exception_report_sent">Verslag is gestuur!</string>
@@ -201,8 +203,6 @@
     <string name="import_deck_package">Pak-pakket (.apkg)</string>
     <string name="import_collection_package">Versameling-pakket (.colpkg)</string>
     <string name="import_csv">Teks-lêer (.txt, .csv)</string>
-    <!-- Deck selection dialog -->
-    <string name="cannot_create_subdeck_for_all_decks">Jy kan nie \'n subpak vir alle pakke skep nie</string>
     <!-- scoped storage -->
     <string name="backup_your_collection">Rugsteun jou versameling</string>
     <string name="backup_collection_message">You haven\'t backed up your collection in a while. You should do this now to prevent data loss</string>

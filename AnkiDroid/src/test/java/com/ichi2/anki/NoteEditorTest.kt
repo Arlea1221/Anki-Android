@@ -37,12 +37,12 @@ import com.ichi2.anki.NoteEditorTest.FromScreen.DECK_LIST
 import com.ichi2.anki.NoteEditorTest.FromScreen.REVIEWER
 import com.ichi2.anki.api.AddContentApi.Companion.DEFAULT_DECK_ID
 import com.ichi2.anki.common.annotations.DuplicatedCode
-import com.ichi2.anki.dialogs.DeckSelectionDialog.SelectableDeck
 import com.ichi2.anki.libanki.Consts
 import com.ichi2.anki.libanki.DeckId
 import com.ichi2.anki.libanki.Decks.Companion.CURRENT_DECK
 import com.ichi2.anki.libanki.Note
 import com.ichi2.anki.libanki.NotetypeJson
+import com.ichi2.anki.model.SelectableDeck
 import com.ichi2.anki.noteeditor.NoteEditorLauncher
 import com.ichi2.testutils.getString
 import kotlinx.coroutines.runBlocking
@@ -274,7 +274,7 @@ class NoteEditorTest : RobolectricTest() {
             assertThat(editor.currentFieldStrings.toList(), contains(newFirstField, initSecondField))
 
             editor.saveNote()
-            waitForAsyncTasksToComplete()
+            advanceRobolectricLooper()
             val actual = editor.currentFieldStrings.toList()
 
             assertThat("newlines should be preserved, second field should be blanked", actual, contains(newFirstField, ""))
@@ -446,7 +446,7 @@ class NoteEditorTest : RobolectricTest() {
             assertThat("setup: deckId", col.notetypes.byName("Basic")!!.did, equalTo(1))
 
             getNoteEditorAdding(NoteType.BASIC).build().also { editor ->
-                editor.onDeckSelected(SelectableDeck(reversedDeckId, "Reversed"))
+                editor.onDeckSelected(SelectableDeck.Deck(reversedDeckId, "Reversed"))
                 editor.setField(0, "Hello")
                 editor.saveNote()
             }
@@ -485,7 +485,7 @@ class NoteEditorTest : RobolectricTest() {
     private fun moveToDynamicDeck(note: Note): DeckId {
         val dyn = addDynamicDeck("All")
         col.decks.select(dyn)
-        col.sched.rebuildDyn()
+        col.sched.rebuildFilteredDeck(dyn)
         assertThat("card is in dynamic deck", note.firstCard().did, equalTo(dyn))
         return dyn
     }

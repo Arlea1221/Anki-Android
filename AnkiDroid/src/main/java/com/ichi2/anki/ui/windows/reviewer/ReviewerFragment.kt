@@ -23,7 +23,6 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.view.KeyEvent
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
@@ -33,7 +32,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import androidx.appcompat.view.menu.SubMenuBuilder
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.ActionMenuView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
@@ -49,11 +48,14 @@ import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.FragmentContainerView
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import anki.scheduler.CardAnswer.Rating
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.ShapeAppearanceModel
@@ -63,28 +65,15 @@ import com.ichi2.anki.CollectionManager
 import com.ichi2.anki.DispatchKeyEventListener
 import com.ichi2.anki.Flag
 import com.ichi2.anki.R
-import com.ichi2.anki.cardviewer.CardMediaPlayer
 import com.ichi2.anki.cardviewer.Gesture
-import com.ichi2.anki.cardviewer.TapGestureMode
 import com.ichi2.anki.common.utils.android.isRobolectric
 import com.ichi2.anki.dialogs.tags.TagsDialog
 import com.ichi2.anki.dialogs.tags.TagsDialogFactory
 import com.ichi2.anki.dialogs.tags.TagsDialogListener
 import com.ichi2.anki.libanki.sched.Counts
-import com.ichi2.anki.libanki.sched.Ease
 import com.ichi2.anki.model.CardStateFilter
 import com.ichi2.anki.preferences.reviewer.ReviewerMenuView
 import com.ichi2.anki.preferences.reviewer.ViewerAction
-import com.ichi2.anki.preferences.reviewer.ViewerAction.BURY_CARD
-import com.ichi2.anki.preferences.reviewer.ViewerAction.BURY_MENU
-import com.ichi2.anki.preferences.reviewer.ViewerAction.BURY_NOTE
-import com.ichi2.anki.preferences.reviewer.ViewerAction.FLAG_MENU
-import com.ichi2.anki.preferences.reviewer.ViewerAction.MARK
-import com.ichi2.anki.preferences.reviewer.ViewerAction.REDO
-import com.ichi2.anki.preferences.reviewer.ViewerAction.SUSPEND_CARD
-import com.ichi2.anki.preferences.reviewer.ViewerAction.SUSPEND_MENU
-import com.ichi2.anki.preferences.reviewer.ViewerAction.SUSPEND_NOTE
-import com.ichi2.anki.preferences.reviewer.ViewerAction.UNDO
 import com.ichi2.anki.previewer.CardViewerActivity
 import com.ichi2.anki.previewer.CardViewerFragment
 import com.ichi2.anki.previewer.stdHtml
@@ -98,24 +87,25 @@ import com.ichi2.anki.settings.enums.ToolbarPosition
 import com.ichi2.anki.snackbar.BaseSnackbarBuilderProvider
 import com.ichi2.anki.snackbar.SnackbarBuilder
 import com.ichi2.anki.snackbar.showSnackbar
+import com.ichi2.anki.ui.windows.reviewer.whiteboard.WhiteboardFragment
 import com.ichi2.anki.utils.CollectionPreferences
 import com.ichi2.anki.utils.ext.collectIn
 import com.ichi2.anki.utils.ext.collectLatestIn
-import com.ichi2.anki.utils.ext.menu
-import com.ichi2.anki.utils.ext.removeSubMenu
 import com.ichi2.anki.utils.ext.sharedPrefs
 import com.ichi2.anki.utils.ext.showDialogFragment
 import com.ichi2.anki.utils.ext.window
 import com.ichi2.anki.utils.isWindowCompact
 import com.ichi2.themes.Themes
 import com.ichi2.utils.dp
-import com.ichi2.utils.setPaddedIcon
+import com.ichi2.utils.show
 import com.squareup.seismic.ShakeDetector
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.IllegalArgumentException
+import kotlin.math.roundToInt
+import kotlin.reflect.jvm.jvmName
 
 class ReviewerFragment :
     CardViewerFragment(R.layout.reviewer2),
@@ -124,9 +114,7 @@ class ReviewerFragment :
     DispatchKeyEventListener,
     TagsDialogListener,
     ShakeDetector.Listener {
-    override val viewModel: ReviewerViewModel by viewModels {
-        ReviewerViewModel.factory(CardMediaPlayer())
-    }
+    override val viewModel: ReviewerViewModel by viewModels()
 
     override val webView: WebView get() = requireView().findViewById(R.id.webview)
     private val timer: AnswerTimer? get() = view?.findViewById(R.id.timer)
@@ -204,6 +192,9 @@ class ReviewerFragment :
         setupToolbarPosition(view)
         setupAnswerTimer(view)
         setupMargins(view)
+        setupCheckPronunciation(view)
+        setupWhiteboard()
+        setupTimebox()
 
         viewModel.actionFeedbackFlow
             .flowWithLifecycle(lifecycle)
@@ -252,16 +243,16 @@ class ReviewerFragment :
 
         if (Prefs.showAnswerFeedback) {
             viewModel.answerFeedbackFlow.collectIn(lifecycleScope) { ease ->
-                if (ease == Ease.AGAIN) {
+                if (ease == Rating.AGAIN) {
                     view.findViewById<AnswerFeedbackView>(R.id.wrong_answer_feedback).toggle()
                     return@collectIn
                 }
                 val drawableId =
                     when (ease) {
-                        Ease.HARD -> R.drawable.ic_ease_hard
-                        Ease.GOOD -> R.drawable.ic_ease_good
-                        Ease.EASY -> R.drawable.ic_ease_easy
-                        Ease.AGAIN -> throw IllegalArgumentException("Shouldn't try to get the 'Again' drawable ID")
+                        Rating.HARD -> R.drawable.ic_ease_hard
+                        Rating.GOOD -> R.drawable.ic_ease_good
+                        Rating.EASY -> R.drawable.ic_ease_easy
+                        Rating.AGAIN, Rating.UNRECOGNIZED -> throw IllegalArgumentException("Invalid rating")
                     }
                 view.findViewById<AnswerFeedbackView>(R.id.correct_answer_feedback).apply {
                     setImageResource(drawableId)
@@ -319,7 +310,6 @@ class ReviewerFragment :
             }
 
         lifecycleScope.launch {
-            if (Prefs.isHtmlTypeAnswerEnabled) return@launch
             val autoFocusTypeAnswer = Prefs.autoFocusTypeAnswer
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.typeAnswerFlow.collect { typeInAnswer ->
@@ -327,6 +317,13 @@ class ReviewerFragment :
                         typeAnswerContainer.isVisible = false
                         return@collect
                     }
+
+                    if (Prefs.isHtmlTypeAnswerEnabled) {
+                        webView.requestFocus()
+                        webView.evaluateJavascript("document.getElementById('typeans').focus();", null)
+                        return@collect
+                    }
+
                     typeAnswerContainer.isVisible = true
                     typeAnswerEditText.apply {
                         if (imeHintLocales != typeInAnswer.imeHintLocales) {
@@ -340,12 +337,8 @@ class ReviewerFragment :
                 }
             }
         }
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.clearTypeAnswerFlow.collect {
-                    typeAnswerEditText.text = null
-                }
-            }
+        viewModel.onCardUpdatedFlow.flowWithLifecycle(lifecycle).collectIn(lifecycleScope) {
+            typeAnswerEditText.text = null
         }
     }
 
@@ -389,26 +382,26 @@ class ReviewerFragment :
 
     private fun setupAnswerButtons(view: View) {
         val answerArea = view.findViewById<FrameLayout>(R.id.answer_area)
-        if (Prefs.hideAnswerButtons) {
+        if (!Prefs.showAnswerButtons) {
             answerArea.isVisible = false
             return
         }
 
         val againButton =
             view.findViewById<AnswerButton>(R.id.again_button).apply {
-                setOnClickListener { viewModel.answerCard(Ease.AGAIN) }
+                setOnClickListener { viewModel.answerCard(Rating.AGAIN) }
             }
         val hardButton =
             view.findViewById<AnswerButton>(R.id.hard_button).apply {
-                setOnClickListener { viewModel.answerCard(Ease.HARD) }
+                setOnClickListener { viewModel.answerCard(Rating.HARD) }
             }
         val goodButton =
             view.findViewById<AnswerButton>(R.id.good_button).apply {
-                setOnClickListener { viewModel.answerCard(Ease.GOOD) }
+                setOnClickListener { viewModel.answerCard(Rating.GOOD) }
             }
         val easyButton =
             view.findViewById<AnswerButton>(R.id.easy_button).apply {
-                setOnClickListener { viewModel.answerCard(Ease.EASY) }
+                setOnClickListener { viewModel.answerCard(Rating.EASY) }
             }
 
         viewModel.answerButtonsNextTimeFlow
@@ -483,91 +476,11 @@ class ReviewerFragment :
         }
     }
 
-    private fun setupBury(menu: ReviewerMenuView) {
-        val menuItem = menu.findItem(BURY_MENU.menuId) ?: return
-        val flow = viewModel.canBuryNoteFlow.flowWithLifecycle(lifecycle)
-        flow.collectLatestIn(lifecycleScope) { canBuryNote ->
-            if (canBuryNote) {
-                if (menuItem.hasSubMenu()) return@collectLatestIn
-                menuItem.setTitle(BURY_MENU.titleRes)
-                val submenu =
-                    SubMenuBuilder(menu.context, menuItem.menu, menuItem).apply {
-                        add(Menu.NONE, BURY_NOTE.menuId, Menu.NONE, BURY_NOTE.titleRes)
-                        add(Menu.NONE, BURY_CARD.menuId, Menu.NONE, BURY_CARD.titleRes)
-                    }
-                menuItem.setSubMenu(submenu)
-            } else {
-                menuItem.removeSubMenu()
-                menuItem.setTitle(BURY_CARD.titleRes)
-            }
-        }
-    }
-
-    private fun setupSuspend(menu: ReviewerMenuView) {
-        val menuItem = menu.findItem(SUSPEND_MENU.menuId) ?: return
-        val flow = viewModel.canSuspendNoteFlow.flowWithLifecycle(lifecycle)
-        flow.collectLatestIn(lifecycleScope) { canSuspendNote ->
-            if (canSuspendNote) {
-                if (menuItem.hasSubMenu()) return@collectLatestIn
-                menuItem.setTitle(SUSPEND_MENU.titleRes)
-                val submenu =
-                    SubMenuBuilder(menu.context, menuItem.menu, menuItem).apply {
-                        add(Menu.NONE, SUSPEND_NOTE.menuId, Menu.NONE, SUSPEND_NOTE.titleRes)
-                        add(Menu.NONE, SUSPEND_CARD.menuId, Menu.NONE, SUSPEND_CARD.titleRes)
-                    }
-                menuItem.setSubMenu(submenu)
-            } else {
-                menuItem.removeSubMenu()
-                menuItem.setTitle(SUSPEND_CARD.titleRes)
-            }
-        }
-    }
-
     private fun setupMenu(view: View) {
-        val menu = view.findViewById<ReviewerMenuView>(R.id.reviewer_menu_view)
-        if (menu.isEmpty()) {
-            menu.isVisible = false
-            return
+        view.findViewById<ReviewerMenuView>(R.id.reviewer_menu_view).apply {
+            setup(lifecycle, viewModel)
+            setOnMenuItemClickListener(this@ReviewerFragment)
         }
-        menu.setOnMenuItemClickListener(this)
-
-        setupBury(menu)
-        setupSuspend(menu)
-
-        viewModel.flagFlow
-            .flowWithLifecycle(lifecycle)
-            .collectLatestIn(lifecycleScope) { flagCode ->
-                menu.findItem(FLAG_MENU.menuId)?.setPaddedIcon(requireContext(), flagCode.drawableRes)
-            }
-
-        val markItem = menu.findItem(MARK.menuId)
-        viewModel.isMarkedFlow
-            .flowWithLifecycle(lifecycle)
-            .collectLatestIn(lifecycleScope) { isMarked ->
-                if (isMarked) {
-                    markItem?.setPaddedIcon(requireContext(), R.drawable.ic_star)
-                    markItem?.setTitle(R.string.menu_unmark_note)
-                } else {
-                    markItem?.setPaddedIcon(requireContext(), R.drawable.ic_star_border_white)
-                    markItem?.setTitle(R.string.menu_mark_note)
-                }
-            }
-
-        val undoItem = menu.findItem(UNDO.menuId)
-        viewModel.undoLabelFlow
-            .flowWithLifecycle(lifecycle)
-            .collectLatestIn(lifecycleScope) { label ->
-                undoItem?.title = label ?: CollectionManager.TR.undoUndo()
-                undoItem?.isEnabled = label != null
-            }
-
-        val redoItem = menu.findItem(REDO.menuId)
-        viewModel.redoLabelFlow
-            .flowWithLifecycle(lifecycle)
-            .collectLatestIn(lifecycleScope) { label ->
-                redoItem?.title = label ?: CollectionManager.TR.undoRedo()
-                redoItem?.isEnabled = label != null
-            }
     }
 
     private fun setupImmersiveMode(view: View) {
@@ -637,7 +550,7 @@ class ReviewerFragment :
      * of [Prefs.toolbarPosition] and `Hide answer buttons`
      */
     private fun setupMargins(view: View) {
-        val hideAnswerButtons = Prefs.hideAnswerButtons
+        val hideAnswerButtons = !Prefs.showAnswerButtons
         // In big screens, let the menu expand if there are no answer buttons
         if (hideAnswerButtons && !resources.isWindowCompact()) {
             val constraintLayout = view.findViewById<ConstraintLayout>(R.id.tools_layout)
@@ -694,6 +607,56 @@ class ReviewerFragment :
         }
     }
 
+    private fun setupCheckPronunciation(view: View) {
+        val container = view.findViewById<FragmentContainerView>(R.id.check_pronunciation_container)
+        viewModel.voiceRecorderEnabledFlow.flowWithLifecycle(lifecycle).collectIn(lifecycleScope) { isEnabled ->
+            container.isVisible = isEnabled
+        }
+    }
+
+    private fun setupWhiteboard() {
+        viewModel.whiteboardEnabledFlow.flowWithLifecycle(lifecycle).collectIn(lifecycleScope) { isEnabled ->
+            childFragmentManager.commit {
+                val whiteboardFragment = childFragmentManager.findFragmentByTag(WhiteboardFragment::class.jvmName)
+                if (isEnabled) {
+                    if (whiteboardFragment != null) return@commit
+                    add(R.id.webview_container, WhiteboardFragment::class.java, null, WhiteboardFragment::class.jvmName)
+                } else {
+                    whiteboardFragment?.let { remove(it) }
+                }
+            }
+        }
+        viewModel.onCardUpdatedFlow.collectIn(lifecycleScope) {
+            val whiteboardFragment = childFragmentManager.findFragmentByTag(WhiteboardFragment::class.jvmName)
+            (whiteboardFragment as? WhiteboardFragment)?.resetCanvas()
+        }
+    }
+
+    private fun setupTimebox() {
+        viewModel.timeBoxReachedFlow.flowWithLifecycle(lifecycle).collectIn(lifecycleScope) { timebox ->
+            Timber.i("ReviewerFragment: Timebox reached (reps %d - secs %d)", timebox.reps, timebox.secs)
+
+            viewModel.stopAutoAdvance()
+
+            val minutes = (timebox.secs / 60f).roundToInt()
+            val message = CollectionManager.TR.studyingCardStudiedIn(timebox.reps) + " " + CollectionManager.TR.studyingMinute(minutes)
+
+            AlertDialog.Builder(requireContext()).show {
+                setTitle(R.string.timebox_reached_title)
+                setMessage(message)
+                setPositiveButton(CollectionManager.TR.studyingContinue()) { _, _ ->
+                    Timber.i("ReviewerFragment: Timebox 'Continue'")
+                    viewModel.onPageFinished(false)
+                }
+                setNegativeButton(CollectionManager.TR.studyingFinish()) { _, _ ->
+                    Timber.i("ReviewerFragment: Timebox 'Finish'")
+                    requireActivity().finish()
+                }
+                setCancelable(false)
+            }
+        }
+    }
+
     override fun onSelectedTags(
         selectedTags: List<String>,
         indeterminateTags: List<String>,
@@ -712,8 +675,12 @@ class ReviewerFragment :
         private var scale: Float = if (!isRobolectric) webView.scale else 1F
         private var isScrolling: Boolean = false
         private var isScrollingJob: Job? = null
-        private val gestureMode = TapGestureMode.fromPreference(sharedPrefs())
-        private val swipeSensitivity = Prefs.swipeSensitivity
+        private val gestureParser by lazy {
+            GestureParser(
+                scope = lifecycleScope,
+                isDoubleTapEnabled = bindingMap.isBound(Gesture.DOUBLE_TAP),
+            )
+        }
 
         init {
             webView.setOnScrollChangeListener { _, _, _, _, _ ->
@@ -730,9 +697,12 @@ class ReviewerFragment :
         override fun handleUrl(url: Uri): Boolean {
             return when (url.scheme) {
                 "gesture" -> {
-                    val gesture = GestureParser.parse(url, isScrolling, scale, webView, swipeSensitivity, gestureMode) ?: return true
-                    Timber.v("ReviewerFragment::onGesture %s", gesture)
-                    bindingMap.onGesture(gesture)
+                    if (isScrolling) return true
+                    gestureParser.parse(url, scale, webView) { gesture ->
+                        if (gesture == null) return@parse
+                        Timber.v("ReviewerFragment::onGesture %s", gesture)
+                        bindingMap.onGesture(gesture)
+                    }
                     true
                 }
                 "ankidroid" -> {
@@ -761,11 +731,10 @@ class ReviewerFragment :
             url: String?,
         ) {
             super.onPageFinished(view, url)
-            view?.evaluateJavascript("ankidroid.doubleTapTimeout = ${Prefs.doubleTapInterval};", null)
             Prefs.cardZoom.let {
                 if (it == 100) return@let
                 val scale = it / 100.0
-                val script = """document.getElementById("qa").style.transform = `scale($scale)`;"""
+                val script = """document.body.style.zoom = `$scale`;"""
                 view?.evaluateJavascript(script, null)
             }
         }

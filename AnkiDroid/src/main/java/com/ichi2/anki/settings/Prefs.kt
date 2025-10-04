@@ -22,9 +22,11 @@ import androidx.core.content.edit
 import com.ichi2.anki.AnkiDroidApp
 import com.ichi2.anki.BuildConfig
 import com.ichi2.anki.R
+import com.ichi2.anki.cardviewer.TapGestureMode
 import com.ichi2.anki.settings.enums.FrameStyle
 import com.ichi2.anki.settings.enums.HideSystemBars
 import com.ichi2.anki.settings.enums.PrefEnum
+import com.ichi2.anki.settings.enums.ShouldFetchMedia
 import com.ichi2.anki.settings.enums.ToolbarPosition
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -79,8 +81,18 @@ object Prefs {
     @VisibleForTesting
     fun putInt(
         @StringRes keyResId: Int,
-        defValue: Int,
-    ) = sharedPrefs.edit { putInt(key(keyResId), defValue) }
+        value: Int,
+    ) = sharedPrefs.edit { putInt(key(keyResId), value) }
+
+    private fun getLong(
+        @StringRes keyResId: Int,
+        defValue: Long,
+    ): Long = sharedPrefs.getLong(key(keyResId), defValue)
+
+    private fun putLong(
+        @StringRes keyResId: Int,
+        value: Long,
+    ) = sharedPrefs.edit { putLong(key(keyResId), value) }
 
     @VisibleForTesting
     fun <E> getEnum(
@@ -88,9 +100,10 @@ object Prefs {
         defaultValue: E,
     ): E where E : Enum<E>, E : PrefEnum {
         val enumClass = defaultValue.javaClass
-        val stringValue = getString(keyResId, defaultValue.entryValue)
+        val fallback = resources.getString(defaultValue.entryResId)
+        val stringValue = getString(keyResId, fallback)
         return enumClass.enumConstants?.firstOrNull {
-            it.entryValue == stringValue
+            resources.getString(it.entryResId) == stringValue
         } ?: defaultValue
     }
 
@@ -156,6 +169,26 @@ object Prefs {
             }
         }
 
+    @VisibleForTesting
+    fun longPref(
+        @StringRes keyResId: Int,
+        defaultValue: Long,
+    ): ReadWriteProperty<Any, Long> =
+        object : ReadWriteProperty<Any?, Long> {
+            override fun getValue(
+                thisRef: Any?,
+                property: KProperty<*>,
+            ): Long = getLong(keyResId, defaultValue)
+
+            override fun setValue(
+                thisRef: Any?,
+                property: KProperty<*>,
+                value: Long,
+            ) {
+                putLong(keyResId, value)
+            }
+        }
+
     // ****************************************************************************************** //
     // **************************************** Settings **************************************** //
     // ****************************************************************************************** //
@@ -167,8 +200,25 @@ object Prefs {
     // ****************************************** Sync ****************************************** //
 
     val isAutoSyncEnabled by booleanPref(R.string.automatic_sync_choice_key, false)
+    val displaySyncStatus by booleanPref(R.string.sync_status_badge_key, defaultValue = true)
+    var allowSyncOnMeteredConnections by booleanPref(R.string.metered_sync_key, defaultValue = false)
+
     var username by stringPref(R.string.username_key)
     var hkey by stringPref(R.string.hkey_key)
+    var currentSyncUri by stringPref(R.string.current_sync_uri_key)
+
+    var lastSyncTime by longPref(R.string.last_sync_time_key, defaultValue = 0L)
+
+    val shouldFetchMedia: ShouldFetchMedia
+        get() = getEnum(R.string.sync_fetch_media_key, ShouldFetchMedia.ALWAYS)
+
+    //region Custom sync server
+
+    val customSyncCertificate by stringPref(R.string.custom_sync_certificate_key)
+    val customSyncUri by stringPref(R.string.custom_sync_server_collection_url_key)
+    val isCustomSyncEnabled by booleanPref(R.string.custom_sync_server_enabled_key, defaultValue = false)
+
+    //endregion
 
     // ************************************** Review Reminders ********************************** //
 
@@ -187,7 +237,7 @@ object Prefs {
     val ignoreDisplayCutout by booleanPref(R.string.ignore_display_cutout_key, false)
     val autoFocusTypeAnswer by booleanPref(R.string.type_in_answer_focus_key, true)
     val showAnswerFeedback by booleanPref(R.string.show_answer_feedback_key, defaultValue = true)
-    val hideAnswerButtons by booleanPref(R.string.hide_answer_buttons_key, false)
+    val showAnswerButtons by booleanPref(R.string.show_answer_buttons_key, true)
 
     val doubleTapInterval by intPref(R.string.double_tap_timeout_pref_key, defaultValue = 200)
     val newStudyScreenAnswerButtonSize by intPref(R.string.answer_button_size_pref_key, defaultValue = 100)
@@ -204,6 +254,17 @@ object Prefs {
     val toolbarPosition: ToolbarPosition
         get() = getEnum(R.string.reviewer_toolbar_position_key, ToolbarPosition.TOP)
 
+    // **************************************** Controls **************************************** //
+    //region Controls
+
+    val tapGestureMode: TapGestureMode
+        get() =
+            when (getBoolean(R.string.gestures_corner_touch_preference, false)) {
+                true -> TapGestureMode.NINE_POINT
+                false -> TapGestureMode.FOUR_POINT
+            }
+
+    //endregion
     // ************************************** Accessibility ************************************* //
 
     val answerButtonsSize: Int by intPref(R.string.answer_button_size_preference, 100)
@@ -227,11 +288,12 @@ object Prefs {
         get() = getBoolean(R.string.dev_options_enabled_by_user_key, false) || BuildConfig.DEBUG
         set(value) = putBoolean(R.string.dev_options_enabled_by_user_key, value)
 
-    val isNewStudyScreenEnabled: Boolean
-        get() = getBoolean(R.string.new_reviewer_pref_key, false) && getBoolean(R.string.new_reviewer_options_key, false)
+    val isNewStudyScreenEnabled by booleanPref(R.string.new_reviewer_options_key, false)
 
     val devIsCardBrowserFragmented: Boolean
         get() = getBoolean(R.string.dev_card_browser_fragmented, false)
+
+    val devUsingCardBrowserSearchView: Boolean by booleanPref(R.string.dev_card_browser_search_view, false)
 
     // **************************************** UI Config *************************************** //
 

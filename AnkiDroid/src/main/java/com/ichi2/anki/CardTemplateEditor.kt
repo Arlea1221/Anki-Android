@@ -46,6 +46,7 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -73,7 +74,6 @@ import com.ichi2.anki.common.utils.annotation.KotlinCleanup
 import com.ichi2.anki.dialogs.ConfirmationDialog
 import com.ichi2.anki.dialogs.DeckSelectionDialog
 import com.ichi2.anki.dialogs.DeckSelectionDialog.DeckSelectionListener
-import com.ichi2.anki.dialogs.DeckSelectionDialog.SelectableDeck
 import com.ichi2.anki.dialogs.DiscardChangesDialog
 import com.ichi2.anki.dialogs.InsertFieldDialog
 import com.ichi2.anki.dialogs.InsertFieldDialog.Companion.REQUEST_FIELD_INSERT
@@ -89,6 +89,7 @@ import com.ichi2.anki.libanki.exception.ConfirmModSchemaException
 import com.ichi2.anki.libanki.getStockNotetype
 import com.ichi2.anki.libanki.getStockNotetypeKinds
 import com.ichi2.anki.libanki.utils.append
+import com.ichi2.anki.model.SelectableDeck
 import com.ichi2.anki.notetype.RenameCardTemplateDialog
 import com.ichi2.anki.notetype.RepositionCardTemplateDialog
 import com.ichi2.anki.observability.undoableOp
@@ -115,7 +116,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
 import java.util.regex.Pattern
-import kotlin.collections.set
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.time.Duration.Companion.seconds
@@ -157,7 +157,7 @@ open class CardTemplateEditor :
 
     /**
      * If true, the view is split in two. The template editor appears on the leading side and the previewer on the trailing side.
-     * This occurs when the view is big enough.
+     * This occurs when the screen size is large
      */
     private var fragmented = false
     val displayDiscardChangesCallback =
@@ -204,12 +204,8 @@ open class CardTemplateEditor :
         }
 
         templatePreviewerFrame = findViewById(R.id.fragment_container)
-        /**
-         * Check if templatePreviewerFrame is not null and if its visibility is set to VISIBLE.
-         * If both conditions are true, assign true to the variable [fragmented], otherwise assign false.
-         * [fragmented] will be true if the screen size is large otherwise false
-         */
-        fragmented = templatePreviewerFrame != null && templatePreviewerFrame?.visibility == View.VISIBLE
+
+        fragmented = templatePreviewerFrame?.isVisible == true
 
         slidingTabLayout = findViewById(R.id.sliding_tabs)
         viewPager = findViewById(R.id.card_template_editor_pager)
@@ -222,19 +218,17 @@ open class CardTemplateEditor :
         if (fragmented) {
             val parentLayout = findViewById<LinearLayout>(R.id.card_template_editor_xl_view)
             val divider = findViewById<View>(R.id.card_template_editor_resizing_divider)
-            val leftPane = findViewById<View>(R.id.template_editor)
-            val rightPane = findViewById<View>(R.id.fragment_container)
-            if (parentLayout != null && divider != null && leftPane != null && rightPane != null) {
-                ResizablePaneManager(
-                    parentLayout = parentLayout,
-                    divider = divider,
-                    leftPane = leftPane,
-                    rightPane = rightPane,
-                    sharedPrefs = Prefs.getUiConfig(this),
-                    leftPaneWeightKey = PREF_TEMPLATE_EDITOR_PANE_WEIGHT,
-                    rightPaneWeightKey = PREF_TEMPLATE_PREVIEWER_PANE_WEIGHT,
-                )
-            }
+            val cardTemplateEditorPane = findViewById<View>(R.id.template_editor)
+            val templatePreviewerPane = findViewById<View>(R.id.fragment_container)
+            ResizablePaneManager(
+                parentLayout = parentLayout,
+                divider = divider,
+                leftPane = cardTemplateEditorPane,
+                rightPane = templatePreviewerPane,
+                sharedPrefs = Prefs.getUiConfig(this),
+                leftPaneWeightKey = PREF_TEMPLATE_EDITOR_PANE_WEIGHT,
+                rightPaneWeightKey = PREF_TEMPLATE_PREVIEWER_PANE_WEIGHT,
+            )
         }
 
         // Open TemplatePreviewerFragment if in fragmented mode
@@ -363,6 +357,7 @@ open class CardTemplateEditor :
 
     /** When a deck is selected via Deck Override  */
     override fun onDeckSelected(deck: SelectableDeck?) {
+        require(deck is SelectableDeck.Deck?)
         if (tempNoteType!!.notetype.isCloze) {
             Timber.w("Attempted to set deck for cloze note type")
             showSnackbar(getString(R.string.multimedia_editor_something_wrong), Snackbar.LENGTH_SHORT)
@@ -666,12 +661,7 @@ open class CardTemplateEditor :
             /* When keyboard is visible, hide the bottom navigation bar to allow viewing
             of all template text when resize happens */
             ViewCompat.setOnApplyWindowInsetsListener(mainView) { _, insets ->
-                val imeIsVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
-                if (imeIsVisible) {
-                    bottomNavigation.visibility = View.GONE
-                } else {
-                    bottomNavigation.visibility = View.VISIBLE
-                }
+                bottomNavigation.isVisible = !insets.isVisible(WindowInsetsCompat.Type.ime())
                 insets
             }
 
@@ -1164,7 +1154,7 @@ open class CardTemplateEditor :
 
         fun displayDeckOverrideDialog(tempModel: CardTemplateNotetype) =
             launchCatchingTask {
-                val activity = requireActivity() as AnkiActivity
+                val activity = requireAnkiActivity()
                 if (tempModel.notetype.isCloze) {
                     showSnackbar(getString(R.string.multimedia_editor_something_wrong), Snackbar.LENGTH_SHORT)
                     return@launchCatchingTask

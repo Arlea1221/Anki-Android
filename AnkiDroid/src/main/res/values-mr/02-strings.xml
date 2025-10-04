@@ -65,6 +65,18 @@
     <string name="save_whiteboard" maxLength="28">व्हाईटबोर्ड जतन करा</string>
     <string name="enable_stylus" maxLength="28">स्टाईलस लेखन सक्षम करा</string>
     <string name="disable_stylus">स्टाइलस लेखन अक्षम करा</string>
+    <string name="eraser" maxLength="28">Eraser</string>
+    <string name="add_brush" maxLength="28">Add brush</string>
+    <string name="whiteboard_align_left" comment="Option to align the whiteboard toolbar on the left" maxLength="28">Left</string>
+    <string name="whiteboard_align_bottom" comment="Option to align the whiteboard toolbar on the bottom" maxLength="28">Bottom</string>
+    <string name="whiteboard_align_right" comment="Option to align the whiteboard toolbar on the right" maxLength="28">Right</string>
+    <string name="whiteboard_clear" comment="Button text to clear the whiteboard" maxLength="28">Clear</string>
+    <string name="whiteboard_more_options" comment="Tooltip of the whiteboard \'More\' button" maxLength="28">More options</string>
+    <string name="whiteboard_remove_brush_message">Are you sure you want to remove this brush from your palette?</string>
+    <string name="whiteboard_ink_eraser" comment="Title of the whiteboard Ink eraser">Ink</string>
+    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">Stroke</string>
+    <string name="stylus_mode" comment="Title of the menu item that toggles the whiteboard stylus mode" maxLength="28">Stylus mode</string>
+    <string name="cannot_remove_last_brush_message">The last brush may not be removed</string>
     <string name="enable_whiteboard" maxLength="28">Vhā\'iṭabōrḍa sakṣama karā</string>
     <string name="disable_whiteboard">Vhā\'iṭabōrḍa akṣama karā</string>
     <string name="show_whiteboard">Vhā\'īṭabōrḍa darśavā</string>
@@ -83,6 +95,7 @@
     <string name="webview_crash_fatal">गंभीर त्रुटी: वेबव्यू प्रस्तुतकर्ता क्रॅश झाला. कारणः%s</string>
     <string name="webview_crash_loop_dialog_title">सिस्टम वेबव्यू प्रस्तुत करणे अयशस्वी</string>
     <string name="webview_crash_loop_dialog_content">सिस्टम \'वेबव्यू\' \'%1$s\' कार्ड प्रस्तुत करण्यात अयशस्वी. \ N%2$s</string>
+    <string name="slide_to_cancel" comment="Message shown when pressing the record button">Slide to cancel</string>
     <string name="filter_by_flags" maxLength="41">ध्वज</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">Building list of tags&#8230;</string>
@@ -150,7 +163,7 @@
     <string name="import_error_handle_exception">फाइल इंपोर्ट करण्यात अयशस्वी\n\n%s</string>
     <string name="import_error_not_apkg_extension">फाइलनाव \"%s\" मध्ये .apkg किंवा .colpkg विस्तार नाही</string>
     <string name="import_error_load_imported_database">अंकी डेटाबेस (.anki2) बदली अद्याप समर्थित नाहीत. कृपया बदलीच्या सूचनांसाठी मॅन्युअल पहा.</string>
-    <string name="import_error_content_provider">Nivaḍalēlī phā\'ila AnkiDroid dvārē svayan̄calitapaṇē āyāta karaṇē śakya navhatē. Kr̥payā ēnkī phā\'ilsa svahastē kaśī āyāta karāvī yābaddala vāparakartā mĕn\'yu\'ala pahā: \n%s</string>
+    <string name="import_error_content_provider">The selected file couldn’t be imported automatically by AnkiDroid. Please see the user manual for how to manually import Anki files: \n%s</string>
     <string name="import_error_copy_to_cache">फाइल कॅशे करण्यात अयशस्वी (शक्यतो स्टोरेज जागा नाही)</string>
     <string name="import_interrupted">आयात व्यत्यय: अंकीड्रोइड बंद होता</string>
     <string name="export_ready_title">निर्यात तयार आहे</string>
@@ -180,11 +193,6 @@
     <string name="tag_editor_add_feedback">\"%1$s\" जोडण्याची पुष्टी करण्यासाठी \"%2$s\" ला स्पर्श करा</string>
     <string name="tag_editor_add_feedback_existing">\"%1$s\" विद्यमान टॅग निवडला.</string>
     <!-- Time spans -->
-    <string name="reminder_title">आज अभ्यास करायला विसरू नका!</string>
-    <plurals name="reminder_text">
-        <item quantity="one">%1$s मध्ये पुनरावलोकन करण्यासाठी %2$d कार्ड</item>
-        <item quantity="other">%1$s मध्ये पुनरावलोकन करण्यासाठी %2$d कार्ड</item>
-    </plurals>
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">apkg फाइल शेअर करताना त्रुटी</string>
     <!-- Import and export v2 feedback -->
@@ -261,7 +269,7 @@
     <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
     <string name="percentage">%s%%</string>
     <string name="download_deck">डेक डाउनलोड करा</string>
-    <string name="open_in_browser" comment="Label of a button inviting to open ankiweb\'s shared deck page if automated download failed">Open in Browser</string>
+    <string name="open_in_browser" comment="Label of a button inviting to open ankiweb\'s shared deck page if automated download failed">Open in browser</string>
     <string name="try_again">पुन्हा प्रयत्न करा</string>
     <string name="cancel_download">डाउनलोड रद्द करा</string>
     <string name="cancel_download_question_title">डाउनलोड रद्द करायचे?</string>
@@ -328,6 +336,9 @@
     <string name="tts_voices_failed_opening_tts_system_settings" comment="error message if opening the system text to speech settings fails">Failed to open text to speech settings</string>
     <string name="shared_decks_login_required">कृपया अधिक डेक डाउनलोड करण्यासाठी लॉग इन करा</string>
     <string name="deck_description_field_hint">वर्णन</string>
+    <string name="deck_description_saved">Description updated</string>
+    <string name="format_deck_description_as_markdown">Format as Markdown</string>
+    <string name="help_button_content_description">Open help for ‘%s’</string>
     <string name="failed_to_copy">कॉपी करण्यात अयशस्वी</string>
     <string name="card_browser_unavailable_when_notes_mode">\'नोट्स\' मोडमध्ये उपलब्ध नाही</string>
     <plurals name="unbury_cards_feedback">

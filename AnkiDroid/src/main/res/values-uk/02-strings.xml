@@ -47,7 +47,7 @@
     <!-- Navigation drawer strings -->
     <string name="drawer_open">Відкрити шухляду</string>
     <string name="drawer_close">Закрити шухляду</string>
-    <string name="note_message">Нотатка збережена</string>
+    <string name="note_message">Запис збережено</string>
     <string name="CardEditorCardDeck">Колода карток:</string>
     <string name="CardEditorNoteDeck">Колода:</string>
     <string name="CardEditorModel">Тип:</string>
@@ -65,6 +65,18 @@
     <string name="save_whiteboard" maxLength="28">Зберегти написане</string>
     <string name="enable_stylus" maxLength="28">Увімкнути режим стилусу</string>
     <string name="disable_stylus">Вимкнути режим стилусу</string>
+    <string name="eraser" maxLength="28">Eraser</string>
+    <string name="add_brush" maxLength="28">Add brush</string>
+    <string name="whiteboard_align_left" comment="Option to align the whiteboard toolbar on the left" maxLength="28">Left</string>
+    <string name="whiteboard_align_bottom" comment="Option to align the whiteboard toolbar on the bottom" maxLength="28">Bottom</string>
+    <string name="whiteboard_align_right" comment="Option to align the whiteboard toolbar on the right" maxLength="28">Right</string>
+    <string name="whiteboard_clear" comment="Button text to clear the whiteboard" maxLength="28">Clear</string>
+    <string name="whiteboard_more_options" comment="Tooltip of the whiteboard \'More\' button" maxLength="28">More options</string>
+    <string name="whiteboard_remove_brush_message">Are you sure you want to remove this brush from your palette?</string>
+    <string name="whiteboard_ink_eraser" comment="Title of the whiteboard Ink eraser">Ink</string>
+    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">Stroke</string>
+    <string name="stylus_mode" comment="Title of the menu item that toggles the whiteboard stylus mode" maxLength="28">Stylus mode</string>
+    <string name="cannot_remove_last_brush_message">The last brush may not be removed</string>
     <string name="enable_whiteboard" maxLength="28">Увімкнути дошку</string>
     <string name="disable_whiteboard">Вимкнути дошку</string>
     <string name="show_whiteboard">Показати дошку</string>
@@ -83,6 +95,7 @@
     <string name="webview_crash_fatal">Критична помилка WebView. Причина: %s</string>
     <string name="webview_crash_loop_dialog_title">Збій системного WebView</string>
     <string name="webview_crash_loop_dialog_content">Системою WebView не вдалося відобразити картку \'%1$s\'.\n %2$s</string>
+    <string name="slide_to_cancel" comment="Message shown when pressing the record button">Slide to cancel</string>
     <string name="filter_by_flags" maxLength="41">Прапорці</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">Створюється список тегів&#8230;</string>
@@ -111,7 +124,7 @@
     <string name="missing_note_type">Жодного типу записів не знайдено</string>
     <string name="card_previewer_empty_front_indicator" comment="Extra text appended onto a tab title in the card previewer so that the user can see at a glance whether a card has no front.">%1$s (порожня)</string>
     <!-- Image cropper -->
-    <string name="image_cropper_action_rotate" maxLength="28" comment="Action in image cropper screen">Повернути</string>
+    <string name="image_cropper_action_rotate" maxLength="28" comment="Action in image cropper screen">Обернути</string>
     <string name="image_cropper_action_flip" maxLength="28" comment="Action in image cropper screen">Перевернути</string>
     <string name="image_cropper_action_flip_horizontally" maxLength="28" comment="Submenu action in image cropper screen">Перевернути по горизонталі</string>
     <string name="image_cropper_action_flip_vertically" maxLength="28" comment="Submenu action in image cropper screen">Перевернути по вертикалі</string>
@@ -156,7 +169,7 @@
     <string name="import_error_handle_exception">Не вдалося імпортувати пакет\n\n%s</string>
     <string name="import_error_not_apkg_extension">Ім\'я пакету “%s” не містить закінчення .apkg чи .colpkg</string>
     <string name="import_error_load_imported_database">Заміна Anki Database (.anki2) ще не підтримується. Перегляньте у посібнику інструкцію по заміні.</string>
-    <string name="import_error_content_provider">Вибраний файл не вдалося імпортувати автоматично до AnkiDroid. Будь ласка, перегляньте посібник користувача для того аби вручну імпортувати anki файли: \n%s</string>
+    <string name="import_error_content_provider">Вибраний файл не вдалося імпортувати автоматично до AnkiDroid. Будь ласка, перегляньте посібник користувача для того аби вручну імпортувати Anki файли: \n%s</string>
     <string name="import_error_copy_to_cache">Не вдалося зберегти файл в кеш (можливо закінчується пам\'ять на пристрої)</string>
     <string name="import_interrupted">Імпортування перервано</string>
     <string name="export_ready_title">Експорт готовий</string>
@@ -186,13 +199,6 @@
     <string name="tag_editor_add_feedback">Натисніть \"%2$s\", аби підтвердити додавання \"%1$s\"</string>
     <string name="tag_editor_add_feedback_existing">Обрано існуючу позначку \"%1$s\"</string>
     <!-- Time spans -->
-    <string name="reminder_title">Не забудьте про сьогоднішнє навчання!</string>
-    <plurals name="reminder_text">
-        <item quantity="one">%2$d картка для повторення в %1$s</item>
-        <item quantity="few">%2$d картки для повторення в %1$s</item>
-        <item quantity="many">%2$d карток для повторення в %1$s</item>
-        <item quantity="other">%2$d карток для повторення в %1$s</item>
-    </plurals>
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">Помилка поширення файлу apkg</string>
     <!-- Import and export v2 feedback -->
@@ -226,7 +232,7 @@
     <string name="anki_js_error_code">(Код помилки: %d)</string>
     <!-- About AnkiDroid screen -->
     <string name="about_ankidroid_successfully_copied_debug_info">Скопійовано в буфер обміну</string>
-    <string name="about_ankidroid_error_copy_debug_info">Помилка копіювання даних відлагодження до буфера обміну</string>
+    <string name="about_ankidroid_error_copy_debug_info">Помилка копіювання даних зневадження до буфера обміну</string>
     <!-- Card Viewer -->
     <string name="card_viewer_could_not_find_image">Не вдалося завантажити «\'%s»</string>
     <!-- Deck Picker -->
@@ -324,7 +330,7 @@
     <string name="show_cards" comment="Label for toggle cards button in BrowserOptionsDialog">Картки</string>
     <string name="show_notes" comment="Label for toggle notes button in BrowserOptionsDialog">Записи</string>
     <string name="toggle_cards_notes">Перемкнути картки/записи</string>
-    <string name="truncate_content_help">Обрізати висоту кожного рядка браузера, щоб показувати лише перші 3 рядки вмісту.</string>
+    <string name="truncate_content_help">Скоротити висоту кожного рядка переглядача, щоб було видно лише перші 3 рядки вмісту</string>
     <string name="browser_options_dialog_heading">Параметри переглядача карток</string>
     <string name="audio_saved">Запис аудіо збережено</string>
     <string name="deleting_selected_notes">Видалення вибраних записів</string>
@@ -338,6 +344,9 @@
     <string name="tts_voices_failed_opening_tts_system_settings" comment="error message if opening the system text to speech settings fails">Не вдалося відкрити налаштування синтезу мовлення</string>
     <string name="shared_decks_login_required">Ввійдіть, будь ласка, до акаунту, щоб завантажити більше колод</string>
     <string name="deck_description_field_hint">Опис</string>
+    <string name="deck_description_saved">Опис оновлено</string>
+    <string name="format_deck_description_as_markdown">Форматувати як Markdown</string>
+    <string name="help_button_content_description">Відкрити допомогу для ‘%s’</string>
     <string name="failed_to_copy">Не вдалося скопіювати</string>
     <string name="card_browser_unavailable_when_notes_mode">Недоступно в режимі \'Записи\'</string>
     <plurals name="unbury_cards_feedback">
@@ -368,7 +377,7 @@
     <string name="edit_front_template" comment="Description of the shortcut that shows the question side of the card template">Редагувати шаблон передньої сторони</string>
     <string name="edit_back_template" comment="Description of the shortcut that shows the answer side of the card template">Редагувати шаблон задньої сторони</string>
     <string name="edit_styling" comment="Description of the shortcut that shows the styling side of the card template">Редагувати стиль</string>
-    <string name="copy_the_template" comment="Description of the shortcut that copy the template as markdown">Копіювати шаблон як розмітку</string>
+    <string name="copy_the_template" comment="Description of the shortcut that copy the template as markdown">Копіювати шаблон як markdown</string>
     <string name="edit_browser_appearance" comment="Description of the shortcut that edits the browser appearance of card template">Редагувати вигляд переглядача карток</string>
     <string name="missing_user_action_dialog_message" comment="%s is the user action number">Дію користувача %s не встановлено в цьому типі запису. Будь ласка, налаштуйте її</string>
     <string name="directory_inaccessible_info">Дізнайтесь більше про те, як відновити доступ тут – %s, або перейдіть в налаштування, щоб оновити теку колекцій.</string>

@@ -65,6 +65,18 @@
     <string name="save_whiteboard" maxLength="28">Saglabāt tāfeli</string>
     <string name="enable_stylus" maxLength="28">Iespējot rakstīšanu ar irbuli</string>
     <string name="disable_stylus">Atspējot rakstīšanu ar irbuli</string>
+    <string name="eraser" maxLength="28">Eraser</string>
+    <string name="add_brush" maxLength="28">Add brush</string>
+    <string name="whiteboard_align_left" comment="Option to align the whiteboard toolbar on the left" maxLength="28">Left</string>
+    <string name="whiteboard_align_bottom" comment="Option to align the whiteboard toolbar on the bottom" maxLength="28">Bottom</string>
+    <string name="whiteboard_align_right" comment="Option to align the whiteboard toolbar on the right" maxLength="28">Right</string>
+    <string name="whiteboard_clear" comment="Button text to clear the whiteboard" maxLength="28">Clear</string>
+    <string name="whiteboard_more_options" comment="Tooltip of the whiteboard \'More\' button" maxLength="28">More options</string>
+    <string name="whiteboard_remove_brush_message">Are you sure you want to remove this brush from your palette?</string>
+    <string name="whiteboard_ink_eraser" comment="Title of the whiteboard Ink eraser">Ink</string>
+    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">Stroke</string>
+    <string name="stylus_mode" comment="Title of the menu item that toggles the whiteboard stylus mode" maxLength="28">Stylus mode</string>
+    <string name="cannot_remove_last_brush_message">The last brush may not be removed</string>
     <string name="enable_whiteboard" maxLength="28">Iespējot tāfeli</string>
     <string name="disable_whiteboard">Atspējot tāfeli</string>
     <string name="show_whiteboard">Rādīt tāfeli</string>
@@ -83,6 +95,7 @@
     <string name="webview_crash_fatal">Nenovēršama kļūda: WebView atveidotājs avarēja. Cēlonis: %s</string>
     <string name="webview_crash_loop_dialog_title">Sistēmas WebView atveidotāja atteice</string>
     <string name="webview_crash_loop_dialog_content">Sistēmas WebView neizdevās attēlot kartīti \"%1$s\".\n %2$s</string>
+    <string name="slide_to_cancel" comment="Message shown when pressing the record button">Slide to cancel</string>
     <string name="filter_by_flags" maxLength="41">Karogi</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">Veido birku sarakstu&#8230;</string>
@@ -164,7 +177,7 @@
     <string name="export_email_subject">AnkiDroid izgūtās zibkartītes: %s</string>
     <string name="export_email_text"><![CDATA[        Sveiciens!
         <br/><br/>
-        Šī ir Anki zibkartīšu kava, kas nosūtīta no ankiDroid[1].
+        Šī ir Anki zibkartīšu kava, kas nosūtīta no AnkiDroid[1].
         Mēģini to atvērt ar vienu no pieejamajām Anki lietotnēm[2] un izbaudīt vieglu un iedarbīgu mācīšanos!<br/><br/>
         [1] %1$s<br/>
         [2] %2$s
@@ -183,12 +196,6 @@
     <string name="tag_editor_add_feedback">Pieskarties \"%2$s\", lai apstiprinātu \"%1$s\" pievienošanu</string>
     <string name="tag_editor_add_feedback_existing">Atlasīta esoša birka \"%1$s\"</string>
     <!-- Time spans -->
-    <string name="reminder_title">Neaizmirsti šodien mācīties!</string>
-    <plurals name="reminder_text">
-        <item quantity="zero">%2$d izskatāmu kartīšu kavā \"%1$s\"</item>
-        <item quantity="one">%2$d izskatāma kartīte kavā \"%1$s\"</item>
-        <item quantity="other">%2$d izskatāmas kartītes kavā \"%1$s\"</item>
-    </plurals>
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">Kļūda .apkg datnes kopīgošanas laikā</string>
     <!-- Import and export v2 feedback -->
@@ -333,6 +340,9 @@
     <string name="tts_voices_failed_opening_tts_system_settings" comment="error message if opening the system text to speech settings fails">Neizdevās atvērt teksta pārveidošanas runā iestatījumus</string>
     <string name="shared_decks_login_required">Lūgums pieteikteis, lai lejupielādētu vairāk kavu</string>
     <string name="deck_description_field_hint">Apraksts</string>
+    <string name="deck_description_saved">Description updated</string>
+    <string name="format_deck_description_as_markdown">Format as Markdown</string>
+    <string name="help_button_content_description">Open help for ‘%s’</string>
     <string name="failed_to_copy">Kopēšana neizdevās</string>
     <string name="card_browser_unavailable_when_notes_mode">Nav pieejams piezīmju skatā</string>
     <plurals name="unbury_cards_feedback">

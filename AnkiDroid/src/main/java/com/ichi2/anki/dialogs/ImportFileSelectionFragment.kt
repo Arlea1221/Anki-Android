@@ -32,6 +32,7 @@ import com.ichi2.anki.R
 import com.ichi2.anki.TextContentImportActivity
 import com.ichi2.anki.analytics.UsageAnalytics
 import com.ichi2.anki.common.annotations.NeedsTest
+import com.ichi2.anki.requireAnkiActivity
 import com.ichi2.anki.snackbar.showSnackbar
 import com.ichi2.anki.utils.MimeTypeUtils
 import com.ichi2.utils.title
@@ -56,7 +57,7 @@ class ImportFileSelectionFragment : DialogFragment() {
                     entry.analyticsId,
                 )
                 openImportFilePicker(
-                    activity = requireActivity() as AnkiActivity,
+                    activity = requireAnkiActivity(),
                     fileType = entry.type,
                     multiple = entry.multiple,
                     mimeType = entry.mimeType,

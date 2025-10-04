@@ -46,19 +46,6 @@
     <string name="error_reporting_choice_always_report">Rapportera alltid</string>
     <string name="error_reporting_choice_never_report">Rapportera aldrig</string>
     <string name="error_reporting_choice_ask_user">Fråga mig</string>
-    <!-- leech_action_labels -->
-    <!-- 01-core:menu_suspend_card -->
-    <!-- new_order_labels -->
-    <!-- cram_deck_conf_order_labels -->
-    <string name="cram_deck_conf_order_oldest_seen_first">Äldst sedd först</string>
-    <string name="cram_deck_conf_order_random">Slumpmässigt</string>
-    <string name="cram_deck_conf_order_increasing_intervals">Ökande intervall</string>
-    <string name="cram_deck_conf_order_decreasing_intervals">Minskande intervall</string>
-    <string name="cram_deck_conf_order_most_lapsed">Mest felbesvarade</string>
-    <string name="cram_deck_conf_order_order_added">Ordningen de lades till</string>
-    <string name="cram_deck_conf_order_order_due">Efter förfallotid</string>
-    <string name="cram_deck_conf_order_latest_added_first">Senast tillagda först</string>
-    <string name="cram_deck_conf_order_relative_overdueness">Relativ försening innan repetition</string>
     <!-- add_to_cur_labels -->
     <string name="add_to_deck_use_current_deck">Använd nuvarande kortlek</string>
     <string name="add_to_deck_decide_by_note_type">Välj efter anteckningstyp</string>
@@ -84,17 +71,17 @@
     <string name="answer_good" maxLength="41">Svara bra</string>
     <string name="answer_easy" maxLength="41">Svara lätt</string>
     <string name="gesture_abort_learning" maxLength="41">Close study screen</string>
-    <string name="gesture_flag_red" maxLength="41">Växla Röd flagga</string>
-    <string name="gesture_flag_orange" maxLength="41">Växla Orange flagga</string>
-    <string name="gesture_flag_green" maxLength="41">Växla Grön flagga</string>
-    <string name="gesture_flag_blue" maxLength="41">Växla Blå flagga</string>
-    <string name="gesture_flag_pink" maxLength="41">Växa Rosa flagga</string>
-    <string name="gesture_flag_turquoise" maxLength="41">Växla Turkos flagga</string>
-    <string name="gesture_flag_purple" maxLength="41">Växla Lila flagga</string>
+    <string name="gesture_flag_red" maxLength="41">Toggle red flag</string>
+    <string name="gesture_flag_orange" maxLength="41">Toggle orange flag</string>
+    <string name="gesture_flag_green" maxLength="41">Toggle green flag</string>
+    <string name="gesture_flag_blue" maxLength="41">Toggle blue flag</string>
+    <string name="gesture_flag_pink" maxLength="41">Toggle pink flag</string>
+    <string name="gesture_flag_turquoise" maxLength="41">Toggle turquoise flag</string>
+    <string name="gesture_flag_purple" maxLength="41">Toggle purple flag</string>
     <string name="gesture_flag_remove" maxLength="41">Ta bort flagga</string>
     <string name="gesture_page_up" maxLength="41">Sida upp</string>
     <string name="gesture_page_down" maxLength="41">Sida ner</string>
-    <string name="gesture_toggle_whiteboard" maxLength="41">Växla Whiteboard</string>
+    <string name="gesture_toggle_whiteboard" maxLength="41">Toggle whiteboard</string>
     <string name="gesture_toggle_eraser" maxLength="41">Toggle eraser</string>
     <string name="gesture_show_hint" maxLength="41">Visa ledtråd</string>
     <string name="gesture_show_all_hints" maxLength="41">Visa alla ledtrådar</string>

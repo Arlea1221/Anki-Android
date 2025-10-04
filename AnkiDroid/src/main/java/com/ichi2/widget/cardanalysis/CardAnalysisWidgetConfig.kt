@@ -38,13 +38,15 @@ import com.ichi2.anki.AnkiActivity
 import com.ichi2.anki.R
 import com.ichi2.anki.dialogs.DeckSelectionDialog
 import com.ichi2.anki.dialogs.DeckSelectionDialog.DeckSelectionListener
-import com.ichi2.anki.dialogs.DeckSelectionDialog.SelectableDeck
 import com.ichi2.anki.dialogs.DiscardChangesDialog
 import com.ichi2.anki.isCollectionEmpty
+import com.ichi2.anki.model.SelectableDeck
 import com.ichi2.anki.showThemedToast
 import com.ichi2.anki.snackbar.BaseSnackbarBuilderProvider
 import com.ichi2.anki.snackbar.SnackbarBuilder
 import com.ichi2.anki.snackbar.showSnackbar
+import com.ichi2.widget.AppWidgetId.Companion.INVALID_APPWIDGET_ID
+import com.ichi2.widget.AppWidgetId.Companion.getAppWidgetId
 import com.ichi2.widget.WidgetConfigScreenAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -58,7 +60,7 @@ class CardAnalysisWidgetConfig :
     AnkiActivity(),
     DeckSelectionListener,
     BaseSnackbarBuilderProvider {
-    private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
+    private var appWidgetId = INVALID_APPWIDGET_ID
     lateinit var deckAdapter: WidgetConfigScreenAdapter
     private lateinit var cardAnalysisWidgetPreferences: CardAnalysisWidgetPreferences
 
@@ -85,12 +87,9 @@ class CardAnalysisWidgetConfig :
 
         cardAnalysisWidgetPreferences = CardAnalysisWidgetPreferences(this)
 
-        appWidgetId = intent.extras?.getInt(
-            AppWidgetManager.EXTRA_APPWIDGET_ID,
-            AppWidgetManager.INVALID_APPWIDGET_ID,
-        ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
+        appWidgetId = intent.getAppWidgetId()
 
-        if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+        if (appWidgetId == INVALID_APPWIDGET_ID) {
             Timber.v("Invalid App Widget ID")
             finish()
             return
@@ -264,7 +263,7 @@ class CardAnalysisWidgetConfig :
     }
 
     /** Returns the list of standard deck. */
-    private suspend fun fetchDecks(): List<SelectableDeck> =
+    private suspend fun fetchDecks(): List<SelectableDeck.Deck> =
         withContext(Dispatchers.IO) {
             SelectableDeck.fromCollection(includeFiltered = true)
         }
@@ -293,6 +292,7 @@ class CardAnalysisWidgetConfig :
         if (deck == null) {
             return
         }
+        require(deck is SelectableDeck.Deck)
 
         // Check if the deck is being added to a fully occupied selection
         if (deckAdapter.itemCount >= MAX_DECKS_ALLOWED) {
@@ -313,7 +313,7 @@ class CardAnalysisWidgetConfig :
             val appWidgetManager = AppWidgetManager.getInstance(this)
             CardAnalysisWidget.updateWidget(this, appWidgetManager, appWidgetId)
 
-            val resultValue = Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            val resultValue = Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId.id)
             setResult(RESULT_OK, resultValue)
             finish()
         }
@@ -335,7 +335,7 @@ class CardAnalysisWidgetConfig :
         val updateIntent =
             Intent(this, CardAnalysisWidget::class.java).apply {
                 action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-                putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(appWidgetId))
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(appWidgetId.id))
                 putExtra(EXTRA_SELECTED_DECK_IDS, selectedDeck)
             }
 
@@ -353,8 +353,8 @@ class CardAnalysisWidgetConfig :
                     return
                 }
 
-                val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
-                if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+                val appWidgetId = intent.getAppWidgetId()
+                if (appWidgetId == INVALID_APPWIDGET_ID) {
                     return
                 }
 

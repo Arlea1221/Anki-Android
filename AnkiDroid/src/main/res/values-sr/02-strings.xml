@@ -65,6 +65,18 @@
     <string name="save_whiteboard" maxLength="28">Save whiteboard</string>
     <string name="enable_stylus" maxLength="28">Enable stylus writing</string>
     <string name="disable_stylus">Disable stylus writing</string>
+    <string name="eraser" maxLength="28">Eraser</string>
+    <string name="add_brush" maxLength="28">Add brush</string>
+    <string name="whiteboard_align_left" comment="Option to align the whiteboard toolbar on the left" maxLength="28">Left</string>
+    <string name="whiteboard_align_bottom" comment="Option to align the whiteboard toolbar on the bottom" maxLength="28">Bottom</string>
+    <string name="whiteboard_align_right" comment="Option to align the whiteboard toolbar on the right" maxLength="28">Right</string>
+    <string name="whiteboard_clear" comment="Button text to clear the whiteboard" maxLength="28">Clear</string>
+    <string name="whiteboard_more_options" comment="Tooltip of the whiteboard \'More\' button" maxLength="28">More options</string>
+    <string name="whiteboard_remove_brush_message">Are you sure you want to remove this brush from your palette?</string>
+    <string name="whiteboard_ink_eraser" comment="Title of the whiteboard Ink eraser">Ink</string>
+    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">Stroke</string>
+    <string name="stylus_mode" comment="Title of the menu item that toggles the whiteboard stylus mode" maxLength="28">Stylus mode</string>
+    <string name="cannot_remove_last_brush_message">The last brush may not be removed</string>
     <string name="enable_whiteboard" maxLength="28">Омогући белу таблу</string>
     <string name="disable_whiteboard">Онемогући белу таблу</string>
     <string name="show_whiteboard">Прикажи белу таблу</string>
@@ -83,6 +95,7 @@
     <string name="webview_crash_fatal">Fatal Error: WebView renderer crashed. Cause: %s</string>
     <string name="webview_crash_loop_dialog_title">System WebView Rendering Failure</string>
     <string name="webview_crash_loop_dialog_content">System WebView failed to render card \'%1$s\'.\n %2$s</string>
+    <string name="slide_to_cancel" comment="Message shown when pressing the record button">Slide to cancel</string>
     <string name="filter_by_flags" maxLength="41">Flags</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">Building list of tags&#8230;</string>
@@ -153,7 +166,7 @@
     <string name="import_error_handle_exception">Failed to import file\n\n%s</string>
     <string name="import_error_not_apkg_extension">Filename “%s” doesn’t have .apkg or .colpkg extension</string>
     <string name="import_error_load_imported_database">Anki Database (.anki2) replacements are not yet supported. Please see the manual for replacement instructions.</string>
-    <string name="import_error_content_provider">Ова датотека не може да се увезе аутоматски. Погледајте у упуству како се ручно увози anki датотека: \n %s</string>
+    <string name="import_error_content_provider">Ова датотека не може да се увезе аутоматски. Погледајте у упуству како се ручно увози Anki датотека: \n %s</string>
     <string name="import_error_copy_to_cache">Failed to cache file (possibly out of storage space)</string>
     <string name="import_interrupted">Import interrupted: AnkiDroid was closed</string>
     <string name="export_ready_title">Export ready</string>
@@ -183,12 +196,6 @@
     <string name="tag_editor_add_feedback">Притисните “%2$s” да бисте потврдили додавање “%1$s”</string>
     <string name="tag_editor_add_feedback_existing">Постојећа ознака “%1$s” је изабрана</string>
     <!-- Time spans -->
-    <string name="reminder_title">Do not forget to study today!</string>
-    <plurals name="reminder_text">
-        <item quantity="one">%2$d card to review in %1$s</item>
-        <item quantity="few">%2$d cards to review in %1$s</item>
-        <item quantity="other">%2$d cards to review in %1$s</item>
-    </plurals>
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">Error sharing apkg file</string>
     <!-- Import and export v2 feedback -->
@@ -265,7 +272,7 @@
     <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
     <string name="percentage">%s%%</string>
     <string name="download_deck">Download deck</string>
-    <string name="open_in_browser" comment="Label of a button inviting to open ankiweb\'s shared deck page if automated download failed">Open in Browser</string>
+    <string name="open_in_browser" comment="Label of a button inviting to open ankiweb\'s shared deck page if automated download failed">Open in browser</string>
     <string name="try_again">Try Again</string>
     <string name="cancel_download">Cancel download</string>
     <string name="cancel_download_question_title">Cancel download?</string>
@@ -333,6 +340,9 @@
     <string name="tts_voices_failed_opening_tts_system_settings" comment="error message if opening the system text to speech settings fails">Failed to open text to speech settings</string>
     <string name="shared_decks_login_required">Please log in to download more decks</string>
     <string name="deck_description_field_hint">Description</string>
+    <string name="deck_description_saved">Description updated</string>
+    <string name="format_deck_description_as_markdown">Format as Markdown</string>
+    <string name="help_button_content_description">Open help for ‘%s’</string>
     <string name="failed_to_copy">Failed to copy</string>
     <string name="card_browser_unavailable_when_notes_mode">Unavailable in ‘Notes’ mode</string>
     <plurals name="unbury_cards_feedback">

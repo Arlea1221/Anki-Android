@@ -20,10 +20,12 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.net.Uri
 import android.view.WindowManager
 import android.view.WindowManager.BadTokenException
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
@@ -32,28 +34,40 @@ import androidx.lifecycle.viewModelScope
 import anki.collection.Progress
 import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.CollectionManager.withCol
+import com.ichi2.anki.CrashReportData.Companion.throwIfDialogUnusable
+import com.ichi2.anki.CrashReportData.Companion.toCrashReportData
+import com.ichi2.anki.CrashReportData.HelpAction
+import com.ichi2.anki.CrashReportData.HelpAction.AnkiBackendLink
+import com.ichi2.anki.CrashReportData.HelpAction.OpenDeckOptions
+import com.ichi2.anki.common.annotations.UseContextParameter
 import com.ichi2.anki.exception.StorageAccessException
 import com.ichi2.anki.libanki.Collection
+import com.ichi2.anki.pages.DeckOptionsDestination
 import com.ichi2.anki.snackbar.showSnackbar
+import com.ichi2.anki.utils.openUrl
+import com.ichi2.utils.create
 import com.ichi2.utils.message
 import com.ichi2.utils.negativeButton
+import com.ichi2.utils.neutralButton
 import com.ichi2.utils.positiveButton
+import com.ichi2.utils.setupEnterKeyHandler
 import com.ichi2.utils.show
 import com.ichi2.utils.title
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import net.ankiweb.rsdroid.Backend
 import net.ankiweb.rsdroid.BackendException
 import net.ankiweb.rsdroid.exceptions.BackendInterruptedException
@@ -65,6 +79,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlin.time.Duration
 
 /** Overridable reference to [Dispatchers.IO]. Useful if tests can't use it */
 // COULD_BE_BETTER: this shouldn't be necessary, but TestClass::runWith needs it
@@ -161,7 +176,7 @@ suspend fun <T> FragmentActivity.runCatching(
     } catch (exc: Exception) {
         if (skipCrashReport?.invoke(exc) == true) {
             Timber.i("Showing error dialog but not sending a crash report.")
-            showError(this, exc.localizedMessage!!, exc, false, enableEnterKeyHandler = true)
+            showError(exc.localizedMessage!!, exc.toCrashReportData(this, reportException = false))
             return null
         }
         when (exc) {
@@ -175,53 +190,21 @@ suspend fun <T> FragmentActivity.runCatching(
             is BackendNetworkException, is BackendSyncException, is StorageAccessException -> {
                 // these exceptions do not generate worthwhile crash reports
                 Timber.i("Showing error dialog but not sending a crash report.")
-                showError(this, exc.localizedMessage!!, exc, false, enableEnterKeyHandler = true)
+                showError(exc.localizedMessage!!, exc.toCrashReportData(this, reportException = false))
             }
             is BackendException -> {
                 Timber.e(exc, errorMessage)
                 if (callerTrace != null) Timber.e(callerTrace)
-                showError(this, exc.localizedMessage!!, exc)
+                showError(exc.localizedMessage!!, exc.toCrashReportData(this))
             }
             else -> {
                 Timber.e(exc, errorMessage)
                 if (callerTrace != null) Timber.e(callerTrace)
-                showError(this, exc.toString(), exc)
+                showError(exc)
             }
         }
     }
     return null
-}
-
-/**
- * Returns CoroutineExceptionHandler which catches any uncaught exceptions and reports it to user
- * Errors from the backend contain localized text that is often suitable to show to the user as-is.
- * Other errors should ideally be handled in the block.
- *
- * Typically you'll want to use [launchCatchingTask] instead; this routine is mainly useful for
- * launching tasks in an activity that is not a lifecycleOwner.
- *
- * @return [CoroutineExceptionHandler]
- * @see [FragmentActivity.launchCatchingTask]
- */
-fun getCoroutineExceptionHandler(
-    activity: Activity,
-    errorMessage: String? = null,
-) = CoroutineExceptionHandler { _, throwable ->
-    // No need to check for cancellation-exception, it does not gets caught by CoroutineExceptionHandler
-    when (throwable) {
-        is BackendInterruptedException -> {
-            Timber.e(throwable, errorMessage)
-            throwable.localizedMessage?.let { activity.showSnackbar(it) }
-        }
-        is BackendException -> {
-            Timber.e(throwable, errorMessage)
-            showError(activity, throwable.localizedMessage!!, throwable)
-        }
-        else -> {
-            Timber.e(throwable, errorMessage)
-            showError(activity, throwable.toString(), throwable)
-        }
-    }
 }
 
 /**
@@ -262,56 +245,73 @@ fun Fragment.launchCatchingTask(
         requireActivity().runCatching(errorMessage, skipCrashReport = skipCrashReport) { block() }
     }
 
-fun showError(
-    context: Context,
-    msg: String,
+/**
+ * Displays an error dialog with title 'Error' and provided [message].
+ * May report the error when the dialog is dismissed
+ *
+ * @param message Message to display to user
+ * @param crashReportData Crash report data which may be reported when the dialog is dismissed.
+ */
+fun Context.showError(
+    message: String,
+    crashReportData: CrashReportData?,
 ) {
-    if (throwOnShowError) throw IllegalStateException("throwOnShowError: $msg")
+    crashReportData.throwIfDialogUnusable(message)
+
     Timber.i("Error dialog displayed")
+
     try {
-        AlertDialog.Builder(context).show {
-            title(R.string.vague_error)
-            message(text = msg)
-            positiveButton(R.string.dialog_ok)
-        }
+        AlertDialog
+            .Builder(this)
+            .create {
+                title(R.string.vague_error)
+                message(text = message)
+                positiveButton(R.string.dialog_ok)
+                if (crashReportData?.helpAction != null) {
+                    neutralButton(R.string.help)
+                }
+                if (crashReportData?.reportableException == true) {
+                    Timber.w("sending crash report on close")
+                    setOnDismissListener { crashReportData.sendCrashReport() }
+                }
+            }.apply {
+                // setup the help link. Link is non-null if neutralButton exists.
+                setOnShowListener {
+                    neutralButton?.setOnClickListener {
+                        lifecycle.coroutineScope.launch {
+                            val shouldDismiss = crashReportData!!.helpAction!!.execute(context = context)
+                            if (shouldDismiss) {
+                                dismiss()
+                            }
+                        }
+                    }
+                }
+                setupEnterKeyHandler()
+                show()
+            }
     } catch (ex: BadTokenException) {
         // issue 12718: activity provided by `context` was not running
         Timber.w(ex, "unable to display error dialog")
+        crashReportData?.sendCrashReport()
     }
 }
 
-fun showError(
-    context: Context,
-    msg: String,
-    exception: Throwable,
-    crashReport: Boolean = true,
-    enableEnterKeyHandler: Boolean = false,
-) {
-    if (throwOnShowError) throw IllegalStateException("throwOnShowError: $msg", exception)
-    Timber.i("Error dialog displayed")
-    try {
-        AlertDialog.Builder(context).show(enableEnterKeyHandler = enableEnterKeyHandler) {
-            title(R.string.vague_error)
-            message(text = msg)
-            positiveButton(R.string.dialog_ok)
-            if (crashReport) {
-                Timber.w("sending crash report on close")
-                setOnDismissListener {
-                    CrashReportService.sendExceptionReport(
-                        exception,
-                        origin = context::class.java.simpleName,
-                    )
-                }
-            }
+/**
+ * @return Whether the dialog should be dismissed
+ */
+suspend fun HelpAction.execute(context: Context): Boolean {
+    when (this) {
+        is AnkiBackendLink -> {
+            context.openUrl(this.link)
+            return false
         }
-    } catch (ex: BadTokenException) {
-        // issue 12718: activity provided by `context` was not running
-        Timber.w(ex, "unable to display error dialog")
-        if (crashReport) {
-            CrashReportService.sendExceptionReport(
-                exception,
-                origin = context::class.java.simpleName,
-            )
+        OpenDeckOptions -> {
+            // if we're in the error dialog, we have no context of the deck which caused the exception
+            // assume it's the current deck
+            val openCurrentDeckOptions = DeckOptionsDestination.fromCurrentDeck()
+            context.startActivity(openCurrentDeckOptions.toIntent(context))
+            // dismiss the dialog - the user should have resolved the issue
+            return true
         }
     }
 }
@@ -592,4 +592,144 @@ suspend fun AnkiActivity.userAcceptsSchemaChange(): Boolean {
 fun <T> CancellableContinuation<T>.ensureActive() {
     // we can't use .isActive here, or the exception would take precedence over a resumed exception
     if (isCancelled) throw CancellationException()
+}
+
+/**
+ * Displays an error dialog with title 'Error' and [throwable] data.
+ * May report the error when the dialog is dismissed
+ *
+ * @param throwable The exception to display to the user
+ * @param reportException If `true`, report the exception when the dialog is dismissed
+ */
+private fun Activity.showError(
+    throwable: Throwable,
+    reportException: Boolean = true,
+) = showError(throwable.toString(), throwable.toCrashReportData(context = this, reportException))
+
+/**
+ * Launches a coroutine which is guaranteed to terminate within the [timeout] duration, which means
+ * it is safe to call on the global coroutine scope. We handle the global scope carefully here to ensure
+ * that the coroutine eventually terminates and does not cause a memory leak.
+ */
+fun runGloballyWithTimeout(
+    timeout: Duration,
+    block: suspend () -> Unit,
+) {
+    AnkiDroidApp.applicationScope.launch {
+        try {
+            withTimeout(timeout) {
+                block()
+            }
+        } catch (e: TimeoutCancellationException) {
+            Timber.w(e, "runGloballyWithTimeout timed out after $timeout")
+        }
+    }
+}
+
+data class CrashReportData(
+    val exception: Throwable,
+    val origin: String,
+    val reportableException: Boolean,
+) {
+    /**
+     * Optional link to a help page regarding the error
+     *
+     * For example: https://docs.ankiweb.net/templates/errors.html#no-cloze-filter-on-cloze-notetype
+     * Or opening the deck options
+     */
+    val helpAction: HelpAction?
+        get() = HelpAction.from(exception)
+
+    fun shouldReportException(): Boolean {
+        if (!reportableException) return false
+        if (exception.isInvalidFsrsParametersException()) return false
+        return true
+    }
+
+    fun sendCrashReport() {
+        if (!shouldReportException()) {
+            Timber.i("skipped crash report due to further validation")
+            return
+        }
+        CrashReportService.sendExceptionReport(exception, origin)
+    }
+
+    /**
+     * Optional action to provide more information about an error
+     *
+     * Examples:
+     * - Open https://docs.ankiweb.net/templates/errors.html#no-cloze-filter-on-cloze-notetype
+     * - Open the deck options
+     */
+    sealed class HelpAction {
+        data class AnkiBackendLink(
+            val link: Uri,
+        ) : HelpAction()
+
+        /** Open the deck options for the current deck */
+        data object OpenDeckOptions : HelpAction()
+
+        companion object {
+            fun from(e: Throwable): HelpAction? {
+                val link =
+                    try {
+                        (e as? BackendException)
+                            ?.getDesktopHelpPageLink(CollectionManager.getBackend())
+                            ?.toUri()
+                    } catch (e: Exception) {
+                        Timber.w(e)
+                        null
+                    }
+
+                if (link != null) return AnkiBackendLink(link)
+                if (e.isInvalidFsrsParametersException()) return OpenDeckOptions
+
+                return null
+            }
+        }
+    }
+
+    companion object {
+        @UseContextParameter("context")
+        fun Throwable.toCrashReportData(
+            context: Context,
+            reportException: Boolean = true,
+        ) = CrashReportData(
+            exception = this,
+            // Appears as 'ManageNotetypes'
+            origin = context::class.java.simpleName,
+            reportableException = reportException,
+        )
+
+        /**
+         * If [throwOnShowError] is set, throws the exception from the crash report data
+         *
+         * So unit tests can fail if an unexpected exception is thrown
+         *
+         * Note: this occurs regardless of the status of [reportableException]
+         *
+         * @param message The message of the thrown [IllegalStateException]
+         * @throws IllegalStateException with [exception] as an innerException if the receiver
+         *  is non-null
+         */
+        fun CrashReportData?.throwIfDialogUnusable(message: String) {
+            if (!throwOnShowError) return
+            val message = "throwOnShowError: $message"
+            if (this == null) throw IllegalStateException(message)
+            throw IllegalStateException(message, exception)
+        }
+
+        private fun Throwable.isInvalidFsrsParametersException(): Boolean =
+            // `TR` may fail in an error-reporting context
+            try {
+                when (message) {
+                    // https://github.com/ankitects/anki/blob/f3b4284afbb38b894164cd4de3e7b690f2bc62a5/rslib/src/scheduler/fsrs/error.rs#L18
+                    "invalid params provided" -> true
+                    TR.deckConfigInvalidParameters() -> true
+                    else -> false
+                }
+            } catch (_: Throwable) {
+                false
+            }
+    }
 }

@@ -40,7 +40,7 @@ class ReviewerOptionsFragment :
         val hideSystemBars =
             requirePreference<ListPreference>(R.string.hide_system_bars_key).apply {
                 setOnPreferenceChangeListener { value ->
-                    ignoreDisplayCutout.isEnabled = value != HideSystemBars.NONE.entryValue
+                    ignoreDisplayCutout.isEnabled = value != getString(HideSystemBars.NONE.entryResId)
                 }
             }
         val newReviewerPref = requirePreference<SwitchPreferenceCompat>(R.string.new_reviewer_options_key)
@@ -50,7 +50,7 @@ class ReviewerOptionsFragment :
             for (pref in prefs) {
                 if (pref is HtmlHelpPreference) continue
                 if (pref.key == ignoreDisplayCutout.key && newValue) {
-                    ignoreDisplayCutout.isEnabled = hideSystemBars.value != HideSystemBars.NONE.entryValue
+                    ignoreDisplayCutout.isEnabled = hideSystemBars.value != getString(HideSystemBars.NONE.entryResId)
                     continue
                 }
                 pref.isEnabled = newValue
@@ -85,13 +85,14 @@ class ReviewerOptionsFragment :
         // Represents the collection pref "estTime": i.e.
         // whether the buttons should indicate the duration of the interval if we click on them.
         requirePreference<SwitchPreferenceCompat>(R.string.show_estimates_preference).apply {
+            title = CollectionManager.TR.preferencesShowNextReviewTimeAboveAnswer()
             launchCatchingTask { isChecked = CollectionPreferences.getShowIntervalOnButtons() }
             setOnPreferenceChangeListener { newValue ->
                 launchCatchingTask { CollectionPreferences.setShowIntervalsOnButtons(newValue) }
             }
         }
 
-        requirePreference<PreferenceCategory>(R.string.addons_category_key).title =
-            CollectionManager.TR.qtMiscAddons()
+        requirePreference<PreferenceCategory>(R.string.pref_review_category_key).title =
+            CollectionManager.TR.preferencesReview()
     }
 }

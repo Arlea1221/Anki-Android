@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Brayan Oliveira <69634269+brayandso@users.noreply.github.con>
+ * Copyright (c) 2025 Brayan Oliveira <69634269+brayandso@users.noreply.github.com>
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -15,10 +15,13 @@
  */
 package com.ichi2.anki.settings.enums
 
+import com.ichi2.anki.R
+
+/** [R.array.reviewer_toolbar_position_values] */
 enum class ToolbarPosition(
-    override val entryValue: String,
+    override val entryResId: Int,
 ) : PrefEnum {
-    TOP("0"),
-    BOTTOM("1"),
-    NONE("2"),
+    TOP(R.string.reviewer_toolbar_value_top),
+    BOTTOM(R.string.reviewer_toolbar_value_bottom),
+    NONE(R.string.reviewer_toolbar_value_none),
 }

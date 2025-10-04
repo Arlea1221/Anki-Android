@@ -47,7 +47,7 @@
     <!-- Navigation drawer strings -->
     <string name="drawer_open">Otevřít menu</string>
     <string name="drawer_close">Zavřít menu</string>
-    <string name="note_message">Note saved</string>
+    <string name="note_message">Poznámka uložena</string>
     <string name="CardEditorCardDeck">Balíček karet:</string>
     <string name="CardEditorNoteDeck">Balíček:</string>
     <string name="CardEditorModel">Typ poznámky:</string>
@@ -65,6 +65,18 @@
     <string name="save_whiteboard" maxLength="28">Uložit tabuli</string>
     <string name="enable_stylus" maxLength="28">Povolit stylus režim</string>
     <string name="disable_stylus">Zakázat stylus režim</string>
+    <string name="eraser" maxLength="28">Guma</string>
+    <string name="add_brush" maxLength="28">Přidat štětec</string>
+    <string name="whiteboard_align_left" comment="Option to align the whiteboard toolbar on the left" maxLength="28">Vlevo</string>
+    <string name="whiteboard_align_bottom" comment="Option to align the whiteboard toolbar on the bottom" maxLength="28">Dole</string>
+    <string name="whiteboard_align_right" comment="Option to align the whiteboard toolbar on the right" maxLength="28">Vpravo</string>
+    <string name="whiteboard_clear" comment="Button text to clear the whiteboard" maxLength="28">Vymazat</string>
+    <string name="whiteboard_more_options" comment="Tooltip of the whiteboard \'More\' button" maxLength="28">Další možnosti</string>
+    <string name="whiteboard_remove_brush_message">Jste si jisti, že chcete odstranit tento štětec z vaší palety?</string>
+    <string name="whiteboard_ink_eraser" comment="Title of the whiteboard Ink eraser">Inkoust</string>
+    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">Tah</string>
+    <string name="stylus_mode" comment="Title of the menu item that toggles the whiteboard stylus mode" maxLength="28">Režim pera</string>
+    <string name="cannot_remove_last_brush_message">Poslední štětec nesmí být odstraněn</string>
     <string name="enable_whiteboard" maxLength="28">Povolit tabuli</string>
     <string name="disable_whiteboard">Zakázat tabuli</string>
     <string name="show_whiteboard">Zobrazit tabuli</string>
@@ -83,6 +95,7 @@
     <string name="webview_crash_fatal">Kritická chyba: Vykreslování WebView selhalo. Příčina: %s</string>
     <string name="webview_crash_loop_dialog_title">Selhání vykreslování systémového webView</string>
     <string name="webview_crash_loop_dialog_content">Systémovému WebView se nepodařilo vykreslit kartu „%1$s“.\n %2$s</string>
+    <string name="slide_to_cancel" comment="Message shown when pressing the record button">Posunutím zrušíte</string>
     <string name="filter_by_flags" maxLength="41">Příznaky</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">Vytváří se seznam štítků&#8230;</string>
@@ -156,7 +169,7 @@
     <string name="import_error_handle_exception">Nepodařilo se importovat soubor\n\n%s</string>
     <string name="import_error_not_apkg_extension">Název souboru „%s“ nemá příponu .apkg nebo .colpkg</string>
     <string name="import_error_load_imported_database">Náhrady Anki databáze (.anki2) ještě nejsou podporovány. Pokyny k náhradě naleznete v příručce.</string>
-    <string name="import_error_content_provider">Vybraný soubor nelze automaticky importovat pomocí AnkiDroid. V uživatelské příručce naleznete, jak provést ruční import souborů anki: \n %s</string>
+    <string name="import_error_content_provider">Vybraný soubor nelze automaticky importovat pomocí AnkiDroid. V uživatelské příručce naleznete, jak provést ruční import souborů Anki: \n %s</string>
     <string name="import_error_copy_to_cache">Nepodařilo se uložit soubor do mezipaměti (možná nedostatek místa v úložišti)</string>
     <string name="import_interrupted">Import přerušen: AnkiDroid se zavřel</string>
     <string name="export_ready_title">Export připraven</string>
@@ -186,13 +199,6 @@
     <string name="tag_editor_add_feedback">Klepněte na „%2$s“, abyste potvrdili přidání „%1$s“</string>
     <string name="tag_editor_add_feedback_existing">Vybrán stávající štítek „%1$s“</string>
     <!-- Time spans -->
-    <string name="reminder_title">Nezapomeňte dnes studovat!</string>
-    <plurals name="reminder_text">
-        <item quantity="one">%2$d karta k zopakování v %1$s</item>
-        <item quantity="few">%2$d karty k zopakování v %1$s</item>
-        <item quantity="many">%2$d karty k zopakování v %1$s</item>
-        <item quantity="other">%2$d karet k zopakování v %1$s</item>
-    </plurals>
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">Chyba sdílení souboru apkg</string>
     <!-- Import and export v2 feedback -->
@@ -338,6 +344,9 @@
     <string name="tts_voices_failed_opening_tts_system_settings" comment="error message if opening the system text to speech settings fails">Nepodařilo se otevřít nastavení převodu textu na řeč</string>
     <string name="shared_decks_login_required">Prosím přihlaste se, abyste mohli stáhnout více balíčků</string>
     <string name="deck_description_field_hint">Popisek</string>
+    <string name="deck_description_saved">Popis aktualizován</string>
+    <string name="format_deck_description_as_markdown">Formátovat jako Markdown</string>
+    <string name="help_button_content_description">Otevřít nápovědu pro „%s“</string>
     <string name="failed_to_copy">Kopírování se nezdařilo</string>
     <string name="card_browser_unavailable_when_notes_mode">Nedostupné v režimu „Poznámky“</string>
     <plurals name="unbury_cards_feedback">

@@ -31,10 +31,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.ichi2.anki.CollectionManager.withCol
 import com.ichi2.anki.common.utils.annotation.KotlinCleanup
 import com.ichi2.anki.dialogs.help.HelpDialog
 import com.ichi2.anki.pages.RemoveAccountFragment
@@ -44,6 +44,7 @@ import com.ichi2.anki.utils.ext.showDialogFragment
 import com.ichi2.ui.TextInputEditField
 import com.ichi2.utils.AdaptionUtil.isUserATestClient
 import com.ichi2.utils.Permissions
+import net.ankiweb.rsdroid.exceptions.BackendSyncException
 import timber.log.Timber
 
 /**
@@ -111,7 +112,7 @@ open class MyAccount : AnkiActivity() {
             finish()
             return
         }
-        mayOpenUrl(resources.getString(R.string.register_url).toUri())
+        mayOpenUrl(R.string.register_url)
         initAllContentViews()
         if (isLoggedIn()) {
             switchToState(STATE_LOGGED_IN)
@@ -150,7 +151,12 @@ open class MyAccount : AnkiActivity() {
 
     private fun logout() {
         launchCatchingTask {
-            syncLogout(baseContext)
+            Prefs.hkey = null
+            Prefs.username = null
+            Prefs.currentSyncUri = null
+            withCol {
+                media.forceResync()
+            }
             switchToState(STATE_LOG_IN)
         }
     }
@@ -182,7 +188,7 @@ open class MyAccount : AnkiActivity() {
     }
 
     private fun resetPassword() {
-        super.openUrl(resources.getString(R.string.resetpw_url).toUri())
+        super.openUrl(R.string.resetpw_url)
     }
 
     private fun initAllContentViews() {
@@ -266,12 +272,12 @@ open class MyAccount : AnkiActivity() {
         val resetPWButton = loginToMyAccountView.findViewById<Button>(R.id.reset_password_button)
         resetPWButton.setOnClickListener { resetPassword() }
         val signUpButton = loginToMyAccountView.findViewById<Button>(R.id.sign_up_button)
-        val url = resources.getString(R.string.register_url).toUri()
+        val url = R.string.register_url
         signUpButton.setOnClickListener { openUrl(url) }
 
         // Add button to link to instructions on how to find AnkiWeb email
         val lostEmail = loginToMyAccountView.findViewById<Button>(R.id.lost_mail_instructions)
-        val lostMailUrl = resources.getString(R.string.link_ankiweb_lost_email_instructions).toUri()
+        val lostMailUrl = R.string.link_ankiweb_lost_email_instructions
         lostEmail.setOnClickListener { openUrl(lostMailUrl) }
         loggedIntoMyAccountView =
             layoutInflater.inflate(R.layout.my_account_logged_in, null).apply {
@@ -321,6 +327,37 @@ open class MyAccount : AnkiActivity() {
     private fun openAnkiDroidPrivacyPolicy() {
         Timber.i("Opening 'Privacy policy'")
         showDialogFragment(HelpDialog.newPrivacyPolicyInstance())
+    }
+
+    private fun handleNewLogin(
+        username: String,
+        password: String,
+        resultLauncher: ActivityResultLauncher<String>,
+    ) {
+        val endpoint = getEndpoint()
+        launchCatchingTask {
+            val auth =
+                try {
+                    withProgress(
+                        extractProgress = {
+                            text = getString(R.string.sign_in)
+                        },
+                        onCancel = ::cancelSync,
+                    ) {
+                        withCol {
+                            syncLogin(username, password, endpoint)
+                        }
+                    }
+                } catch (exc: BackendSyncException.BackendSyncAuthFailedException) {
+                    // auth failed; clear out login details
+                    updateLogin("", "")
+                    throw exc
+                }
+            updateLogin(username, auth.hkey)
+            setResult(RESULT_OK)
+            checkNotificationPermission(this@MyAccount, resultLauncher)
+            finish()
+        }
     }
 
     companion object {

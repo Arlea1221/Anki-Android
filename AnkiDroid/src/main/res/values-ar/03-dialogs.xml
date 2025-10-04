@@ -136,6 +136,8 @@
     <string name="multimedia_editor_failed">تعذر فتح محرر الوسائط المتعددة</string>
     <!-- Multimedia - Audio View -->
     <string name="multimedia_editor_audio_permission_denied">رُفِض إذن تسجيل الصوت</string>
+    <string name="permission_denied">رُفِضَ الإذن</string>
+    <string name="recording_permission_denied_message">إذن الميكروفون ضروري لميزة «تسجيل الصوت». امنحه من إعدادات التطبيق رجاءًا.</string>
     <!-- Database Integrity Check -->
     <string name="integrity_check_startup_title">تم تحديث آنكي درويد</string>
     <string name="integrity_check_startup_content">تم تحديث آنكي درويد. يتضمن هذا التحديث إصلاحًا لأعطال ممكنة في قاعدة البيانات، لذلك ننصح باستخدام ميزة فحص قاعدة البيانات الآن.</string>
@@ -217,8 +219,6 @@
     <string name="import_deck_package">حزمة رزمة (.apkg)</string>
     <string name="import_collection_package">حزمة مجموعة (.colpkg)</string>
     <string name="import_csv">ملف نصي (.txt; .csv)</string>
-    <!-- Deck selection dialog -->
-    <string name="cannot_create_subdeck_for_all_decks">لا يمكنك إنشاء رزمة فرعية لكل الرزم</string>
     <!-- scoped storage -->
     <string name="backup_your_collection">انسخ  المجموعة الخاصة بك احتياطيًا</string>
     <string name="backup_collection_message">لم تقم بنسخ مجموعتك احتياطيًا منذ مدة. من الأفضل أن تقوم بذلك الآن لمنع فقدان البيانات</string>
@@ -277,14 +277,14 @@
     <string name="cloze_number">رقم الفراغ</string>
     <string name="change_editor_mode">تغيير وضع المحرر</string>
     <string name="open_note_editor">فتح محرر الملحوظات</string>
-    <string name="change_cloze_mode">غير وضع الفراغات</string>
+    <string name="change_cloze_mode">تغيير وضع الفراغات</string>
     <!-- Outdated WebView dialog -->
     <string name="webview_update_message">إصدار ويب فيو لهذا النظام قديم. لن تعمل بعض الميزات بشكل صحيح. حدثه رجاءًا.\n\nالإصدار المنصب: %1$d\nالإصدار الأدنى المطلوب: %2$d</string>
-    <string name="compress">إضغط</string>
+    <string name="compress">ضغط</string>
     <!-- Tts playback error dialog -->
     <string name="tts_error_dialog_title">اللغة غير مدعومة</string>
     <string name="tts_error_dialog_reason_text">لا يدعم محرك تحويل النص إلى كلام <b>%1$s</b> اللغة التالية:
 <b>%2$s</b></string>
-    <string name="tts_error_dialog_change_button_text">غير المحرك</string>
+    <string name="tts_error_dialog_change_button_text">تغيير المحرك</string>
     <string name="tts_error_dialog_supported_voices_button_text">خيارات الصوت</string>
 </resources>

@@ -27,11 +27,14 @@ import com.ichi2.anki.CollectionManager.withCol
 import com.ichi2.anki.StudyOptionsFragment.StudyOptionsListener
 import com.ichi2.anki.dialogs.customstudy.CustomStudyDialog.CustomStudyAction
 import com.ichi2.anki.dialogs.customstudy.CustomStudyDialog.CustomStudyAction.Companion.REQUEST_KEY
+import com.ichi2.anki.libanki.undoAvailable
+import com.ichi2.anki.libanki.undoLabel
 import com.ichi2.anki.observability.ChangeManager
 import com.ichi2.anki.utils.ext.setFragmentResultListener
 import com.ichi2.ui.RtlCompliantActionProvider
 import com.ichi2.widget.WidgetStatus
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class StudyOptionsActivity :
     AnkiActivity(),
@@ -58,6 +61,14 @@ class StudyOptionsActivity :
                 ->
                     currentFragment!!.refreshInterface()
             }
+        }
+        setFragmentResultListener(StudyOptionsFragment.REQUEST_STUDY_OPTIONS_STUDY) { _, _ ->
+            Timber.d("Opening study screen from study options screen")
+            val reviewer = Reviewer.getIntent(this)
+            // go back to DeckPicker after studying when not in tablet mode
+            reviewer.flags = Intent.FLAG_ACTIVITY_FORWARD_RESULT
+            startActivity(reviewer)
+            finish()
         }
     }
 

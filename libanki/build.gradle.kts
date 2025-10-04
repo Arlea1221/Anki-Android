@@ -63,7 +63,9 @@ dependencies {
 
     // Android interface dependencies
     implementation(libs.androidx.annotation)
+    implementation(libs.androidx.sqlite.framework)
     testImplementation(libs.androidx.sqlite.framework)
+    testImplementation(libs.androidx.test.rules) // @SdkSuppress
 
     // test dependencies
     testImplementation(libs.hamcrest)
