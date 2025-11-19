@@ -233,6 +233,7 @@
     <string name="search_decks" maxLength="28">തിരയൽ ഡെക്കുകൾ</string>
     <string name="ankidroid_init_failed_webview_title">മാരകമായ തെറ്റ്</string>
     <string name="ankidroid_init_failed_webview">ലഭ്യമല്ലാത്ത സിസ്റ്റം വെബ്‌വ്യൂവിനെ AnkiDroid ആശ്രയിക്കുന്നു. സിസ്റ്റം അപ്‌ഡേറ്റുകൾ‌ ഇൻ‌സ്റ്റാൾ‌ ചെയ്യുകയാണെങ്കിൽ‌ ഇത് സംഭവിക്കാം. കുറച്ച് മിനിറ്റിനുള്ളിൽ വീണ്ടും ശ്രമിക്കുക. \n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">അക്ഷര വലിപ്പം</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">ടൂൾബാർ കാണിക്കുക</string>
@@ -279,7 +280,6 @@
     <string name="download_failed">ഡൗൺലോഡ് പരാജയപ്പെട്ടു</string>
     <string name="deck_download_progress_message">ഡൗൺലോഡ് പ്രവർത്തിക്കുമ്പോൾ നിങ്ങൾക്ക് മറ്റ് ആപ്പുകൾ ഉപയോഗിക്കാം</string>
     <string name="check_network">നിങ്ങളുടെ നെറ്റ്‌വർക്ക് കണക്ഷൻ പരിശോധിക്കുക</string>
-    <string name="search_using_deck_name">ഡെക്കിൻ്റെ പേര് ഉപയോഗിച്ച് തിരയുക</string>
     <string name="external_storage_unavailable">ഡൗൺലോഡ് നിർത്തലാക്കി, ബാഹ്യ സംഭരണം ലഭ്യമല്ല</string>
     <string name="home" maxLength="28">Home</string>
     <!-- Study Screen actions
@@ -312,7 +312,6 @@
     <string name="intro_sync_from_ankiweb">Sync from AnkiWeb</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid is not initialized yet. Please open AnkiDroid and try again</string>
-    <string name="already_logged_in">ഇതിനകം ലോഗിൻ ചെയ്തു</string>
     <!-- Deck Creation -->
     <string name="deck_created">ഡെക്ക് സൃഷ്ടിച്ചു</string>
     <string name="deck_renamed">Deck renamed</string>

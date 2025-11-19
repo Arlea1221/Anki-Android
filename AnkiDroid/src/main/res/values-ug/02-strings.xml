@@ -95,7 +95,7 @@
     <string name="webview_crash_fatal">ئېغىر خاتالىق: WebView ھاسىللىغۇچ يىمىرىلدى. سەۋەبى: %s</string>
     <string name="webview_crash_loop_dialog_title">سىستېما WebView ھاسىللىيالمىدى</string>
     <string name="webview_crash_loop_dialog_content">سىستېما WebView دا «%1$s» كارتىنى ھاسىللىيالمىدى.\n %2$s</string>
-    <string name="slide_to_cancel" comment="Message shown when pressing the record button">Slide to cancel</string>
+    <string name="slide_to_cancel" comment="Message shown when pressing the record button">سۈرۈلسە ۋاز كەچ</string>
     <string name="filter_by_flags" maxLength="41">بايراق</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">بەلگە تىزىمى ھاسىللاۋاتىدۇ&#8230;</string>
@@ -233,6 +233,7 @@
     <string name="search_decks" maxLength="28">دەستە ئىزدە</string>
     <string name="ankidroid_init_failed_webview_title">ئېغىر خاتالىق</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid سىستېمىدىكى WebView غا تايىنىدۇ ئەمما ئۇنى ئىشلەتكىلى بولمايدۇ. بۇ سىستېما يېڭىلانمىنى ئورنىتىۋاتقاندا يۈز بېرىشى مۇمكىن. بىر قانچە مىنۇتتىن كېيىن قايتا سىناڭ.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">خەت چوڭلۇقى</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">قورال بالداقنى كۆرسەت</string>
@@ -279,7 +280,6 @@
     <string name="download_failed">چۈشۈرەلمىدى</string>
     <string name="deck_download_progress_message">اچۈشۈرۈۋاتقاندا باشقا ئەپنى ئىشلىتەلەيسىز</string>
     <string name="check_network">تور باغلىنىشىنى تەكشۈرۈڭ</string>
-    <string name="search_using_deck_name">دەستە ئىسمى بويىچە ئىزدەيدۇ</string>
     <string name="external_storage_unavailable">چۈشۈرۈش بىكار قىلىندى، سىرتقا ساقلىغۇچنى ئىشلەتكىلى بولمايدۇ</string>
     <string name="home" maxLength="28">باش بەت</string>
     <!-- Study Screen actions
@@ -312,7 +312,6 @@
     <string name="intro_sync_from_ankiweb">AnkiWeb دىن قەدەمداشلا</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid تېخى دەسلەپلەشتۈرۈلمىدى. AnkiDroid نى ئېچىپ قايتا سىناڭ</string>
-    <string name="already_logged_in">ئاللىبۇرۇن كىرگەن</string>
     <!-- Deck Creation -->
     <string name="deck_created">دەستە قۇرۇلدى</string>
     <string name="deck_renamed">دەستە ئىسمى ئۆزگەرتىلدى</string>

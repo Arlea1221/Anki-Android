@@ -27,7 +27,6 @@ import android.view.MenuItem
 import android.view.SubMenu
 import android.view.View
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import android.widget.BaseAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
@@ -44,7 +43,6 @@ import androidx.appcompat.widget.ThemeUtils
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -70,6 +68,7 @@ import com.ichi2.anki.browser.registerFindReplaceHandler
 import com.ichi2.anki.browser.toCardBrowserLaunchOptions
 import com.ichi2.anki.common.annotations.NeedsTest
 import com.ichi2.anki.common.utils.annotation.KotlinCleanup
+import com.ichi2.anki.databinding.CardBrowserBinding
 import com.ichi2.anki.dialogs.DeckSelectionDialog.DeckSelectionListener
 import com.ichi2.anki.dialogs.DiscardChangesDialog
 import com.ichi2.anki.dialogs.GradeNowDialog
@@ -102,9 +101,9 @@ import com.ichi2.anki.ui.internationalization.toSentenceCase
 import com.ichi2.anki.utils.ext.showDialogFragment
 import com.ichi2.anki.widgets.DeckDropDownAdapter
 import com.ichi2.ui.CardBrowserSearchView
+import com.ichi2.utils.AndroidUiUtils.hideKeyboard
 import com.ichi2.utils.LanguageUtil
 import com.ichi2.utils.increaseHorizontalPaddingOfOverflowMenuIcons
-import com.ichi2.widget.WidgetStatus.updateInBackground
 import kotlinx.coroutines.launch
 import net.ankiweb.rsdroid.RustCleanup
 import timber.log.Timber
@@ -146,14 +145,9 @@ open class CardBrowser :
 
     lateinit var viewModel: CardBrowserViewModel
 
+    private lateinit var binding: CardBrowserBinding
+
     lateinit var cardBrowserFragment: CardBrowserFragment
-
-    /**
-     * The frame containing the NoteEditor. Non null only in layout x-large.
-     */
-    private var noteEditorFrame: FragmentContainerView? = null
-
-    private var deckSpinnerSelection: DeckSpinnerSelection? = null
 
     private var actionBarTitle: TextView? = null
 
@@ -173,9 +167,11 @@ open class CardBrowser :
         }
 
     // Dev option for Issue 18709
+    // TODO: Broken currently; needs R.layout.card_browser_searchview
     val useSearchView: Boolean
         get() = Prefs.devUsingCardBrowserSearchView
 
+    @Suppress("unused")
     @get:LayoutRes
     private val layout: Int
         get() = if (useSearchView) R.layout.card_browser_searchview else R.layout.card_browser
@@ -301,6 +297,7 @@ open class CardBrowser :
         }
         tagsDialogFactory = TagsDialogFactory(this).attachToActivity<TagsDialogFactory>(this)
         super.onCreate(savedInstanceState)
+        binding = CardBrowserBinding.inflate(layoutInflater)
         if (!ensureStoragePermissions()) {
             return
         }
@@ -316,10 +313,8 @@ open class CardBrowser :
 
         val launchOptions = intent?.toCardBrowserLaunchOptions() // must be called after super.onCreate()
 
-        setContentView(layout)
-        initNavigationDrawer()
-
-        noteEditorFrame = findViewById(R.id.note_editor_frame)
+        setViewBinding(binding)
+        initNavigationDrawer(findViewById(android.R.id.content))
 
         /**
          * Check if noteEditorFrame is not null and if its visibility is set to VISIBLE.
@@ -330,24 +325,21 @@ open class CardBrowser :
         val fragmented =
             Prefs.devIsCardBrowserFragmented &&
                 !useSearchView &&
-                noteEditorFrame?.visibility == View.VISIBLE
+                binding.noteEditorFrame?.visibility == View.VISIBLE
         Timber.i("Using split Browser: %b", fragmented)
 
         if (fragmented) {
-            val parentLayout = findViewById<LinearLayout>(R.id.card_browser_xl_view)
-            val divider = findViewById<View>(R.id.card_browser_resizing_divider)
-            val cardBrowserPane = findViewById<View>(R.id.card_browser_frame)
-            val noteEditorPane = findViewById<View>(R.id.note_editor_frame)
-
             ResizablePaneManager(
-                parentLayout = parentLayout,
-                divider = divider,
-                leftPane = cardBrowserPane,
-                rightPane = noteEditorPane,
+                parentLayout = requireNotNull(binding.cardBrowserXlView),
+                divider = requireNotNull(binding.cardBrowserResizingDivider),
+                leftPane = requireNotNull(binding.cardBrowserFrame),
+                rightPane = requireNotNull(binding.noteEditorFrame),
                 sharedPrefs = Prefs.getUiConfig(this),
                 leftPaneWeightKey = PREF_CARD_BROWSER_PANE_WEIGHT,
                 rightPaneWeightKey = PREF_NOTE_EDITOR_PANE_WEIGHT,
             )
+        } else {
+            binding.noteEditorFrame?.isVisible = false
         }
 
         // must be called once we have an accessible collection
@@ -364,16 +356,8 @@ open class CardBrowser :
             // initialize the lateinit variables
             // Load reference to action bar title
             actionBarTitle = findViewById(R.id.toolbar_title)
-
-            deckSpinnerSelection =
-                DeckSpinnerSelection(
-                    this,
-                    findViewById(R.id.toolbar_spinner),
-                    showAllDecks = true,
-                    alwaysShowDefault = false,
-                    showFilteredDecks = true,
-                    subtitleProvider = this,
-                )
+            // new deck selection is only available when the new search view is not used
+            findViewById<LinearLayout>(R.id.toolbar_content).setOnClickListener { startDeckSelection(all = true, filtered = true) }
         }
 
         startLoadingCollection()
@@ -469,7 +453,7 @@ open class CardBrowser :
             return
         }
         // Show note editor frame
-        noteEditorFrame!!.isVisible = true
+        binding.noteEditorFrame!!.isVisible = true
 
         // If there are unsaved changes in NoteEditor then show dialog for confirmation
         if (fragment?.hasUnsavedChanges() == true) {
@@ -506,10 +490,10 @@ open class CardBrowser :
             searchView?.setQuery(filterQuery, submit = false)
         }
 
-        suspend fun onDeckIdChanged(deckId: DeckId?) {
+        fun onDeckIdChanged(deckId: DeckId?) {
             if (deckId == null) return
             // this handles ALL_DECKS_ID
-            deckSpinnerSelection?.selectDeckById(deckId, false)
+            updateAppBarInfo(deckId)
         }
 
         fun onCanSaveChanged(canSave: Boolean) {
@@ -522,12 +506,14 @@ open class CardBrowser :
                 Timber.d("load multiselect mode")
                 // show title and hide spinner
                 actionBarTitle?.visibility = View.VISIBLE
-                deckSpinnerSelection?.setSpinnerVisibility(View.GONE)
+                findViewById<TextView>(R.id.deck_name)?.isVisible = false
+                findViewById<TextView>(R.id.subtitle)?.isVisible = false
                 multiSelectOnBackPressedCallback.isEnabled = true
             } else {
                 Timber.d("end multiselect mode")
                 refreshSubtitle()
-                deckSpinnerSelection?.setSpinnerVisibility(View.VISIBLE)
+                findViewById<TextView>(R.id.deck_name)?.isVisible = true
+                findViewById<TextView>(R.id.subtitle)?.isVisible = true
                 actionBarTitle?.visibility = View.GONE
                 multiSelectOnBackPressedCallback.isEnabled = false
             }
@@ -592,8 +578,7 @@ open class CardBrowser :
         Timber.d("hideKeyboard()")
         searchView?.let { view ->
             view.clearFocus()
-            val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            imm?.hideSoftInputFromWindow(view.windowToken, 0)
+            view.hideKeyboard()
         }
     }
 
@@ -604,15 +589,7 @@ open class CardBrowser :
         registerReceiver()
 
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
-        deckSpinnerSelection?.apply {
-            initializeActionBarDeckSpinner(col, supportActionBar!!)
-            launchCatchingTask {
-                selectDeckById(
-                    viewModel.deckId ?: DeckSpinnerSelection.ALL_DECKS_ID,
-                    false,
-                )
-            }
-        }
+        updateAppBarInfo(viewModel.deckId ?: ALL_DECKS_ID)
     }
 
     override fun onKeyUp(
@@ -769,14 +746,6 @@ open class CardBrowser :
                 showSnackbar(R.string.multimedia_editor_something_wrong)
             }
         }
-
-    override fun onStop() {
-        // cancel rendering the question and answer, which has shared access to mCards
-        super.onStop()
-        if (!isFinishing) {
-            updateInBackground(this)
-        }
-    }
 
     override fun onPause() {
         super.onPause()
@@ -960,6 +929,8 @@ open class CardBrowser :
         }
         // set the number of selected rows (only in multiselect)
         actionBarTitle?.text = String.format(LanguageUtil.getLocaleCompat(resources), "%d", viewModel.selectedRowCount())
+        findViewById<TextView>(R.id.deck_name)?.isVisible = !viewModel.hasSelectedAnyRows() && !viewModel.isInMultiSelectMode
+        findViewById<TextView>(R.id.subtitle)?.isVisible = !viewModel.hasSelectedAnyRows() && !viewModel.isInMultiSelectMode
 
         actionBarMenu.findItem(R.id.action_flag).isVisible = viewModel.hasSelectedAnyRows()
         actionBarMenu.findItem(R.id.action_suspend_card).apply {
@@ -1189,7 +1160,7 @@ open class CardBrowser :
             // Check whether deck is empty or not
             val isDeckEmpty = viewModel.rowCount == 0
             // Hide note editor frame if deck is empty and fragmented
-            noteEditorFrame?.visibility =
+            binding.noteEditorFrame?.visibility =
                 if (fragmented && !isDeckEmpty) {
                     viewModel.currentCardId = (viewModel.focusedRow ?: viewModel.cards[0]).toCardId(viewModel.cardsOrNotes)
                     loadNoteEditorFragmentIfFragmented()
@@ -1225,7 +1196,7 @@ open class CardBrowser :
     private fun updateList() {
         if (!colIsOpenUnsafe()) return
         Timber.d("updateList")
-        deckSpinnerSelection?.notifyDataSetChanged()
+        updateAppBarInfo(viewModel.deckId)
         onSelectionChanged()
         refreshMenuItems()
     }
@@ -1305,7 +1276,7 @@ open class CardBrowser :
             try {
                 when (val deckId = viewModel.lastDeckId) {
                     null -> getString(R.string.card_browser_unknown_deck_name)
-                    DeckSpinnerSelection.ALL_DECKS_ID -> getString(R.string.card_browser_all_decks)
+                    ALL_DECKS_ID -> getString(R.string.card_browser_all_decks)
                     else -> getColUnsafe.decks.name(deckId)
                 }
             } catch (e: Exception) {
@@ -1363,6 +1334,23 @@ open class CardBrowser :
 
     override val shortcuts
         get() = cardBrowserFragment.shortcuts
+
+    /**
+     * Sets the selected deck name and current selection count based on [deckDropDownSubtitle] in
+     * the topbar.
+     */
+    private fun updateAppBarInfo(deckId: DeckId?) {
+        if (deckId == null || useSearchView) return
+        findViewById<TextView>(R.id.subtitle)?.text = deckDropDownSubtitle
+        launchCatchingTask {
+            val deckName =
+                when (deckId) {
+                    ALL_DECKS_ID -> getString(R.string.card_browser_all_decks)
+                    else -> withCol { decks.getLegacy(deckId)?.name }
+                }
+            findViewById<TextView>(R.id.deck_name)?.text = deckName
+        }
+    }
 
     companion object {
         // Keys for saving pane weights in SharedPreferences

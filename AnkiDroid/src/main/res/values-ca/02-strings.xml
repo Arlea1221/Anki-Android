@@ -233,6 +233,7 @@
     <string name="search_decks" maxLength="28">Cerca de paquets</string>
     <string name="ankidroid_init_failed_webview_title">Error fatal</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid confia en el sistema WebView que no està disponible. Això pot passar si el sistema instal·la actualitzacions. Torneu-ho a provar d\'aquí a uns quants minuts.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">Mida de la lletra</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">Mostra la barra d\'eines</string>
@@ -279,7 +280,6 @@
     <string name="download_failed">Error al baixar</string>
     <string name="deck_download_progress_message">Es poden usar altres aplicacions mentre es fa la baixada</string>
     <string name="check_network">Comproveu la vostra connexió de xarxa si us plau</string>
-    <string name="search_using_deck_name">Cercar usant el nom del paquet</string>
     <string name="external_storage_unavailable">Download aborted, the external storage is not available</string>
     <string name="home" maxLength="28">Inici</string>
     <!-- Study Screen actions
@@ -312,7 +312,6 @@
     <string name="intro_sync_from_ankiweb">Sincronitza-ho amb AnkiWeb</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid is not initialized yet. Please open AnkiDroid and try again</string>
-    <string name="already_logged_in">Ja heu iniciat la sessió</string>
     <!-- Deck Creation -->
     <string name="deck_created">S\'ha generat un paquet</string>
     <string name="deck_renamed">S\'ha canviat el nom del paquet</string>

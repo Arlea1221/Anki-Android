@@ -19,6 +19,7 @@ package com.ichi2.utils
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.util.AndroidRuntimeException
 import android.webkit.WebView
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
@@ -56,6 +57,13 @@ fun checkWebviewVersion(activity: AnkiActivity) {
 fun getWebviewUserAgent(context: Context): String? {
     try {
         return WebView(context).settings.userAgentString
+    } catch (e: AndroidRuntimeException) {
+        // MissingWebViewPackageException is not public
+        if (e.cause.toString().contains("MissingWebViewPackageException")) {
+            Timber.w(e, "MissingWebViewPackageException")
+            return null // WebView not installed - don't log a crash report
+        }
+        CrashReportService.sendExceptionReport(e, "WebViewUtils", "some issue occurred while extracting webview user agent")
     } catch (e: Throwable) {
         CrashReportService.sendExceptionReport(e, "WebViewUtils", "some issue occurred while extracting webview user agent")
     }
@@ -153,3 +161,32 @@ private fun getAndroidSystemWebViewPackageInfo(packageManager: PackageManager): 
     return getPackage("com.google.android.webview")
         ?: getPackage("com.android.webview") // com.android.webview is used on API 24
 }
+
+/**
+ * Enables debugging of web contents (HTML / CSS / JavaScript)
+ * loaded into any WebViews of this application. This flag can be enabled
+ * in order to facilitate debugging of web layouts and JavaScript
+ * code running inside WebViews. Please refer to WebView documentation
+ * for the debugging guide.
+ *
+ * In WebView 113.0.5656.0 and later, this is enabled automatically if the
+ * app is declared as
+ * [`android:debuggable="true"`](https://developer.android.com/guide/topics/manifest/application-element#debug)
+ * in its manifest; otherwise, the
+ * default is {@code false}.
+ *
+ * Enabling web contents debugging allows the state of any WebView in the
+ * app to be inspected and modified by the user via adb. This is a security
+ * liability and should not be enabled in production builds of apps unless
+ * this is an explicitly intended use of the app. More info on
+ * [secure debug settings](https://developer.android.com/topic/security/risks/android-debuggable)
+ *
+ * @param enabled whether to enable web contents debugging
+ */
+fun setWebContentsDebuggingEnabled(enabled: Boolean) =
+    try {
+        WebView.setWebContentsDebuggingEnabled(enabled)
+    } catch (e: Exception) {
+        // android.util.AndroidRuntimeException: android.webkit.WebViewFactory$MissingWebViewPackageException: Failed to load WebView provider: No WebView installed
+        Timber.w(e, "setWebContentsDebuggingEnabled")
+    }

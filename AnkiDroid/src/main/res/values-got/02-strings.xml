@@ -233,6 +233,7 @@
     <string name="search_decks" maxLength="28">𐌺𐌰𐍂𐍄𐌰𐌷𐌿𐌶𐌳𐌰 𐍃𐍉𐌺𐌾𐌰𐌽</string>
     <string name="ankidroid_init_failed_webview_title">𐌿𐍃𐍄𐌹𐌿𐌷𐌰𐌽𐌳𐌴𐌹 𐌰𐌹𐍂𐌶𐌴𐌹</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid relies on the System WebView which is unavailable. This can happen if the system is installing updates. Please try again in a few minutes.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">𐌼𐌹𐌺𐌹𐌻𐌴𐌹 𐍆𐌰𐌿𐌽𐍄𐌹𐍃</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">𐍄𐍉𐌻𐌰-𐌰𐌽𐍃 𐌱𐌰𐌽𐌳𐍅𐌾𐌰𐌽</string>
@@ -279,7 +280,6 @@
     <string name="download_failed">𐌽𐌹 𐌼𐌰𐌷𐍄𐌰 𐌰𐍄𐌳𐍂𐌰𐌲𐌰𐌽</string>
     <string name="deck_download_progress_message">𐌼𐌰𐌲𐍄 𐌰𐌽𐌸𐌰𐍂𐌰𐌹𐌶𐌴 𐌰𐍀𐍀𐌴 𐌱𐍂𐌿𐌺𐌾𐌰𐌽 𐌼𐌹𐌸𐌸𐌰𐌽𐌴𐌹 𐌰𐍄𐌳𐍂𐌰𐌲𐌰𐌳𐌰</string>
     <string name="check_network">𐌱𐌹𐌳𐌾𐌰𐌼 𐌸𐌿𐌺, 𐍃𐌰𐌹 𐌲𐌰𐍅𐌹𐍃𐍃 𐌽𐌰𐍄𐌾𐌰𐍅𐌰𐌿𐍂𐌺𐌹𐍃 𐌸𐌴𐌹𐌽𐌹𐍃</string>
-    <string name="search_using_deck_name">𐍃𐍉𐌺𐌽𐍃 𐌱𐍂𐌿𐌺𐌾𐌰𐌽𐌳𐌴𐌹 𐌽𐌰𐌼𐌹𐌽𐍃 𐌺𐌰𐍂𐍄𐌰𐌷𐌿𐌶𐌳𐌹𐍃</string>
     <string name="external_storage_unavailable">Download aborted, the external storage is not available</string>
     <string name="home" maxLength="28">𐌲𐌰𐍂𐌳𐍃</string>
     <!-- Study Screen actions
@@ -312,7 +312,6 @@
     <string name="intro_sync_from_ankiweb">𐌲𐌰𐌲𐌰𐌻𐌴𐌹𐌺𐍉 𐍆𐍂𐌰𐌼 𐌰𐌽𐌺𐌴𐌹𐍅𐌰𐌱𐌾𐌰</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid is not initialized yet. Please open AnkiDroid and try again</string>
-    <string name="already_logged_in">𐌾𐌿𐌸𐌰𐌽 𐌰𐍄𐌹𐌳𐌳𐌾𐌴𐍃</string>
     <!-- Deck Creation -->
     <string name="deck_created">𐌺𐌰𐍂𐍄𐌰𐌷𐌿𐌶𐌳 𐌲𐌰𐍃𐌺𐌰𐍀𐌰𐌽</string>
     <string name="deck_renamed">𐌺𐌰𐍂𐍄𐌰𐌷𐌿𐌶𐌳 𐌰𐍆𐍄𐍂𐌰𐌷𐌰𐌹𐍄𐌰𐌽</string>

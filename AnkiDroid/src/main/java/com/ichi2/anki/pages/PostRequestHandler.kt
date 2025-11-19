@@ -54,9 +54,32 @@ import timber.log.Timber
 
 interface PostRequestHandler {
     suspend fun handlePostRequest(
-        uri: String,
+        uri: PostRequestUri,
         bytes: ByteArray,
     ): ByteArray
+}
+
+@JvmInline
+value class PostRequestUri(
+    val uri: String,
+) {
+    val backendMethodName: String?
+        get() =
+            if (uri.startsWith(AnkiServer.ANKI_PREFIX)) {
+                uri.substring(AnkiServer.ANKI_PREFIX.length)
+            } else {
+                null
+            }
+
+    val jsApiMethodName: String?
+        get() =
+            if (uri.startsWith(AnkiServer.ANKIDROID_JS_PREFIX)) {
+                uri.substring(AnkiServer.ANKIDROID_JS_PREFIX.length)
+            } else {
+                null
+            }
+
+    override fun toString() = uri
 }
 
 fun <ByteArray> backendIdentity(bytes: ByteArray): ByteArray = bytes
@@ -97,6 +120,8 @@ val collectionMethods =
         "getIgnoredBeforeCount" to { bytes -> getIgnoredBeforeCountRaw(bytes) },
         "getRetentionWorkload" to { bytes -> getRetentionWorkloadRaw(bytes) },
         "simulateFsrsWorkload" to { bytes -> simulateFsrsWorkloadRaw(bytes) },
+        // https://github.com/ankitects/anki/pull/4326 -> saveCustomColours should be no-op in mobile clients
+        "saveCustomColours" to { bytes -> backendIdentity(bytes) },
     )
 
 suspend fun handleCollectionPostRequest(

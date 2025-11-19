@@ -134,7 +134,6 @@
     <string name="empty_filtered_deck">Iztukšo pielāgoto kavu</string>
     <string name="search_deck" comment="Deck search for selecting it">Kavu meklēšana</string>
     <string name="empty_deck">Šī kava ir tukša</string>
-    <string name="search_for_download_deck" comment="Deck search value for downloading deck" maxLength="28">Kavu meklēšana</string>
     <string name="invalid_deck_name">Nederīgs kavas nosaukums</string>
     <string name="studyoptions_congrats_finished">Apsveicam! Pagaidām viss ir pabeigts.</string>
     <string name="studyoptions_congrats_next_due_in" comment="The param will be replaced with \'The next card will be ready in X time\'">Kava pagaidām ir pabeigta. %s</string>
@@ -175,6 +174,7 @@
     <string name="card_template_browser_appearance_title">Pārlūka izskats</string>
     <!-- card Info -->
     <string name="card_info_title" maxLength="28">Kartītes apkopojums</string>
+    <string name="previous_card_info_title" maxLength="28">Previous card info</string>
     <!-- Permissions -->
     <string name="read_write_permission_label">Lasīt un rakstīt AnkiDroid datubāzē</string>
     <string name="read_write_permission_description">Piekļūt esošajām piezīmēm, kartītēm, piezīmju veidiem un kavām, kā arī izveidot jaunas</string>

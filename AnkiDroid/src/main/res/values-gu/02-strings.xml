@@ -233,6 +233,7 @@
     <string name="search_decks" maxLength="28">તૂતક શોધો</string>
     <string name="ankidroid_init_failed_webview_title">જીવલેણ ભૂલ</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid સિસ્ટમ WebView પર આધાર રાખે છે જે અનુપલબ્ધ છે. જો સિસ્ટમ અપડેટ્સ ઇન્સ્ટોલ કરી રહી હોય તો આ થઈ શકે છે. કૃપા કરીને થોડીવારમાં ફરી પ્રયાસ કરો.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">અક્ષર ની જાડાઈ</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">ટૂલબાર બતાવો</string>
@@ -279,7 +280,6 @@
     <string name="download_failed">ડાઉનલોડ ફેઇલ ગયું છે</string>
     <string name="deck_download_progress_message">ડાઉનલોડ ચાલુ હોય ત્યારે તમે અન્ય એપ્સનો ઉપયોગ કરી શકો છો</string>
     <string name="check_network">કૃપા કરીને તમારું નેટવર્ક કનેક્શન તપાસો</string>
-    <string name="search_using_deck_name">ડેક નામનો ઉપયોગ કરીને શોધો</string>
     <string name="external_storage_unavailable">ડાઉનલોડ રદ કર્યું, બાહ્ય સ્ટોરેજ ઉપલબ્ધ નથી</string>
     <string name="home" maxLength="28">ઘર</string>
     <!-- Study Screen actions
@@ -312,7 +312,6 @@
     <string name="intro_sync_from_ankiweb">AnkiWeb થી સમન્વયન</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid હજી શરૂ થયું નથી. કૃપા કરીને AnkiDroid ખોલો અને ફરી પ્રયાસ કરો</string>
-    <string name="already_logged_in">પહેલેથી જ લૉગ ઇન છે</string>
     <!-- Deck Creation -->
     <string name="deck_created">ડેક બનાવ્યું</string>
     <string name="deck_renamed">ડેકનું નામ બદલ્યું</string>

@@ -61,13 +61,13 @@ class BootService : BroadcastReceiver() {
             Timber.d("BootService - Already run")
             return
         }
-        if (!grantedStoragePermissions(context, showToast = false)) {
+        if (runCatching { grantedStoragePermissions(context, showToast = false) }.getOrNull() != true) {
             Timber.w("Boot Service did not execute - no permissions")
             return
         }
         if (Prefs.newReviewRemindersEnabled) {
             Timber.i("Executing Boot Service - Review reminders")
-            // TODO: GSoC 2025: Run schedule all notifications method
+            AlarmManagerService.scheduleAllNotifications(context)
         } else {
             // There are cases where the app is installed, and we have access, but nothing exist yet
             val col = getColSafe()

@@ -233,6 +233,7 @@
     <string name="search_decks" maxLength="28">Keresés a paklikban</string>
     <string name="ankidroid_init_failed_webview_title">Végzetes hiba</string>
     <string name="ankidroid_init_failed_webview">Az AnkiDroid a System WebView-t használja, ami jelenleg nem elérhető. Lehetséges, hogy a rendszer frissítéseket telepít. Próbáld újra pár perc múlva.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">Betűméret</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">Eszköztár megjelenítése</string>
@@ -279,7 +280,6 @@
     <string name="download_failed">Letöltés sikertelen</string>
     <string name="deck_download_progress_message">Más alkalmazásokat használhatsz, amíg a letöltés folyik.</string>
     <string name="check_network">Ellenőrizd a hálózati kapcsolatodat!</string>
-    <string name="search_using_deck_name">Keresés a paklik nevében</string>
     <string name="external_storage_unavailable">A letöltés megszakadt, a külső tároló nem elérhető</string>
     <string name="home" maxLength="28">Kezdőlap</string>
     <!-- Study Screen actions
@@ -313,7 +313,6 @@
     <string name="intro_sync_from_ankiweb">Szinkronizálás AnkiWebről</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid is not initialized yet. Please open AnkiDroid and try again</string>
-    <string name="already_logged_in">Már bejelentkeztél</string>
     <!-- Deck Creation -->
     <string name="deck_created">Pakli elkészült</string>
     <string name="deck_renamed">Pakli átnevezve</string>

@@ -233,6 +233,7 @@
     <string name="search_decks" maxLength="28">Maghanap ng mga deck</string>
     <string name="ankidroid_init_failed_webview_title">Malubhang Kamalian</string>
     <string name="ankidroid_init_failed_webview">Umaasa ang AnkiDroid sa Pansistemang WebView kung saan ito ay hindi magamit. Nangyayari ito kung nag-iinstall ng update ang sistema. Mangyaring subukan muli makaraan ang ilang minuto.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">Laki ng font</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">Ipakita ang toolbar</string>
@@ -279,7 +280,6 @@
     <string name="download_failed">Bigo ang pag-download</string>
     <string name="deck_download_progress_message">Maari kang kumamit ng iba pang apps habang tumatakbo ang download</string>
     <string name="check_network">Mangyaring suriin ang iyong koneksyon sa network.</string>
-    <string name="search_using_deck_name">Hanapin gamit ang pangalan ng deck</string>
     <string name="external_storage_unavailable">Naudlot ang pag-download, wala nang natirang lugar sa external storage</string>
     <string name="home" maxLength="28">Home</string>
     <!-- Study Screen actions
@@ -312,7 +312,6 @@
     <string name="intro_sync_from_ankiweb">Mag-sync mula sa AnkiWeb</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">Hindi pa na-initialize ang AnkiDroid. Mangyaring buksan ulit ang AnkiDroid at subukan muli</string>
-    <string name="already_logged_in">Naka-login na</string>
     <!-- Deck Creation -->
     <string name="deck_created">Nailikha ang deck</string>
     <string name="deck_renamed">Napangalanan muli ang deck</string>

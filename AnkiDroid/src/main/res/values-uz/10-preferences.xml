@@ -235,6 +235,9 @@
     <string name="misc" maxLength="41">Boshqa</string>
     <!-- Review reminders -->
     <string name="add_reminder" comment="Label for the add reminder button in the screen for adding and editing review reminders">Bildirishnoma qoʻshish</string>
+    <string name="add_review_reminder" comment="Title of the screen for creating a new review reminder">Takrorlash bildirishnomasini qoʻshish</string>
+    <string name="edit_review_reminder" comment="Title of the screen for editing an existing review reminder">Takrorlash bildirishnomasini tahrirlash</string>
+    <string name="you_have_no_review_reminders" comment="Text that appears in the review reminder editing screen when there are no reminders set">Siza hech qanday takrorlash bildirishnomalari yoʻq</string>
     <!-- studyoptions -->
     <string name="studyoptions_limit_select_tags">Teglarni tanlash</string>
     <!-- Deck configurations -->
@@ -383,7 +386,7 @@
     <string name="toolbar_position" maxLength="28">Asboblar paneli joylashuvi</string>
     <string name="new_study_screen" maxLength="41">Yangi oʻrganish ekrani</string>
     <string name="new_study_screen_summ"><![CDATA[Oʻrganish ekrani takomillashtirildi va joriy ekranni almashtiradi. Eski ekranning baʼzi xususiyatlari oʻzgartirildi yoki oʻchirildi. Iltimos, <a href="%1$s">fikr-mulohazalaringiz</a> yoki <a href="%2$s">baglar</a> haqida xabar bering.]]></string>
-    <string name="show_answer_feedback" maxLength="41">Show answer feedback</string>
+    <string name="show_answer_feedback" maxLength="41">Javob firk-mulohazalarini koʻrsatish</string>
     <string name="screen" maxLength="41">Ekran</string>
     <!--Keyboard shortcuts dialog-->
     <string name="open_settings" comment="Description of the shortcut that opens the app settings">Sozlamalarni ochish</string>

@@ -65,16 +65,16 @@
     <string name="save_whiteboard" maxLength="28">ذخیره تخته سفید</string>
     <string name="enable_stylus" maxLength="28">فعال کردن قلم</string>
     <string name="disable_stylus">غیرفعال کردن قلم</string>
-    <string name="eraser" maxLength="28">Eraser</string>
-    <string name="add_brush" maxLength="28">Add brush</string>
-    <string name="whiteboard_align_left" comment="Option to align the whiteboard toolbar on the left" maxLength="28">Left</string>
-    <string name="whiteboard_align_bottom" comment="Option to align the whiteboard toolbar on the bottom" maxLength="28">Bottom</string>
-    <string name="whiteboard_align_right" comment="Option to align the whiteboard toolbar on the right" maxLength="28">Right</string>
-    <string name="whiteboard_clear" comment="Button text to clear the whiteboard" maxLength="28">Clear</string>
-    <string name="whiteboard_more_options" comment="Tooltip of the whiteboard \'More\' button" maxLength="28">More options</string>
+    <string name="eraser" maxLength="28">پاک کن</string>
+    <string name="add_brush" maxLength="28">افزودن قلم</string>
+    <string name="whiteboard_align_left" comment="Option to align the whiteboard toolbar on the left" maxLength="28">چپ</string>
+    <string name="whiteboard_align_bottom" comment="Option to align the whiteboard toolbar on the bottom" maxLength="28">پایین</string>
+    <string name="whiteboard_align_right" comment="Option to align the whiteboard toolbar on the right" maxLength="28">راست</string>
+    <string name="whiteboard_clear" comment="Button text to clear the whiteboard" maxLength="28">پاک کن</string>
+    <string name="whiteboard_more_options" comment="Tooltip of the whiteboard \'More\' button" maxLength="28">گزینه های بیشتر</string>
     <string name="whiteboard_remove_brush_message">Are you sure you want to remove this brush from your palette?</string>
-    <string name="whiteboard_ink_eraser" comment="Title of the whiteboard Ink eraser">Ink</string>
-    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">Stroke</string>
+    <string name="whiteboard_ink_eraser" comment="Title of the whiteboard Ink eraser">جوهر</string>
+    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">خط</string>
     <string name="stylus_mode" comment="Title of the menu item that toggles the whiteboard stylus mode" maxLength="28">Stylus mode</string>
     <string name="cannot_remove_last_brush_message">The last brush may not be removed</string>
     <string name="enable_whiteboard" maxLength="28">فعال سازی تخته سفید</string>
@@ -233,6 +233,7 @@
     <string name="search_decks" maxLength="28">جستجو در تمام دسته‌ها</string>
     <string name="ankidroid_init_failed_webview_title">خطای مخرب</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid بر روی سیستم WebView تکیه میکند که غیرقابل دسترسی است. این میتواند اتفاق بیفتد اگر سیستم در حال نسب کردن آپدیت باشد. لطفا دقایقی دیگر تلاش کنید.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">اندازه فونت</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">نمایش نوار ابزار</string>
@@ -279,7 +280,6 @@
     <string name="download_failed">دانلود نشد</string>
     <string name="deck_download_progress_message">شما می‌توانید زمانی که این در حال دانلود است از برنامه‌های دیگر استفاده کنید</string>
     <string name="check_network">لطفا اتصال اینترنت خود را چک کنید</string>
-    <string name="search_using_deck_name">جست و جو با استفاده از اسم دسته</string>
     <string name="external_storage_unavailable">بارگیری توقف شد، حافظه خارجی در دسترس نیست</string>
     <string name="home" maxLength="28">خانه</string>
     <!-- Study Screen actions
@@ -312,7 +312,6 @@
     <string name="intro_sync_from_ankiweb">با AnkiWeb همگام سازی کن</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">انکی‌دروید هنوز راه‌اندازی نشده است. لطفاً انکی‌دروید را باز کرده و دوباره تلاش کنید</string>
-    <string name="already_logged_in">قبلاً وارد شده‌اید</string>
     <!-- Deck Creation -->
     <string name="deck_created">دسته ایجاد شد</string>
     <string name="deck_renamed">نام دسته تغییر کرد</string>

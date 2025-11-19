@@ -31,6 +31,9 @@
     <string name="pref_backup_limits_screen_key">backupLimitsScreen</string>
     <!-- Editing -->
     <string name="paste_png_key">pastePNG</string>
+    <!-- Switch Profile -->
+    <string name="pref_switch_profile_screen_key">switchProfileScreen</string>
+    <string name="pref_enable_switch_profile_key">enableSwitchProfile</string>
     <!-- Appearance -->
     <string name="pref_appearance_screen_key">appearance_preference_group</string>
     <string name="app_theme_key">appTheme</string>
@@ -64,6 +67,7 @@
     <string name="custom_button_add_card_key">customButtonAddCard</string>
     <string name="custom_button_replay_key">customButtonReplay</string>
     <string name="custom_button_card_info_key">customButtonCardInfo</string>
+    <string name="custom_button_previous_card_info_key">customButtonPreviousCardInfo</string>
     <string name="custom_button_select_tts_key">customButtonSelectTts</string>
     <string name="custom_button_deck_options_key">customButtonDeckOptions</string>
     <string name="custom_button_mark_card_key">customButtonMarkCard</string>
@@ -126,6 +130,7 @@
     <string name="statistics_command_key">binding_STATISTICS</string>
     <string name="tag_command_key">binding_TAG</string>
     <string name="card_info_command_key">binding_CARD_INFO</string>
+    <string name="previous_card_info_command_key">binding_PREVIOUS_CARD_INFO</string>
     <string name="record_voice_command_key">binding_RECORD_VOICE</string>
     <string name="replay_voice_command_key">binding_REPLAY_VOICE</string>
     <string name="save_voice_command_key">binding_SAVE_VOICE</string>
@@ -154,7 +159,7 @@
     <string name="previewer_mark_key">previewer_MARK</string>
     <string name="previewer_edit_key">previewer_EDIT</string>
     <string name="previewer_replay_media_key">previewer_REPLAY_AUDIO</string>
-    <string name="previewer_backside_only_action_key">previewer_BACKSIDE_ONLY</string>
+    <string name="previewer_backside_only_action_key">previewer_TOGGLE_BACKSIDE_ONLY</string>
     <string name="previewer_flag_red_key">previewer_TOGGLE_FLAG_RED</string>
     <string name="previewer_flag_orange_key">previewer_TOGGLE_FLAG_ORANGE</string>
     <string name="previewer_flag_green_key">previewer_TOGGLE_FLAG_GREEN</string>
@@ -222,6 +227,7 @@
     <string name="use_fixed_port_pref_key">useFixedPort</string>
     <string name="dev_card_browser_fragmented">cardBrowserFragmented</string>
     <string name="dev_card_browser_search_view">cardBrowserSearchView</string>
+    <string name="dev_open_tts_voices">openTtsVoices</string>
     <!-- Developer options > Create fake notes -->
     <string name="pref_fill_default_deck_number_key">FillDefaultNumberDeck</string>
     <string name="pref_fill_default_deck_key">FillDefaultDeck</string>

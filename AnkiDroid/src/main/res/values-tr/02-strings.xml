@@ -233,6 +233,7 @@
     <string name="search_decks" maxLength="28">Deste ara</string>
     <string name="ankidroid_init_failed_webview_title">Kritik Hata</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid şu an ulaşılamayan System WebView\'a dayanır. Bu sistem güncelleme yüklerken olabilir. Lütfen birkaç dakika sonra tekrar deneyin.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">Yazı tipi boyutu</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">Araç çubuğunu göster</string>
@@ -279,7 +280,6 @@
     <string name="download_failed">İndirme başarısız</string>
     <string name="deck_download_progress_message">İndirme devam ederken diğer uygulamaları kullanabilirsiniz</string>
     <string name="check_network">Lütfen ağ bağlantını kontrol et</string>
-    <string name="search_using_deck_name">Deste ismini kullanarak ara</string>
     <string name="external_storage_unavailable">İndirme iptal edildi, harici hafıza erişilebilir değil.</string>
     <string name="home" maxLength="28">Ana sayfa</string>
     <!-- Study Screen actions
@@ -312,7 +312,6 @@
     <string name="intro_sync_from_ankiweb">AnkiWeb\'den senkronize et</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid henüz açılmadı. Lütfen AnkiDroid\'i açıp tekrar deneyin</string>
-    <string name="already_logged_in">Zaten giriş yapılmış</string>
     <!-- Deck Creation -->
     <string name="deck_created">Deste oluşturuldu</string>
     <string name="deck_renamed">Deste yeniden adlandırıldı</string>

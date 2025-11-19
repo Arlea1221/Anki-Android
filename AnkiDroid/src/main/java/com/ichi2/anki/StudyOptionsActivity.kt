@@ -24,7 +24,6 @@ import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import anki.collection.OpChanges
 import com.ichi2.anki.CollectionManager.withCol
-import com.ichi2.anki.StudyOptionsFragment.StudyOptionsListener
 import com.ichi2.anki.dialogs.customstudy.CustomStudyDialog.CustomStudyAction
 import com.ichi2.anki.dialogs.customstudy.CustomStudyDialog.CustomStudyAction.Companion.REQUEST_KEY
 import com.ichi2.anki.libanki.undoAvailable
@@ -32,13 +31,14 @@ import com.ichi2.anki.libanki.undoLabel
 import com.ichi2.anki.observability.ChangeManager
 import com.ichi2.anki.utils.ext.setFragmentResultListener
 import com.ichi2.ui.RtlCompliantActionProvider
-import com.ichi2.widget.WidgetStatus
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+/**
+ * Hosts [StudyOptionsFragment] when non-fragmented
+ */
 class StudyOptionsActivity :
-    AnkiActivity(),
-    StudyOptionsListener,
+    AnkiActivity(R.layout.studyoptions),
     ChangeManager.Subscriber {
     private var undoState = UndoState()
 
@@ -47,7 +47,6 @@ class StudyOptionsActivity :
             return
         }
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.studyoptions)
         enableToolbar().apply { title = "" }
         if (savedInstanceState == null) {
             loadStudyOptionsFragment()
@@ -73,11 +72,7 @@ class StudyOptionsActivity :
     }
 
     private fun loadStudyOptionsFragment() {
-        var withDeckOptions = false
-        if (intent.extras != null) {
-            withDeckOptions = intent.extras!!.getBoolean("withDeckOptions")
-        }
-        val currentFragment = StudyOptionsFragment.newInstance(withDeckOptions)
+        val currentFragment = StudyOptionsFragment()
         supportFragmentManager.commit {
             replace(R.id.studyoptions_frame, currentFragment)
         }
@@ -124,22 +119,12 @@ class StudyOptionsActivity :
         refreshUndoState()
     }
 
-    public override fun onStop() {
-        super.onStop()
-        if (colIsOpenUnsafe()) {
-            WidgetStatus.updateInBackground(this)
-        }
-    }
-
-    override fun onRequireDeckListUpdate() {
-        currentFragment!!.refreshInterface()
-    }
-
     override fun opExecuted(
         changes: OpChanges,
         handler: Any?,
     ) {
         refreshUndoState()
+        currentFragment?.refreshInterface()
     }
 
     private fun refreshUndoState() {

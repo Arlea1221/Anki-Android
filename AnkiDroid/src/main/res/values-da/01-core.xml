@@ -131,7 +131,6 @@
     <string name="empty_filtered_deck">Tømmer filtreret stak&#8230;</string>
     <string name="search_deck" comment="Deck search for selecting it">Staksøgning</string>
     <string name="empty_deck">Denne stak er tom</string>
-    <string name="search_for_download_deck" comment="Deck search value for downloading deck" maxLength="28">Staksøgning</string>
     <string name="invalid_deck_name">Ugyldigt staknavn</string>
     <string name="studyoptions_congrats_finished">Congratulations! You have finished for today.</string>
     <string name="studyoptions_congrats_next_due_in" comment="The param will be replaced with \'The next card will be ready in X time\'">Deck finished for now! %s</string>
@@ -170,6 +169,7 @@
     <string name="card_template_browser_appearance_title">Browserudseende</string>
     <!-- card Info -->
     <string name="card_info_title" maxLength="28">Kortinformation</string>
+    <string name="previous_card_info_title" maxLength="28">Previous card info</string>
     <!-- Permissions -->
     <string name="read_write_permission_label">Læse og skrive til AnkiDroid-databasen</string>
     <string name="read_write_permission_description">tilgå eksisterende noter, kort, notetyper og stakke, og skabe nye</string>

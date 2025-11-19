@@ -58,7 +58,6 @@ import androidx.annotation.CheckResult
 import androidx.annotation.DrawableRes
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.FileProvider
@@ -103,6 +102,7 @@ import com.ichi2.anki.dialogs.tags.TagsDialogFactory
 import com.ichi2.anki.dialogs.tags.TagsDialogListener
 import com.ichi2.anki.libanki.Card
 import com.ichi2.anki.libanki.Collection
+import com.ichi2.anki.libanki.Consts
 import com.ichi2.anki.libanki.DeckId
 import com.ichi2.anki.libanki.Decks.Companion.CURRENT_DECK
 import com.ichi2.anki.libanki.Field
@@ -181,7 +181,6 @@ import com.ichi2.utils.neutralButton
 import com.ichi2.utils.positiveButton
 import com.ichi2.utils.show
 import com.ichi2.utils.title
-import com.ichi2.widget.WidgetStatus
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -239,7 +238,6 @@ class NoteEditorFragment :
 
     @VisibleForTesting
     internal var noteTypeSpinner: Spinner? = null
-    private var deckSpinnerSelection: DeckSpinnerSelection? = null
     private var imageOcclusionButtonsContainer: LinearLayout? = null
     private var selectImageForOcclusionButton: Button? = null
     private var editOcclusionsButton: Button? = null
@@ -433,11 +431,7 @@ class NoteEditorFragment :
         }
         require(deck is SelectableDeck.Deck)
         deckId = deck.deckId
-        // this is called because DeckSpinnerSelection.onDeckAdded doesn't update the list
-        deckSpinnerSelection!!.initializeNoteEditorDeckSpinner(getColUnsafe)
-        launchCatchingTask {
-            deckSpinnerSelection!!.selectDeckById(deckId, false)
-        }
+        view?.findViewById<TextView>(R.id.note_deck_name)?.text = deck.name
     }
 
     private enum class AddClozeType {
@@ -825,17 +819,41 @@ class NoteEditorFragment :
         if (!addNote && editorNote!!.notetype.templates.length() > 1) {
             deckTextView.setText(R.string.CardEditorCardDeck)
         }
-        deckSpinnerSelection =
-            DeckSpinnerSelection(
-                requireContext() as AppCompatActivity,
-                requireView().findViewById(R.id.note_deck_spinner),
-                showAllDecks = false,
-                alwaysShowDefault = true,
-                showFilteredDecks = false,
-                fragmentManagerSupplier = { childFragmentManager },
-            )
-        deckSpinnerSelection!!.initializeNoteEditorDeckSpinner(col)
+
         deckId = requireArguments().getLong(EXTRA_DID, deckId)
+        if (addNote) {
+            // When adding and if we didn't receive a valid deck id or it's the 'Default' deck, look
+            // at what deck is selected and use that(guards against certain scenarios when deleting
+            // a deck and no deck is visually selected in DeckPicker)
+            if (deckId == 0L || deckId == Consts.DEFAULT_DECK_ID) {
+                // check if this is the actual deck selected
+                val currentSelectedDeckId = col.decks.selected()
+                if (currentSelectedDeckId != Consts.DEFAULT_DECK_ID) {
+                    deckId = currentSelectedDeckId
+                }
+            }
+            // Also guard against adding to a filtered deck in which case revert to 'Default'
+            val deck = col.decks.getLegacy(deckId)
+            if (deck == null || deck.isFiltered) {
+                deckId = Consts.DEFAULT_DECK_ID
+            }
+        } else {
+            // When editing we always have a valid currentEditCard. Check to see if it's from a normal
+            // deck or a filtered deck(in which case use it's original did or revert to 'Default')
+            val cardDeckId = currentEditedCard?.did
+            deckId =
+                if (cardDeckId == null || col.decks.isFiltered(cardDeckId)) {
+                    currentEditedCard?.oDid ?: Consts.DEFAULT_DECK_ID
+                } else {
+                    cardDeckId
+                }
+        }
+        view?.findViewById<TextView>(R.id.note_deck_name)?.apply {
+            text = col.decks.name(deckId)
+            setOnClickListener {
+                startDeckSelection(all = false, filtered = false)
+            }
+        }
         val getTextFromSearchView = requireArguments().getString(EXTRA_TEXT_FROM_SEARCH_VIEW)
         setDid(editorNote)
         setNote(editorNote, FieldChangeType.onActivityCreation(shouldReplaceNewlines()))
@@ -903,8 +921,8 @@ class NoteEditorFragment :
             )
         }
 
-        // don't open keyboard if not adding note
-        if (!addNote) {
+        // Don't open keyboard if not adding note or the note type is Image Occlusion
+        if (!addNote || currentNotetypeIsImageOcclusion()) {
             requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         }
 
@@ -1028,13 +1046,6 @@ class NoteEditorFragment :
         textBox.setSelection(start + newStart, start + newEnd)
     }
 
-    override fun onStop() {
-        super.onStop()
-        if (!isRemoving) {
-            WidgetStatus.updateInBackground(requireContext())
-        }
-    }
-
     @KotlinCleanup("convert KeyUtils to extension functions")
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         // We want to behave as onKeyUp and thus only react to ACTION_UP
@@ -1055,7 +1066,7 @@ class NoteEditorFragment :
                 }
             KeyEvent.KEYCODE_D -> // null check in case Spinner is moved into options menu in the future
                 if (event.isCtrlPressed) {
-                    launchCatchingTask { deckSpinnerSelection!!.displayDeckSelectionDialog() }
+                    launchCatchingTask { startDeckSelection(all = false, filtered = false) }
                     return true
                 }
             KeyEvent.KEYCODE_L ->
@@ -1232,13 +1243,15 @@ class NoteEditorFragment :
     // ----------------------------------------------------------------------------
 
     @KotlinCleanup("return early and simplify if possible")
-    private fun onNoteAdded() {
+    private fun onNoteAdded(count: Int) {
         var closeEditorAfterSave = false
         var closeIntent: Intent? = null
         changed = true
         sourceText = null
         refreshNoteData(FieldChangeType.refreshWithStickyFields(shouldReplaceNewlines()))
-        showSnackbar(TR.addingAdded(), Snackbar.LENGTH_SHORT)
+        // backend text ends with dot
+        val successMessage = TR.importingCardsAdded(count).replace(".", "")
+        showSnackbar(successMessage, Snackbar.LENGTH_SHORT)
 
         if (caller == NoteEditorCaller.NOTEEDITOR || aedictIntent) {
             closeEditorAfterSave = true
@@ -1263,14 +1276,15 @@ class NoteEditorFragment :
 
     private suspend fun saveNoteWithProgress() {
         // adding current note to collection
-        requireActivity().withProgress(resources.getString(R.string.saving_facts)) {
-            undoableOp {
-                notetypes.save(editorNote!!.notetype)
-                addNote(editorNote!!, deckId)
+        val changes =
+            requireActivity().withProgress(resources.getString(R.string.saving_facts)) {
+                undoableOp {
+                    notetypes.save(editorNote!!.notetype)
+                    addNote(editorNote!!, deckId)
+                }
             }
-        }
         // update UI based on the result, noOfAddedCards
-        onNoteAdded()
+        onNoteAdded(changes.count)
         updateFieldsFromStickyText()
     }
 
@@ -1446,12 +1460,22 @@ class NoteEditorFragment :
                 }
             }
         }
-        menu.findItem(R.id.action_show_toolbar).isChecked =
-            !shouldHideToolbar()
-        menu.findItem(R.id.action_capitalize).isChecked =
-            sharedPrefs().getBoolean(PREF_NOTE_EDITOR_CAPITALIZE, true)
-        menu.findItem(R.id.action_scroll_toolbar).isChecked =
-            sharedPrefs().getBoolean(PREF_NOTE_EDITOR_SCROLL_TOOLBAR, true)
+        if (currentNotetypeIsImageOcclusion()) {
+            // Showing options related to editing text in fields is not needed
+            // for image occlusion notetypes as there are no fields for inputting
+            // text in the editor screen. (Text is handled by the backend page.)
+            menu.findItem(R.id.action_font_size).isVisible = false
+            menu.findItem(R.id.action_show_toolbar).isVisible = false
+            menu.findItem(R.id.action_scroll_toolbar).isVisible = false
+            menu.findItem(R.id.action_capitalize).isVisible = false
+        } else {
+            menu.findItem(R.id.action_show_toolbar).isChecked =
+                !shouldHideToolbar()
+            menu.findItem(R.id.action_capitalize).isChecked =
+                sharedPrefs().getBoolean(PREF_NOTE_EDITOR_CAPITALIZE, true)
+            menu.findItem(R.id.action_scroll_toolbar).isChecked =
+                sharedPrefs().getBoolean(PREF_NOTE_EDITOR_SCROLL_TOOLBAR, true)
+        }
     }
 
     /**
@@ -1630,7 +1654,10 @@ class NoteEditorFragment :
     }
 
     private fun showDiscardChangesDialog() {
-        DiscardChangesDialog.showDialog(requireContext()) {
+        DiscardChangesDialog.showDialog(
+            requireContext(),
+            message = if (addNote) TR.addingDiscardCurrentInput() else TR.cardTemplatesDiscardChanges(),
+        ) {
             Timber.i("NoteEditor:: OK button pressed to confirm discard changes")
             closeNoteEditor()
         }
@@ -1789,23 +1816,16 @@ class NoteEditorFragment :
         editNoteTypeMode: Boolean,
     ) {
         val editLines = fieldState.loadFieldEditLines(type)
+        // showing the fields is not needed for image occlusion notetypes as they are handled by the
+        // backend page
+        fieldsLayoutContainer?.isVisible = !currentNotetypeIsImageOcclusion()
         fieldsLayoutContainer!!.removeAllViews()
         customViewIds.clear()
         imageOcclusionButtonsContainer?.isVisible = currentNotetypeIsImageOcclusion()
 
-        val indicesToHide = mutableListOf<Int>()
-        if (currentNotetypeIsImageOcclusion()) {
-            val occlusionTag = "0"
-            val imageTag = "1"
-            val fields = currentlySelectedNotetype!!.fields
-            for ((i, field) in fields.withIndex()) {
-                val tag = field.imageOcclusionTag
-                if (tag == occlusionTag || tag == imageTag) {
-                    indicesToHide.add(i)
-                }
-            }
-        }
-
+        // Showing the bottom toolbar (for HTML format) is not needed for image occlusion notetypes
+        // as there are no fields for inputting text.
+        toolbar.isVisible = !currentNotetypeIsImageOcclusion()
         editFields = LinkedList()
 
         var previous: FieldEditLine? = null
@@ -1838,7 +1858,7 @@ class NoteEditorFragment :
             )
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                 if (i == 0) {
-                    requireView().findViewById<View>(R.id.note_deck_spinner).nextFocusForwardId = newEditText.id
+                    requireView().findViewById<View>(R.id.note_deck_name).nextFocusForwardId = newEditText.id
                 }
                 if (previous != null) {
                     previous.lastViewInTabOrder.nextFocusForwardId = newEditText.id
@@ -1893,9 +1913,9 @@ class NoteEditorFragment :
             toggleStickyButton.contentDescription =
                 getString(R.string.note_editor_toggle_sticky, editLineView.name)
 
-            editLineView.isVisible = i !in indicesToHide
             fieldsLayoutContainer!!.addView(editLineView)
         }
+        requireActivity().invalidateOptionsMenu()
     }
 
     private fun getActionModeCallback(
@@ -2370,7 +2390,10 @@ class NoteEditorFragment :
         }
 
         deckId = calculateDeckId()
-        launchCatchingTask { deckSpinnerSelection!!.selectDeckById(deckId, false) }
+        launchCatchingTask {
+            val selectedDeckName = withCol { decks.name(deckId) }
+            view?.findViewById<TextView>(R.id.note_deck_name)?.text = selectedDeckName
+        }
     }
 
     /** Refreshes the UI using the currently selected note type as a template  */
@@ -2403,6 +2426,11 @@ class NoteEditorFragment :
         updateToolbar()
         populateEditFields(changeType, false)
         updateFieldsFromStickyText()
+
+        // Showing the deck selection parts is not needed for Image Occlusion notetypes
+        // as deck selection is handled by the backend page
+        requireView().findViewById<TextView>(R.id.CardEditorDeckText).isVisible = !currentNotetypeIsImageOcclusion()
+        requireView().findViewById<View>(R.id.note_deck_name).isVisible = !currentNotetypeIsImageOcclusion()
     }
 
     private fun addClozeButton(
@@ -2644,6 +2672,9 @@ class NoteEditorFragment :
                     .trim()
                     .replace(" ", ", "),
             )
+        // showing the tags is not needed for image occlusion notetypes as they are handled by the
+        // backend page
+        tagsButton?.isVisible = !currentNotetypeIsImageOcclusion()
     }
 
     /** Update the list of card templates for current note type  */
@@ -2770,7 +2801,6 @@ class NoteEditorFragment :
 
         refreshNoteData(FieldChangeType.changeFieldCount(shouldReplaceNewlines()))
         setDuplicateFieldStyles()
-        deckSpinnerSelection!!.updateDeckPosition(deckId)
     }
 
     // ----------------------------------------------------------------------------
@@ -2844,15 +2874,14 @@ class NoteEditorFragment :
                 updateTags()
                 requireView().findViewById<View>(R.id.CardEditorTagButton).isEnabled = false
                 // ((LinearLayout) findViewById(R.id.CardEditorCardsButton)).setEnabled(false);
-                deckSpinnerSelection!!.setEnabledActionBarSpinner(false)
-                deckSpinnerSelection!!.updateDeckPosition(currentEditedCard!!.did)
+                view?.findViewById<TextView>(R.id.note_deck_name)?.isEnabled = false
                 updateFieldsFromStickyText()
             } else {
                 populateEditFields(FieldChangeType.refresh(shouldReplaceNewlines()), false)
                 updateCards(currentEditedCard!!.noteType(getColUnsafe))
                 requireView().findViewById<View>(R.id.CardEditorTagButton).isEnabled = true
                 // ((LinearLayout) findViewById(R.id.CardEditorCardsButton)).setEnabled(false);
-                deckSpinnerSelection!!.setEnabledActionBarSpinner(true)
+                view?.findViewById<TextView>(R.id.note_deck_name)?.isEnabled = true
             }
         }
 

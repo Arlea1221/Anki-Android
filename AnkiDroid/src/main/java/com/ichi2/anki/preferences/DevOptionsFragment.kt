@@ -27,12 +27,16 @@ import com.ichi2.anki.CollectionManager.withCol
 import com.ichi2.anki.CrashReportService
 import com.ichi2.anki.R
 import com.ichi2.anki.analytics.UsageAnalytics
+import com.ichi2.anki.dialogs.TtsVoicesDialogFragment
 import com.ichi2.anki.launchCatchingTask
 import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.showThemedToast
 import com.ichi2.anki.snackbar.showSnackbar
+import com.ichi2.anki.utils.ext.defaultConfig
+import com.ichi2.anki.utils.ext.showDialogFragment
 import com.ichi2.anki.withProgress
 import com.ichi2.preferences.IncrementerNumberRangePreferenceCompat
+import com.ichi2.utils.setWebContentsDebuggingEnabled
 import com.ichi2.utils.show
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -96,7 +100,7 @@ class DevOptionsFragment : SettingsFragment() {
             Timber.w("Corrupting FSRS parameters for default deck config")
             launchCatchingTask {
                 withCol {
-                    val defaultConfig = decks.getConfig(1)
+                    val defaultConfig = decks.defaultConfig
                     val invalidFsrsConfig =
                         JSONArray().apply {
                             put(0.4197)
@@ -130,6 +134,12 @@ class DevOptionsFragment : SettingsFragment() {
                 }
                 setNegativeButton(R.string.dialog_cancel) { _, _ -> }
             }
+            false
+        }
+
+        // Open TTS voice selection ({{tts-voices:}})
+        requirePreference<Preference>(R.string.dev_open_tts_voices).setOnPreferenceClickListener {
+            showDialogFragment(TtsVoicesDialogFragment())
             false
         }
 
@@ -189,6 +199,22 @@ class DevOptionsFragment : SettingsFragment() {
         requirePreference<Preference>(R.string.pref_new_review_reminders).setOnPreferenceChangeListener { _, _ ->
             ActivityCompat.recreate(requireActivity())
             true
+        }
+
+        requirePreference<Preference>(R.string.pref_enable_switch_profile_key).setOnPreferenceChangeListener { _, _ ->
+            ActivityCompat.recreate(requireActivity())
+            true
+        }
+
+        setupWebDebugPreference()
+    }
+
+    private fun setupWebDebugPreference() {
+        requirePreference<SwitchPreferenceCompat>(R.string.html_javascript_debugging_key).apply {
+            isVisible = !BuildConfig.DEBUG
+            setOnPreferenceChangeListener { isEnabled ->
+                setWebContentsDebuggingEnabled(isEnabled)
+            }
         }
     }
 

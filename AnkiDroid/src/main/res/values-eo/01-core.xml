@@ -131,9 +131,8 @@
     <string name="empty_filtered_deck">Malplenigado de filtrita kartaro&#8230;</string>
     <string name="search_deck" comment="Deck search for selecting it">Serĉi kartaron</string>
     <string name="empty_deck">Tiu ĉi kartaro estas malplena</string>
-    <string name="search_for_download_deck" comment="Deck search value for downloading deck" maxLength="28">Serĉi kartaron</string>
     <string name="invalid_deck_name">Malĝusta nomo por kartaro</string>
-    <string name="studyoptions_congrats_finished">Gratulon! Vi finis la hodiaŭan.</string>
+    <string name="studyoptions_congrats_finished">Gratulon! Vi finis la hodiaŭan lernadon.</string>
     <string name="studyoptions_congrats_next_due_in" comment="The param will be replaced with \'The next card will be ready in X time\'">La kartaro estas ripetita! %s</string>
     <string name="studyoptions_no_cards_due">Neniu karto por ripeti</string>
     <string name="sd_card_not_mounted">Aparata konservejo ne muntita</string>
@@ -170,6 +169,7 @@
     <string name="card_template_browser_appearance_title">Aspekto de la foliumilo</string>
     <!-- card Info -->
     <string name="card_info_title" maxLength="28">Informoj pri la karto</string>
+    <string name="previous_card_info_title" maxLength="28">Informoj pri antaŭa karto</string>
     <!-- Permissions -->
     <string name="read_write_permission_label">Legi kaj skribi al la datumbazo de AnkiDroid</string>
     <string name="read_write_permission_description">aliri ekzistajn notojn, kartojn, nototipojn kaj kartarojn, kaj krei novajn</string>

@@ -233,6 +233,7 @@
     <string name="search_decks" maxLength="28">Sök kortlekar</string>
     <string name="ankidroid_init_failed_webview_title">Kritiskt fel</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid använder sig av System WebView vilket inte är tillgängligt. Detta kan hända om systemet håller på att installera uppdateringar. Försök igen om några minuter.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">Teckenstorlek</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">Visa verktygsfält</string>
@@ -279,7 +280,6 @@
     <string name="download_failed">Hämtning misslyckades</string>
     <string name="deck_download_progress_message">Du kan använda andra appar medan nedladdningen pågår</string>
     <string name="check_network">Kontrollera din nätverksanslutning</string>
-    <string name="search_using_deck_name">Sök efter kortlekens namn</string>
     <string name="external_storage_unavailable">Nedladdningen avbruten, det externa lagringsutrymmet är inte tillgängligt</string>
     <string name="home" maxLength="28">Hem</string>
     <!-- Study Screen actions
@@ -313,7 +313,6 @@
     <string name="intro_sync_from_ankiweb">Synka från AnkiWeb</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid är inte initierat än. Öppna AnkiDroid och försök igen</string>
-    <string name="already_logged_in">Redan inloggad</string>
     <!-- Deck Creation -->
     <string name="deck_created">Kortlek skapad</string>
     <string name="deck_renamed">Kortlek namnändrad</string>

@@ -235,6 +235,7 @@
     <string name="search_decks" maxLength="28">Chirca matzos</string>
     <string name="ankidroid_init_failed_webview_title">Faddina fatale</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid si basat in subrade sa WebView de sistema chi no est a disponimentu. Custu podet acontèssere si su sistema est installende atualizatziones. Torra a proare a pustis de una paja de minutos.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">Mannària de su caràtere</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">Ammustra sa barra de sas ainas</string>
@@ -281,7 +282,6 @@
     <string name="download_failed">Iscarrigamentu fallidu</string>
     <string name="deck_download_progress_message">Podes impreare àteras aplicatziones in su mentres chi s\'iscarrigamentu est in cursu</string>
     <string name="check_network">Verìfica sa connessione de retze tua</string>
-    <string name="search_using_deck_name">Chirca impreende su nùmene de su matzu</string>
     <string name="external_storage_unavailable">Iscarrigamentu annulladu, sa memòria esterna no est a disponimentu</string>
     <string name="home" maxLength="28">Pàgina printzipale</string>
     <!-- Study Screen actions
@@ -314,7 +314,6 @@
     <string name="intro_sync_from_ankiweb">Sincroniza dae AnkiWeb</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid no est galu aviadu. Torra a abèrrere AnkiDroid e a proare</string>
-    <string name="already_logged_in">Giai intradu</string>
     <!-- Deck Creation -->
     <string name="deck_created">Matzu creadu</string>
     <string name="deck_renamed">Matzu mudadu de nùmene</string>

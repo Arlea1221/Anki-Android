@@ -41,8 +41,6 @@ import net.ankiweb.rsdroid.RustCleanup
 /**
  * A [RecyclerView.Adapter] used to show the list of decks inside [com.ichi2.anki.DeckPicker].
  *
- * @param activityHasBackground true if [com.ichi2.anki.DeckPicker] has a background set, false
- * otherwise. If true the adapter will make the rows transparent so the background can be seen.
  * @param onDeckSelected callback triggered when the user selects a deck
  * @param onDeckCountsSelected callback triggered when the user selects the counts of a deck
  * @param onDeckChildrenToggled callback triggered when the user toggles the visibility of its
@@ -54,7 +52,6 @@ import net.ankiweb.rsdroid.RustCleanup
 @RustCleanup("Differs from legacy backend: Create deck 'One', create deck 'One::two'. 'One::two' was not expanded")
 class DeckAdapter(
     context: Context,
-    private val activityHasBackground: Boolean,
     private val onDeckSelected: (DeckId) -> Unit,
     private val onDeckCountsSelected: (DeckId) -> Unit,
     private val onDeckChildrenToggled: (DeckId) -> Unit,
@@ -82,6 +79,18 @@ class DeckAdapter(
     // Flags
     private var hasSubdecks = false
 
+    /**
+     * Flag to indicate if the activity has a background set. If true the adapter will make the rows
+     * transparent so the background can be seen.
+     */
+    var activityHasBackground: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                notifyDataSetChanged()
+            }
+        }
+
     class ViewHolder(
         v: View,
     ) : RecyclerView.ViewHolder(v) {
@@ -103,25 +112,12 @@ class DeckAdapter(
         data: List<DisplayDeckNode>,
         hasSubDecks: Boolean,
     ) {
-        // submitList is smart to not trigger a refresh if the new list is the same, but we do need
-        // an adapter refresh if the other two properties have changed even if the new data is the
-        // same as they modify some of the adapter's content appearance
-        val forceRefresh =
-            areDataSetsEqual(currentList, data) &&
-                (this.hasSubdecks != hasSubDecks)
+        // force refresh when sub decks status changes as this info isn't encapsulated in the
+        // adapter's items so there wouldn't be an ui refresh just from using submitList()
+        val forceRefresh = this.hasSubdecks != hasSubDecks
         this.hasSubdecks = hasSubDecks
         submitList(data)
         if (forceRefresh) notifyDataSetChanged()
-    }
-
-    private fun areDataSetsEqual(
-        currentSet: List<DisplayDeckNode>,
-        newSet: List<DisplayDeckNode>,
-    ): Boolean {
-        if (currentSet.size != newSet.size) return false
-        return currentSet.zip(newSet).all { (fst, snd) ->
-            fst.fullDeckName == snd.fullDeckName
-        }
     }
 
     /**
@@ -154,6 +150,7 @@ class DeckAdapter(
             runBlocking { setDeckExpander(holder.deckExpander, holder.indentView, node) }
         } else {
             holder.deckExpander.visibility = View.GONE
+            holder.indentView.minimumWidth = 0
             deckLayout.setPaddingRelative(startPadding, 0, endPadding, 0)
         }
         if (node.canCollapse) {

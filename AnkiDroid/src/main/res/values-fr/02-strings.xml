@@ -74,7 +74,7 @@
     <string name="whiteboard_more_options" comment="Tooltip of the whiteboard \'More\' button" maxLength="28">Plus d\'options</string>
     <string name="whiteboard_remove_brush_message">Êtes-vous sûr de vouloir supprimer ce pinceau de votre palette ?</string>
     <string name="whiteboard_ink_eraser" comment="Title of the whiteboard Ink eraser">Encre</string>
-    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">Stroke</string>
+    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">Trait</string>
     <string name="stylus_mode" comment="Title of the menu item that toggles the whiteboard stylus mode" maxLength="28">Mode stylet</string>
     <string name="cannot_remove_last_brush_message">Le dernier pinceau n\'a pas pu être supprimé</string>
     <string name="enable_whiteboard" maxLength="28">Activer le tableau blanc</string>
@@ -233,6 +233,7 @@
     <string name="search_decks" maxLength="28">Rechercher dans les paquets</string>
     <string name="ankidroid_init_failed_webview_title">Erreur fatale</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid s\'appuie sur la WebView du système qui n\'est pas disponible. Ceci peut se produire si le système installe des mises à jour. Veuillez réessayer dans quelques minutes.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">Taille de la police</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">Afficher la barre d\'outils</string>
@@ -279,7 +280,6 @@
     <string name="download_failed">Le téléchargement a échoué</string>
     <string name="deck_download_progress_message">Vous pouvez utiliser d\'autres applications pendant que le téléchargement est en cours d\'exécution</string>
     <string name="check_network">Veuillez vérifier votre connexion réseau</string>
-    <string name="search_using_deck_name">Chercher en utilisant le nom du paquet</string>
     <string name="external_storage_unavailable">Téléchargement interrompu, le stockage externe n\'est pas disponible</string>
     <string name="home" maxLength="28">Accueil</string>
     <!-- Study Screen actions
@@ -312,7 +312,6 @@
     <string name="intro_sync_from_ankiweb">Synchroniser avec AnkiWeb</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid n\'est pas encore initialisé. Veuillez ouvrir AnkiDroid et réessayer</string>
-    <string name="already_logged_in">Déjà connecté</string>
     <!-- Deck Creation -->
     <string name="deck_created">Paquet créé</string>
     <string name="deck_renamed">Paquet renommé</string>

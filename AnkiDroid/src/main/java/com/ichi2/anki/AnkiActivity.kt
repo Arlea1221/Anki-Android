@@ -52,6 +52,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.viewbinding.ViewBinding
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.snackbar.Snackbar
 import com.ichi2.anim.ActivityTransitionAnimation
@@ -74,6 +75,7 @@ import com.ichi2.anki.dialogs.ExportReadyDialog.Companion.KEY_EXPORT_PATH
 import com.ichi2.anki.dialogs.ExportReadyDialog.Companion.REQUEST_EXPORT_SAVE
 import com.ichi2.anki.dialogs.ExportReadyDialog.Companion.REQUEST_EXPORT_SHARE
 import com.ichi2.anki.dialogs.SimpleMessageDialog
+import com.ichi2.anki.exception.SystemStorageException
 import com.ichi2.anki.libanki.Collection
 import com.ichi2.anki.preferences.sharedPrefs
 import com.ichi2.anki.receiver.SdCardReceiver
@@ -81,7 +83,6 @@ import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.snackbar.showSnackbar
 import com.ichi2.anki.utils.ext.showDialogFragment
 import com.ichi2.anki.workarounds.AppLoadedFromBackupWorkaround.showedActivityFailedScreen
-import com.ichi2.async.CollectionLoader
 import com.ichi2.compat.CompatHelper
 import com.ichi2.compat.CompatHelper.Companion.registerReceiverCompat
 import com.ichi2.compat.customtabs.CustomTabActivityHelper
@@ -102,9 +103,9 @@ import java.io.FileOutputStream
 import androidx.browser.customtabs.CustomTabsIntent.Builder as CustomTabsIntentBuilder
 
 @UiThread
-@KotlinCleanup("set activityName")
-open class AnkiActivity :
-    AppCompatActivity,
+open class AnkiActivity(
+    @LayoutRes contentLayoutId: Int? = null,
+) : AppCompatActivity(contentLayoutId ?: 0),
     ShortcutGroupProvider,
     AnkiActivityProvider {
     /**
@@ -117,8 +118,6 @@ open class AnkiActivity :
 
     var importColpkgListener: ImportColpkgListener? = null
 
-    /** The name of the parent class (example: 'Reviewer')  */
-    private val activityName: String
     val dialogHandler = DialogHandler(this)
     override val ankiActivity = this
 
@@ -133,16 +132,6 @@ open class AnkiActivity :
                 Timber.i("The file selection for the exported collection was cancelled")
             }
         }
-
-    constructor() : super() {
-        activityName = javaClass.simpleName
-    }
-
-    constructor(
-        @LayoutRes contentLayoutId: Int,
-    ) : super(contentLayoutId) {
-        activityName = javaClass.simpleName
-    }
 
     @Suppress("deprecation") // #9332: UI Visibility -> Insets
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -201,6 +190,10 @@ open class AnkiActivity :
         )
         // Show any pending dialogs which were stored persistently
         dialogHandler.executeMessage()
+    }
+
+    open fun setViewBinding(binding: ViewBinding) {
+        setContentView(binding.root)
     }
 
     /**
@@ -428,14 +421,28 @@ open class AnkiActivity :
         }
         // Open collection asynchronously if it hasn't already been opened
         showProgressBar()
-        CollectionLoader.load(
-            this,
-        ) { col: Collection? ->
-            if (col != null) {
-                Timber.d("Asynchronously calling onCollectionLoaded")
-                onCollectionLoaded(col)
-            } else {
-                onCollectionLoadError()
+        lifecycleScope.launch {
+            val col =
+                withContext(Dispatchers.IO) {
+                    // load collection
+                    try {
+                        Timber.d("CollectionLoader accessing collection")
+                        val col = CollectionManager.getColUnsafe()
+                        Timber.i("CollectionLoader obtained collection")
+                        col
+                    } catch (e: RuntimeException) {
+                        Timber.e(e, "loadInBackground - RuntimeException on opening collection")
+                        CrashReportService.sendExceptionReport(e, "CollectionLoader.load")
+                        null
+                    }
+                }
+            if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
+                if (col != null) {
+                    Timber.d("Asynchronously calling onCollectionLoaded")
+                    onCollectionLoaded(col)
+                } else {
+                    onCollectionLoadError()
+                }
             }
         }
     }
@@ -734,6 +741,8 @@ open class AnkiActivity :
      *
      * @return `true`: activity may continue to start, `false`: [onCreate] should stop executing
      * as storage permissions are mot granted
+     *
+     * @throws SystemStorageException if `getExternalFilesDir` returns null
      */
     fun ensureStoragePermissions(): Boolean {
         if (IntentHandler.grantedStoragePermissions(this, showToast = true)) {

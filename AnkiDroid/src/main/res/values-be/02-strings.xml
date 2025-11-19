@@ -239,6 +239,7 @@
     <string name="search_decks" maxLength="28">Пошук калод</string>
     <string name="ankidroid_init_failed_webview_title">Крытычная памылка</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid выкарыстоўвае сістэмныя WebView, якія зараз недаступныя. Гэта можа здарыцца таму, што ў дадзены момант адбываюцца ўсталяванне абнаўленняў. Паспрабуйце, калі ласка, пачакаць і паўтарыць спробу праз некалькі хвілін.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">Памер шрыфту</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">Паказаць панэль інструментаў</string>
@@ -285,7 +286,6 @@
     <string name="download_failed">Памылка пры спампоўцы</string>
     <string name="deck_download_progress_message">Можаце карыстацца іншымі праграмамі падчас спампоўвання</string>
     <string name="check_network">Калі ласка, праверце падключэнне да інтэрнэту</string>
-    <string name="search_using_deck_name">Пошук па назве калоды</string>
     <string name="external_storage_unavailable">Спампоўванне абарвана, бо знешняе сховішча недаступна.</string>
     <string name="home" maxLength="28">Галоўная</string>
     <!-- Study Screen actions
@@ -320,7 +320,6 @@
     <string name="intro_sync_from_ankiweb">Сінхранізаваць з AnkiWeb</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid пакуль не ініцыялізаваны. Адкрыйце праграму і паспрабуйце яшчэ раз</string>
-    <string name="already_logged_in">Вы ўжо ўвайшлі</string>
     <!-- Deck Creation -->
     <string name="deck_created">Створаная калода</string>
     <string name="deck_renamed">Перайменаваная калода</string>

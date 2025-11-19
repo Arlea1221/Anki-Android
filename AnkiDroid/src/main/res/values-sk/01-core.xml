@@ -137,7 +137,6 @@
     <string name="empty_filtered_deck">Vyprázdňujem filtrovaný balíček&#8230;</string>
     <string name="search_deck" comment="Deck search for selecting it">Vyhľadávanie v balíčku</string>
     <string name="empty_deck">Tento balíček je prázdny</string>
-    <string name="search_for_download_deck" comment="Deck search value for downloading deck" maxLength="28">Vyhľadávanie v balíčku</string>
     <string name="invalid_deck_name">Neplatný názov balíčka</string>
     <string name="studyoptions_congrats_finished">Congratulations! You have finished for today.</string>
     <string name="studyoptions_congrats_next_due_in" comment="The param will be replaced with \'The next card will be ready in X time\'">Deck finished for now! %s</string>
@@ -180,6 +179,7 @@
     <string name="card_template_browser_appearance_title">Vzhľad prehliadača</string>
     <!-- card Info -->
     <string name="card_info_title" maxLength="28">Info o kartičke</string>
+    <string name="previous_card_info_title" maxLength="28">Previous card info</string>
     <!-- Permissions -->
     <string name="read_write_permission_label">Čítať a písať do databázy AnkiDroid</string>
     <string name="read_write_permission_description">prístup k existujúcim poznámkam, kartičkám, typom poznámok, balíčkom ako aj vytváranie nových</string>

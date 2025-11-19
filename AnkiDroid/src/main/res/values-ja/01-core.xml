@@ -128,7 +128,6 @@
     <string name="empty_filtered_deck">フィルターデッキを空にしています&#8230;</string>
     <string name="search_deck" comment="Deck search for selecting it">デッキ検索</string>
     <string name="empty_deck">このデッキにはカードがありません</string>
-    <string name="search_for_download_deck" comment="Deck search value for downloading deck" maxLength="28">デッキを検索</string>
     <string name="invalid_deck_name">無効なデッキ名です</string>
     <string name="studyoptions_congrats_finished">おめでとうございます！ このデッキの今日の課題をすべて達成しました！</string>
     <string name="studyoptions_congrats_next_due_in" comment="The param will be replaced with \'The next card will be ready in X time\'">このデッキの現在の課題をすべて達成しました。\nなお、%s</string>
@@ -165,6 +164,7 @@
     <string name="card_template_browser_appearance_title">ブラウザ表示設定</string>
     <!-- card Info -->
     <string name="card_info_title" maxLength="28">カード情報</string>
+    <string name="previous_card_info_title" maxLength="28">Previous card info</string>
     <!-- Permissions -->
     <string name="read_write_permission_label">AnkiDroidデータベースの読み取りと書き込み</string>
     <string name="read_write_permission_description">ノート、カード、ノートタイプ、デッキへのアクセスや、それらの新規作成を行います。</string>

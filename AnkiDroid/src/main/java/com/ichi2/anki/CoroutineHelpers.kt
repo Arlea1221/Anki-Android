@@ -94,6 +94,11 @@ var throwOnShowError = false
  * Runs a suspend function that catches any uncaught errors and reports them to the user.
  * Errors from the backend contain localized text that is often suitable to show to the user as-is.
  * Other errors should ideally be handled in the block.
+ *
+ * @param context Coroutine context passed to [launch]
+ * @param errorMessageHandler Called after an exception is caught and logged, input is either
+ * `Exception.localizedMessage` or `Exception.toString()`
+ * @param block code to execute inside [launch]
  */
 fun CoroutineScope.launchCatching(
     context: CoroutineContext = EmptyCoroutineContext,
@@ -438,7 +443,9 @@ suspend fun <T> withProgressDialog(
                 }
             }
         // disable taps immediately
-        context.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        context.runOnUiThread {
+            context.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        }
         // reveal the dialog after 600ms
         var dialogIsOurs = false
         val dialogJob =
@@ -470,7 +477,7 @@ suspend fun <T> withProgressDialog(
         } finally {
             dialogJob.cancel()
             dismissDialogIfShowing(dialog)
-            context.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            context.runOnUiThread { context.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE) }
             if (dialogIsOurs) {
                 AnkiDroidApp.instance.progressDialogShown = false
             }

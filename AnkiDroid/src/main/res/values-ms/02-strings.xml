@@ -230,6 +230,7 @@
     <string name="search_decks" maxLength="28">Cari dek</string>
     <string name="ankidroid_init_failed_webview_title">Ralat Maut</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid bergantung kepada WebView Sistem yang tidak tersedia. Ini boleh berlaku jika sistem sedang kemas kini. Sila cuba lagi dalam beberapa minit.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">Saiz tulisan</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">Lihat Bar Alat</string>
@@ -276,7 +277,6 @@
     <string name="download_failed">Memuat turun gagal</string>
     <string name="deck_download_progress_message">Anda boleh guna aplikasi lain sementara memuat turun</string>
     <string name="check_network">Sila semak sambungan rangkaian anda</string>
-    <string name="search_using_deck_name">Cari menggunakan nama dek</string>
     <string name="external_storage_unavailable">Muat turun batal, tiada storan luaran tersedia</string>
     <string name="home" maxLength="28">Laman Utama</string>
     <!-- Study Screen actions
@@ -308,7 +308,6 @@
     <string name="intro_sync_from_ankiweb">Segerakkan dari AnkiWeb</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid is not initialized yet. Please open AnkiDroid and try again</string>
-    <string name="already_logged_in">Telah log masuk</string>
     <!-- Deck Creation -->
     <string name="deck_created">Dek dicipta</string>
     <string name="deck_renamed">Dek dinamakan semula</string>

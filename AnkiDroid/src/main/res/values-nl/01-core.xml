@@ -131,7 +131,6 @@
     <string name="empty_filtered_deck">Gefilterde set wordt leeggemaakt&#8230;</string>
     <string name="search_deck" comment="Deck search for selecting it">Leerset zoeken</string>
     <string name="empty_deck">Deze leerset is leeg</string>
-    <string name="search_for_download_deck" comment="Deck search value for downloading deck" maxLength="28">Set doorzoeken</string>
     <string name="invalid_deck_name">Ongeldige setnaam</string>
     <string name="studyoptions_congrats_finished">Gefeliciteerd! Je bent klaar voor vandaag.</string>
     <string name="studyoptions_congrats_next_due_in" comment="The param will be replaced with \'The next card will be ready in X time\'">Set is klaar voor nu! %s</string>
@@ -170,6 +169,7 @@
     <string name="card_template_browser_appearance_title">Verkenner uiterlijk</string>
     <!-- card Info -->
     <string name="card_info_title" maxLength="28">Kaartinformatie</string>
+    <string name="previous_card_info_title" maxLength="28">Previous card info</string>
     <!-- Permissions -->
     <string name="read_write_permission_label">Lees en schrijf naar de AnkiDroid database</string>
     <string name="read_write_permission_description">toegang tot bestaande notities, kaarten, notitietypen en sets, eventueel nieuwe aanmaken</string>

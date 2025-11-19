@@ -233,6 +233,7 @@
     <string name="search_decks" maxLength="28">Soek pakke</string>
     <string name="ankidroid_init_failed_webview_title">Fatale fout</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid maak staat op die Stelsel WebView wat nie beskikbaar is nie. Dit kan gebeur as die stelsel opdaterings installeer. Probeer asseblief weer oor \'n paar minute.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">Lettergrootte</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">Wys nutsbalk</string>
@@ -279,7 +280,6 @@
     <string name="download_failed">Aflaai het misluk</string>
     <string name="deck_download_progress_message">Jy kan ander toepassings gebruik terwyl die aflaai loop</string>
     <string name="check_network">Kontroleer asseblief jou netwerkverbinding</string>
-    <string name="search_using_deck_name">Soek met paknaam</string>
     <string name="external_storage_unavailable">Aflaai gestaak, die eksterne berging is nie beskikbaar nie</string>
     <string name="home" maxLength="28">Tuis</string>
     <!-- Study Screen actions
@@ -312,7 +312,6 @@
     <string name="intro_sync_from_ankiweb">Sinkroniseer Van AnkiWeb</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid Is Nog Nie Geïnisialiseer Nie. Maak Asseblief AnkiDroid Oop En Probeer Weer.</string>
-    <string name="already_logged_in">Reeds ingelog</string>
     <!-- Deck Creation -->
     <string name="deck_created">Pak geskep</string>
     <string name="deck_renamed">Pak hernoem</string>

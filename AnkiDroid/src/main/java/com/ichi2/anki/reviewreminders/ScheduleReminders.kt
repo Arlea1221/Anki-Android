@@ -20,9 +20,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.BundleCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
@@ -31,13 +32,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.ichi2.anki.CollectionManager.withCol
 import com.ichi2.anki.CrashReportData.Companion.toCrashReportData
 import com.ichi2.anki.R
 import com.ichi2.anki.SingleFragmentActivity
+import com.ichi2.anki.canUserAccessDeck
 import com.ichi2.anki.dialogs.DeckSelectionDialog
 import com.ichi2.anki.launchCatchingTask
 import com.ichi2.anki.libanki.DeckId
 import com.ichi2.anki.model.SelectableDeck
+import com.ichi2.anki.services.AlarmManagerService
 import com.ichi2.anki.showError
 import com.ichi2.anki.snackbar.BaseSnackbarBuilderProvider
 import com.ichi2.anki.snackbar.SnackbarBuilder
@@ -82,7 +86,7 @@ class ScheduleReminders :
     private lateinit var reminders: HashMap<ReviewReminderId, ReviewReminder>
 
     /**
-     * Retrieving deck names for a given deck ID in [setDeckNameFromScopeForView] requires a call to the collection.
+     * Retrieving deck names for a given deck ID in [retrieveDeckNameFromID] requires a call to the collection.
      * However, most reminders in the RecyclerView will often be from the same deck (and are guaranteed to be if
      * this fragment is opened in [ReviewReminderScope.DeckSpecific] mode). Hence, we cache deck names.
      */
@@ -112,7 +116,8 @@ class ScheduleReminders :
         // Set up adapter, pass functionality to it
         adapter =
             ScheduleRemindersAdapter(
-                ::setDeckNameFromScopeForView,
+                ::retrieveDeckNameFromID,
+                ::retrieveCanUserAccessDeck,
                 ::toggleReminderEnabled,
                 ::editReminder,
             )
@@ -182,6 +187,7 @@ class ScheduleReminders :
         Timber.d("Handling add/edit dialog result: mode=%s reminder=%s", modeOfFinishedDialog, newOrModifiedReminder)
         updateDatabaseForAddEditDialog(newOrModifiedReminder, modeOfFinishedDialog)
         updateUIForAddEditDialog(newOrModifiedReminder, modeOfFinishedDialog)
+        updateAlarmsForAddEditDialog(newOrModifiedReminder, modeOfFinishedDialog)
         // Feedback
         showSnackbar(
             when (modeOfFinishedDialog) {
@@ -279,22 +285,54 @@ class ScheduleReminders :
     }
 
     /**
-     * Sets a TextView's text based on a [ReviewReminderScope].
-     * The text is either the scope's associated deck's name, or "All Decks" if the scope is global.
-     * For example, this is used to display the [ScheduleRemindersAdapter]'s deck name column.
+     * Update the AlarmManager notifications for the new or modified reminder.
+     * @see handleAddEditDialogResult
      */
-    private fun setDeckNameFromScopeForView(
-        scope: ReviewReminderScope,
-        view: TextView,
+    private fun updateAlarmsForAddEditDialog(
+        newOrModifiedReminder: ReviewReminder?,
+        modeOfFinishedDialog: AddEditReminderDialog.DialogMode,
     ) {
-        when (scope) {
-            is ReviewReminderScope.Global -> view.text = getString(R.string.card_browser_all_decks)
-            is ReviewReminderScope.DeckSpecific -> {
-                launchCatchingTask {
-                    val deckName = cachedDeckNames.getOrPut(scope.did) { scope.getDeckName() }
-                    view.text = deckName
-                }
-            }
+        if (modeOfFinishedDialog is AddEditReminderDialog.DialogMode.Edit) {
+            AlarmManagerService.unscheduleReviewReminderNotifications(
+                requireContext(),
+                modeOfFinishedDialog.reminderToBeEdited,
+            )
+        }
+        newOrModifiedReminder?.let {
+            AlarmManagerService.scheduleReviewReminderNotification(
+                requireContext(),
+                it,
+            )
+        }
+    }
+
+    /**
+     * Retrieves a deck name from the collection for a given deck ID and passes it to the provided callback.
+     * Used by the [ScheduleRemindersAdapter] because it cannot access the collection directly.
+     */
+    private fun retrieveDeckNameFromID(
+        did: DeckId,
+        callback: (deckName: String) -> Unit,
+    ) {
+        launchCatchingTask {
+            val deckName = cachedDeckNames.getOrPut(did) { withCol { decks.name(did) } }
+            callback(deckName)
+        }
+    }
+
+    /**
+     * Retrieves whether the user can access the deck with the given ID and passes the result to the provided callback.
+     * Basically, checks whether the deck exists, with some exceptions: see [canUserAccessDeck].
+     * Used by the [ScheduleRemindersAdapter] because it cannot access the collection directly.
+     */
+    private fun retrieveCanUserAccessDeck(
+        did: DeckId,
+        callback: (isDeckAccessible: Boolean) -> Unit,
+    ) {
+        launchCatchingTask {
+            val isDeckAccessible = canUserAccessDeck(did)
+            Timber.d("Checked for whether deck with id %s can be accessed: %s", did, isDeckAccessible)
+            callback(isDeckAccessible)
         }
     }
 
@@ -330,6 +368,12 @@ class ScheduleReminders :
         // Update UI
         reminder.enabled = newState
         triggerUIUpdate()
+
+        // Update scheduled AlarmManager notifications
+        when (newState) {
+            true -> AlarmManagerService.scheduleReviewReminderNotification(requireContext(), reminder)
+            false -> AlarmManagerService.unscheduleReviewReminderNotifications(requireContext(), reminder)
+        }
     }
 
     /**
@@ -376,14 +420,16 @@ class ScheduleReminders :
 
     /**
      * Trigger a RecyclerView UI update for ScheduleReminders.
+     * If there are no reminders to display, show the "No Reminders" placeholder icon and text.
      */
     private fun triggerUIUpdate() {
-        adapter.submitList(
+        val listToDisplay =
             reminders
                 .values
                 .sortedBy { it.time.toSecondsFromMidnight() }
-                .toList(),
-        )
+                .toList()
+        adapter.submitList(listToDisplay)
+        view?.findViewById<LinearLayout>(R.id.no_reminders_placeholder)?.isVisible = listToDisplay.isEmpty()
     }
 
     companion object {

@@ -234,6 +234,7 @@
     <string name="search_decks" maxLength="28">ڈیکس تلاش کریں</string>
     <string name="ankidroid_init_failed_webview_title">مہلک غلطی</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid سسٹم WebView پر انحصار کرتا ہے جو دستیاب نہیں ہے۔ اگر سسٹم اپ ڈیٹس انسٹال کر رہا ہو تو ایسا ہو سکتا ہے۔ براہ کرم چند منٹوں میں دوبارہ کوشش کریں۔\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">حرف کا سائز</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">ٹول بار دکھائیں</string>
@@ -280,7 +281,6 @@
     <string name="download_failed">ڈاؤن لوڈ ناکام ہو گیا۔</string>
     <string name="deck_download_progress_message">جب ڈاؤن لوڈ چل رہا ہو تو آپ دوسری ایپس استعمال کر سکتے ہیں۔</string>
     <string name="check_network">براہ کرم اپنا نیٹ ورک کنکشن چیک کریں</string>
-    <string name="search_using_deck_name">ڈیک کا نام استعمال کرکے تلاش کریں</string>
     <string name="external_storage_unavailable">ڈاؤن لوڈ منسوخ کر دیا گیا، بیرونی اسٹوریج دستیاب نہیں ہے</string>
     <string name="home" maxLength="28">گھر</string>
     <!-- Study Screen actions
@@ -313,7 +313,6 @@
     <string name="intro_sync_from_ankiweb">AnkiWeb سے مطابقت پذیری کریں۔</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid ابھی شروع نہیں ہوا ہے۔ براہ کرم AnkiDroid کھولیں اور دوبارہ کوشش کریں</string>
-    <string name="already_logged_in">پہلے سے لاگ ان</string>
     <!-- Deck Creation -->
     <string name="deck_created">ڈیک بنایا گیا</string>
     <string name="deck_renamed">ڈیک کا نام تبدیل کر دیا گیا</string>

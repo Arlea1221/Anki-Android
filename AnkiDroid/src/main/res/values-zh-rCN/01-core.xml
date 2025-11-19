@@ -128,7 +128,6 @@
     <string name="empty_filtered_deck">正在清空筛选牌组&#8230;</string>
     <string name="search_deck" comment="Deck search for selecting it">牌组搜索</string>
     <string name="empty_deck">此牌组为空</string>
-    <string name="search_for_download_deck" comment="Deck search value for downloading deck" maxLength="28">牌组搜索</string>
     <string name="invalid_deck_name">无效的牌组名称</string>
     <string name="studyoptions_congrats_finished">恭喜！你已经完成了今天的学习任务。</string>
     <string name="studyoptions_congrats_next_due_in" comment="The param will be replaced with \'The next card will be ready in X time\'">牌组目前已完成！%s</string>
@@ -165,6 +164,7 @@
     <string name="card_template_browser_appearance_title">浏览器外观</string>
     <!-- card Info -->
     <string name="card_info_title" maxLength="28">卡片信息</string>
+    <string name="previous_card_info_title" maxLength="28">上一个卡片信息</string>
     <!-- Permissions -->
     <string name="read_write_permission_label">读取并写入 AnkiDroid 数据库</string>
     <string name="read_write_permission_description">创建或访问现有的笔记、卡片、笔记模板和牌组</string>

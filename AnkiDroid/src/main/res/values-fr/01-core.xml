@@ -131,7 +131,6 @@
     <string name="empty_filtered_deck">Vidage du paquet filtré&#8230;</string>
     <string name="search_deck" comment="Deck search for selecting it">Recherche de paquet</string>
     <string name="empty_deck">Ce paquet est vide</string>
-    <string name="search_for_download_deck" comment="Deck search value for downloading deck" maxLength="28">Chercher un deck</string>
     <string name="invalid_deck_name">Nom de paquet invalide</string>
     <string name="studyoptions_congrats_finished">Félicitations ! Vous avez terminé pour aujourd\'hui.</string>
     <string name="studyoptions_congrats_next_due_in" comment="The param will be replaced with \'The next card will be ready in X time\'">Paquet terminé pour l’instant! %s</string>
@@ -170,6 +169,7 @@
     <string name="card_template_browser_appearance_title">Apparence du navigateur</string>
     <!-- card Info -->
     <string name="card_info_title" maxLength="28">Infos sur la carte</string>
+    <string name="previous_card_info_title" maxLength="28">Previous card info</string>
     <!-- Permissions -->
     <string name="read_write_permission_label">Lire et écrire dans la base de données d\'AnkiDroid</string>
     <string name="read_write_permission_description">accéder aux notes, cartes, types de notes et paquets actuels, mais aussi en créer de nouveaux</string>

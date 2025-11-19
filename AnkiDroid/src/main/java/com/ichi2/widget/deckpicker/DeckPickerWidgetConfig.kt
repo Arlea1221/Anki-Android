@@ -19,12 +19,10 @@ package com.ichi2.widget.deckpicker
 import android.appwidget.AppWidgetManager
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
@@ -33,10 +31,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.ichi2.anki.AnkiActivity
 import com.ichi2.anki.R
+import com.ichi2.anki.databinding.WidgetDeckPickerConfigBinding
 import com.ichi2.anki.dialogs.DeckSelectionDialog
 import com.ichi2.anki.dialogs.DeckSelectionDialog.DeckSelectionListener
 import com.ichi2.anki.dialogs.DiscardChangesDialog
@@ -47,10 +45,12 @@ import com.ichi2.anki.showThemedToast
 import com.ichi2.anki.snackbar.BaseSnackbarBuilderProvider
 import com.ichi2.anki.snackbar.SnackbarBuilder
 import com.ichi2.anki.snackbar.showSnackbar
+import com.ichi2.anki.utils.ext.unregisterReceiverSilently
 import com.ichi2.widget.AppWidgetId.Companion.INVALID_APPWIDGET_ID
 import com.ichi2.widget.AppWidgetId.Companion.getAppWidgetId
 import com.ichi2.widget.AppWidgetId.Companion.updateWidget
 import com.ichi2.widget.WidgetConfigScreenAdapter
+import dev.androidbroadcast.vbpd.viewBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -64,9 +64,11 @@ import timber.log.Timber
  * User Can remove, reorder decks and reconfigure by holding the widget.
  */
 class DeckPickerWidgetConfig :
-    AnkiActivity(),
+    AnkiActivity(R.layout.widget_deck_picker_config),
     DeckSelectionListener,
     BaseSnackbarBuilderProvider {
+    private val binding by viewBinding(WidgetDeckPickerConfigBinding::bind)
+
     private var appWidgetId = INVALID_APPWIDGET_ID
     lateinit var deckAdapter: WidgetConfigScreenAdapter
     private lateinit var deckPickerWidgetPreferences: DeckPickerWidgetPreferences
@@ -89,8 +91,6 @@ class DeckPickerWidgetConfig :
         if (!ensureStoragePermissions()) {
             return
         }
-
-        setContentView(R.layout.widget_deck_picker_config)
 
         deckPickerWidgetPreferences = DeckPickerWidgetPreferences(this)
 
@@ -145,7 +145,7 @@ class DeckPickerWidgetConfig :
                 setUnsavedChanges(true)
             }
 
-        findViewById<RecyclerView>(R.id.recyclerViewSelectedDecks).apply {
+        binding.recyclerViewSelectedDecks.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = this@DeckPickerWidgetConfig.deckAdapter
             val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
@@ -156,7 +156,7 @@ class DeckPickerWidgetConfig :
 
         // TODO: Implement multi-select functionality so that user can select desired decks in once.
         // TODO: Implement a functionality to hide already selected deck.
-        findViewById<FloatingActionButton>(R.id.fabWidgetDeckPicker).setOnClickListener {
+        binding.fabWidgetDeckPicker.setOnClickListener {
             showDeckSelectionDialog()
         }
 
@@ -216,7 +216,7 @@ class DeckPickerWidgetConfig :
     }
 
     override val baseSnackbarBuilder: SnackbarBuilder = {
-        anchorView = findViewById<FloatingActionButton>(R.id.fabWidgetDeckPicker)
+        anchorView = binding.fabWidgetDeckPicker
     }
 
     /**
@@ -228,12 +228,11 @@ class DeckPickerWidgetConfig :
      *   and the activity is finished.
      */
     private fun setupDoneButton() {
-        val doneButton = findViewById<Button>(R.id.submit_button)
         val saveText = getString(R.string.save).uppercase()
 
         // Set the button text and click listener only once during initialization
-        doneButton.text = saveText
-        doneButton.setOnClickListener {
+        binding.submitButton.text = saveText
+        binding.submitButton.setOnClickListener {
             saveSelectedDecksToPreferencesDeckPickerWidget()
             hasUnsavedChanges = false
             setUnsavedChanges(false)
@@ -253,8 +252,7 @@ class DeckPickerWidgetConfig :
     }
 
     private fun updateDoneButtonVisibility() {
-        val doneButton = findViewById<Button>(R.id.submit_button)
-        doneButton.isVisible = deckAdapter.itemCount != 0
+        binding.submitButton.isVisible = deckAdapter.itemCount != 0
     }
 
     /** Updates the visibility of the FloatingActionButton based on the number of selected decks */
@@ -272,8 +270,8 @@ class DeckPickerWidgetConfig :
 
             val selectedDeckCount = deckAdapter.itemCount
 
-            val fab = findViewById<FloatingActionButton>(R.id.fabWidgetDeckPicker)
-            fab.isVisible = !(selectedDeckCount >= MAX_DECKS_ALLOWED || selectedDeckCount >= adjustedTotalSelectableDecks)
+            binding.fabWidgetDeckPicker.isVisible =
+                !(selectedDeckCount >= MAX_DECKS_ALLOWED || selectedDeckCount >= adjustedTotalSelectableDecks)
         }
     }
 
@@ -370,15 +368,12 @@ class DeckPickerWidgetConfig :
 
     /** Updates the visibility of the "no decks" placeholder and the widget configuration container */
     fun updateViewVisibility() {
-        val noDecksPlaceholder = findViewById<View>(R.id.no_decks_placeholder)
-        val widgetConfigContainer = findViewById<View>(R.id.widgetConfigContainer)
-
         if (deckAdapter.itemCount > 0) {
-            noDecksPlaceholder.visibility = View.GONE
-            widgetConfigContainer.visibility = View.VISIBLE
+            binding.noDecksPlaceholder.visibility = View.GONE
+            binding.widgetConfigContainer.visibility = View.VISIBLE
         } else {
-            noDecksPlaceholder.visibility = View.VISIBLE
-            widgetConfigContainer.visibility = View.GONE
+            binding.noDecksPlaceholder.visibility = View.VISIBLE
+            binding.widgetConfigContainer.visibility = View.GONE
         }
     }
 
@@ -437,7 +432,7 @@ class DeckPickerWidgetConfig :
                 action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(appWidgetId.id))
 
-                putExtra("deck_picker_widget_selected_deck_ids", selectedDecks.toList().toLongArray())
+                putExtra(DeckPickerWidget.EXTRA_SELECTED_DECK_IDS, selectedDecks.toList().toLongArray())
             }
 
         sendBroadcast(updateIntent)
@@ -468,26 +463,5 @@ class DeckPickerWidgetConfig :
          * Maximum number of decks allowed in the widget.
          */
         private const val MAX_DECKS_ALLOWED = 5
-    }
-}
-
-/**
- * Unregisters a broadcast receiver from the context silently.
- *
- * This extension function attempts to unregister a broadcast receiver from the context
- * without throwing an exception if the receiver is not registered.
- * It catches the `IllegalArgumentException` that is thrown when attempting to unregister
- * a receiver that is not registered, allowing the operation to fail gracefully without crashing.
- *
- * @param receiver The broadcast receiver to be unregistered.
- *
- * @see ContextWrapper.unregisterReceiver
- * @see IllegalArgumentException
- */
-fun ContextWrapper.unregisterReceiverSilently(receiver: BroadcastReceiver) {
-    try {
-        unregisterReceiver(receiver)
-    } catch (e: IllegalArgumentException) {
-        Timber.d(e, "unregisterReceiverSilently")
     }
 }

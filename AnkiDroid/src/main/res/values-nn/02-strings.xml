@@ -233,6 +233,7 @@
     <string name="search_decks" maxLength="28">Search decks</string>
     <string name="ankidroid_init_failed_webview_title">Uopprettelig feil</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid relies on the System WebView which is unavailable. This can happen if the system is installing updates. Please try again in a few minutes.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">Skriftstørrelse</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">Vis verktøylinje</string>
@@ -279,7 +280,6 @@
     <string name="download_failed">Nedlasting feilet</string>
     <string name="deck_download_progress_message">You can use other apps while the download is running</string>
     <string name="check_network">Please check your network connection</string>
-    <string name="search_using_deck_name">Søk ved hjelp av kortstokknavn</string>
     <string name="external_storage_unavailable">Download aborted, the external storage is not available</string>
     <string name="home" maxLength="28">Hjem</string>
     <!-- Study Screen actions
@@ -312,7 +312,6 @@
     <string name="intro_sync_from_ankiweb">Synkroniser frå AnkiWeb</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid is not initialized yet. Please open AnkiDroid and try again</string>
-    <string name="already_logged_in">Allereie pålogga</string>
     <!-- Deck Creation -->
     <string name="deck_created">Laga ein kortleik</string>
     <string name="deck_renamed">Døypte om kortleiken</string>

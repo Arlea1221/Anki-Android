@@ -25,9 +25,8 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.Spinner
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.BundleCompat
 import androidx.core.view.isVisible
@@ -40,8 +39,8 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.ichi2.anki.ALL_DECKS_ID
 import com.ichi2.anki.CollectionManager.withCol
-import com.ichi2.anki.DeckSpinnerSelection
 import com.ichi2.anki.R
 import com.ichi2.anki.dialogs.ConfirmationDialog
 import com.ichi2.anki.isDefaultDeckEmpty
@@ -50,6 +49,7 @@ import com.ichi2.anki.libanki.Consts
 import com.ichi2.anki.libanki.DeckId
 import com.ichi2.anki.model.SelectableDeck
 import com.ichi2.anki.snackbar.showSnackbar
+import com.ichi2.anki.startDeckSelection
 import com.ichi2.anki.utils.ext.showDialogFragment
 import com.ichi2.utils.DisplayUtils.resizeWhenSoftInputShown
 import com.ichi2.utils.customView
@@ -131,7 +131,7 @@ class AddEditReminderDialog : DialogFragment() {
         Timber.d("Setting up fields")
         setUpToolbar()
         setUpTimeButton()
-        setUpDeckSpinner()
+        setInitialDeckSelection()
         setUpAdvancedDropdown()
         setUpCardThresholdInput()
 
@@ -148,10 +148,12 @@ class AddEditReminderDialog : DialogFragment() {
             val selectedDeckId: DeckId =
                 when (selectedDeck) {
                     is SelectableDeck.Deck -> selectedDeck.deckId
-                    is SelectableDeck.AllDecks -> DeckSpinnerSelection.ALL_DECKS_ID
+                    is SelectableDeck.AllDecks -> ALL_DECKS_ID
                     else -> Consts.DEFAULT_DECK_ID
                 }
             viewModel.setDeckSelected(selectedDeckId)
+            this.dialog?.findViewById<TextView>(R.id.add_edit_reminder_deck_name)?.text =
+                selectedDeck?.getDisplayName(requireContext())
         }
 
         dialog.window?.let { resizeWhenSoftInputShown(it) }
@@ -181,46 +183,47 @@ class AddEditReminderDialog : DialogFragment() {
         }
     }
 
-    private fun setUpDeckSpinner() {
-        val deckSpinner = contentView.findViewById<Spinner>(R.id.add_edit_reminder_deck_spinner)
-        val deckSpinnerSelection =
-            DeckSpinnerSelection(
-                context = (activity as AppCompatActivity),
-                spinner = deckSpinner,
-                showAllDecks = true,
-                alwaysShowDefault = true,
-                showFilteredDecks = true,
-            )
+    private fun setInitialDeckSelection() {
+        val deckName = contentView.findViewById<TextView>(R.id.add_edit_reminder_deck_name)
+        deckName.setOnClickListener { startDeckSelection(all = true, filtered = true) }
         launchCatchingTask {
-            Timber.d("Setting up deck spinner")
-            deckSpinnerSelection.initializeScheduleRemindersDeckSpinner()
-            val deckToSelect = ensureValidDeckSelected()
-            deckSpinnerSelection.selectDeckById(deckToSelect, setAsCurrentDeck = false)
+            Timber.d("Setting up deck name view")
+            val (selectedDeckId, selectedDeckName) = getValidDeckSelection()
+            Timber.d("Initial selection of deck %s(id=%d)", selectedDeckName, selectedDeckId)
+            deckName.text = selectedDeckName
+            viewModel.setDeckSelected(selectedDeckId)
         }
     }
 
     /**
-     * Checks to see if the ViewModel's selected deck is valid and exists. If it does not, we set the selected deck to a
-     * valid deck (either the default deck or "all decks", depending on whether the default deck is present or not).
+     * Checks to see if the ViewModel's selected deck is valid and exists. If it does not, we select
+     * a valid deck (either the default deck or "all decks", depending on whether the default deck
+     * is present or not).
      *
-     * @return The valid deck ID that is now selected.
+     * @return a [Pair] with the [DeckId] and name of the selected valid deck
      */
-    private suspend fun ensureValidDeckSelected(): DeckId {
-        val fallbackSelection = if (isDefaultDeckEmpty()) DeckSpinnerSelection.ALL_DECKS_ID else Consts.DEFAULT_DECK_ID
+    private suspend fun getValidDeckSelection(): Pair<DeckId, String> {
+        suspend fun getFallbackSelection(): Pair<DeckId, String> =
+            if (isDefaultDeckEmpty()) {
+                Pair(ALL_DECKS_ID, getString(R.string.card_browser_all_decks))
+            } else {
+                Pair(Consts.DEFAULT_DECK_ID, withCol { decks.name(Consts.DEFAULT_DECK_ID) })
+            }
+
         val currentlySelectedDeckID = viewModel.deckSelected.value
-        val deckToSelect =
-            when (currentlySelectedDeckID) {
-                DeckSpinnerSelection.ALL_DECKS_ID -> DeckSpinnerSelection.ALL_DECKS_ID
-                Consts.DEFAULT_DECK_ID -> fallbackSelection
-                null -> fallbackSelection
-                else -> {
-                    val doesDeckExist = withCol { decks.have(currentlySelectedDeckID) }
-                    if (doesDeckExist) currentlySelectedDeckID else fallbackSelection
+        return when (currentlySelectedDeckID) {
+            ALL_DECKS_ID -> Pair(ALL_DECKS_ID, getString(R.string.card_browser_all_decks))
+            Consts.DEFAULT_DECK_ID -> getFallbackSelection()
+            null -> getFallbackSelection()
+            else -> {
+                val doesDeckExist = withCol { decks.have(currentlySelectedDeckID) }
+                if (doesDeckExist) {
+                    Pair(currentlySelectedDeckID, withCol { decks.name(currentlySelectedDeckID) })
+                } else {
+                    getFallbackSelection()
                 }
             }
-        viewModel.setDeckSelected(deckToSelect)
-        Timber.d("Initial selected deck ID: %s, newly selected deck ID: %s", currentlySelectedDeckID, deckToSelect)
-        return deckToSelect
+        }
     }
 
     private fun setUpAdvancedDropdown() {

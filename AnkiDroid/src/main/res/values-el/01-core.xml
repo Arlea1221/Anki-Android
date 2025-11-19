@@ -131,7 +131,6 @@
     <string name="empty_filtered_deck">Άδειασμα φιλτραρισμένης τράπουλας&#8230;</string>
     <string name="search_deck" comment="Deck search for selecting it">Αναζήτηση</string>
     <string name="empty_deck">Αυτή η τράπουλα είναι κενή</string>
-    <string name="search_for_download_deck" comment="Deck search value for downloading deck" maxLength="28">Αναζήτηση</string>
     <string name="invalid_deck_name">Μη έγκυρο όνομα</string>
     <string name="studyoptions_congrats_finished">Συγχαρητήρια! Τελειώσατε για σήμερα.</string>
     <string name="studyoptions_congrats_next_due_in" comment="The param will be replaced with \'The next card will be ready in X time\'">Η τράπουλα τελείωσε για τώρα! %s</string>
@@ -170,6 +169,7 @@
     <string name="card_template_browser_appearance_title">Εμφάνιση περιηγητή</string>
     <!-- card Info -->
     <string name="card_info_title" maxLength="28">Πληροφορίες κάρτας</string>
+    <string name="previous_card_info_title" maxLength="28">Previous card info</string>
     <!-- Permissions -->
     <string name="read_write_permission_label">Ανάγνωση και εγγραφή στη βάση δεδομένων του AnkiDroid</string>
     <string name="read_write_permission_description">πρόσβαση σε υπάρχουσες σημειώσεις, κάρτες, τύπους σημειώσεων και τράπουλες, καθώς και δημιουργία νέων</string>

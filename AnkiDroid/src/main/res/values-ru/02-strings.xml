@@ -239,6 +239,7 @@
     <string name="search_decks" maxLength="28">Найти колоду</string>
     <string name="ankidroid_init_failed_webview_title">Критическая ошибка</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid использует системный WebView, который сейчас не доступен. Это может произойти, если система устанавливает обновления. Повторите попытку через несколько минут.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">Размер шрифта</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">Показать панель инструментов</string>
@@ -285,7 +286,6 @@
     <string name="download_failed">Загрузка не удалась</string>
     <string name="deck_download_progress_message">Вы можете использовать другие приложения во время загрузки</string>
     <string name="check_network">Проверьте подключение к Интернету</string>
-    <string name="search_using_deck_name">Искать по названию колоды</string>
     <string name="external_storage_unavailable">Загрузка прервана, внешняя память недоступна</string>
     <string name="home" maxLength="28">Главная</string>
     <!-- Study Screen actions
@@ -320,7 +320,6 @@
     <string name="intro_sync_from_ankiweb">Скачать с AnkiWeb</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid не запущен. Пожалуйста, откройте AnkiDroid и попробуйте снова</string>
-    <string name="already_logged_in">Вход уже выполнен</string>
     <!-- Deck Creation -->
     <string name="deck_created">Колода создана</string>
     <string name="deck_renamed">Колода переименована</string>

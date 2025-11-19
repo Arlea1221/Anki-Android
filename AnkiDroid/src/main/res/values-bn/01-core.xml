@@ -131,7 +131,6 @@
     <string name="empty_filtered_deck">খালি করা হচ্ছে ফিল্টারড ডেক</string>
     <string name="search_deck" comment="Deck search for selecting it">ডেক অনুসন্ধান</string>
     <string name="empty_deck">এই ডেক ফাঁকা।</string>
-    <string name="search_for_download_deck" comment="Deck search value for downloading deck" maxLength="28">ডেক অনুসন্ধান</string>
     <string name="invalid_deck_name">ডেক নাম বৈধ নয়</string>
     <string name="studyoptions_congrats_finished">Congratulations! You have finished for today.</string>
     <string name="studyoptions_congrats_next_due_in" comment="The param will be replaced with \'The next card will be ready in X time\'">ডেক আপাতত শেষ! %s</string>
@@ -170,6 +169,7 @@
     <string name="card_template_browser_appearance_title">ব্রাউজারের চেহারা</string>
     <!-- card Info -->
     <string name="card_info_title" maxLength="28">কার্ডের বিবরণী</string>
+    <string name="previous_card_info_title" maxLength="28">Previous card info</string>
     <!-- Permissions -->
     <string name="read_write_permission_label">AnkiDroid ডাটাবেস থেকে পড়ুন এবং লিখুন</string>
     <string name="read_write_permission_description">বিদ্যমান নোট, কার্ড, নোটের ধরন এবং ডেক এ প্রবেশের পাশাপাশি নতুন একটি তৈরি করুন</string>

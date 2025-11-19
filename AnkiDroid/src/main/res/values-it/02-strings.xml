@@ -233,6 +233,7 @@
     <string name="search_decks" maxLength="28">Cerca mazzi</string>
     <string name="ankidroid_init_failed_webview_title">Errore Fatale</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid si basa sulla WebView di Sistema che non è disponibile. Questo può verificarsi se il sistema sta installando aggiornamenti. Sei pregato di riprovare tra qualche minuto.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">Dimensione Carattere</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">Mostra barra strumenti</string>
@@ -279,7 +280,6 @@
     <string name="download_failed">Scaricamento non riuscito</string>
     <string name="deck_download_progress_message">È possibile utilizzare altre applicazioni mentre lo scaricamento è in esecuzione</string>
     <string name="check_network">Controlla la tua connessione di rete</string>
-    <string name="search_using_deck_name">Cerca usando il nome del mazzo</string>
     <string name="external_storage_unavailable">Download interrotto, l\'archiviazione esterna non è disponibile</string>
     <string name="home" maxLength="28">Pagina principale</string>
     <!-- Study Screen actions
@@ -312,7 +312,6 @@
     <string name="intro_sync_from_ankiweb">Sincronizza da AnkiWeb</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid non è ancora inizializzato. Aprirlo e riprovare</string>
-    <string name="already_logged_in">Già connesso</string>
     <!-- Deck Creation -->
     <string name="deck_created">Mazzo creato</string>
     <string name="deck_renamed">Mazzo rinominato</string>

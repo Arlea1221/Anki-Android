@@ -233,6 +233,7 @@ Context | Request Context    [1]</string>
     <string name="search_decks" maxLength="28">덱 검색하기</string>
     <string name="ankidroid_init_failed_webview_title">심각한 오류</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid이 필요한 시스템 WebView를 사용할 수 없습니다. 이 문제는 시스템이 업데이트를 설치하는 경우 발생할 수도 있습니다. 잠시 후 다시 시도하십시오.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">글꼴 크기</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">도구 모음 표시</string>
@@ -279,7 +280,6 @@ Context | Request Context    [1]</string>
     <string name="download_failed">다운로드 실패</string>
     <string name="deck_download_progress_message">다운로드하는 동안 다른 앱을 이용하실 수 있습니다.</string>
     <string name="check_network">네트워크 연결 상태를 확인해 주세요.</string>
-    <string name="search_using_deck_name">사용 중인 카드 덱 이름 찾기</string>
     <string name="external_storage_unavailable">다운로드가 중단되었습니다. 외부 저장 공간을 사용할 수 없습니다.</string>
     <string name="home" maxLength="28">홈</string>
     <!-- Study Screen actions
@@ -311,7 +311,6 @@ Context | Request Context    [1]</string>
     <string name="intro_sync_from_ankiweb">AnkiWeb과 동기화</string>
     <!-- IntentHandler -->
     <string name="app_not_initialized_new">AnkiDroid가 초기화되지 않았습니다. AnkiDroid를 열어 다시 시도해 주세요.</string>
-    <string name="already_logged_in">이미 로그인되어 있습니다</string>
     <!-- Deck Creation -->
     <string name="deck_created">생성된 덱</string>
     <string name="deck_renamed">이름이 변경된 덱</string>

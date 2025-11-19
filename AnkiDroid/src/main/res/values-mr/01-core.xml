@@ -56,7 +56,7 @@
     <!-- Entries of the Support ankidroid menu. -->
     <string name="send_feedback" comment="Menu entry in the \'Help&gt;Support ankidroid\' menu, that opens the web page explaining how to send feedback.">अभिप्राय पाठवा</string>
     <!-- Study Options-->
-    <string name="studyoptions_start" comment="Title of the Reviewer activity. Also the button to open it.">अभ्यास शुरू करा</string>
+    <string name="studyoptions_start" comment="Title of the Reviewer activity. Also the button to open it.">अभ्यास सुरू करा</string>
     <!-- DeckPicker.kt -->
     <string name="expand" comment="In the deck picker: accessibility label of the buttons that display the subdecks of a deck.">विस्तृत करा</string>
     <string name="collapse" comment="In the deck picker: accessibility label of the buttons that hide the subdecks of a deck.">कोसळणे</string>
@@ -73,8 +73,8 @@
         <item quantity="other">%1$d तास %2$d बाकी</item>
     </plurals>
     <plurals name="reviewer_window_title_days_new" comment="Header of the reviewer, telling the users how many minutes remains before they have seen all cards. The second parameter is the number of hours.">
-        <item quantity="one">%1$d day %2$dh left</item>
-        <item quantity="other">%1$d days %2$dh left</item>
+        <item quantity="one">%1$d दिवस %2$d तास बाकी</item>
+        <item quantity="other">%1$d दिवस %2$d तास बाकी</item>
     </plurals>
     <string name="type_answer_hint" comment="In the reviewer. When the user use note type with hint. It\'s the default content of the text field in which the user is invited to type their answer. It disappears as soon as the user start to type.">उत्तर टाइप करा</string>
     <string name="show_answer" maxLength="41" comment="When displaying the question side of a card. This is the label of a button that display the answer side.">उत्तर दाखवा</string>
@@ -131,7 +131,6 @@
     <string name="empty_filtered_deck">फिल्टर केलेले डेक रिक्त करत आहे&#8230;</string>
     <string name="search_deck" comment="Deck search for selecting it">डेक शोध</string>
     <string name="empty_deck">हा डेक रिक्त आहे</string>
-    <string name="search_for_download_deck" comment="Deck search value for downloading deck" maxLength="28">डेक शोध</string>
     <string name="invalid_deck_name">अवैध डेक नाव</string>
     <string name="studyoptions_congrats_finished">Congratulations! You have finished for today.</string>
     <string name="studyoptions_congrats_next_due_in" comment="The param will be replaced with \'The next card will be ready in X time\'">डेक आतासाठी पूर्ण झाले आहे! %s</string>
@@ -170,6 +169,7 @@
     <string name="card_template_browser_appearance_title">ब्राउझर देखावा</string>
     <!-- card Info -->
     <string name="card_info_title" maxLength="28">कार्ड माहिती</string>
+    <string name="previous_card_info_title" maxLength="28">Previous card info</string>
     <!-- Permissions -->
     <string name="read_write_permission_label">AnkiDroid डेटाबेस वाचा आणि लिहा</string>
     <string name="read_write_permission_description">विद्यमान नोट्स, कार्डे, नोट्स प्रकार आणि डेकमध्ये प्रवेश करा तसेच नवीन तयार करा</string>
