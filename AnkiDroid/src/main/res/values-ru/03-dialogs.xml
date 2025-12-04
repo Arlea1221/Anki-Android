@@ -256,7 +256,7 @@
     <string name="set_due_date_range_end" comment="\'Set Due Date\' may change the due date of a card to a random number of days in the future. This labels the \'maximum\' value of this range (inclusive)">До</string>
     <!-- Instant Note Editor -->
     <string name="cloze_note_required">Нужен тип записи с пропусками</string>
-    <string name="cloze_not_found_message">Записей с пропусками не найдено, откройте редактор записей или попробуйте снова после добавления карточки с пропусками.</string>
+    <string name="cloze_not_found_message">Нет типа записей для тестов с пропусками. Откройте редактор записей или попробуйте снова после того, как добавите нужный тип записей.</string>
     <string name="open">Открыть</string>
     <string name="change_cloze_number">Количество пропусков</string>
     <string name="cloze_number">Количество пропусков:</string>
@@ -271,4 +271,16 @@
     <string name="tts_error_dialog_reason_text">TTS движок <b>%1$s</b> не поддерживает язык: <b>%2$s</b></string>
     <string name="tts_error_dialog_change_button_text">Изменить движок</string>
     <string name="tts_error_dialog_supported_voices_button_text">Настройки голоса</string>
+    <string-array name="import_cache_error_resolutions">
+        <item>@string/import_error_resolution_try_again</item>
+        <item>@string/import_error_resolution_free_up_space</item>
+        <item>@string/import_error_resolution_check_internet</item>
+        <item>@string/import_error_resolution_copy_to_device</item>
+        <item>@string/import_error_resolution_select_file</item>
+    </string-array>
+    <string name="import_error_resolution_try_again">Re-import the file</string>
+    <string name="import_error_resolution_free_up_space">Ensure there is sufficient free space on your device</string>
+    <string name="import_error_resolution_check_internet">Ensure you are connected to the internet</string>
+    <string name="import_error_resolution_copy_to_device">Copy the file to your device and try again with the local file</string>
+    <string name="import_error_resolution_select_file">Open the file using your device’s file browser app</string>
 </resources>
