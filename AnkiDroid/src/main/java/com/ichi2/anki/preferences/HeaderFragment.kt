@@ -130,6 +130,12 @@ class HeaderFragment : SettingsFragment() {
                         .addBreadcrumb(R.string.pref_cat_appearance)
                 }
                 index(R.xml.preferences_controls)
+                index(R.xml.preferences_reviewer_controls)
+                    .addBreadcrumb(activity.getString(R.string.pref_cat_controls))
+                    .addBreadcrumb(activity.getString(R.string.pref_controls_reviews_tab))
+                index(R.xml.preferences_previewer_controls)
+                    .addBreadcrumb(activity.getString(R.string.pref_cat_controls))
+                    .addBreadcrumb(activity.getString(R.string.pref_controls_previews_tab))
                 index(R.xml.preferences_accessibility)
                 index(R.xml.preferences_backup_limits)
                 ignorePreference(activity.getString(R.string.pref_backups_help_key))
@@ -195,27 +201,27 @@ class HeaderFragment : SettingsFragment() {
             // Some preferences and categories are only shown conditionally,
             // so they should be searchable based on the same conditions
 
-            /** From [HeaderFragment.onCreatePreferences] */
+            // From [HeaderFragment.onCreatePreferences]
             if (Prefs.isDevOptionsEnabled) {
                 searchConfiguration.index(R.xml.preferences_dev_options)
-                /** From [DevOptionsFragment.initSubscreen] */
+                // From [DevOptionsFragment.initSubscreen]
                 if (BuildConfig.DEBUG) {
                     searchConfiguration.ignorePreference(activity.getString(R.string.dev_options_enabled_by_user_key))
                 }
             }
 
-            /** From [HeaderFragment.onCreatePreferences] */
+            // From [HeaderFragment.onCreatePreferences]
             if (!AdaptionUtil.isXiaomiRestrictedLearningDevice) {
                 searchConfiguration.index(R.xml.preferences_advanced)
             }
 
-            /** From [NotificationsSettingsFragment.initSubscreen] */
+            // From [NotificationsSettingsFragment.initSubscreen]
             if (AdaptionUtil.isXiaomiRestrictedLearningDevice) {
                 searchConfiguration.ignorePreference(activity.getString(R.string.pref_notifications_vibrate_key))
                 searchConfiguration.ignorePreference(activity.getString(R.string.pref_notifications_blink_key))
             }
 
-            /** From [AdvancedSettingsFragment.removeUnnecessaryAdvancedPrefs] */
+            // From [AdvancedSettingsFragment.removeUnnecessaryAdvancedPrefs]
             if (!CompatHelper.hasScrollKeys()) {
                 searchConfiguration.ignorePreference(activity.getString(R.string.double_scrolling_gap_key))
             }

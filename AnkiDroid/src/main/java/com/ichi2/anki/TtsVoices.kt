@@ -22,12 +22,10 @@
 
 package com.ichi2.anki
 
-import android.icu.util.ULocale
 import android.speech.tts.TextToSpeech
 import android.speech.tts.Voice
-import androidx.annotation.CheckResult
-import com.ichi2.anki.AndroidTtsVoice.Companion.normalize
-import com.ichi2.anki.common.utils.android.isRobolectric
+import com.ichi2.anki.i18n.normalize
+import com.ichi2.anki.i18n.toAnkiTwoLetterCode
 import com.ichi2.anki.libanki.TemplateManager
 import com.ichi2.anki.libanki.TtsVoice
 import kotlinx.coroutines.Dispatchers
@@ -175,7 +173,7 @@ object TtsVoices {
             // TODO: Handle multiple engines
             val ttsEngine = tts.defaultEngine
             availableVoices = tts.voices.map { it.toTtsVoice(ttsEngine) }.toSet()
-            availableLocaleData = tts.availableLanguages.map { normalize(it) }
+            availableLocaleData = tts.availableLanguages.map { it.normalize() }
         } catch (_: Exception) {
             availableVoices = emptySet()
             availableLocaleData = emptyList()
@@ -261,7 +259,7 @@ fun Voice.toTtsVoice(engine: String) = AndroidTtsVoice(this, engine)
 class AndroidTtsVoice(
     val voice: Voice,
     val engine: String,
-) : TtsVoice(name = "$engine-${voice.name}", lang = toAnkiTwoLetterCode(voice.locale)) {
+) : TtsVoice(name = "$engine-${voice.name}", lang = voice.locale.toAnkiTwoLetterCode()) {
     override fun unavailable(): Boolean = voice.features.contains(TextToSpeech.Engine.KEY_FEATURE_NOT_INSTALLED)
 
     /**
@@ -272,78 +270,8 @@ class AndroidTtsVoice(
         // on Samsung phones, the variant (f001/DEFAULT) looks awful in the UI
         // normalise: "en-GBR" is "English (GBR)". "en-GB" is "English (United Kingdom)"
         // then remove the variant: We want English (United Kingdom), not (United Kingdom,DEFAULT)
-        get() = normalize(voice.locale).let { Locale.forLanguageTag(it.language + '-' + it.country) }
+        get() = voice.locale.normalize().let { Locale.forLanguageTag(it.language + '-' + it.country) }
 
     val isNetworkConnectionRequired
         get() = voice.isNetworkConnectionRequired
-
-    companion object {
-        /**
-         * Returns an Anki-compatible 'two letter' code (ISO-639-1 + ISO 3166-1 [alpha-2 preferred])
-         * ```
-         * Locale("spa", "MEX", "001") => "es_MX"
-         * Locale("ar", "") => "ar"
-         * ```
-         *
-         * This differs from [Locale.toLanguageTag]:
-         * * [Locale.variant][Locale.getVariant] is not output
-         * * A "_" is used instead of a "-" to match Anki Desktop
-         */
-        fun toAnkiTwoLetterCode(locale: Locale): String =
-            normalize(locale).run {
-                return if (country.isBlank()) language else "${language}_$country"
-            }
-
-        // TODO: Move the following functions into a separate object
-        // All are coupled to `twoLetterSystemLocaleMapping`
-
-        /**
-         * Converts a locale to a 'two letter' code (ISO-639-1 + ISO 3166-1 alpha-2)
-         * Locale("spa", "MEX", "001") => Locale("es", "MX", "001")
-         */
-        @CheckResult
-        fun normalize(locale: Locale): Locale {
-            // ULocale isn't currently handled by Robolectric
-            if (isRobolectric) {
-                // normalises to "spa_MEX"
-                val iso3Code = getIso3Code(locale) ?: return locale
-                // convert back from this key to a two-letter mapping
-                return twoLetterSystemLocaleMapping[iso3Code] ?: locale
-            }
-            return try {
-                val uLocale = ULocale(locale.language, locale.country, locale.variant)
-                Locale.forLanguageTag(uLocale.language + '-' + uLocale.country + '-' + uLocale.variant)
-            } catch (e: Exception) {
-                Timber.w(e, "Failed to normalize locale %s", locale)
-                locale
-            }
-        }
-
-        /**
-         * Maps from the ISO 3 code of a locale to the locale in
-         */
-        private val twoLetterSystemLocaleMapping: Map<String, Locale>
-
-        fun getIso3Code(locale: Locale): String? {
-            try {
-                if (locale.country.isBlank()) {
-                    return locale.isO3Language
-                }
-                return "${locale.isO3Language}_${locale.isO3Country}"
-            } catch (e: Exception) {
-                // MissingResourceException can be thrown, in which case return null
-                return null
-            }
-        }
-
-        init {
-            val locales = Locale.getAvailableLocales()
-            val validLocales = mutableMapOf<String, Locale>()
-            for (locale in locales) {
-                val code = getIso3Code(locale) ?: continue
-                validLocales.putIfAbsent(code, locale)
-            }
-            twoLetterSystemLocaleMapping = validLocales
-        }
-    }
 }

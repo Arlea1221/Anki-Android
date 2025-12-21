@@ -16,6 +16,7 @@
 package com.ichi2.anki.ui.windows.reviewer
 
 import android.net.Uri
+import android.view.ViewConfiguration
 import android.webkit.WebView
 import androidx.annotation.VisibleForTesting
 import com.ichi2.anki.cardviewer.Gesture
@@ -38,12 +39,12 @@ class GestureParser(
     private val scope: CoroutineScope,
     private val isDoubleTapEnabled: Boolean,
     private val gestureMode: TapGestureMode = Prefs.tapGestureMode,
-    private val doubleTapTimeout: Long = Prefs.doubleTapInterval.toLong(),
     swipeSensitivity: Float = Prefs.swipeSensitivity,
 ) {
     private val swipeThresholdBase = 100 / swipeSensitivity
     private var lastTapTime = 0L
     private var singleTapJob: Job? = null
+    private val doubleTapTimeout = ViewConfiguration.getDoubleTapTimeout().toLong()
 
     @VisibleForTesting
     fun parseInternal(
@@ -126,7 +127,7 @@ class GestureParser(
      *
      * [GestureData.scrollDirection]: Indicates whether the underlying web content at the gesture's origin
      * is scrollable. This value is determined by the `getScrollDirection`
-     * function in `ankidroid.js` and is used to prevent custom swipe gestures
+     * function in `ankidroid-reviewer.js` and is used to prevent custom swipe gestures
      * from overriding the browser's native scrolling behavior. It can contain:
      * - 'h': The content is horizontally scrollable.
      * - 'v': The content is vertically scrollable.

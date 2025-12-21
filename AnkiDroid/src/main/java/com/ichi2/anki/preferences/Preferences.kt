@@ -1,22 +1,22 @@
-/***************************************************************************************
- * Copyright (c) 2009 Nicolas Raoul <nicolas.raoul@gmail.com>                           *
- * Copyright (c) 2009 Edu Zamora <edu.zasu@gmail.com>                                   *
- * Copyright (c) 2010 Norbert Nagold <norbert.nagold@gmail.com>                         *
- * Copyright (c) 2012 Kostas Spyropoulos <inigo.aldana@gmail.com>                       *
- * Copyright (c) 2015 Timothy Rae <perceptualchaos2@gmail.com>                          *
- *                                                                                      *
- * This program is free software; you can redistribute it and/or modify it under        *
- * the terms of the GNU General Public License as published by the Free Software        *
- * Foundation; either version 3 of the License, or (at your option) any later           *
- * version.                                                                             *
- *                                                                                      *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY      *
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A      *
- * PARTICULAR PURPOSE. See the GNU General Public License for more details.             *
- *                                                                                      *
- * You should have received a copy of the GNU General Public License along with         *
- * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
- ****************************************************************************************/
+/*
+ * Copyright (c) 2009 Nicolas Raoul <nicolas.raoul@gmail.com>
+ * Copyright (c) 2009 Edu Zamora <edu.zasu@gmail.com>
+ * Copyright (c) 2010 Norbert Nagold <norbert.nagold@gmail.com>
+ * Copyright (c) 2012 Kostas Spyropoulos <inigo.aldana@gmail.com>
+ * Copyright (c) 2015 Timothy Rae <perceptualchaos2@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.ichi2.anki.preferences
 
 import android.content.Context
@@ -137,8 +137,11 @@ class PreferencesFragment :
             addToBackStack(fragment.javaClass.name)
         }
 
-        Timber.i("Highlighting key '%s' on %s", result.key, fragment)
-        result.highlight(fragment as PreferenceFragmentCompat)
+        if (fragment is ControlsSettingsFragment) {
+            fragment.highlightPreference(result)
+        } else {
+            result.highlight(fragment as PreferenceFragmentCompat)
+        }
     }
 
     private fun setupBackCallbacks() {
@@ -282,6 +285,8 @@ fun getFragmentFromXmlRes(
         R.xml.preferences_notifications -> NotificationsSettingsFragment()
         R.xml.preferences_appearance -> AppearanceSettingsFragment()
         R.xml.preferences_controls -> ControlsSettingsFragment()
+        R.xml.preferences_reviewer_controls -> ControlsSettingsFragment()
+        R.xml.preferences_previewer_controls -> ControlsSettingsFragment()
         R.xml.preferences_advanced -> AdvancedSettingsFragment()
         R.xml.preferences_accessibility -> AccessibilitySettingsFragment()
         R.xml.preferences_dev_options -> DevOptionsFragment()

@@ -166,7 +166,7 @@
     <string name="import_error_not_apkg_extension">ఫైల్ పేరు “%s”కి .apkg లేదా .colpkg పొడిగింపు లేదు</string>
     <string name="import_error_load_imported_database">Anki డేటాబేస్ (.anki2) భర్తీకి ఇంకా మద్దతు లేదు. దయచేసి భర్తీ సూచనల కోసం మాన్యువల్‌ని చూడండి.</string>
     <string name="import_error_content_provider">The selected file couldn’t be imported automatically by AnkiDroid. Please see the user manual for how to manually import Anki files: \n%s</string>
-    <string name="import_error_copy_to_cache_title">Failed to cache file</string>
+    <string name="import_error_copy_to_cache_title">ఫైల్‌ను కాష్ చేయడంలో విఫలమైంది</string>
     <string name="import_error_copy_to_cache_explanation" comment="The substitution is a list of suggested fixes in bullet point form">This is often caused by a bug in the app you used to select the file. Please try the following fixes:\n\n%s</string>
     <string name="import_interrupted">దిగుమతికి అంతరాయం ఏర్పడింది: AnkiDroid మూసివేయబడింది</string>
     <string name="export_ready_title">ఎగుమతి సిద్ధంగా ఉంది</string>
@@ -376,6 +376,7 @@
     <string name="copy_the_template" comment="Description of the shortcut that copy the template as markdown">టెంప్లేట్‌ను మార్క్‌డౌన్‌గా కాపీ చేయండి</string>
     <string name="edit_browser_appearance" comment="Description of the shortcut that edits the browser appearance of card template">బ్రౌజర్ రూపాన్ని సవరించండి</string>
     <string name="missing_user_action_dialog_message" comment="%s is the user action number">ఈ నోట్‌టైప్‌లో వినియోగదారు చర్య %s సెట్ చేయబడలేదు. దయచేసి దీన్ని కాన్ఫిగర్ చేయండి</string>
+    <string name="feature_not_supported_by_study_screen">This card has features that are not yet supported by the new study screen.</string>
     <string name="directory_inaccessible_info">ఇక్కడ యాక్సెస్‌ని ఎలా పునరుద్ధరించాలనే దాని గురించి మరింత తెలుసుకోండి %s లేదా సేకరణ ఫోల్డర్‌ని నవీకరించడానికి సెట్టింగ్‌లకు వెళ్లండి.</string>
     <!-- Scheduler Upgrade Required Dialog title-->
     <string name="scheduler_upgrade_required_dialog_title" comment="Shown in a dialog when user has imported a collection using a very old version of the Anki spaced repetition scheduler">Scheduler upgrade required</string>

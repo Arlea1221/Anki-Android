@@ -166,7 +166,7 @@
     <string name="import_error_not_apkg_extension">A \"%s\" fájlnévnek nincsen .apkg vagy .colpkg kiterjesztése</string>
     <string name="import_error_load_imported_database">Az Anki Adatbázis (.anki2) csere még nem támogatott. Kérjük olvassa el az útmutatót az instrukciókhoz.</string>
     <string name="import_error_content_provider">A kiválasztott fájl nem importálható automatikusan. Olvasd el a felhasználói kézikönyvet, hogy megtudd, hogyan importálhatsz manuálisan Anki fájlokat:\n%s</string>
-    <string name="import_error_copy_to_cache_title">Failed to cache file</string>
+    <string name="import_error_copy_to_cache_title">Nem sikerült gyorsítótárba helyezni a fájlt</string>
     <string name="import_error_copy_to_cache_explanation" comment="The substitution is a list of suggested fixes in bullet point form">This is often caused by a bug in the app you used to select the file. Please try the following fixes:\n\n%s</string>
     <string name="import_interrupted">Importálás megszakítva</string>
     <string name="export_ready_title">Exportálás kész</string>
@@ -377,6 +377,7 @@
     <string name="copy_the_template" comment="Description of the shortcut that copy the template as markdown">Sablon másolása Markdown formátumban</string>
     <string name="edit_browser_appearance" comment="Description of the shortcut that edits the browser appearance of card template">Edit browser appearance</string>
     <string name="missing_user_action_dialog_message" comment="%s is the user action number">User action %s is not set in this notetype. Please configure it</string>
+    <string name="feature_not_supported_by_study_screen">This card has features that are not yet supported by the new study screen.</string>
     <string name="directory_inaccessible_info">Learn more about how to restore access here %s or go to settings to update collection folder.</string>
     <!-- Scheduler Upgrade Required Dialog title-->
     <string name="scheduler_upgrade_required_dialog_title" comment="Shown in a dialog when user has imported a collection using a very old version of the Anki spaced repetition scheduler">Scheduler upgrade required</string>

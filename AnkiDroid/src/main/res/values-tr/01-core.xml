@@ -169,7 +169,7 @@
     <string name="card_template_browser_appearance_title">Tarayıcı görünümü</string>
     <!-- card Info -->
     <string name="card_info_title" maxLength="28">Kart bilgileri</string>
-    <string name="previous_card_info_title" maxLength="28">Previous card info</string>
+    <string name="previous_card_info_title" maxLength="28">Önceki kart bilgisi</string>
     <!-- Permissions -->
     <string name="read_write_permission_label">AnkiDroid veritabanına okut ve yaz</string>
     <string name="read_write_permission_description">varolan notlara, kartlara, not türlerine ve destelere erişmek, ve yenilerini oluşturmak</string>
@@ -212,4 +212,6 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">Hesabı sil</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">Anında kart</string>
+    <!-- Multiple profile -->
+    <string name="add_profile">Add profile</string>
 </resources>

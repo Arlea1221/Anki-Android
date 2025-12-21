@@ -94,7 +94,7 @@
     <string name="undo" maxLength="28" comment="When tapping on this text, the last action is undone.">Vrátit zpět</string>
     <string name="redo" maxLength="28" comment="Menu entry that allows to redo action that was just undone.">Znovu</string>
     <!-- flashcard_portrait.xml -->
-    <string name="undo_action_whiteboard_last_stroke" comment="One of the display patterns of \'Undo\' item on the action menu in the Study Screen. It is shown as the title of the item when the whiteboard (handwriting) feature is enabled and visible and has any strokes (handwritten lines)" maxLength="28">Zrušit čáru</string>
+    <string name="undo_action_whiteboard_last_stroke" comment="One of the display patterns of \'Undo\' item on the action menu in the Study Screen. It is shown as the title of the item when the whiteboard (handwriting) feature is enabled and visible and has any strokes (handwritten lines)" maxLength="28">Vrátit zpět tah</string>
     <string name="move_all_to_deck">Přesunout vše do balíčku</string>
     <string name="unbury" maxLength="28">Zrušit přeskočení</string>
     <string name="rename_deck" maxLength="28">Přejmenovat balíček</string>
@@ -222,4 +222,6 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">Odebrat účet</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">Okamžitá karta</string>
+    <!-- Multiple profile -->
+    <string name="add_profile">Přidat profil</string>
 </resources>

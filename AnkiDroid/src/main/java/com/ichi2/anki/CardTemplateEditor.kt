@@ -1,20 +1,19 @@
-/***************************************************************************************
- *                                                                                      *
- * Copyright (c) 2014 Timothy Rae <perceptualchaos2@gmail.com>                          *
- * Copyright (c) 2018 Mike Hardy <mike@mikehardy.net>                                   *
- *                                                                                      *
- * This program is free software; you can redistribute it and/or modify it under        *
- * the terms of the GNU General Public License as published by the Free Software        *
- * Foundation; either version 3 of the License, or (at your option) any later           *
- * version.                                                                             *
- *                                                                                      *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY      *
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A      *
- * PARTICULAR PURPOSE. See the GNU General Public License for more details.             *
- *                                                                                      *
- * You should have received a copy of the GNU General Public License along with         *
- * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
- ****************************************************************************************/
+/*
+ * Copyright (c) 2014 Timothy Rae <perceptualchaos2@gmail.com>
+ * Copyright (c) 2018 Mike Hardy <mike@mikehardy.net>
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.ichi2.anki
 
 import android.content.Context
@@ -97,6 +96,7 @@ import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.snackbar.showSnackbar
 import com.ichi2.anki.ui.ResizablePaneManager
 import com.ichi2.anki.utils.ext.dismissAllDialogFragments
+import com.ichi2.anki.utils.ext.doOnTabSelected
 import com.ichi2.anki.utils.ext.showDialogFragment
 import com.ichi2.anki.utils.postDelayed
 import com.ichi2.compat.CompatHelper.Companion.getSerializableCompat
@@ -169,19 +169,6 @@ open class CardTemplateEditor :
     /**
      * Triggered when a card template ('Card 1') is selected in the top tab view
      */
-    private val onCardTemplateSelectedListener: TabLayout.OnTabSelectedListener =
-        object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                Timber.i("selected card index: %s", tab.position)
-                loadTemplatePreviewerFragmentIfFragmented()
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab) {
-            }
-        }
 
     // ----------------------------------------------------------------------------
     // Listeners
@@ -242,7 +229,10 @@ open class CardTemplateEditor :
         loadTemplatePreviewerFragmentIfFragmented()
         onBackPressedDispatcher.addCallback(this, displayDiscardChangesCallback)
 
-        topBinding.slidingTabs.addOnTabSelectedListener(onCardTemplateSelectedListener)
+        topBinding.slidingTabs.doOnTabSelected { tab ->
+            Timber.i("selected card index: %s", tab.position)
+            loadTemplatePreviewerFragmentIfFragmented()
+        }
     }
 
     /**
@@ -691,7 +681,7 @@ open class CardTemplateEditor :
                 insets
             }
 
-            /**
+            /*
              * We focus on the editText to indicate it's editable, but we don't automatically
              * show the keyboard. This is intentional - the keyboard should only appear
              * when the user taps on the edit field, not every time the fragment loads.
@@ -707,7 +697,7 @@ open class CardTemplateEditor :
             setupMenu()
         }
 
-        /**
+        /*
          * Custom ActionMode.Callback implementation for adding new field action
          * button in the text selection menu.
          */
@@ -930,6 +920,7 @@ open class CardTemplateEditor :
             confirmAddCards(templateEditor.tempNoteType!!.notetype, numAffectedCards)
         }
 
+        @NeedsTest("Ensure save button is enabled in case of exception")
         fun saveNoteType(): Boolean {
             if (noteTypeHasChanged()) {
                 val confirmButton = templateEditor.findViewById<View>(R.id.action_confirm)
@@ -941,10 +932,20 @@ open class CardTemplateEditor :
                     confirmButton.isEnabled = false
                 }
                 launchCatchingTask(resources.getString(R.string.card_template_editor_save_error)) {
-                    requireActivity().withProgress(resources.getString(R.string.saving_model)) {
-                        templateEditor.tempNoteType!!.saveToDatabase()
+                    try {
+                        requireActivity().withProgress(resources.getString(R.string.saving_model)) {
+                            templateEditor.tempNoteType!!.saveToDatabase()
+                        }
+                        onModelSaved()
+                    } catch (e: Exception) {
+                        Timber.e(e, "CardTemplateEditor:: saveNoteType() failed")
+
+                        confirmButton?.post {
+                            confirmButton.isEnabled = true
+                        }
+
+                        throw e
                     }
-                    onModelSaved()
                 }
             } else {
                 Timber.d("CardTemplateEditor:: note type has not changed, exiting")

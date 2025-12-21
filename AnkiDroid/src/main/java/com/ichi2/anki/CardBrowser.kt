@@ -1,20 +1,20 @@
-/****************************************************************************************
- * Copyright (c) 2010 Norbert Nagold <norbert.nagold@gmail.com>                         *
- * Copyright (c) 2012 Kostas Spyropoulos <inigo.aldana@gmail.com>                       *
- * Copyright (c) 2014 Timothy Rae <perceptualchaos2@gmail.com>                          *
- *                                                                                      *
- * This program is free software; you can redistribute it and/or modify it under        *
- * the terms of the GNU General Public License as published by the Free Software        *
- * Foundation; either version 3 of the License, or (at your option) any later           *
- * version.                                                                             *
- *                                                                                      *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY      *
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A      *
- * PARTICULAR PURPOSE. See the GNU General Public License for more details.             *
- *                                                                                      *
- * You should have received a copy of the GNU General Public License along with         *
- * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
- ****************************************************************************************/
+/*
+ * Copyright (c) 2010 Norbert Nagold <norbert.nagold@gmail.com>
+ * Copyright (c) 2012 Kostas Spyropoulos <inigo.aldana@gmail.com>
+ * Copyright (c) 2014 Timothy Rae <perceptualchaos2@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.ichi2.anki
 
@@ -122,7 +122,7 @@ open class CardBrowser :
      */
     @get:VisibleForTesting
     val addNoteLauncher: NoteEditorLauncher
-        get() = createAddNoteLauncher(viewModel, fragmented)
+        get() = createAddNoteLauncher(viewModel)
 
     /**
      * Provides an instance of NoteEditorLauncher for editing a note
@@ -1118,11 +1118,7 @@ open class CardBrowser :
     ): Intent = PreviewerDestination(index, idsFile).toIntent(this)
 
     private fun addNoteFromCardBrowser() {
-        if (fragmented) {
-            loadNoteEditorFragmentIfFragmented()
-        } else {
-            onAddNoteActivityResult.launch(addNoteLauncher.toIntent(this))
-        }
+        onAddNoteActivityResult.launch(addNoteLauncher.toIntent(this))
     }
 
     private val reviewerCardId: CardId
@@ -1361,10 +1357,8 @@ open class CardBrowser :
         fun clearLastDeckId() = SharedPreferencesLastDeckIdRepository.clearLastDeckId()
 
         @VisibleForTesting
-        fun createAddNoteLauncher(
-            viewModel: CardBrowserViewModel,
-            inCardBrowserActivity: Boolean = false,
-        ): NoteEditorLauncher = NoteEditorLauncher.AddNoteFromCardBrowser(viewModel, inCardBrowserActivity)
+        fun createAddNoteLauncher(viewModel: CardBrowserViewModel): NoteEditorLauncher =
+            NoteEditorLauncher.AddNoteFromCardBrowser(viewModel)
     }
 }
 

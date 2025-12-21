@@ -65,8 +65,10 @@ import com.ichi2.anki.utils.CollectionPreferences
 import com.ichi2.anki.utils.Destination
 import com.ichi2.anki.utils.ext.answerCard
 import com.ichi2.anki.utils.ext.cardStatsNoCardClean
+import com.ichi2.anki.utils.ext.currentCardStudy
 import com.ichi2.anki.utils.ext.flag
 import com.ichi2.anki.utils.ext.getLongOrNull
+import com.ichi2.anki.utils.ext.previousCardStudy
 import com.ichi2.anki.utils.ext.setUserFlagForCards
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Deferred
@@ -91,6 +93,7 @@ class ReviewerViewModel(
             queueState.await()?.topCard
                 ?: Card(anki.cards.Card.getDefaultInstance())
         }
+    private val repository = StudyScreenRepository()
     val finishResultFlow = MutableSharedFlow<Int>()
     val isMarkedFlow = MutableStateFlow(false)
     val flagFlow = MutableStateFlow(Flag.NONE)
@@ -106,22 +109,22 @@ class ReviewerViewModel(
     val destinationFlow = MutableSharedFlow<Destination>()
     val editNoteTagsFlow = MutableSharedFlow<NoteId>()
     val setDueDateFlow = MutableSharedFlow<CardId>()
-    val answerTimerStatusFlow = MutableStateFlow<AnswerTimerStatus?>(null)
     val answerFeedbackFlow = MutableSharedFlow<Rating>()
     val voiceRecorderEnabledFlow = MutableStateFlow(false)
-    val whiteboardEnabledFlow = MutableStateFlow(false)
+    val whiteboardEnabledFlow = MutableStateFlow(repository.isWhiteboardEnabled)
     val replayVoiceFlow = MutableSharedFlow<Unit>()
     val timeBoxReachedFlow = MutableSharedFlow<Collection.TimeboxReached>()
     val pageUpFlow = MutableSharedFlow<Unit>()
     val pageDownFlow = MutableSharedFlow<Unit>()
     val statesMutationEvalFlow = MutableSharedFlow<String>()
 
-    override val server: AnkiServer = AnkiServer(this, StudyScreenRepository.getServerPort()).also { it.start() }
+    override val server: AnkiServer = AnkiServer(this, repository.getServerPort()).also { it.start() }
     private val stateMutationKey = TimeManager.time.intTimeMS().toString()
     private var typedAnswer = ""
 
     private val autoAdvance = AutoAdvance(this)
     private val isHtmlTypeAnswerEnabled = Prefs.isHtmlTypeAnswerEnabled
+    val answerTimer = AnswerTimer()
 
     /**
      * A flag that determines if the SchedulingStates in CurrentQueueState are
@@ -211,11 +214,11 @@ class ReviewerViewModel(
                 autoAdvance.onShowAnswer()
             } // else wait for onMediaGroupCompleted
 
-            if (answerTimerStatusFlow.value == null) return@launchCatchingIO
+            if (answerTimer.state.value == AnswerTimerState.Hidden) return@launchCatchingIO
             val did = currentCard.await().currentDeckId()
             val stopTimerOnAnswer = withCol { decks.configDictForDeckId(did) }.stopTimerOnAnswer
             if (stopTimerOnAnswer) {
-                answerTimerStatusFlow.emit(AnswerTimerStatus.Stopped)
+                answerTimer.stop()
             }
         }
     }
@@ -264,7 +267,7 @@ class ReviewerViewModel(
 
     private suspend fun emitCardInfoDestination() {
         val cardId = currentCard.await().id
-        val destination = CardInfoDestination(cardId, TR.cardStatsCurrentCard(TR.decksStudy()))
+        val destination = CardInfoDestination(cardId, TR.currentCardStudy())
         Timber.i("Launching 'card info' for card %d", cardId)
         destinationFlow.emit(destination)
     }
@@ -276,7 +279,7 @@ class ReviewerViewModel(
             actionFeedbackFlow.emit(TR.cardStatsNoCardClean())
             return
         }
-        val destination = CardInfoDestination(previousCardId, TR.cardStatsPreviousCard(TR.decksStudy()))
+        val destination = CardInfoDestination(previousCardId, TR.previousCardStudy())
         Timber.i("Launching 'previous card info' for card %d", previousCardId)
         destinationFlow.emit(destination)
     }
@@ -291,7 +294,8 @@ class ReviewerViewModel(
 
     private suspend fun emitBrowseDestination() {
         val deckId = withCol { decks.getCurrentId() }
-        val destination = BrowserDestination(deckId)
+        val cardId = currentCard.await().id
+        val destination = BrowserDestination.ToCard(deckId, cardId)
         Timber.i("Launching 'browse options' for deck %d", deckId)
         destinationFlow.emit(destination)
     }
@@ -620,17 +624,19 @@ class ReviewerViewModel(
 
     private suspend fun setupAnswerTimer(card: Card) {
         val shouldShowTimer = withCol { card.shouldShowTimer(this@withCol) }
-        if (!shouldShowTimer) {
-            answerTimerStatusFlow.emit(null)
-            return
-        }
-        val limitInMillis = withCol { card.timeLimit(this@withCol) }
-        answerTimerStatusFlow.emit(AnswerTimerStatus.Running(limitInMillis))
+        val limitMs = withCol { card.timeLimit(this@withCol) }
+        answerTimer.configureForCard(shouldShowTimer, limitMs)
     }
 
     private suspend fun replayMedia() {
         val side = if (showingAnswer.value) SingleCardSide.BACK else SingleCardSide.FRONT
         cardMediaPlayer.replayAll(side)
+    }
+
+    private fun toggleWhiteboard() {
+        val newValue = !whiteboardEnabledFlow.value
+        whiteboardEnabledFlow.value = newValue
+        repository.isWhiteboardEnabled = newValue
     }
 
     fun executeAction(action: ViewerAction) {
@@ -675,7 +681,7 @@ class ReviewerViewModel(
                 ViewerAction.FLIP_OR_ANSWER_EASE4 -> flipOrAnswer(Rating.EASY)
                 ViewerAction.SHOW_HINT -> eval.emit("ankidroid.showHint()")
                 ViewerAction.SHOW_ALL_HINTS -> eval.emit("ankidroid.showAllHints()")
-                ViewerAction.TOGGLE_WHITEBOARD -> whiteboardEnabledFlow.emit(!whiteboardEnabledFlow.value)
+                ViewerAction.TOGGLE_WHITEBOARD -> toggleWhiteboard()
                 ViewerAction.RECORD_VOICE -> voiceRecorderEnabledFlow.emit(!voiceRecorderEnabledFlow.value)
                 ViewerAction.REPLAY_VOICE -> replayVoiceFlow.emit(Unit)
                 ViewerAction.PAGE_UP -> pageUpFlow.emit(Unit)

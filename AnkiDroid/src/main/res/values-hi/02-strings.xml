@@ -166,7 +166,7 @@
     <string name="import_error_not_apkg_extension">फ़ाइल नाम \"%s\" में .apkg या .colpkg एक्सटेंशन नहीं है</string>
     <string name="import_error_load_imported_database">अन्कि डाटाबेस (.anki2) प्रतिस्थापन अभीतक सहारा नहीं दिया जाता हैं । कृपया पुस्तिका प्रतिस्थापन के शिक्षण के लिये देखिये ।</string>
     <string name="import_error_content_provider">The selected file couldn’t be imported automatically by AnkiDroid. Please see the user manual for how to manually import Anki files: \n%s</string>
-    <string name="import_error_copy_to_cache_title">Failed to cache file</string>
+    <string name="import_error_copy_to_cache_title">फ़ाइल कैश करने में विफल</string>
     <string name="import_error_copy_to_cache_explanation" comment="The substitution is a list of suggested fixes in bullet point form">This is often caused by a bug in the app you used to select the file. Please try the following fixes:\n\n%s</string>
     <string name="import_interrupted">आयात बाधित हुआ</string>
     <string name="export_ready_title">एक्सपोर्ट तैयार  है</string>
@@ -376,6 +376,7 @@
     <string name="copy_the_template" comment="Description of the shortcut that copy the template as markdown">टेम्पलेट को मार्कडाउन के रूप में कॉपी करें</string>
     <string name="edit_browser_appearance" comment="Description of the shortcut that edits the browser appearance of card template">ब्राउज़र स्वरूप संपादित करें</string>
     <string name="missing_user_action_dialog_message" comment="%s is the user action number">इस नोटटाइप में उपयोगकर्ता कार्रवाई %s सेट नहीं है. कृपया इसे कॉन्फ़िगर करें</string>
+    <string name="feature_not_supported_by_study_screen">This card has features that are not yet supported by the new study screen.</string>
     <string name="directory_inaccessible_info">यहां %s तक पहुंच बहाल करने के तरीके के बारे में और जानें या संग्रह फ़ोल्डर को अपडेट करने के लिए सेटिंग्स पर जाएं।</string>
     <!-- Scheduler Upgrade Required Dialog title-->
     <string name="scheduler_upgrade_required_dialog_title" comment="Shown in a dialog when user has imported a collection using a very old version of the Anki spaced repetition scheduler">Scheduler upgrade required</string>

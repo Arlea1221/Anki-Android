@@ -163,8 +163,8 @@
     <string name="import_error_not_apkg_extension">「%s」并不是具有 .apkg 或 .colpkg 扩展名的文件</string>
     <string name="import_error_load_imported_database">尚不支持替换 Anki 数据库（.anki2）。请参阅手册以获取替换说明。</string>
     <string name="import_error_content_provider">所选文件无法由 AnkiDroid 自动导入。请查看用户手册了解如何手动导入 Anki 文件：\n%s</string>
-    <string name="import_error_copy_to_cache_title">Failed to cache file</string>
-    <string name="import_error_copy_to_cache_explanation" comment="The substitution is a list of suggested fixes in bullet point form">This is often caused by a bug in the app you used to select the file. Please try the following fixes:\n\n%s</string>
+    <string name="import_error_copy_to_cache_title">缓存文件失败</string>
+    <string name="import_error_copy_to_cache_explanation" comment="The substitution is a list of suggested fixes in bullet point form">这通常是由您用来选择文件的应用中的错误引起的。请尝试以下修复：\n\n%s</string>
     <string name="import_interrupted">导入中断</string>
     <string name="text_content_import_hint">请输入或粘贴文本内容\n爸爸爱你们哦\n你们要加油哦</string>
     <string name="clipboard_auto_filled">已自动填充剪贴板内容</string>
@@ -373,6 +373,7 @@
     <string name="copy_the_template" comment="Description of the shortcut that copy the template as markdown">将模板复制为Markdown</string>
     <string name="edit_browser_appearance" comment="Description of the shortcut that edits the browser appearance of card template">编辑浏览器外观</string>
     <string name="missing_user_action_dialog_message" comment="%s is the user action number">此笔记类型中未设置用户操作 %s。请配置它</string>
+    <string name="feature_not_supported_by_study_screen">此卡片具有新学习界面尚不支持的功能。</string>
     <string name="directory_inaccessible_info">要了解有关如何恢复访问权限的更多信息，请访问此处 %s，或前往设置更新集合文件夹。</string>
     <!-- Scheduler Upgrade Required Dialog title-->
     <string name="scheduler_upgrade_required_dialog_title" comment="Shown in a dialog when user has imported a collection using a very old version of the Anki spaced repetition scheduler">需要升级调度程序</string>

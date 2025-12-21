@@ -1,18 +1,18 @@
-/****************************************************************************************
- * Copyright (c) 2025 lukstbit <52494258+lukstbit@users.noreply.github.com>             *
- *                                                                                      *
- * This program is free software; you can redistribute it and/or modify it under        *
- * the terms of the GNU General Public License as published by the Free Software        *
- * Foundation; either version 3 of the License, or (at your option) any later           *
- * version.                                                                             *
- *                                                                                      *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY      *
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A      *
- * PARTICULAR PURPOSE. See the GNU General Public License for more details.             *
- *                                                                                      *
- * You should have received a copy of the GNU General Public License along with         *
- * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
- ****************************************************************************************/
+/*
+ * Copyright (c) 2025 lukstbit <52494258+lukstbit@users.noreply.github.com>
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.ichi2.anki.pages
 
@@ -44,7 +44,11 @@ class StatisticsTest : RobolectricTest() {
     @Test
     fun `shows 'Default' deck when collection is empty`() =
         runTest {
-            ActivityScenario.launch<SingleFragmentActivity>(Statistics.getIntent(targetContext))
+            ActivityScenario.launch<SingleFragmentActivity>(
+                StatisticsDestination().toIntent(
+                    targetContext,
+                ),
+            )
             advanceUntilIdle()
             onView(withText("Default")).check(matches(isDisplayed()))
         }
@@ -57,7 +61,11 @@ class StatisticsTest : RobolectricTest() {
             val testDeck1 = addDeck(testDeckName1)
             withCol { decks.select(testDeck1) }
             addDeck(testDeckName2)
-            ActivityScenario.launch<SingleFragmentActivity>(Statistics.getIntent(targetContext))
+            ActivityScenario.launch<SingleFragmentActivity>(
+                StatisticsDestination().toIntent(
+                    targetContext,
+                ),
+            )
             advanceUntilIdle()
             onView(withId(R.id.deck_name)).check(matches(withText(testDeckName1)))
             onView(withId(R.id.deck_name)).perform(click())
@@ -75,7 +83,7 @@ class StatisticsTest : RobolectricTest() {
             // and filtered decks
             mockkStatic("com.ichi2.anki.DeckSpinnerSelectionKt")
             ActivityScenario
-                .launch<SingleFragmentActivity>(Statistics.getIntent(targetContext))
+                .launch<SingleFragmentActivity>(StatisticsDestination().toIntent(targetContext))
                 .onActivity { activity ->
                     val statisticsFragment =
                         activity.supportFragmentManager.findFragmentById(R.id.fragment_container)

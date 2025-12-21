@@ -27,6 +27,7 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
@@ -78,6 +79,7 @@ import com.ichi2.anki.settings.enums.ToolbarPosition
 import com.ichi2.anki.snackbar.BaseSnackbarBuilderProvider
 import com.ichi2.anki.snackbar.SnackbarBuilder
 import com.ichi2.anki.snackbar.showSnackbar
+import com.ichi2.anki.ui.windows.reviewer.audiorecord.CheckPronunciationFragment
 import com.ichi2.anki.ui.windows.reviewer.whiteboard.WhiteboardFragment
 import com.ichi2.anki.utils.CollectionPreferences
 import com.ichi2.anki.utils.ext.collectIn
@@ -85,7 +87,6 @@ import com.ichi2.anki.utils.ext.collectLatestIn
 import com.ichi2.anki.utils.ext.sharedPrefs
 import com.ichi2.anki.utils.ext.showDialogFragment
 import com.ichi2.anki.utils.ext.window
-import com.ichi2.anki.utils.isWindowCompact
 import com.ichi2.anki.workarounds.SafeWebViewLayout
 import com.ichi2.themes.Themes
 import com.ichi2.utils.dp
@@ -116,6 +117,7 @@ class ReviewerFragment :
     private lateinit var bindingMap: BindingMap<ReviewerBinding, ViewerAction>
     private var shakeDetector: ShakeDetector? = null
     private val sensorManager get() = ContextCompat.getSystemService(requireContext(), SensorManager::class.java)
+    private val isBigScreen: Boolean get() = binding.complementsLayout != null
     private var webviewHasFocus = false
 
     override val baseSnackbarBuilder: SnackbarBuilder = {
@@ -123,7 +125,7 @@ class ReviewerFragment :
             when {
                 binding.typeAnswerContainer.isVisible -> binding.typeAnswerContainer
                 binding.answerArea.isVisible -> binding.answerArea
-                (Prefs.toolbarPosition == ToolbarPosition.BOTTOM || !resources.isWindowCompact()) ->
+                (Prefs.toolbarPosition == ToolbarPosition.BOTTOM || isBigScreen) ->
                     binding.toolsLayout
 
                 else -> null
@@ -135,7 +137,7 @@ class ReviewerFragment :
     override fun onLoadInitialHtml(): String =
         stdHtml(
             context = requireContext(),
-            extraJsAssets = listOf("scripts/ankidroid.js"),
+            extraJsAssets = listOf("scripts/ankidroid-reviewer.js"),
             nightMode = Themes.currentTheme.isNightMode,
         )
 
@@ -210,22 +212,23 @@ class ReviewerFragment :
 
         if (Prefs.showAnswerFeedback) {
             viewModel.answerFeedbackFlow.collectIn(lifecycleScope) { ease ->
-                if (ease == Rating.AGAIN) {
-                    binding.wrongAnswerFeedback.toggle()
-                    return@collectIn
-                }
                 val drawableId =
                     when (ease) {
+                        Rating.AGAIN -> R.drawable.ic_ease_again
                         Rating.HARD -> R.drawable.ic_ease_hard
                         Rating.GOOD -> R.drawable.ic_ease_good
                         Rating.EASY -> R.drawable.ic_ease_easy
-                        Rating.AGAIN, Rating.UNRECOGNIZED -> throw IllegalArgumentException("Invalid rating")
+                        Rating.UNRECOGNIZED -> throw IllegalArgumentException("Invalid rating")
                     }
-                binding.correctAnswerFeedback.apply {
+                binding.answerFeedback.apply {
                     setImageResource(drawableId)
                     toggle()
                 }
             }
+        }
+
+        if (Prefs.keepScreenOn) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
     }
 
@@ -309,7 +312,7 @@ class ReviewerFragment :
         if (stripHtml(typeAnswer.expectedAnswer).matches(Regex("^-?\\d+([.,]\\d*)?$"))) {
             InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED
         } else {
-            InputType.TYPE_CLASS_TEXT
+            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
         }
 
     private fun resetZoom() {
@@ -450,7 +453,7 @@ class ReviewerFragment :
         }
 
         val minTopPadding =
-            if (Prefs.frameStyle == FrameStyle.CARD && (!resources.isWindowCompact() || Prefs.toolbarPosition != ToolbarPosition.TOP)) {
+            if (Prefs.frameStyle == FrameStyle.CARD && (isBigScreen || Prefs.toolbarPosition != ToolbarPosition.TOP)) {
                 8F.dp.toPx(requireContext())
             } else {
                 0
@@ -478,7 +481,7 @@ class ReviewerFragment :
     }
 
     private fun setupToolbarPosition() {
-        if (!resources.isWindowCompact()) return
+        if (isBigScreen) return
         when (Prefs.toolbarPosition) {
             ToolbarPosition.TOP -> return
             ToolbarPosition.NONE -> binding.toolsLayout.isVisible = false
@@ -516,7 +519,7 @@ class ReviewerFragment :
     private fun setupToolbarOnBigWindows() {
         val hideAnswerButtons = !Prefs.showAnswerButtons
         // In big screens, let the menu expand if there are no answer buttons
-        if (hideAnswerButtons && !resources.isWindowCompact()) {
+        if (hideAnswerButtons && isBigScreen) {
             with(ConstraintSet()) {
                 clone(binding.toolsLayout)
                 clear(R.id.reviewer_menu_view, ConstraintSet.START)
@@ -528,36 +531,24 @@ class ReviewerFragment :
                 )
                 applyTo(binding.toolsLayout)
             }
-            // applying a ConstraintSet resets the visibility of counts_flow,
-            // which includes the timer, so set again its visibility.
-            binding.timer.isVisible = viewModel.answerTimerStatusFlow.value != null
             return
         }
     }
 
     private fun setupAnswerTimer() {
-        val timer = binding.timer
-        timer.isVisible = viewModel.answerTimerStatusFlow.value != null // necessary to handle configuration changes
-        viewModel.answerTimerStatusFlow.collectIn(lifecycleScope) { status ->
-            when (status) {
-                is AnswerTimerStatus.Running -> {
-                    timer.isVisible = true
-                    timer.limitInMs = status.limitInMs
-                    timer.restart()
-                }
-                AnswerTimerStatus.Stopped -> {
-                    timer.isVisible = true
-                    timer.stop()
-                }
-                null -> {
-                    timer.isVisible = false
-                }
-            }
+        lifecycle.addObserver(viewModel.answerTimer)
+        viewModel.answerTimer.state.collectIn(lifecycleScope) { state ->
+            binding.timer.setup(state)
         }
     }
 
     private fun setupCheckPronunciation() {
         viewModel.voiceRecorderEnabledFlow.flowWithLifecycle(lifecycle).collectIn(lifecycleScope) { isEnabled ->
+            if (isEnabled && binding.checkPronunciationContainer.getFragment<CheckPronunciationFragment?>() == null) {
+                childFragmentManager.commit {
+                    add(binding.checkPronunciationContainer.id, CheckPronunciationFragment())
+                }
+            }
             binding.checkPronunciationContainer.isVisible = isEnabled
         }
     }
@@ -635,7 +626,7 @@ class ReviewerFragment :
             webViewLayout.pageDown()
         }
 
-        val repository = StudyScreenRepository(sharedPrefs())
+        val repository = StudyScreenRepository()
 
         viewModel.isMarkedFlow
             .flowWithLifecycle(lifecycle)
@@ -681,6 +672,7 @@ class ReviewerFragment :
                 isDoubleTapEnabled = bindingMap.isBound(Gesture.DOUBLE_TAP),
             )
         }
+        private var hasShownUnsupportedFeatureWarning = false
 
         init {
             webViewLayout.setOnScrollChangeListener { _, _, _, _, _ ->
@@ -713,6 +705,15 @@ class ReviewerFragment :
                         "focusin" -> webviewHasFocus = true
                         "focusout" -> webviewHasFocus = false
                         "show-answer" -> viewModel.onShowAnswer()
+                    }
+                    true
+                }
+                "signal" -> {
+                    if (hasShownUnsupportedFeatureWarning) return true
+                    hasShownUnsupportedFeatureWarning = true
+                    AlertDialog.Builder(requireContext()).show {
+                        setMessage(R.string.feature_not_supported_by_study_screen)
+                        setPositiveButton(R.string.dialog_ok) { _, _ -> }
                     }
                     true
                 }

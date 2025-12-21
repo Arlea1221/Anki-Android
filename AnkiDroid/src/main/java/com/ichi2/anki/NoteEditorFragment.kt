@@ -1,20 +1,19 @@
-/***************************************************************************************
- *                                                                                      *
- * Copyright (c) 2012 Norbert Nagold <norbert.nagold@gmail.com>                         *
- * Copyright (c) 2014 Timothy Rae <perceptualchaos2@gmail.com>                          *
- *                                                                                      *
- * This program is free software; you can redistribute it and/or modify it under        *
- * the terms of the GNU General Public License as published by the Free Software        *
- * Foundation; either version 3 of the License, or (at your option) any later           *
- * version.                                                                             *
- *                                                                                      *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY      *
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A      *
- * PARTICULAR PURPOSE. See the GNU General Public License for more details.             *
- *                                                                                      *
- * You should have received a copy of the GNU General Public License along with         *
- * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
- ****************************************************************************************/
+/*
+ * Copyright (c) 2012 Norbert Nagold <norbert.nagold@gmail.com>
+ * Copyright (c) 2014 Timothy Rae <perceptualchaos2@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.ichi2.anki
 
@@ -92,6 +91,7 @@ import com.ichi2.anki.android.input.ShortcutGroupProvider
 import com.ichi2.anki.android.input.shortcut
 import com.ichi2.anki.common.annotations.NeedsTest
 import com.ichi2.anki.common.utils.annotation.KotlinCleanup
+import com.ichi2.anki.common.utils.ext.ifZero
 import com.ichi2.anki.dialogs.ConfirmationDialog
 import com.ichi2.anki.dialogs.DeckSelectionDialog.DeckSelectionListener
 import com.ichi2.anki.dialogs.DiscardChangesDialog
@@ -209,6 +209,7 @@ const val CALLER_KEY = "caller"
  */
 @KotlinCleanup("Go through the class and select elements to fix")
 @KotlinCleanup("see if we can lateinit")
+@NeedsTest("19733")
 class NoteEditorFragment :
     Fragment(R.layout.note_editor_fragment),
     DeckSelectionListener,
@@ -248,7 +249,9 @@ class NoteEditorFragment :
     private var pasteOcclusionImageButton: Button? = null
 
     // non-null after onCollectionLoaded
-    private var editorNote: Note? = null
+    @VisibleForTesting
+    var editorNote: Note? = null
+        private set
 
     private val multimediaViewModel: MultimediaViewModel by activityViewModels()
 
@@ -479,8 +482,9 @@ class NoteEditorFragment :
             }
 
     override val baseSnackbarBuilder: SnackbarBuilder = {
-        if (sharedPrefs().getBoolean(PREF_NOTE_EDITOR_SHOW_TOOLBAR, true)) {
-            anchorView = requireView().findViewById<Toolbar>(R.id.editor_toolbar)
+        val view = this@NoteEditorFragment.view?.findViewById<Toolbar?>(R.id.editor_toolbar)
+        if (view?.isVisible == true) {
+            anchorView = view
         }
     }
 
@@ -818,20 +822,14 @@ class NoteEditorFragment :
 
         deckId = requireArguments().getLong(EXTRA_DID, deckId)
         if (addNote) {
-            // When adding and if we didn't receive a valid deck id or it's the 'Default' deck, look
-            // at what deck is selected and use that(guards against certain scenarios when deleting
-            // a deck and no deck is visually selected in DeckPicker)
-            if (deckId == 0L || deckId == Consts.DEFAULT_DECK_ID) {
-                // check if this is the actual deck selected
-                val currentSelectedDeckId = col.decks.selected()
-                if (currentSelectedDeckId != Consts.DEFAULT_DECK_ID) {
-                    deckId = currentSelectedDeckId
-                }
-            }
-            // Also guard against adding to a filtered deck in which case revert to 'Default'
+            // When adding and if we didn't receive a valid deck id or it's the 'Default' deck,
+            // use the recommended deck for adding
+            deckId = deckId.ifZero { col.defaultsForAdding().deckId }
+
+            // Also guard against adding to a filtered deck
             val deck = col.decks.getLegacy(deckId)
             if (deck == null || deck.isFiltered) {
-                deckId = Consts.DEFAULT_DECK_ID
+                deckId = col.defaultsForAdding().deckId
             }
         } else {
             // When editing we always have a valid currentEditCard. Check to see if it's from a normal
@@ -917,8 +915,8 @@ class NoteEditorFragment :
             )
         }
 
-        // Don't open keyboard if not adding note or the note type is Image Occlusion
-        if (!addNote || currentNotetypeIsImageOcclusion()) {
+        // don't open keyboard if not adding note
+        if (!addNote) {
             requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         }
 
@@ -1389,9 +1387,16 @@ class NoteEditorFragment :
                     }
                 }
             }
-            closeNoteEditor()
+
+            closeNoteEditorAfterSave()
             return
         }
+    }
+
+    private fun closeNoteEditorAfterSave() {
+        isFieldEdited = false
+        isTagsEdited = false
+        closeNoteEditor()
     }
 
     /**
@@ -1410,8 +1415,9 @@ class NoteEditorFragment :
         }
         // refresh the note object to reflect the database changes
         withCol { editorNote!!.load(this@withCol) }
+
         // close note editor
-        closeNoteEditor()
+        closeNoteEditorAfterSave()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -1452,21 +1458,15 @@ class NoteEditorFragment :
                 }
             }
         }
-        if (currentNotetypeIsImageOcclusion()) {
-            // Showing options related to editing text in fields is not needed
-            // for image occlusion notetypes as there are no fields for inputting
-            // text in the editor screen. (Text is handled by the backend page.)
-            menu.findItem(R.id.action_font_size).isVisible = false
-            menu.findItem(R.id.action_show_toolbar).isVisible = false
-            menu.findItem(R.id.action_scroll_toolbar).isVisible = false
-            menu.findItem(R.id.action_capitalize).isVisible = false
-        } else {
-            menu.findItem(R.id.action_show_toolbar).isChecked =
-                !shouldHideToolbar()
-            menu.findItem(R.id.action_capitalize).isChecked =
-                sharedPrefs().getBoolean(PREF_NOTE_EDITOR_CAPITALIZE, true)
-            menu.findItem(R.id.action_scroll_toolbar).isChecked =
+        menu.findItem(R.id.action_show_toolbar).isChecked =
+            !shouldHideToolbar()
+        menu.findItem(R.id.action_capitalize).isChecked =
+            sharedPrefs().getBoolean(PREF_NOTE_EDITOR_CAPITALIZE, true)
+        menu.findItem(R.id.action_scroll_toolbar).apply {
+            isChecked =
                 sharedPrefs().getBoolean(PREF_NOTE_EDITOR_SCROLL_TOOLBAR, true)
+            isEnabled =
+                !shouldHideToolbar()
         }
     }
 
@@ -1522,6 +1522,9 @@ class NoteEditorFragment :
                     putBoolean(PREF_NOTE_EDITOR_SHOW_TOOLBAR, item.isChecked)
                 }
                 updateToolbar()
+
+                // Update the overflow action menu in order to switch the enable/disable status of the "Scroll toolbar" item on the spot
+                requireActivity().invalidateOptionsMenu()
             }
             R.id.action_capitalize -> {
                 Timber.i("NoteEditor:: Capitalize button pressed. New State: %b", !item.isChecked)
@@ -1808,16 +1811,23 @@ class NoteEditorFragment :
         editNoteTypeMode: Boolean,
     ) {
         val editLines = fieldState.loadFieldEditLines(type)
-        // showing the fields is not needed for image occlusion notetypes as they are handled by the
-        // backend page
-        fieldsLayoutContainer?.isVisible = !currentNotetypeIsImageOcclusion()
         fieldsLayoutContainer!!.removeAllViews()
         customViewIds.clear()
         imageOcclusionButtonsContainer?.isVisible = currentNotetypeIsImageOcclusion()
 
-        // Showing the bottom toolbar (for HTML format) is not needed for image occlusion notetypes
-        // as there are no fields for inputting text.
-        toolbar.isVisible = !currentNotetypeIsImageOcclusion()
+        val indicesToHide = mutableListOf<Int>()
+        if (currentNotetypeIsImageOcclusion()) {
+            val occlusionTag = "0"
+            val imageTag = "1"
+            val fields = currentlySelectedNotetype!!.fields
+            for ((i, field) in fields.withIndex()) {
+                val tag = field.imageOcclusionTag
+                if (tag == occlusionTag || tag == imageTag) {
+                    indicesToHide.add(i)
+                }
+            }
+        }
+
         editFields = LinkedList()
 
         var previous: FieldEditLine? = null
@@ -1905,9 +1915,9 @@ class NoteEditorFragment :
             toggleStickyButton.contentDescription =
                 getString(R.string.note_editor_toggle_sticky, editLineView.name)
 
+            editLineView.isVisible = i !in indicesToHide
             fieldsLayoutContainer!!.addView(editLineView)
         }
-        requireActivity().invalidateOptionsMenu()
     }
 
     private fun getActionModeCallback(
@@ -2423,12 +2433,6 @@ class NoteEditorFragment :
         updateToolbar()
         populateEditFields(changeType, false)
         updateFieldsFromStickyText()
-
-        // When adding a note, ImageOcclusion handles the deck selection
-        // as a user can reach this screen directly from an intent
-        val disableDeckEditing = addNote && currentNotetypeIsImageOcclusion()
-        requireView().findViewById<TextView>(R.id.CardEditorDeckText).isVisible = !disableDeckEditing
-        requireView().findViewById<View>(R.id.note_deck_name).isVisible = !disableDeckEditing
     }
 
     private fun addClozeButton(
@@ -2670,9 +2674,6 @@ class NoteEditorFragment :
                     .trim()
                     .replace(" ", ", "),
             )
-        // showing the tags is not needed for image occlusion notetypes as they are handled by the
-        // backend page
-        tagsButton?.isVisible = !currentNotetypeIsImageOcclusion()
     }
 
     /** Update the list of card templates for current note type  */
@@ -2799,7 +2800,7 @@ class NoteEditorFragment :
 
         // Update deck
         if (!getColUnsafe.config.getBool(ConfigKey.Bool.ADDING_DEFAULTS_TO_CURRENT_DECK)) {
-            deckId = noteType.did
+            deckId = getColUnsafe.defaultsForAdding().deckId
         }
 
         refreshNoteData(FieldChangeType.changeFieldCount(shouldReplaceNewlines()))

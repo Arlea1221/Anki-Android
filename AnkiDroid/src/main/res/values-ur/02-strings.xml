@@ -166,7 +166,7 @@
     <string name="import_error_not_apkg_extension">فائل نام \"%s\" میں .apkg یا .colpkg ایکسٹینشن نہیں ہے۔</string>
     <string name="import_error_load_imported_database">Anki ڈیٹا بیس (.anki2) کی تبدیلی ابھی تک تعاون یافتہ نہیں ہے۔ براہ کرم متبادل ہدایات کے لیے دستی دیکھیں۔</string>
     <string name="import_error_content_provider">The selected file couldn’t be imported automatically by AnkiDroid. Please see the user manual for how to manually import Anki files: \n%s</string>
-    <string name="import_error_copy_to_cache_title">Failed to cache file</string>
+    <string name="import_error_copy_to_cache_title">فائل کو کیش کرنے میں ناکام</string>
     <string name="import_error_copy_to_cache_explanation" comment="The substitution is a list of suggested fixes in bullet point form">This is often caused by a bug in the app you used to select the file. Please try the following fixes:\n\n%s</string>
     <string name="import_interrupted">درآمد میں رکاوٹ: AnkiDroid بند تھا۔</string>
     <string name="export_ready_title">ایکسپورٹ تیار ہے۔</string>
@@ -377,6 +377,7 @@
     <string name="copy_the_template" comment="Description of the shortcut that copy the template as markdown">ٹیمپلیٹ کو بطور مارک ڈاؤن کاپی کریں</string>
     <string name="edit_browser_appearance" comment="Description of the shortcut that edits the browser appearance of card template">براؤزر کی ظاہری شکل میں ترمیم کریں</string>
     <string name="missing_user_action_dialog_message" comment="%s is the user action number">صارف کی کارروائی %s اس نوٹ ٹائپ میں سیٹ نہیں ہے۔ براہ کرم اسے ترتیب دیں</string>
+    <string name="feature_not_supported_by_study_screen">This card has features that are not yet supported by the new study screen.</string>
     <string name="directory_inaccessible_info">یہاں %s تک رسائی کو بحال کرنے کے بارے میں مزید جانیں یا کلیکشن فولڈر کو اپ ڈیٹ کرنے کے لیے سیٹنگز پر جائیں۔</string>
     <!-- Scheduler Upgrade Required Dialog title-->
     <string name="scheduler_upgrade_required_dialog_title" comment="Shown in a dialog when user has imported a collection using a very old version of the Anki spaced repetition scheduler">Scheduler upgrade required</string>

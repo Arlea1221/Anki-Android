@@ -1,18 +1,18 @@
-/****************************************************************************************
- * Copyright (c) 2013 Houssam Salem <houssam.salem.au@gmail.com>                        *
- *                                                                                      *
- * This program is free software; you can redistribute it and/or modify it under        *
- * the terms of the GNU General Public License as published by the Free Software        *
- * Foundation; either version 3 of the License, or (at your option) any later           *
- * version.                                                                             *
- *                                                                                      *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY      *
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A      *
- * PARTICULAR PURPOSE. See the GNU General Public License for more details.             *
- *                                                                                      *
- * You should have received a copy of the GNU General Public License along with         *
- * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
- ****************************************************************************************/
+/*
+ * Copyright (c) 2013 Houssam Salem <houssam.salem.au@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.ichi2.preferences
 
 import android.content.Context
@@ -142,19 +142,13 @@ open class NumberRangePreference :
         editText.filters += LengthFilter(max.toString().length)
     }
 
+    /**
+     * This preference's value. The value is validated and persisted as an Integer.
+     *
+     * @param value to set.
+     */
     var value: Int
-        /**
-         * Get the persisted value held by this preference.
-         *
-         * @return the persisted value.
-         */
         get() = getPersistedInt(min)
-
-        /**
-         * Set this preference's value. The value is validated and persisted as an Integer.
-         *
-         * @param value to set.
-         */
         set(value) {
             val validated = getValidatedRangeFromInt(value)
             text = validated.toString()

@@ -166,8 +166,8 @@
     <string name="import_error_not_apkg_extension">Dosiernomo \"%s\" ne finiĝas per .apkg aŭ .colpkg</string>
     <string name="import_error_load_imported_database">Anstataŭigoj de Anki-datumbazo (.anki2) ankoraŭ ne estas subtenataj. Legu la manlibron por instrukciojn pri anstataŭigo.</string>
     <string name="import_error_content_provider">Ne povas aŭtomate enporti elektitan dosieron al AnkiDroid. Bonvolu legi la manlibron de uzanto por sciiĝi pri kiel permane enporti Anki-dosierojn:\n%s</string>
-    <string name="import_error_copy_to_cache_title">Failed to cache file</string>
-    <string name="import_error_copy_to_cache_explanation" comment="The substitution is a list of suggested fixes in bullet point form">This is often caused by a bug in the app you used to select the file. Please try the following fixes:\n\n%s</string>
+    <string name="import_error_copy_to_cache_title">Malsukcesis kaŝmemori dosieron</string>
+    <string name="import_error_copy_to_cache_explanation" comment="The substitution is a list of suggested fixes in bullet point form">Tio ĉi ofte okazas pro eraro en la aplikaĵo uzita por elekti la dosieron. Provu la jenon por solvi la problemon:\n\n%s</string>
     <string name="import_interrupted">Enportado interrompita</string>
     <string name="export_ready_title">Elporto estas preta</string>
     <string name="export_send_no_handlers">Neniu aplikaĵo por pritrakti apkg. Konservado&#8230;</string>
@@ -308,8 +308,8 @@
     <string name="field_editor_model_not_available">Malsukcesis aliri la kolekton. Reprovu!</string>
     <string name="cd_manage_notetypes_add">Aldoni novan nototipon</string>
     <plurals name="note_types_selected">
-        <item quantity="one">%d note type selected</item>
-        <item quantity="other">%d note types selected</item>
+        <item quantity="one">%d nototipo elektita</item>
+        <item quantity="other">%d nototipoj elektitaj</item>
     </plurals>
     <!-- App Intro -->
     <string name="intro_ankidroid_tagline_one">Lernu malpli</string>
@@ -376,6 +376,7 @@
     <string name="copy_the_template" comment="Description of the shortcut that copy the template as markdown">Kopii ŝablonon kiel Markdown</string>
     <string name="edit_browser_appearance" comment="Description of the shortcut that edits the browser appearance of card template">Redakti aspekton de kart-foliumilo</string>
     <string name="missing_user_action_dialog_message" comment="%s is the user action number">La ago de uzanto “%s” ne estas agordita por tiu ĉi nototipo. Agordu ĝin.</string>
+    <string name="feature_not_supported_by_study_screen">This card has features that are not yet supported by the new study screen.</string>
     <string name="directory_inaccessible_info">Sciiĝu pli pri kiel restarigi aliron ĉe %s aŭ malfermu agordojn kaj ŝanĝu la dosierujon por kolekto.</string>
     <!-- Scheduler Upgrade Required Dialog title-->
     <string name="scheduler_upgrade_required_dialog_title" comment="Shown in a dialog when user has imported a collection using a very old version of the Anki spaced repetition scheduler">Necesas promocii planilon</string>

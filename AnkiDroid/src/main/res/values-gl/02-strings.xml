@@ -166,8 +166,8 @@
     <string name="import_error_not_apkg_extension">O ficheiro \"%s\" non ten extensión .apkg ou .colpkg</string>
     <string name="import_error_load_imported_database">As substitucións da base de datos Anki (.anki2) aínda non son compatíbeis. Consulta o manual para obter instrucións de substitución.</string>
     <string name="import_error_content_provider">O ficheiro seleccionado non se puido importar automaticamente. Consulta o manual do usuario para ver como importar manualmente ficheiros Anki: \n%s</string>
-    <string name="import_error_copy_to_cache_title">Failed to cache file</string>
-    <string name="import_error_copy_to_cache_explanation" comment="The substitution is a list of suggested fixes in bullet point form">This is often caused by a bug in the app you used to select the file. Please try the following fixes:\n\n%s</string>
+    <string name="import_error_copy_to_cache_title">Non se puido gardar o ficheiro na caché</string>
+    <string name="import_error_copy_to_cache_explanation" comment="The substitution is a list of suggested fixes in bullet point form">Isto adoita ocorrer por fallos na aplicación usada para seleccionar o ficheiro. Proba coas seguintes solucións:\n\n%s</string>
     <string name="import_interrupted">Importación interrompida: pechouse AnkiDroid</string>
     <string name="export_ready_title">Listo para exportar</string>
     <string name="export_send_no_handlers">Non hai aplicacións dispoñíbeis para manexar apkg. Gardando&#8230;</string>
@@ -376,6 +376,7 @@
     <string name="copy_the_template" comment="Description of the shortcut that copy the template as markdown">Copiar modelo como markdown</string>
     <string name="edit_browser_appearance" comment="Description of the shortcut that edits the browser appearance of card template">Editar aparencia do explorador</string>
     <string name="missing_user_action_dialog_message" comment="%s is the user action number">A acción de usuario %s non está establecida neste tipo de nota. Configúraa</string>
+    <string name="feature_not_supported_by_study_screen">Esta tarxeta ten características non soportadas pola nova pantalla de estudo.</string>
     <string name="directory_inaccessible_info">Obtén máis información sobre como restaurar o acceso aquí %s ou ve á configuración para actualizar o cartafol da colección.</string>
     <!-- Scheduler Upgrade Required Dialog title-->
     <string name="scheduler_upgrade_required_dialog_title" comment="Shown in a dialog when user has imported a collection using a very old version of the Anki spaced repetition scheduler">Cómpre actualizar o programador</string>

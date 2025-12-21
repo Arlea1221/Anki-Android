@@ -85,7 +85,7 @@ subprojects {
             }
         }
 
-        /**
+        /*
         Related to ExperimentalCoroutinesApi: this opt-in is added to enable usage of experimental
         coroutines API, this targets all project modules with the exception of the "api" module,
         which doesn't use coroutines so the annotation isn't not available. This would normally
@@ -102,6 +102,7 @@ subprojects {
                 )
                 if (project.name != "api") {
                     compilerArgs += "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+                    compilerArgs += "-Xcontext-parameters"
                 }
                 freeCompilerArgs = compilerArgs
             }

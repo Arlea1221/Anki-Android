@@ -11,21 +11,14 @@
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.ichi2.anki.ui.windows.reviewer
+package com.ichi2.anki.common.utils.ext
 
-import kotlin.random.Random
+import android.content.Intent
 
-sealed interface AnswerTimerStatus {
-    data class Running(
-        val limitInMs: Int,
-    ) : AnswerTimerStatus {
-        // allows emitting the same value in MutableStateFlow
-        override fun equals(other: Any?): Boolean = false
-
-        override fun hashCode(): Int = Random.nextInt()
-    }
-
-    data object Stopped : AnswerTimerStatus
+fun Intent.getLongExtra(key: String): Long? {
+    @Suppress("DEPRECATION") // get()
+    val value = extras?.get(key) ?: return null
+    return value as Long
 }

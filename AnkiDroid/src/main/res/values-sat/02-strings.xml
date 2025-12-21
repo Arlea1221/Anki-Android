@@ -166,7 +166,7 @@
     <string name="import_error_not_apkg_extension">ᱨᱮᱫᱧᱩᱛᱩᱢ “%s” ᱴᱷᱮᱱ .apkg or .colpkg extension ᱵᱟᱱᱩᱜᱽᱟ</string>
     <string name="import_error_load_imported_database">Anki Database (.anki2) ᱵᱚᱫᱚᱞ ᱥᱟᱹᱯᱚᱴ ᱵᱟᱹᱱᱩᱜᱼᱟ ᱾ ᱨᱤᱯᱞᱮᱥᱢᱮᱴ ᱞᱟᱹᱜᱤᱫ ᱢᱮᱱᱩᱟᱞ ᱧᱮᱞᱯᱮ</string>
     <string name="import_error_content_provider">ᱵᱟᱪᱷᱟᱣᱟᱠᱟᱱ ᱨᱮᱫ AnkiDroid ᱛᱮ ᱵᱟᱭ ᱞᱟᱫᱮᱜ ᱠᱟᱱᱟ ᱾ ᱫᱚᱭᱟᱠᱟᱛᱮ ᱨᱤᱯᱞᱮᱥᱢᱮᱴ ᱞᱟᱹᱜᱤᱫ ᱢᱮᱱᱩᱟᱞ ᱧᱮᱞᱯᱮ Anki ᱨᱮᱫ: \n%s</string>
-    <string name="import_error_copy_to_cache_title">Failed to cache file</string>
+    <string name="import_error_copy_to_cache_title">ᱯᱷᱤᱞ ᱠᱷᱟᱪ ᱨᱮ ᱵᱟᱭ ᱥᱮᱞᱮᱫ ᱫᱟᱲᱮᱭᱟᱜ ᱠᱟᱱᱟ</string>
     <string name="import_error_copy_to_cache_explanation" comment="The substitution is a list of suggested fixes in bullet point form">This is often caused by a bug in the app you used to select the file. Please try the following fixes:\n\n%s</string>
     <string name="import_interrupted">ᱨᱮᱫ ᱟᱠᱚᱴ ᱮᱱᱟ</string>
     <string name="export_ready_title">ᱮᱠᱥᱯᱳᱨᱴ ᱞᱟᱹᱜᱤᱫ ᱥᱟᱹᱛ</string>
@@ -376,6 +376,7 @@
     <string name="copy_the_template" comment="Description of the shortcut that copy the template as markdown">ᱢᱟᱨᱠᱰᱟᱩᱱ ᱞᱮᱠᱟᱛᱮ ᱠᱳᱯᱤ ᱢᱮᱴᱟᱤᱞ</string>
     <string name="edit_browser_appearance" comment="Description of the shortcut that edits the browser appearance of card template">ᱵᱽᱨᱟᱩᱡᱚᱨ ᱨᱮᱱᱟᱜ ᱧᱮᱞ ᱥᱟᱯᱲᱟᱣ</string>
     <string name="missing_user_action_dialog_message" comment="%s is the user action number">ᱱᱚᱶᱟ ᱱᱳᱴᱤᱯ ᱨᱮ ᱵᱮᱵᱷᱟᱨᱤᱭᱟᱹ ᱠᱟᱹᱢᱤ %s ᱫᱚ ᱵᱟᱝ ᱥᱮᱴᱮᱨ ᱟᱠᱟᱱᱟ. ᱱᱚᱶᱟ ᱞᱤᱱ ᱢᱮ</string>
+    <string name="feature_not_supported_by_study_screen">This card has features that are not yet supported by the new study screen.</string>
     <string name="directory_inaccessible_info">%s ᱨᱮ ᱥᱮᱴᱮᱨᱚᱜ ᱨᱮᱱᱟᱜ ᱵᱟᱹᱲᱛᱤ ᱵᱟᱰᱟᱭ ᱞᱟᱹᱜᱤᱫ ᱥᱮᱴᱮᱨᱚᱜ ᱨᱮ ᱥᱮᱴᱮᱨᱚᱜ ᱢᱮ ᱟᱨ ᱥᱮᱞᱮᱫ ᱯᱟᱹᱴᱷᱩᱣᱟᱹ ᱠᱚᱢᱯᱩᱴᱚᱨ ᱨᱮ ᱵᱚᱫᱚᱞ ᱢᱮ</string>
     <!-- Scheduler Upgrade Required Dialog title-->
     <string name="scheduler_upgrade_required_dialog_title" comment="Shown in a dialog when user has imported a collection using a very old version of the Anki spaced repetition scheduler">Scheduler upgrade required</string>

@@ -1,18 +1,18 @@
-/****************************************************************************************
- * Copyright (c) 2018 Mike Hardy <mike@mikehardy.net>                                   *
- *                                                                                      *
- * This program is free software; you can redistribute it and/or modify it under        *
- * the terms of the GNU General Public License as published by the Free Software        *
- * Foundation; either version 3 of the License, or (at your option) any later           *
- * version.                                                                             *
- *                                                                                      *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY      *
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A      *
- * PARTICULAR PURPOSE. See the GNU General Public License for more details.             *
- *                                                                                      *
- * You should have received a copy of the GNU General Public License along with         *
- * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
- ****************************************************************************************/
+/*
+ * Copyright (c) 2018 Mike Hardy <mike@mikehardy.net>
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.ichi2.utils
 
@@ -32,6 +32,7 @@ import com.ichi2.anki.AnkiDroidApp
 import com.ichi2.anki.CrashReportService
 import com.ichi2.anki.R
 import com.ichi2.anki.common.annotations.NeedsTest
+import com.ichi2.anki.common.time.TimeManager
 import com.ichi2.anki.dialogs.DialogHandler
 import com.ichi2.anki.dialogs.DialogHandlerMessage
 import com.ichi2.anki.dialogs.ImportDialog
@@ -165,7 +166,7 @@ object ImportUtils {
             context: Context,
             uri: Uri,
         ): String? {
-            val filename = ensureValidLength(getFileNameFromContentProvider(context, uri) ?: return null)
+            val filename = validateFileName(getFileNameFromContentProvider(context, uri) ?: return null)
             val tempFile = File(context.cacheDir, filename)
             return when (val result = copyFileToCache(context, uri, tempFile.absolutePath)) {
                 is CacheFileResult.Success -> result.path
@@ -220,7 +221,6 @@ object ImportUtils {
                     }
                 }
             }
-            val tempOutDir: String
             if (isValidTextOrDataFile(context, importPathUri)) {
                 (context as Activity).onSelectedCsvForImport(intent!!)
                 return ImportResult.Success
@@ -236,8 +236,8 @@ object ImportUtils {
             }
 
             // Copy to temporary file
-            filename = ensureValidLength(filename)
-            tempOutDir = Uri.fromFile(File(context.cacheDir, filename)).encodedPath!!
+            filename = validateFileName(filename)
+            val tempOutDir: String = Uri.fromFile(File(context.cacheDir, filename)).encodedPath!!
 
             copyFileToCache(context, importPathUri, tempOutDir).asErrorDetails()?.let { details ->
                 CrashReportService.sendExceptionReport(details.exceptionForReport, "ImportUtils")
@@ -266,7 +266,8 @@ object ImportUtils {
 
         private fun isAnkiDatabase(filename: String?): Boolean = filename != null && hasExtension(filename, "anki2")
 
-        private fun ensureValidLength(fileName: String): String {
+        @NeedsTest("Add test for the fallback, ensure the fallback filename \"file_<timestamp>.<ext>\" is produced when decoding fails")
+        private fun validateFileName(fileName: String): String {
             // #6137 - filenames can be too long when URLEncoded
             return try {
                 val encoded = URLEncoder.encode(fileName, "UTF-8")
@@ -284,7 +285,7 @@ object ImportUtils {
                 }
             } catch (e: Exception) {
                 Timber.w(e, "Failed to shorten file: %s", fileName)
-                fileName
+                "file_${TimeManager.time.intTimeMS()}.${getExtension(fileName)}"
             }
         }
 

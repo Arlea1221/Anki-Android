@@ -16,55 +16,70 @@
 package com.ichi2.anki.ui.windows.reviewer
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.appcompat.widget.AppCompatImageView
+import com.ichi2.anki.R
 import com.ichi2.utils.HandlerUtils
 
-class AnswerFeedbackView
-    @JvmOverloads
-    constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0,
-    ) : AppCompatImageView(context, attrs, defStyleAttr) {
-        /**
-         * Fades in and fades out for a brief amount of time.
-         *
-         * TODO handle "safeDisplay" setting
-         */
-        fun toggle() {
-            val fadeIn = AnimationUtils.loadAnimation(context, android.R.anim.fade_in)
-            val fadeOut = AnimationUtils.loadAnimation(context, android.R.anim.fade_out)
-            fadeIn.duration = 125
-            fadeOut.duration = 175
-            fadeIn.setAnimationListener(
-                object : Animation.AnimationListener {
-                    override fun onAnimationStart(animation: Animation) {
-                        visibility = VISIBLE
-                    }
+class AnswerFeedbackView : AppCompatImageView {
+    constructor(context: Context) : this(context, null)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-                    override fun onAnimationEnd(animation: Animation) {
-                        HandlerUtils.executeFunctionWithDelay(200) {
-                            startAnimation(fadeOut)
-                        }
-                    }
+    private var fadeOutRunnable: Runnable? = null
+    private val handler = Handler(Looper.getMainLooper())
 
-                    override fun onAnimationRepeat(animation: Animation) {}
-                },
-            )
-            fadeOut.setAnimationListener(
-                object : Animation.AnimationListener {
-                    override fun onAnimationStart(animation: Animation) {}
+    /**
+     * Shows the feedback for one second
+     * with a quick fade in, brief hold, then gentle fade out.
+     *
+     * TODO handle "safeDisplay" setting
+     */
+    fun toggle() {
+        clearAnimation()
 
-                    override fun onAnimationEnd(animation: Animation) {
-                        visibility = INVISIBLE
-                    }
-
-                    override fun onAnimationRepeat(animation: Animation) {}
-                },
-            )
-            startAnimation(fadeIn)
+        fadeOutRunnable?.let {
+            handler.removeCallbacks(it)
+            fadeOutRunnable = null
         }
+
+        val fadeIn = AnimationUtils.loadAnimation(context, R.anim.answer_feedback_fade_in)
+        val fadeOut = AnimationUtils.loadAnimation(context, R.anim.answer_feedback_fade_out)
+
+        fadeIn.setAnimationListener(
+            object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) {
+                    visibility = VISIBLE
+                }
+
+                override fun onAnimationEnd(animation: Animation) {
+                    fadeOutRunnable =
+                        Runnable {
+                            startAnimation(fadeOut)
+                        }.also {
+                            handler.postDelayed(it, 600)
+                        }
+                }
+
+                override fun onAnimationRepeat(animation: Animation) {}
+            },
+        )
+        fadeOut.setAnimationListener(
+            object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) {}
+
+                override fun onAnimationEnd(animation: Animation) {
+                    visibility = GONE
+                    fadeOutRunnable = null
+                }
+
+                override fun onAnimationRepeat(animation: Animation) {}
+            },
+        )
+        startAnimation(fadeIn)
     }
+}

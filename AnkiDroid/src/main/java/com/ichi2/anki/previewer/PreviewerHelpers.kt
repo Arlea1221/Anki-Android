@@ -25,8 +25,7 @@ import org.intellij.lang.annotations.Language
 
 /**
  * Not exactly equal to anki's stdHtml. Some differences:
- * * `ankidroid.css` is added
- * * `bridgeCommand()` is ignored
+ * * `ankidroid.css` and `ankidroid-cardviewer.js` are added
  *
  * Aimed to be used only for reviewing/previewing cards
  *
@@ -54,6 +53,7 @@ fun stdHtml(
             "backend/js/mathjax.js",
             "backend/js/vendor/mathjax/tex-chtml-full.js",
             "backend/js/reviewer.js",
+            "scripts/ankidroid-cardviewer.js",
         ) + extraJsAssets
     val jsTxt =
         jsAssets.joinToString("\n") {
@@ -76,16 +76,19 @@ fun stdHtml(
         <body class="${bodyClass()}">
             <div id="qa"></div>
             $jsTxt
-            <script>bridgeCommand = function(){};</script>
         </body>
         </html>
         """.trimIndent()
 }
 
-/** @return body classes used when showing a card */
+/**
+ * "mathjax-rendered" is a legacy class kept only to support old note types.
+ *
+ * @return body classes used when showing a card
+ */
 fun bodyClassForCardOrd(
     cardOrd: Int,
     nightMode: Boolean = Themes.currentTheme.isNightMode,
-): String = "card card${cardOrd + 1} ${bodyClass(nightMode)}"
+): String = "card card${cardOrd + 1} ${bodyClass(nightMode)} mathjax-rendered"
 
 private fun bodyClass(nightMode: Boolean = Themes.currentTheme.isNightMode): String = if (nightMode) "nightMode night_mode" else ""

@@ -1,18 +1,18 @@
-/****************************************************************************************
- * Copyright (c) 2011 Norbert Nagold <norbert.nagold@gmail.com>                         *
- *                                                                                      *
- * This program is free software; you can redistribute it and/or modify it under        *
- * the terms of the GNU General Public License as published by the Free Software        *
- * Foundation; either version 3 of the License, or (at your option) any later           *
- * version.                                                                             *
- *                                                                                      *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY      *
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A      *
- * PARTICULAR PURPOSE. See the GNU General Public License for more details.             *
- *                                                                                      *
- * You should have received a copy of the GNU General Public License along with         *
- * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
- ****************************************************************************************/
+/*
+ * Copyright (c) 2011 Norbert Nagold <norbert.nagold@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.ichi2.anki
 
 import android.annotation.SuppressLint
@@ -26,6 +26,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import com.ichi2.anki.cardviewer.SingleCardSide
 import com.ichi2.anki.common.annotations.NeedsTest
+import com.ichi2.anki.i18n.iso3Code
 import com.ichi2.anki.libanki.Card
 import com.ichi2.anki.libanki.Collection
 import com.ichi2.anki.libanki.DeckId
@@ -121,11 +122,18 @@ object ReadText {
             val localeMappings: List<Pair<String, CharSequence>> =
                 mutableListOf<Pair<String, String>>().apply {
                     add(Pair(NO_TTS, res.getString(R.string.tts_no_tts))) // add option: "no tts"
-                    addAll(
+                    val (validLocales, invalidLocales) =
                         availableLocales()
                             .sortedWith(compareBy { it.displayName })
-                            .map { Pair(it.isO3Language, it.displayName) },
-                    )
+                            .map { Pair(it.iso3Code, it.displayName) }
+                            // iso3Code returns null if invalid
+                            // we could work around this, but ReadText is deprecated
+                            .partition { it.first != null }
+
+                    if (invalidLocales.isNotEmpty()) {
+                        Timber.w("%d invalid languages", invalidLocales.size)
+                    }
+                    addAll(validLocales.map { Pair(it.first!!, it.second) })
                 }
             Timber.i("showing 'select language' dialog")
             dialog
