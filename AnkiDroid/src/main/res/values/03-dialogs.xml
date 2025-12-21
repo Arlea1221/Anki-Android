@@ -208,7 +208,7 @@
     <string name="import_csv">Text file (.txt, .csv)</string>
     <string name="import_text_content">Text Content</string>
     <!-- Deck selection dialog -->
-    <string name="cannot_create_subdeck_for_all_decks">You cannot create a subdeck for all decks</string>
+    
 
     <!-- scoped storage -->
     <string name="backup_your_collection">Backup your collection</string>
