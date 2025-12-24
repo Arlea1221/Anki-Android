@@ -295,28 +295,35 @@ class VoskModelManager(
                 val client = OkHttpClient()
                 val request = Request.Builder().url(info.url).build()
                 val tmp_zip = File(context.cacheDir, "vosk_${info.id}.zip")
-                client.newCall(request).execute().use { resp ->
-                    if (!resp.isSuccessful) error("http ${resp.code}")
-                    val body = resp.body ?: error("empty body")
-                    val total = body.contentLength().takeIf { it > 0 } ?: -1L
-                    body.source().use { source ->
-                        tmp_zip.sink().buffer().use { sink ->
-                            var read: Long
-                            var bytes_copied = 0L
-                            val buffer = Buffer()
-                            while (source.read(buffer, 8_192).also { read = it } != -1L) {
-                                sink.write(buffer, read)
-                                bytes_copied += read
-                                if (total > 0) {
-                                    val pct = ((bytes_copied * 100) / total).toInt()
-                                    progress_map[info.id] = pct
-                                    onProgress(pct)
+                val local_zip = local_zip_file(info)
+                val zip_to_use =
+                    local_zip?.takeIf { it.exists() }?.also {
+                        Timber.i("using local vosk zip for ${info.id}: ${it.absolutePath}")
+                    }
+                        ?: tmp_zip.also {
+                            client.newCall(request).execute().use { resp ->
+                                if (!resp.isSuccessful) error("http ${resp.code}")
+                                val body = resp.body ?: error("empty body")
+                                val total = body.contentLength().takeIf { it > 0 } ?: -1L
+                                body.source().use { source ->
+                                    tmp_zip.sink().buffer().use { sink ->
+                                        var read: Long
+                                        var bytes_copied = 0L
+                                        val buffer = Buffer()
+                                        while (source.read(buffer, 8_192).also { read = it } != -1L) {
+                                            sink.write(buffer, read)
+                                            bytes_copied += read
+                                            if (total > 0) {
+                                                val pct = ((bytes_copied * 100) / total).toInt()
+                                                progress_map[info.id] = pct
+                                                onProgress(pct)
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
-                }
-                unzip_to_dir(info, tmp_zip)
+                unzip_to_dir(info, zip_to_use)
                 onComplete()
             }.onFailure { e ->
                 Timber.w(e, "vosk model download failed")
@@ -331,6 +338,7 @@ class VoskModelManager(
         val target_dir = info_dir(info)
         if (target_dir.exists()) target_dir.deleteRecursively()
         target_dir.mkdirs()
+        zipFile.parentFile?.mkdirs()
         ZipInputStream(zipFile.inputStream()).use { zis ->
             var entry = zis.nextEntry
             while (entry != null) {
@@ -366,4 +374,9 @@ class VoskModelManager(
     private fun info_dir(info: ModelInfo): File = File(context.filesDir, "vosk/${info.folder}")
 
     private fun marker_file(info: ModelInfo): File = File(info_dir(info), ".model_ready")
+
+    private fun local_zip_file(info: ModelInfo): File? =
+        context.getExternalFilesDir(null)?.let { base ->
+            File(base, "vosk/${info.id}.zip")
+        }
 }
