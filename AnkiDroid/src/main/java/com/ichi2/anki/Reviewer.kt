@@ -1,3 +1,13 @@
+@file:Suppress(
+    "ktlint:standard:property-naming",
+    "ktlint:standard:function-naming",
+    "ktlint:standard:indent",
+    "ktlint:standard:chain-method-continuation",
+    "ktlint:standard:multiline-expression-wrapping",
+    "ktlint:standard:trailing-comma-on-declaration-site",
+    "ktlint:standard:function-signature",
+    "ktlint:standard:import-ordering",
+)
 /*
  * Copyright (c) 2011 Kostas Spyropoulos <inigo.aldana@gmail.com>
  * Copyright (c) 2014 Bruno Romero de Azevedo <brunodea@inf.ufsm.br>
@@ -30,7 +40,14 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.os.Parcelable
+import android.speech.RecognitionListener as AndroidRecognitionListener
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
+import android.text.Spannable
 import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.style.BackgroundColorSpan
+import android.text.style.StrikethroughSpan
 import android.text.style.UnderlineSpan
 import android.view.KeyEvent
 import android.view.Menu
@@ -55,11 +72,13 @@ import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isGone
 import androidx.lifecycle.lifecycleScope
 import anki.frontend.SetSchedulingStatesRequest
 import anki.scheduler.CardAnswer.Rating
 import com.google.android.material.color.MaterialColors
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.ichi2.anim.ActivityTransitionAnimation.getInverseTransition
 import com.ichi2.anki.CollectionManager.TR
@@ -92,6 +111,7 @@ import com.ichi2.anki.observability.undoableOp
 import com.ichi2.anki.pages.CardInfoDestination
 import com.ichi2.anki.pages.PostRequestUri
 import com.ichi2.anki.preferences.sharedPrefs
+import com.ichi2.anki.preferences.VoskModelManager
 import com.ichi2.anki.reviewer.ActionButtons
 import com.ichi2.anki.reviewer.AnswerButtons.Companion.getBackgroundColors
 import com.ichi2.anki.reviewer.AnswerButtons.Companion.getTextColors
@@ -140,12 +160,19 @@ import com.ichi2.utils.positiveButton
 import com.ichi2.utils.show
 import com.ichi2.utils.tintOverflowMenuIcons
 import com.ichi2.utils.title
+import com.ichi2.utils.stripHtml
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import org.vosk.Model
+import org.vosk.Recognizer
+import org.vosk.android.SpeechService
+import org.vosk.android.RecognitionListener as VoskRecognitionListener
 import timber.log.Timber
 import kotlin.coroutines.resume
+import kotlin.math.max
+import kotlin.math.roundToInt
 
-@Suppress("LeakingThis")
+@Suppress("LeakingThis", "ktlint:standard:property-naming", "ktlint:standard:function-naming")
 @NeedsTest("#14709: Timebox shouldn't appear instantly when the Reviewer is opened")
 open class Reviewer :
     AbstractFlashcardViewer(),
@@ -200,6 +227,21 @@ open class Reviewer :
     private var audioRecordingController: AudioRecordingController? = null
     private var isAudioUIInitialized = false
     private lateinit var micToolBarLayer: LinearLayout
+    private var speech_recognizer: SpeechRecognizer? = null
+    private var speech_recognizer_intent: Intent? = null
+    private var speech_recognition_running = false
+    private var speech_transcript_text: String = ""
+    private var speech_expected_text: String = ""
+    private var speech_diff_button: MaterialButton? = null
+    private var speech_diff_result: TextView? = null
+    private var speech_diff_error: TextView? = null
+    private var speech_diff_status: TextView? = null
+    private val speech_hit_color = "#d4f4d4".toColorInt()
+    private val speech_miss_color = "#ffd6d6".toColorInt()
+    private val vosk_manager by lazy { VoskModelManager(this) }
+    private var vosk_model: Model? = null
+    private var vosk_recognizer: Recognizer? = null
+    private var vosk_service: SpeechService? = null
 
     // ETA
     private var eta = 0
@@ -268,6 +310,11 @@ open class Reviewer :
         if (typeAnswer?.autoFocusEditText() == true) {
             answerField?.focusWithKeyboard()
         }
+    }
+
+    override fun onDestroy() {
+        release_speech_recognizer()
+        super.onDestroy()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -473,7 +520,6 @@ open class Reviewer :
             R.id.action_suspend_card -> suspendCard()
             R.id.action_suspend_note -> suspendNote()
             R.id.action_reschedule_card -> showDueDateDialog()
-            R.id.action_reset_card_progress -> showResetCardDialog()
             R.id.action_delete -> {
                 Timber.i("Reviewer:: Delete note button pressed")
                 showDeleteNoteDialog()
@@ -684,6 +730,8 @@ open class Reviewer :
             whiteboard!!.clear()
         }
         audioRecordingController?.updateUIForNewCard()
+        refresh_speech_expected_text()
+        render_speech_diff()
     }
 
     override fun unblockControls() {
@@ -735,6 +783,7 @@ open class Reviewer :
         Timber.i("toggle mic toolbar")
         tempAudioPath = generateTempAudioFile(this)
         if (isMicToolBarVisible) {
+            stop_speech_recognition()
             micToolBarLayer.visibility = View.GONE
         } else {
             setEditorStatus(false)
@@ -747,6 +796,7 @@ open class Reviewer :
                         initialState = RecordingState.ImmediatePlayback.CLEARED,
                         R.layout.activity_audio_recording_reviewer,
                     )
+                    init_speech_diff_ui()
                 } catch (e: Exception) {
                     Timber.w(e, "unable to add the audio recorder to toolbar")
                     CrashReportService.sendExceptionReport(e, "Unable to create recorder tool bar")
@@ -759,6 +809,8 @@ open class Reviewer :
                 isAudioUIInitialized = true
             }
             micToolBarLayer.visibility = View.VISIBLE
+            refresh_speech_expected_text()
+            render_speech_diff()
         }
         isMicToolBarVisible = !isMicToolBarVisible
 
@@ -766,6 +818,473 @@ open class Reviewer :
 
         refreshActionBar()
     }
+
+    private fun init_speech_diff_ui() {
+        speech_diff_button = micToolBarLayer.findViewById(R.id.action_start_speech_diff)
+        speech_diff_result = micToolBarLayer.findViewById(R.id.speech_diff_result)
+        speech_diff_error = micToolBarLayer.findViewById(R.id.speech_diff_error)
+        speech_diff_status = micToolBarLayer.findViewById(R.id.speech_diff_status)
+        speech_diff_button?.setOnClickListener { toggle_speech_recognition() }
+        refresh_speech_expected_text()
+        render_speech_diff()
+        update_speech_diff_button()
+    }
+
+    private fun toggle_speech_recognition() {
+        if (speech_recognition_running) {
+            stop_speech_recognition()
+        } else {
+            start_speech_recognition()
+        }
+    }
+
+    private fun start_speech_recognition() {
+        if (!canRecordAudio(this)) {
+            speech_diff_error?.text = getString(R.string.speech_diff_no_permission)
+            return
+        }
+        if (!ensure_speech_recognizer_ready()) {
+            return
+        }
+        speech_transcript_text = ""
+        speech_diff_error?.text = ""
+        render_speech_diff()
+        speech_recognition_running = true
+        update_speech_diff_button()
+        try {
+            speech_recognizer?.startListening(speech_recognizer_intent)
+        } catch (e: Exception) {
+            Timber.w(e, "speech recognition start failed")
+            speech_recognition_running = false
+            speech_diff_error?.text = getString(R.string.speech_diff_error, e.message ?: "unknown")
+            update_speech_diff_button()
+        }
+    }
+
+    private fun stop_speech_recognition() {
+        try {
+            speech_recognizer?.stopListening()
+        } catch (e: Exception) {
+            Timber.w(e, "speech recognition stop failed")
+        }
+        speech_recognition_running = false
+        update_speech_diff_button()
+        stop_vosk_recognition()
+    }
+
+    private fun ensure_speech_recognizer_ready(): Boolean {
+        if (!SpeechRecognizer.isRecognitionAvailable(this)) {
+            speech_diff_error?.text = getString(R.string.speech_diff_not_available)
+            return false
+        }
+        if (speech_recognizer == null) {
+            speech_recognizer = SpeechRecognizer.createSpeechRecognizer(this).apply {
+                setRecognitionListener(speech_recognition_listener)
+            }
+        }
+        if (speech_recognizer_intent == null) {
+            speech_recognizer_intent =
+                Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                    putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                    putExtra(RecognizerIntent.EXTRA_LANGUAGE, "zh-CN")
+                    putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "zh-CN")
+                    putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+                    putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
+                }
+        }
+        return true
+    }
+
+    private fun release_speech_recognizer() {
+        speech_recognition_running = false
+        try {
+            speech_recognizer?.destroy()
+        } catch (e: Exception) {
+            Timber.w(e, "speech recognizer destroy failed")
+        }
+        speech_recognizer = null
+        speech_recognizer_intent = null
+        stop_vosk_recognition()
+        try {
+            vosk_model?.close()
+        } catch (e: Exception) {
+            Timber.w(e, "failed to close vosk model")
+        }
+        vosk_model = null
+    }
+
+    private fun start_vosk_recognition() {
+        val model_id = sharedPrefs().getString(getString(R.string.pref_vosk_model_choice_key), "cn_small") ?: "cn_small"
+        if (vosk_manager.status(model_id) != VoskModelManager.Status.READY) {
+            speech_diff_error?.text = getString(R.string.vosk_pref_error_no_model)
+            return
+        }
+        val model =
+            vosk_model ?: vosk_manager.loadModelIfReady(model_id)?.also { loaded_model ->
+                vosk_model = loaded_model
+            }
+        if (model == null) {
+            speech_diff_error?.text = getString(R.string.vosk_pref_error_no_model)
+            return
+        }
+        stop_vosk_recognition()
+        vosk_recognizer =
+            kotlin.runCatching { Recognizer(model, 16_000f) }
+                .onFailure {
+                    Timber.w(it, "failed to create vosk recognizer")
+                    speech_diff_error?.text = getString(R.string.vosk_pref_error_download, it.message ?: "unknown")
+                }
+                .getOrNull()
+        vosk_recognizer ?: return
+        vosk_service =
+            kotlin.runCatching { SpeechService(vosk_recognizer, 16_000.0f) }
+                .onFailure {
+                    Timber.w(it, "failed to create vosk service")
+                    speech_diff_error?.text = getString(R.string.vosk_pref_error_download, it.message ?: "unknown")
+                }
+                .getOrNull()
+        vosk_service ?: return
+        speech_transcript_text = ""
+        vosk_service?.startListening(
+            object : VoskRecognitionListener {
+                override fun onPartialResult(hypothesis: String?) {
+                    val text = extract_vosk_text(hypothesis)
+                    if (text.isNotBlank()) {
+                        speech_transcript_text = text
+                        render_speech_diff()
+                    }
+                }
+
+                override fun onResult(hypothesis: String?) {
+                    val text = extract_vosk_text(hypothesis)
+                    if (text.isNotBlank()) {
+                        speech_transcript_text = text
+                        render_speech_diff()
+                    }
+                    speech_recognition_running = false
+                    update_speech_diff_button()
+                }
+
+                override fun onFinalResult(hypothesis: String?) {
+                    val text = extract_vosk_text(hypothesis)
+                    if (text.isNotBlank()) {
+                        speech_transcript_text = text
+                        render_speech_diff()
+                    }
+                    speech_recognition_running = false
+                    update_speech_diff_button()
+                }
+
+                override fun onError(error: Exception?) {
+                    speech_recognition_running = false
+                    speech_diff_error?.text = getString(R.string.vosk_pref_error_download, error?.message ?: "unknown")
+                    update_speech_diff_button()
+                }
+
+                override fun onTimeout() {
+                    speech_recognition_running = false
+                    update_speech_diff_button()
+                }
+            },
+        )
+        speech_recognition_running = true
+        update_speech_diff_button()
+    }
+
+    private fun stop_vosk_recognition() {
+        try {
+            vosk_service?.stop()
+            vosk_service?.shutdown()
+        } catch (e: Exception) {
+            Timber.w(e, "failed to stop vosk service")
+        }
+        try {
+            vosk_recognizer?.close()
+        } catch (e: Exception) {
+            Timber.w(e, "failed to close vosk recognizer")
+        }
+        vosk_service = null
+        vosk_recognizer = null
+    }
+
+    private fun extract_vosk_text(json: String?): String {
+        if (json.isNullOrBlank()) return ""
+        val marker = "\"text\""
+        val idx = json.indexOf(marker)
+        if (idx < 0) return ""
+        val after = json.substring(idx + marker.length)
+        val firstQuote = after.indexOf('"')
+        val secondQuote = after.indexOf('"', firstQuote + 1)
+        if (firstQuote >= 0 && secondQuote > firstQuote) {
+            return after.substring(firstQuote + 1, secondQuote)
+        }
+        return ""
+    }
+
+    private fun update_speech_diff_button() {
+        speech_diff_button?.text =
+            if (speech_recognition_running) {
+                getString(R.string.speech_diff_stop)
+            } else {
+                getString(R.string.speech_diff_start)
+            }
+        speech_diff_status?.text =
+            if (speech_recognition_running) {
+                getString(R.string.speech_diff_listening)
+            } else {
+                ""
+            }
+    }
+
+    private fun refresh_speech_expected_text() {
+        speech_expected_text =
+            try {
+                currentCard?.answer(getColUnsafe)?.let { raw ->
+                    stripHtml(raw)
+                        .replace(Regex("\\[sound:[^]]+]", RegexOption.IGNORE_CASE), "")
+                        .replace(Regex("\\s+"), " ")
+                        .trim()
+                }.orEmpty()
+            } catch (e: Exception) {
+                Timber.w(e, "failed to refresh expected text for speech diff")
+                ""
+            }
+    }
+
+    private fun render_speech_diff() {
+        val result_view = speech_diff_result ?: return
+        val expected = speech_expected_text
+        val actual = speech_transcript_text
+        if (expected.isBlank() && actual.isBlank()) {
+            result_view.text = getString(R.string.speech_diff_no_card)
+            return
+        }
+        val expected_tokens = tokenize_text(expected)
+        val actual_tokens = tokenize_text(actual)
+        val lcs = compute_lcs(expected_tokens, actual_tokens)
+        val marked_tokens = build_marked_tokens(expected_tokens, actual_tokens, lcs)
+        val builder = SpannableStringBuilder()
+        builder.append(getString(R.string.speech_diff_expected_label)).append(" ")
+        append_marked_tokens(builder, marked_tokens.first)
+        builder.append("\n")
+        val score_text = build_total_match_text(expected_tokens, actual_tokens)
+        if (score_text.isNotEmpty()) {
+            builder.append("(").append(score_text).append("%) ")
+        }
+        builder.append(getString(R.string.speech_diff_actual_label)).append(" ")
+        append_marked_tokens(builder, marked_tokens.second)
+        result_view.text = builder
+    }
+
+    private fun tokenize_text(text: String): List<String> {
+        val tokens = mutableListOf<String>()
+        val ascii_buffer = StringBuilder()
+        val flush_buffer = {
+            if (ascii_buffer.isNotEmpty()) {
+                tokens.add(ascii_buffer.toString())
+                ascii_buffer.clear()
+            }
+        }
+        text.forEach { ch ->
+            when {
+                ch.isLetterOrDigit() -> ascii_buffer.append(ch)
+                ch.isWhitespace() -> flush_buffer()
+                else -> {
+                    flush_buffer()
+                    tokens.add(ch.toString())
+                }
+            }
+        }
+        flush_buffer()
+        return tokens
+    }
+
+    private fun compute_lcs(a: List<String>, b: List<String>): List<String> {
+        val m = a.size
+        val n = b.size
+        val dp = Array(m + 1) { IntArray(n + 1) }
+        for (x in m - 1 downTo 0) {
+            for (y in n - 1 downTo 0) {
+                dp[x][y] = if (a[x] == b[y]) {
+                    dp[x + 1][y + 1] + 1
+                } else {
+                    max(dp[x + 1][y], dp[x][y + 1])
+                }
+            }
+        }
+        val seq = mutableListOf<String>()
+        var i = 0
+        var j = 0
+        while (i < m && j < n) {
+            when {
+                a[i] == b[j] -> {
+                    seq.add(a[i])
+                    i++
+                    j++
+                }
+                dp[i + 1][j] >= dp[i][j + 1] -> i++
+                else -> j++
+            }
+        }
+        return seq
+    }
+
+    private fun build_marked_tokens(
+        expected_tokens: List<String>,
+        actual_tokens: List<String>,
+        lcs: List<String>,
+    ): Pair<List<Pair<String, Int>>, List<Pair<String, Int>>> {
+        val expected_marked = mutableListOf<Pair<String, Int>>()
+        val actual_marked = mutableListOf<Pair<String, Int>>()
+        var i = 0
+        var j = 0
+        lcs.forEach { token ->
+            while (i < expected_tokens.size && expected_tokens[i] != token) {
+                expected_marked.add(expected_tokens[i] to TOKEN_MISS_EXPECTED)
+                i++
+            }
+            while (j < actual_tokens.size && actual_tokens[j] != token) {
+                actual_marked.add(actual_tokens[j] to TOKEN_MISS_ACTUAL)
+                j++
+            }
+            if (i < expected_tokens.size && j < actual_tokens.size) {
+                expected_marked.add(expected_tokens[i] to TOKEN_HIT)
+                actual_marked.add(actual_tokens[j] to TOKEN_HIT)
+                i++
+                j++
+            }
+        }
+        while (i < expected_tokens.size) {
+            expected_marked.add(expected_tokens[i] to TOKEN_MISS_EXPECTED)
+            i++
+        }
+        while (j < actual_tokens.size) {
+            actual_marked.add(actual_tokens[j] to TOKEN_MISS_ACTUAL)
+            j++
+        }
+        return expected_marked to actual_marked
+    }
+
+    private fun append_marked_tokens(
+        builder: SpannableStringBuilder,
+        tokens: List<Pair<String, Int>>,
+    ) {
+        tokens.forEach { token ->
+            val start = builder.length
+            builder.append(token.first)
+            val end = builder.length
+            when (token.second) {
+                TOKEN_HIT -> builder.setSpan(
+                    BackgroundColorSpan(speech_hit_color),
+                    start,
+                    end,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+                )
+                TOKEN_MISS_EXPECTED -> builder.setSpan(
+                    BackgroundColorSpan(speech_miss_color),
+                    start,
+                    end,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+                )
+                TOKEN_MISS_ACTUAL -> {
+                    builder.setSpan(
+                        BackgroundColorSpan(speech_miss_color),
+                        start,
+                        end,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+                    )
+                    builder.setSpan(
+                        StrikethroughSpan(),
+                        start,
+                        end,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+                    )
+                }
+            }
+        }
+    }
+
+    private fun build_total_match_text(
+        expected_tokens: List<String>,
+        actual_tokens: List<String>,
+    ): String {
+        val max_len = max(expected_tokens.size, actual_tokens.size)
+        if (max_len == 0) {
+            return ""
+        }
+        val lcs_len = compute_lcs(expected_tokens, actual_tokens).size
+        val score = ((lcs_len.toDouble() / max_len) * 100).roundToInt()
+        return score.toString()
+    }
+
+    private fun speech_error_message(error: Int): String =
+        when (error) {
+            SpeechRecognizer.ERROR_AUDIO -> "audio"
+            SpeechRecognizer.ERROR_CLIENT -> "client"
+            SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "permission"
+            SpeechRecognizer.ERROR_NETWORK -> "network"
+            SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "network timeout"
+            SpeechRecognizer.ERROR_NO_MATCH -> "no match"
+            SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "busy"
+            SpeechRecognizer.ERROR_SERVER -> "server"
+            SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "timeout"
+            else -> "unknown"
+        }
+
+    private fun handle_speech_results(bundle: Bundle?, is_final: Boolean) {
+        val texts = bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION).orEmpty()
+        if (texts.isNotEmpty()) {
+            speech_transcript_text += texts.first()
+            render_speech_diff()
+        }
+        if (is_final) {
+            speech_recognition_running = false
+            update_speech_diff_button()
+        }
+    }
+
+    private val speech_recognition_listener =
+        object : AndroidRecognitionListener {
+            override fun onReadyForSpeech(params: Bundle?) {
+                speech_diff_status?.text = getString(R.string.speech_diff_listening)
+            }
+
+            override fun onBeginningOfSpeech() = Unit
+
+            override fun onRmsChanged(rmsdB: Float) = Unit
+
+            override fun onBufferReceived(buffer: ByteArray?) = Unit
+
+            override fun onEndOfSpeech() {
+                speech_recognition_running = false
+                update_speech_diff_button()
+                render_speech_diff()
+            }
+
+            override fun onError(error: Int) {
+                speech_recognition_running = false
+                speech_diff_error?.text = getString(R.string.speech_diff_error, speech_error_message(error))
+                val should_fallback =
+                    error == SpeechRecognizer.ERROR_NETWORK ||
+                        error == SpeechRecognizer.ERROR_NETWORK_TIMEOUT ||
+                        error == SpeechRecognizer.ERROR_SERVER
+                if (should_fallback) {
+                    start_vosk_recognition()
+                } else {
+                    update_speech_diff_button()
+                }
+            }
+
+            override fun onResults(results: Bundle?) {
+                handle_speech_results(results, true)
+            }
+
+            override fun onPartialResults(partialResults: Bundle?) {
+                handle_speech_results(partialResults, false)
+            }
+
+            override fun onEvent(eventType: Int, params: Bundle?) = Unit
+        }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -860,7 +1379,7 @@ open class Reviewer :
 
         // Anki Desktop Translations
         menu.findItem(R.id.action_reschedule_card).title =
-            CollectionManager.TR.actionsSetDueDate().toSentenceCase(this, R.string.sentence_set_due_date)
+            TR.actionsSetDueDate().toSentenceCase(this, R.string.sentence_set_due_date)
 
         // Undo button
         @DrawableRes val undoIconId: Int
@@ -872,7 +1391,7 @@ open class Reviewer :
         } else {
             undoIconId = R.drawable.ic_undo_white
             undoEnabled = colIsOpenUnsafe() && getColUnsafe.undoAvailable()
-            this.isEraserMode = false
+            isEraserMode = false
         }
         val alphaUndo = Themes.ALPHA_ICON_ENABLED_LIGHT
         val undoIcon = menu.findItem(R.id.action_undo)
@@ -891,8 +1410,10 @@ open class Reviewer :
                 }
             } else {
                 // Disable whiteboard eraser action button
-                isEraserMode = false
-                whiteboard?.reviewerEraserModeIsToggledOn = isEraserMode
+                    if (isEraserMode) {
+                        isEraserMode = false
+                        whiteboard?.reviewerEraserModeIsToggledOn = isEraserMode
+                    }
 
                 if (getColUnsafe.undoAvailable()) {
                     // set the undo title to a named action ('Undo Answer Card' etc...)
@@ -1261,7 +1782,7 @@ open class Reviewer :
                 positiveButton(R.string.dialog_continue) {
                     coroutines.resume(Unit)
                 }
-                negativeButton(text = CollectionManager.TR.studyingFinish()) {
+                negativeButton(text = TR.studyingFinish()) {
                     coroutines.resume(Unit)
                     finish()
                 }
@@ -1812,6 +2333,9 @@ open class Reviewer :
         private const val REQUEST_AUDIO_PERMISSION = 0
         private const val ANIMATION_DURATION = 200
         private const val TRANSPARENCY = 0.90f
+        private const val TOKEN_HIT = 0
+        private const val TOKEN_MISS_EXPECTED = 1
+        private const val TOKEN_MISS_ACTUAL = 2
 
         /** Default (500ms) time for action snackbars, such as undo, bury and suspend */
         const val ACTION_SNACKBAR_TIME = 500

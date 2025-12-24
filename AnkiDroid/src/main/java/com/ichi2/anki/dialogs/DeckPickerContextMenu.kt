@@ -74,6 +74,7 @@ class DeckPickerContextMenu : AnalyticsDialogFragment() {
         EDIT_DESCRIPTION(R.string.edit_deck_description),
         ADD_CARD(R.string.menu_add),
         SCHEDULE_REMINDERS(R.string.schedule_reminders_do_not_translate),
+        IMPORT_TEXT_CONTENT(R.string.import_text_content),
     }
 
     companion object {

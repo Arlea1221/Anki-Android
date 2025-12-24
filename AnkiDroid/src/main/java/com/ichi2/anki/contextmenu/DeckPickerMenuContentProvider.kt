@@ -94,6 +94,7 @@ class DeckPickerMenuContentProvider(
                 if (Prefs.newReviewRemindersEnabled) {
                     add(DeckPickerContextMenu.DeckPickerContextMenuOption.SCHEDULE_REMINDERS)
                 }
+                add(DeckPickerContextMenu.DeckPickerContextMenuOption.IMPORT_TEXT_CONTENT)
                 add(DeckPickerContextMenu.DeckPickerContextMenuOption.DELETE_DECK)
             }
 

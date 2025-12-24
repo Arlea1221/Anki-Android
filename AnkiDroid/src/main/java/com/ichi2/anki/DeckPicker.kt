@@ -131,8 +131,10 @@ import com.ichi2.anki.dialogs.EditDeckDescriptionDialog
 import com.ichi2.anki.dialogs.EmptyCardsDialogFragment
 import com.ichi2.anki.dialogs.FatalErrorDialog
 import com.ichi2.anki.dialogs.ImportDialog.ImportDialogListener
+import com.ichi2.anki.dialogs.ImportFileSelectionFragment
 import com.ichi2.anki.dialogs.ImportFileSelectionFragment.ApkgImportResultLauncherProvider
 import com.ichi2.anki.dialogs.ImportFileSelectionFragment.CsvImportResultLauncherProvider
+import com.ichi2.anki.dialogs.ImportFileSelectionFragment.ImportFileType
 import com.ichi2.anki.dialogs.SchedulerUpgradeDialog
 import com.ichi2.anki.dialogs.SyncErrorDialog
 import com.ichi2.anki.dialogs.SyncErrorDialog.Companion.newInstance
@@ -951,6 +953,15 @@ open class DeckPicker :
                 viewModel.scheduleReviewReminders(deckId)
                 dismissAllDialogFragments()
             }
+            DeckPickerContextMenuOption.IMPORT_TEXT_CONTENT -> {
+                Timber.i("ContextMenu: Import text content selected")
+                dismissAllDialogFragments()
+                ImportFileSelectionFragment.openImportFilePicker(
+                    this,
+                    ImportFileType.TEXT_CONTENT,
+                    targetDeckId = deckId,
+                )
+            }
         }
     }
 
@@ -1736,7 +1747,7 @@ open class DeckPicker :
                 val message =
                     """
                     ${res.getString(R.string.full_sync_confirmation_upgrade)}
-                    
+
                     ${res.getString(R.string.full_sync_confirmation)}
                     """.trimIndent()
 
@@ -1818,7 +1829,6 @@ open class DeckPicker :
                     val notetypes = getColUnsafe.notetypes
                     for (noteType in notetypes.all()) {
                         val css = noteType.css
-                        @Suppress("SpellCheckingInspection")
                         if (css.contains("font-familiy")) {
                             noteType.css = css.replace("font-familiy", "font-family")
                             notetypes.save(noteType)
@@ -2023,8 +2033,6 @@ open class DeckPicker :
      * from the mSyncConflictResolutionListener if the first attempt determines that a full-sync is required.
      */
     override fun sync(conflict: ConflictResolution?) {
-        val preferences = baseContext.sharedPrefs()
-
         val hkey = Prefs.hkey
         if (hkey.isNullOrEmpty()) {
             Timber.w("User not logged in")

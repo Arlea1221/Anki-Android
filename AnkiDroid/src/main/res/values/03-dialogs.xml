@@ -206,9 +206,9 @@
     <string name="import_deck_package">Deck package (.apkg)</string>
     <string name="import_collection_package">Collection package (.colpkg)</string>
     <string name="import_csv">Text file (.txt, .csv)</string>
-    <string name="import_text_content">Text Content</string>
+    <string name="import_text_content">Import Text Content</string>
     <!-- Deck selection dialog -->
-    
+
 
     <!-- scoped storage -->
     <string name="backup_your_collection">Backup your collection</string>

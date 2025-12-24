@@ -114,4 +114,15 @@
         android:key="@string/tts_key"
         android:summary="@string/tts_summ"
         android:title="@string/tts" />
+    <ListPreference
+        android:key="@string/pref_vosk_model_choice_key"
+        android:title="@string/vosk_pref_model_choice_title"
+        android:entries="@array/vosk_model_entries"
+        android:entryValues="@array/vosk_model_values"
+        android:defaultValue="cn_small"
+        app1:useSimpleSummaryProvider="true" />
+    <Preference
+        android:key="@string/pref_vosk_model_key"
+        android:title="@string/vosk_pref_title"
+        android:summary="@string/vosk_pref_desc_not_loaded" />
 </PreferenceScreen>

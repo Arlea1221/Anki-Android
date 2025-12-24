@@ -32,6 +32,7 @@ import com.ichi2.anki.R
 import com.ichi2.anki.TextContentImportActivity
 import com.ichi2.anki.analytics.UsageAnalytics
 import com.ichi2.anki.common.annotations.NeedsTest
+import com.ichi2.anki.libanki.DeckId
 import com.ichi2.anki.requireAnkiActivity
 import com.ichi2.anki.snackbar.showSnackbar
 import com.ichi2.anki.utils.MimeTypeUtils
@@ -167,9 +168,13 @@ class ImportFileSelectionFragment : DialogFragment() {
             multiple: Boolean = false,
             mimeType: String = "*/*",
             extraMimes: Array<String>? = null,
+            targetDeckId: DeckId? = null,
         ) {
             if (fileType == ImportFileType.TEXT_CONTENT) {
-                val intent = Intent(activity, TextContentImportActivity::class.java)
+                val intent =
+                    Intent(activity, TextContentImportActivity::class.java).apply {
+                        targetDeckId?.let { putExtra(TextContentImportActivity.EXTRA_TARGET_DECK_ID, it) }
+                    }
                 activity.startActivity(intent)
                 return
             }
@@ -194,7 +199,7 @@ class ImportFileSelectionFragment : DialogFragment() {
                 } else {
                     Timber.w("Activity($activity) can't handle requested import: $fileType")
                 }
-            } catch (ex: ActivityNotFoundException) {
+            } catch (_: ActivityNotFoundException) {
                 Timber.w("No activity to handle openImportFilePicker request")
                 activity.showSnackbar(R.string.activity_start_failed)
             }

@@ -71,4 +71,13 @@
     <string name="replay_voice" maxLength="41">Replay voice</string>
     <string name="save_voice" maxLength="41">Save recording</string>
 
+    <string-array name="vosk_model_entries">
+        <item>Chinese small (v0.22, ~50MB)</item>
+        <item>English small (v0.22, ~40MB)</item>
+    </string-array>
+    <string-array name="vosk_model_values">
+        <item>cn_small</item>
+        <item>en_small</item>
+    </string-array>
+
 </resources>

@@ -166,6 +166,26 @@
     <string name="text_content_import_hint">Enter or paste text content\nDad loves you all\nYou all need to work hard</string>
     <string name="clipboard_auto_filled">Clipboard content automatically filled</string>
     <string name="please_enter_text_content">Please enter text content</string>
+    <string name="insert_newline">New line</string>
+    <string name="speech_diff_title">Speech diff</string>
+    <string name="speech_diff_start">Start</string>
+    <string name="speech_diff_stop" comment="Stop speech diff recognition; shares text with stop_recording">Stop</string>
+    <string name="speech_diff_listening">Listening…</string>
+    <string name="speech_diff_no_permission">Microphone permission required</string>
+    <string name="speech_diff_not_available">Speech recognition not available on this device</string>
+    <string name="speech_diff_error">Speech error: %s</string>
+    <string name="speech_diff_no_card">No card text available</string>
+    <string name="speech_diff_expected_label">Expected:</string>
+    <string name="speech_diff_actual_label">Actual:</string>
+    <string name="vosk_pref_model_choice_title" maxLength="41">Speech model</string>
+    <string name="pref_vosk_model_choice_key">pref_vosk_model_choice_key</string>
+    <string name="vosk_pref_desc_not_loaded">Model not loaded</string>
+    <string name="vosk_pref_title" maxLength="41">Speech recognition</string>
+    <string name="pref_vosk_model_key">pref_vosk_model_key</string>
+    <string name="vosk_pref_desc_downloading">Downloading… %1$d%%</string>
+    <string name="vosk_pref_desc_loaded">Model loaded</string>
+    <string name="vosk_pref_error_no_model">Speech model not ready</string>
+    <string name="vosk_pref_error_download">Speech model error: %s</string>
     <string name="export_ready_title">Export ready</string>
     <string name="export_send_no_handlers">No applications available to handle apkg. Saving…</string>
     <string name="export_save_apkg_successful">Successfully saved Anki package</string>
@@ -420,7 +440,7 @@ opening the system text to speech settings fails">Failed to open text to speech 
     <string name="previewer_back" comment="Name of the back button in the previewer" maxLength="28">Back</string>
 
     <string name="start_recording">Record</string>
-    <string name="stop_recording">Stop</string>
+    <string name="stop_recording" comment="Stop audio recording; shares text with speech_diff_stop">Stop</string>
     <string name="play_recording">Play</string>
     <string name="next_recording" comment="Description of a button to go to the next recording">Next</string>
 
