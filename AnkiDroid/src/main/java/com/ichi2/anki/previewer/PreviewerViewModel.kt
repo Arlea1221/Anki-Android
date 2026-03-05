@@ -17,7 +17,6 @@ package com.ichi2.anki.previewer
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import anki.collection.OpChanges
 import com.ichi2.anki.CollectionManager.withCol
 import com.ichi2.anki.Flag
@@ -34,7 +33,6 @@ import com.ichi2.anki.pages.AnkiServer
 import com.ichi2.anki.reviewer.CardSide
 import com.ichi2.anki.servicelayer.MARKED_TAG
 import com.ichi2.anki.servicelayer.NoteService
-import com.ichi2.anki.utils.ext.collectIn
 import com.ichi2.anki.utils.ext.flag
 import com.ichi2.anki.utils.ext.require
 import com.ichi2.anki.utils.ext.setUserFlagForCards
@@ -47,7 +45,7 @@ import timber.log.Timber
 
 class PreviewerViewModel(
     savedStateHandle: SavedStateHandle,
-) : CardViewerViewModel(),
+) : CardViewerViewModel(savedStateHandle),
     ChangeManager.Subscriber {
     val currentIndex =
         savedStateHandle.getMutableStateFlow(
@@ -61,7 +59,6 @@ class PreviewerViewModel(
     @VisibleForTesting
     val selectedCardIds: List<Long> = savedStateHandle.require<IdsFile>(PreviewerFragment.CARD_IDS_FILE_ARG).getIds()
 
-    override val showingAnswer = MutableStateFlow(savedStateHandle[SHOWING_ANSWER_KEY] ?: false)
     val isBackButtonEnabled =
         combine(currentIndex, showingAnswer, backSideOnly) { index, showingAnswer, isBackSideOnly ->
             index != 0 || (showingAnswer && !isBackSideOnly)
@@ -81,9 +78,6 @@ class PreviewerViewModel(
 
     init {
         ChangeManager.subscribe(this)
-        showingAnswer.collectIn(viewModelScope) {
-            savedStateHandle[SHOWING_ANSWER_KEY] = it
-        }
     }
 
     /* *********************************************************************************************
@@ -278,6 +272,5 @@ class PreviewerViewModel(
     companion object {
         private const val KEY_BACKSIDE_ONLY = "backsideOnly"
         private const val KEY_CURRENT_INDEX = "currentIndex"
-        private const val SHOWING_ANSWER_KEY = "showingAnswer"
     }
 }

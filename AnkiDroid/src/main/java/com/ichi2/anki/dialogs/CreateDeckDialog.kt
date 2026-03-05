@@ -94,7 +94,20 @@ class CreateDeckDialog(
                 .Builder(context)
                 .show {
                     title(title)
-                    positiveButton(R.string.dialog_ok) { onPositiveButtonClicked() }
+                    // Resource ID for the dialog's positive action button text.
+                    // Uses "Rename" for rename deck dialogs and "Create" for all other deck-related dialogs.
+                    val positiveButtonTextRes =
+                        when (deckDialogType) {
+                            DeckDialogType.RENAME_DECK -> R.string.rename
+
+                            DeckDialogType.DECK,
+                            DeckDialogType.SUB_DECK,
+                            DeckDialogType.FILTERED_DECK,
+                            -> R.string.dialog_positive_create
+                        }
+                    positiveButton(positiveButtonTextRes) {
+                        onPositiveButtonClicked()
+                    }
                     negativeButton(R.string.dialog_cancel)
                     setView(R.layout.dialog_generic_text_input)
                 }.input(prefill = initialDeckName, displayKeyboard = true, waitForPositiveButton = false) { dialog, text ->
@@ -132,7 +145,7 @@ class CreateDeckDialog(
                         dialog.positiveButton.isEnabled = false
                         return@input
                     }
-                    if (maybeDeckName != initialDeckName && deckExists(getColUnsafe, maybeDeckName)) {
+                    if (!maybeDeckName.equals(initialDeckName, ignoreCase = true) && deckExists(getColUnsafe, maybeDeckName)) {
                         dialog.getInputTextLayout().error = context.getString(R.string.deck_already_exists)
                         dialog.positiveButton.isEnabled = false
                         return@input

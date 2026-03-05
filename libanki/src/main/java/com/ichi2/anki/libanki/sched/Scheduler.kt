@@ -56,11 +56,12 @@ import com.ichi2.anki.libanki.NoteId
 import com.ichi2.anki.libanki.QueueType
 import com.ichi2.anki.libanki.Utils
 import com.ichi2.anki.libanki.utils.LibAnkiAlias
-import com.ichi2.anki.libanki.utils.NotInLibAnki
+import com.ichi2.anki.libanki.utils.NotInPyLib
 import net.ankiweb.rsdroid.RustCleanup
 import timber.log.Timber
 import kotlin.math.ceil
 import kotlin.math.max
+import kotlin.math.roundToLong
 
 /**
  * A parameter for [Scheduler.setDueDate]
@@ -77,7 +78,7 @@ import kotlin.math.max
  * ```
  */
 @JvmInline
-@NotInLibAnki
+@NotInPyLib
 value class SetDueDateDays(
     val value: String,
 )
@@ -229,7 +230,7 @@ open class Scheduler(
      * @throws com.ichi2.anki.libanki.exception.ConfirmModSchemaException
      */
     fun upgradeToV2() {
-        col.modSchema()
+        col.modSchema(check = true)
         col.backend.upgradeScheduler()
         col._loadScheduler()
     }
@@ -650,7 +651,7 @@ open class Scheduler(
             toRelrn = failures
         } while (toRelrn > 1)
         val futureRelrnTotal = relrnTime * futureReps
-        return Math.round((newTotal + relrnTotal + revTotal + futureRelrnTotal) / 60000).toInt()
+        return ((newTotal + relrnTotal + revTotal + futureRelrnTotal) / 60000).roundToLong().toInt()
     }
 
     /** Used only by V1/V2, and unit tests.

@@ -36,6 +36,7 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -48,10 +49,12 @@ import com.ichi2.anki.launchCatchingTask
 import com.ichi2.anki.libanki.Consts
 import com.ichi2.anki.libanki.DeckId
 import com.ichi2.anki.model.SelectableDeck
+import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.snackbar.showSnackbar
 import com.ichi2.anki.startDeckSelection
 import com.ichi2.anki.utils.ext.showDialogFragment
 import com.ichi2.utils.DisplayUtils.resizeWhenSoftInputShown
+import com.ichi2.utils.Permissions
 import com.ichi2.utils.customView
 import com.ichi2.utils.negativeButton
 import com.ichi2.utils.neutralButton
@@ -134,6 +137,7 @@ class AddEditReminderDialog : DialogFragment() {
         setInitialDeckSelection()
         setUpAdvancedDropdown()
         setUpCardThresholdInput()
+        setUpOnlyNotifyIfNoReviewsCheckbox()
 
         // For getting the result of the deck selection sub-dialog from ScheduleReminders
         // See ScheduleReminders.onDeckSelected for more information
@@ -210,8 +214,7 @@ class AddEditReminderDialog : DialogFragment() {
                 Pair(Consts.DEFAULT_DECK_ID, withCol { decks.name(Consts.DEFAULT_DECK_ID) })
             }
 
-        val currentlySelectedDeckID = viewModel.deckSelected.value
-        return when (currentlySelectedDeckID) {
+        return when (val currentlySelectedDeckID = viewModel.deckSelected.value) {
             ALL_DECKS_ID -> Pair(ALL_DECKS_ID, getString(R.string.card_browser_all_decks))
             Consts.DEFAULT_DECK_ID -> getFallbackSelection()
             null -> getFallbackSelection()
@@ -261,6 +264,20 @@ class AddEditReminderDialog : DialogFragment() {
                     else -> null
                 }
             viewModel.setCardTriggerThreshold(value ?: 0)
+        }
+    }
+
+    private fun setUpOnlyNotifyIfNoReviewsCheckbox() {
+        val contentSection = contentView.findViewById<LinearLayout>(R.id.add_edit_reminder_only_notify_if_no_reviews_section)
+        val checkbox = contentView.findViewById<MaterialCheckBox>(R.id.add_edit_reminder_only_notify_if_no_reviews_checkbox)
+        contentSection.setOnClickListener {
+            viewModel.toggleOnlyNotifyIfNoReviews()
+        }
+        checkbox.setOnClickListener {
+            viewModel.toggleOnlyNotifyIfNoReviews()
+        }
+        viewModel.onlyNotifyIfNoReviews.observe(this) { onlyNotifyIfNoReviews ->
+            checkbox.isChecked = onlyNotifyIfNoReviews
         }
     }
 
@@ -317,6 +334,14 @@ class AddEditReminderDialog : DialogFragment() {
                 putParcelable(ScheduleReminders.ADD_EDIT_DIALOG_RESULT_REQUEST_KEY, reminderToBeReturned)
             },
         )
+
+        // Request notification permissions from the user if they have not been requested due to review reminders ever before
+        if (!Prefs.reminderNotifsRequestShown) {
+            Permissions.showNotificationsPermissionBottomSheetIfNeeded(requireActivity(), parentFragmentManager) {
+                Prefs.reminderNotifsRequestShown = true
+            }
+        }
+
         dismiss()
     }
 

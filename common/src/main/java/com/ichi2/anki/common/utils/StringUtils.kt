@@ -35,12 +35,10 @@
 package com.ichi2.anki.common.utils
 
 import com.ichi2.anki.common.annotations.DuplicatedCode
-import com.ichi2.anki.common.annotations.NeedsTest
 import org.jetbrains.annotations.Contract
 import java.util.Locale
 import kotlin.math.min
 
-@NeedsTest("all except toTitleCase is untested")
 object StringUtils {
     /** Converts the string to where the first letter is uppercase, and the rest of the string is lowercase  */
     // TODO(low): some libAnki functions can use this instead of capitalize() alternatives
@@ -49,14 +47,28 @@ object StringUtils {
         if (s == null) return null
         if (s.isBlank()) return s
 
-        return s.substring(0, 1).uppercase(Locale.getDefault()) + s.substring(1).lowercase(Locale.getDefault())
+        return s[0].uppercase(Locale.getDefault()) + s.substring(1).lowercase(Locale.getDefault())
     }
 }
 
 fun String.trimToLength(maxLength: Int): String = this.substring(0, min(this.length, maxLength))
 
-fun String.lastIndexOfOrNull(c: Char): Int? =
-    when (val index = this.lastIndexOf(c)) {
+fun String.indexOfOrNull(
+    c: Char,
+    startIndex: Int = 0,
+    ignoreCase: Boolean = false,
+): Int? =
+    when (val index = this.indexOf(c, startIndex, ignoreCase)) {
+        -1 -> null
+        else -> index
+    }
+
+fun String.lastIndexOfOrNull(
+    c: Char,
+    startIndex: Int = lastIndex,
+    ignoreCase: Boolean = false,
+): Int? =
+    when (val index = this.lastIndexOf(c, startIndex, ignoreCase)) {
         -1 -> null
         else -> index
     }
