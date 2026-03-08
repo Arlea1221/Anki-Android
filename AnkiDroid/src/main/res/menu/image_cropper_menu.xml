@@ -23,7 +23,7 @@
                 android:title="@string/image_cropper_action_flip_vertically" />
         </menu>
     </item>
-    
+
     <item
         android:id="@+id/action_done"
         android:title="@string/multimedia_editor_field_editing_done"

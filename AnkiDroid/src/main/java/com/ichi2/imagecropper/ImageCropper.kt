@@ -18,6 +18,7 @@
 package com.ichi2.imagecropper
 
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -30,6 +31,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.BundleCompat
 import androidx.core.view.MenuProvider
@@ -37,12 +39,14 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.canhub.cropper.CropImageView
+import com.ichi2.anki.DrawingFragment
 import com.ichi2.anki.R
 import com.ichi2.anki.databinding.FragmentImageCropperBinding
 import com.ichi2.anki.snackbar.showSnackbar
 import com.ichi2.anki.withProgress
 import com.ichi2.imagecropper.ImageCropper.Companion.DECODED_IMAGE_LIMIT
 import com.ichi2.utils.ContentResolverUtil
+import com.ichi2.utils.ImportUtils
 import com.ichi2.utils.openInputStreamSafe
 import dev.androidbroadcast.vbpd.viewBinding
 import kotlinx.coroutines.launch
@@ -62,6 +66,30 @@ class ImageCropper :
     Fragment(R.layout.fragment_image_cropper),
     MenuProvider {
     private val binding by viewBinding(FragmentImageCropperBinding::bind)
+    private var enableDrawingTools = false
+
+    private val drawingActivityLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode != Activity.RESULT_OK) {
+                return@registerForActivityResult
+            }
+            val drawingImageUri =
+                result.data?.extras?.let {
+                    BundleCompat.getParcelable(it, DrawingFragment.IMAGE_PATH_KEY, Uri::class.java)
+                } ?: return@registerForActivityResult
+            val drawingImagePath =
+                resolveUriPath(drawingImageUri) ?: run {
+                    Timber.w("Unable to resolve path for drawing uri: %s", drawingImageUri)
+                    showSnackbar(R.string.something_wrong)
+                    return@registerForActivityResult
+                }
+            finishWithResult(
+                CropResultData(
+                    uriContent = drawingImageUri,
+                    uriPath = drawingImagePath,
+                ),
+            )
+        }
 
     override fun onViewCreated(
         view: View,
@@ -83,6 +111,7 @@ class ImageCropper :
         val originalImageUri =
             BundleCompat.getParcelable(requireArguments(), CROP_IMAGE_URI, Uri::class.java)
                 ?: error("No image identifier was provided for cropping")
+        enableDrawingTools = requireArguments().getBoolean(ENABLE_DRAWING_TOOLS, false)
         viewLifecycleOwner.lifecycleScope.launch {
             withProgress {
                 if (isImageTooBig(originalImageUri)) {
@@ -129,13 +158,7 @@ class ImageCropper :
         when (menuItem.itemId) {
             R.id.action_done -> {
                 Timber.d("Done clicked")
-                val imageFormat = binding.cropImageView.imageUri?.let { getImageCompressFormat(it) }
-                Timber.d("Compress format: $imageFormat")
-                if (imageFormat != null) {
-                    binding.cropImageView.croppedImageAsync(
-                        saveCompressFormat = imageFormat,
-                    )
-                }
+                requestCroppedImage()
                 true
             }
 
@@ -159,6 +182,16 @@ class ImageCropper :
 
             else -> false
         }
+
+    private fun requestCroppedImage() {
+        val imageFormat = binding.cropImageView.imageUri?.let { getImageCompressFormat(it) }
+        Timber.d("Compress format: $imageFormat")
+        if (imageFormat != null) {
+            binding.cropImageView.croppedImageAsync(
+                saveCompressFormat = imageFormat,
+            )
+        }
+    }
 
     private fun getImageCompressFormat(uri: Uri): Bitmap.CompressFormat {
         Timber.d("Original image URI: $uri")
@@ -204,20 +237,53 @@ class ImageCropper :
         result: CropImageView.CropResult,
     ) {
         if (result.error == null) {
-            val resultIntent = Intent()
-            resultIntent.putExtra(
-                CROP_IMAGE_RESULT,
+            val cropResultData =
                 CropResultData(
                     uriContent = result.uriContent,
                     uriPath = context?.let { result.getUriFilePath(it) },
-                ),
-            )
-            activity?.setResult(Activity.RESULT_OK, resultIntent)
-            activity?.finish()
+                )
+            if (enableDrawingTools) {
+                launchDrawingEditor(cropResultData)
+                return
+            }
+            finishWithResult(cropResultData)
         } else {
             Timber.e(result.error, "Failed to crop image")
             showSnackbar(R.string.something_wrong)
         }
+    }
+
+    private fun launchDrawingEditor(cropResultData: CropResultData) {
+        val croppedImageUri =
+            cropResultData.uriContent ?: run {
+                Timber.w("Unable to start drawing because crop result URI is null")
+                showSnackbar(R.string.something_wrong)
+                return
+            }
+        drawingActivityLauncher.launch(
+            DrawingFragment.getIntent(
+                requireContext(),
+                background_image_uri = croppedImageUri,
+            ),
+        )
+    }
+
+    private fun resolveUriPath(uri: Uri): String? =
+        when (uri.scheme) {
+            ContentResolver.SCHEME_FILE -> uri.path
+            else -> ImportUtils.getFileCachedCopy(requireContext(), uri)
+        }
+
+    private fun finishWithResult(cropResultData: CropResultData) {
+        val resultIntent =
+            Intent().apply {
+                putExtra(
+                    CROP_IMAGE_RESULT,
+                    cropResultData,
+                )
+            }
+        activity?.setResult(Activity.RESULT_OK, resultIntent)
+        activity?.finish()
     }
 
     override fun onDestroyView() {
@@ -238,6 +304,11 @@ class ImageCropper :
          * The key for the cropped image path sent back in the result Intent.
          */
         const val CROP_IMAGE_RESULT = "crop_image_result"
+
+        /**
+         * Whether the crop result should open the drawing editor.
+         */
+        const val ENABLE_DRAWING_TOOLS = "enable_drawing_tools"
     }
 
     @Parcelize

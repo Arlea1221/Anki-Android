@@ -42,27 +42,16 @@ import com.ichi2.anki.launchCatchingTask
 import com.ichi2.anki.preferences.sharedPrefs
 import com.ichi2.anki.provider.CardContentProvider
 import com.ichi2.anki.settings.Prefs
-import com.ichi2.anki.showThemedToast
 import com.ichi2.anki.snackbar.showSnackbar
+import com.ichi2.anki.speech.WhisperModelManager
 import com.ichi2.anki.utils.openUrl
 import com.ichi2.compat.CompatHelper
 import com.ichi2.utils.show
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okio.Buffer
-import okio.buffer
-import okio.sink
-import org.vosk.Model
 import timber.log.Timber
 import java.io.File
-import java.util.zip.ZipInputStream
 
 @Suppress("ktlint:standard:property-naming")
 class AdvancedSettingsFragment : SettingsFragment() {
-    private val vosk_manager by lazy { VoskModelManager(requireContext()) }
-
     override val preferenceResource: Int
         get() = R.xml.preferences_advanced
     override val analyticsScreenNameConstant: String
@@ -157,7 +146,7 @@ class AdvancedSettingsFragment : SettingsFragment() {
         }
 
         setupNewStudyScreenSettings()
-        setupVoskModelPreference()
+        setupWhisperModelPreference()
     }
 
     private fun removeUnnecessaryAdvancedPrefs() {
@@ -180,52 +169,54 @@ class AdvancedSettingsFragment : SettingsFragment() {
         }
     }
 
-    private fun setupVoskModelPreference() {
-        val pref = findPreference<Preference>(getString(R.string.pref_vosk_model_key)) ?: return
-        val model_key = getString(R.string.pref_vosk_model_choice_key)
+    private fun setupWhisperModelPreference() {
+        val status_pref = findPreference<Preference>(getString(R.string.pref_whisper_model_status_key)) ?: return
+        val whisper_manager = WhisperModelManager(requireContext())
 
-        fun refreshSummary(progress: Int? = null) {
-            val selected = requireContext().sharedPrefs().getString(model_key, "cn_small") ?: "cn_small"
-            pref.summary =
-                when (vosk_manager.status(selected)) {
-                    VoskModelManager.Status.NOT_DOWNLOADED -> getString(R.string.vosk_pref_desc_not_loaded)
-                    VoskModelManager.Status.DOWNLOADING ->
-                        getString(R.string.vosk_pref_desc_downloading, progress ?: vosk_manager.currentProgress(selected))
-                    VoskModelManager.Status.READY -> getString(R.string.vosk_pref_desc_loaded)
-                }
+        fun refresh() {
+            whisper_manager.update_summary { status_pref.summary = it }
         }
-        refreshSummary()
-        pref.setOnPreferenceClickListener {
-            val selected = requireContext().sharedPrefs().getString(model_key, "cn_small") ?: "cn_small"
-            when (vosk_manager.status(selected)) {
-                VoskModelManager.Status.READY -> {
-                    showThemedToast(requireContext(), getString(R.string.vosk_pref_desc_loaded), true)
+
+        refresh()
+        status_pref.setOnPreferenceClickListener {
+            refresh()
+            when (whisper_manager.status()) {
+                WhisperModelManager.Status.READY,
+                WhisperModelManager.Status.READY_LOCAL,
+                -> {
+                    showSnackbar(status_pref.summary.toString())
                 }
-                VoskModelManager.Status.DOWNLOADING -> {
-                    showThemedToast(
-                        requireContext(),
-                        getString(R.string.vosk_pref_desc_downloading, vosk_manager.currentProgress(selected)),
-                        true,
-                    )
+                WhisperModelManager.Status.DOWNLOADING -> {
+                    showSnackbar(getString(R.string.whisper_model_status_downloading, whisper_manager.progress()))
                 }
-                VoskModelManager.Status.NOT_DOWNLOADED -> {
+                WhisperModelManager.Status.NOT_READY -> {
                     launchCatchingTask {
-                        vosk_manager.downloadModel(
-                            selected,
-                            onProgress = { pct -> refreshSummary(pct) },
-                            onError = { msg ->
-                                refreshSummary()
-                                showThemedToast(requireContext(), getString(R.string.vosk_pref_error_download, msg), false)
+                        whisper_manager.download_model(
+                            on_progress = { pct ->
+                                status_pref.summary = getString(R.string.whisper_model_status_downloading, pct)
                             },
-                            onComplete = {
-                                refreshSummary()
-                                showThemedToast(requireContext(), getString(R.string.vosk_pref_desc_loaded), true)
+                            on_error = { msg ->
+                                status_pref.summary = getString(R.string.whisper_model_status_not_ready)
+                                showSnackbar(getString(R.string.whisper_model_download_failed, msg))
+                            },
+                            on_complete = {
+                                refresh()
+                                showSnackbar(status_pref.summary.toString())
                             },
                         )
                     }
-                    refreshSummary()
                 }
             }
+            true
+        }
+
+        // When URL/path changes, refresh the status line
+        findPreference<EditTextPreference>(getString(R.string.pref_whisper_model_url_key))?.setOnPreferenceChangeListener { _, _ ->
+            refresh()
+            true
+        }
+        findPreference<EditTextPreference>(getString(R.string.pref_whisper_model_local_path_key))?.setOnPreferenceChangeListener { _, _ ->
+            refresh()
             true
         }
     }
@@ -238,145 +229,4 @@ class AdvancedSettingsFragment : SettingsFragment() {
                 R.string.tts_key,
             )
     }
-}
-
-@Suppress("ktlint:standard:property-naming", "ktlint:standard:function-naming")
-class VoskModelManager(
-    private val context: Context,
-) {
-    enum class Status {
-        NOT_DOWNLOADED,
-        DOWNLOADING,
-        READY,
-    }
-
-    private data class ModelInfo(
-        val id: String,
-        val url: String,
-        val folder: String,
-    )
-
-    private val models =
-        mapOf(
-            "cn_small" to ModelInfo("cn_small", "https://alphacephei.com/vosk/models/vosk-model-small-cn-0.22.zip", "model_cn_small"),
-            "en_small" to ModelInfo("en_small", "https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip", "model_en_small"),
-        )
-
-    private val progress_map = mutableMapOf<String, Int>()
-    private val downloading = mutableSetOf<String>()
-
-    fun status(model_id: String): Status {
-        val info = models[model_id] ?: return Status.NOT_DOWNLOADED
-        if (downloading.contains(info.id)) return Status.DOWNLOADING
-        val marker = marker_file(info)
-        return if (marker.exists() && info_dir(info).exists()) Status.READY else Status.NOT_DOWNLOADED
-    }
-
-    fun currentProgress(model_id: String): Int = progress_map[model_id] ?: 0
-
-    fun modelPath(model_id: String): String? {
-        val info = models[model_id] ?: return null
-        val dir = info_dir(info)
-        return if (status(model_id) == Status.READY) dir.absolutePath else null
-    }
-
-    suspend fun downloadModel(
-        model_id: String,
-        onProgress: (Int) -> Unit = {},
-        onError: (String) -> Unit = {},
-        onComplete: () -> Unit = {},
-    ) = withContext(Dispatchers.IO) {
-        val info = models[model_id] ?: return@withContext
-        if (status(model_id) == Status.DOWNLOADING) return@withContext
-        downloading.add(info.id)
-        progress_map[info.id] = 0
-        val result =
-            kotlin.runCatching {
-                val client = OkHttpClient()
-                val request = Request.Builder().url(info.url).build()
-                val tmp_zip = File(context.cacheDir, "vosk_${info.id}.zip")
-                val local_zip = local_zip_file(info)
-                val zip_to_use =
-                    local_zip?.takeIf { it.exists() }?.also {
-                        Timber.i("using local vosk zip for ${info.id}: ${it.absolutePath}")
-                    }
-                        ?: tmp_zip.also {
-                            client.newCall(request).execute().use { resp ->
-                                if (!resp.isSuccessful) error("http ${resp.code}")
-                                val body = resp.body ?: error("empty body")
-                                val total = body.contentLength().takeIf { it > 0 } ?: -1L
-                                body.source().use { source ->
-                                    tmp_zip.sink().buffer().use { sink ->
-                                        var read: Long
-                                        var bytes_copied = 0L
-                                        val buffer = Buffer()
-                                        while (source.read(buffer, 8_192).also { read = it } != -1L) {
-                                            sink.write(buffer, read)
-                                            bytes_copied += read
-                                            if (total > 0) {
-                                                val pct = ((bytes_copied * 100) / total).toInt()
-                                                progress_map[info.id] = pct
-                                                onProgress(pct)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                unzip_to_dir(info, zip_to_use)
-                onComplete()
-            }.onFailure { e ->
-                Timber.w(e, "vosk model download failed")
-                onError(e.message ?: "unknown")
-            }
-        downloading.remove(info.id)
-        progress_map.remove(info.id)
-        result.exceptionOrNull()?.let { return@withContext }
-    }
-
-    private fun unzip_to_dir(info: ModelInfo, zipFile: File) {
-        val target_dir = info_dir(info)
-        if (target_dir.exists()) target_dir.deleteRecursively()
-        target_dir.mkdirs()
-        zipFile.parentFile?.mkdirs()
-        ZipInputStream(zipFile.inputStream()).use { zis ->
-            var entry = zis.nextEntry
-            while (entry != null) {
-                val relative = entry.name.substringAfter("/", entry.name)
-                if (relative.isEmpty()) {
-                    entry = zis.nextEntry
-                    continue
-                }
-                val out_file = File(target_dir, relative)
-                if (entry.isDirectory) {
-                    out_file.mkdirs()
-                } else {
-                    out_file.parentFile?.mkdirs()
-                    out_file.outputStream().use { out ->
-                        zis.copyTo(out)
-                    }
-                }
-                zis.closeEntry()
-                entry = zis.nextEntry
-            }
-        }
-        marker_file(info).writeText("ready")
-    }
-
-    fun loadModelIfReady(model_id: String): Model? {
-        val info = models[model_id] ?: return null
-        if (status(model_id) != Status.READY) return null
-        return runCatching { Model(info_dir(info).absolutePath) }.onFailure { e ->
-            Timber.w(e, "failed to load vosk model")
-        }.getOrNull()
-    }
-
-    private fun info_dir(info: ModelInfo): File = File(context.filesDir, "vosk/${info.folder}")
-
-    private fun marker_file(info: ModelInfo): File = File(info_dir(info), ".model_ready")
-
-    private fun local_zip_file(info: ModelInfo): File? =
-        context.getExternalFilesDir(null)?.let { base ->
-            File(base, "vosk/${info.id}.zip")
-        }
 }

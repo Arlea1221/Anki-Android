@@ -172,20 +172,24 @@
     <string name="speech_diff_stop" comment="Stop speech diff recognition; shares text with stop_recording">Stop</string>
     <string name="speech_diff_listening">Listening…</string>
     <string name="speech_diff_no_permission">Microphone permission required</string>
-    <string name="speech_diff_not_available">Speech recognition not available on this device</string>
-    <string name="speech_diff_error">Speech error: %s</string>
     <string name="speech_diff_no_card">No card text available</string>
-    <string name="speech_diff_expected_label">Expected:</string>
-    <string name="speech_diff_actual_label">Actual:</string>
-    <string name="vosk_pref_model_choice_title" maxLength="41">Speech model</string>
-    <string name="pref_vosk_model_choice_key">pref_vosk_model_choice_key</string>
-    <string name="vosk_pref_desc_not_loaded">Model not loaded</string>
-    <string name="vosk_pref_title" maxLength="41">Speech recognition</string>
-    <string name="pref_vosk_model_key">pref_vosk_model_key</string>
-    <string name="vosk_pref_desc_downloading">Downloading… %1$d%%</string>
-    <string name="vosk_pref_desc_loaded">Model loaded</string>
-    <string name="vosk_pref_error_no_model">Speech model not ready</string>
-    <string name="vosk_pref_error_download">Speech model error: %s</string>
+    <string name="pref_whisper_model_url_key">pref_whisper_model_url_key</string>
+    <string name="pref_whisper_model_local_path_key">pref_whisper_model_local_path_key</string>
+    <string name="pref_whisper_model_status_key">pref_whisper_model_status_key</string>
+    <string name="whisper_model_status_title" maxLength="41">Whisper model</string>
+    <string name="whisper_model_status_not_ready">Not downloaded</string>
+    <string name="whisper_model_status_downloading">Downloading… %1$d%%</string>
+    <string name="whisper_model_status_ready">Ready: %1$s</string>
+    <string name="whisper_model_status_using_local">Using local model: %1$s</string>
+    <string name="whisper_model_url_title" maxLength="41">Whisper model URL</string>
+    <string name="whisper_model_url_summary">URL used for downloading the model file</string>
+    <string name="whisper_model_local_path_title" maxLength="41">Local model path (optional)</string>
+    <string name="whisper_model_local_path_summary">If set and exists, this file will be used instead of the downloaded model</string>
+    <string name="whisper_model_default_url">https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin</string>
+    <string name="whisper_model_download_failed">Model download failed: %1$s</string>
+    <string name="whisper_transcribing">Transcribing…</string>
+    <string name="whisper_engine_init_failed">Failed to initialize Whisper engine</string>
+    <string name="whisper_recording_failed">Audio recording failed: %1$s</string>
     <string name="export_ready_title">Export ready</string>
     <string name="export_send_no_handlers">No applications available to handle apkg. Saving…</string>
     <string name="export_save_apkg_successful">Successfully saved Anki package</string>

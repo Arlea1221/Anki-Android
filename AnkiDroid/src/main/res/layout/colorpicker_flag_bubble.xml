@@ -26,6 +26,6 @@
         android:id="@+id/flag_color_layout"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:background="@drawable/circle_background"
+        android:background="@drawable/profile_bg_circle"
         android:clipToOutline="true" />
 </FrameLayout>

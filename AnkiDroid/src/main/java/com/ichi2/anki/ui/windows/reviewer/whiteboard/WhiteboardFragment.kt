@@ -65,6 +65,7 @@ class WhiteboardFragment :
 
     private var eraserPopup: PopupWindow? = null
     private var brushConfigPopup: PopupWindow? = null
+    private var force_stylus_mode_off = false
 
     override fun onViewCreated(
         view: View,
@@ -192,7 +193,7 @@ class WhiteboardFragment :
 
         viewModel.isStylusOnlyMode
             .onEach { isEnabled ->
-                whiteboardView.isStylusOnlyMode = isEnabled
+                whiteboardView.isStylusOnlyMode = if (force_stylus_mode_off) false else isEnabled
             }.launchIn(lifecycleScope)
 
         viewModel.toolbarAlignment
@@ -408,6 +409,11 @@ class WhiteboardFragment :
     }
 
     fun resetCanvas() = viewModel.reset()
+
+    fun set_force_stylus_mode_off(force_off: Boolean) {
+        force_stylus_mode_off = force_off
+        binding.whiteboardView.isStylusOnlyMode = if (force_off) false else viewModel.isStylusOnlyMode.value
+    }
 
     /**
      * @return whether the whiteboard is completely empty, including the undo and redo stacks.

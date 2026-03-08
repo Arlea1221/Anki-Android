@@ -602,10 +602,10 @@ class MultimediaImageFragment : MultimediaFragment(R.layout.fragment_multimedia_
         Timber.i("Loading non-SVG image using WebView")
 
         try {
-            val internalFile = internalizeUri(imageUri)?.takeIf { it.exists() }
+            val internalFile = resolveUriToFile(imageUri)?.takeIf { it.exists() }
             if (internalFile == null) {
                 Timber.w(
-                    "loadImage() unable to internalize image from Uri %s",
+                    "loadImage() unable to resolve image from Uri %s",
                     imageUri,
                 )
                 showSomethingWentWrong()
@@ -663,8 +663,10 @@ class MultimediaImageFragment : MultimediaFragment(R.layout.fragment_multimedia_
         hasStartedImageSelection = true
         val intent =
             com.ichi2.imagecropper.ImageCropperLauncher
-                .ImageUri(imageUri)
-                .getIntent(requireContext())
+                .ImageUri(
+                    imageUri = imageUri,
+                    enableDrawingTools = true,
+                ).getIntent(requireContext())
         imageCropperLauncher.launch(intent)
     }
 

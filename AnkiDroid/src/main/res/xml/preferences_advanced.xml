@@ -114,15 +114,24 @@
         android:key="@string/tts_key"
         android:summary="@string/tts_summ"
         android:title="@string/tts" />
-    <ListPreference
-        android:key="@string/pref_vosk_model_choice_key"
-        android:title="@string/vosk_pref_model_choice_title"
-        android:entries="@array/vosk_model_entries"
-        android:entryValues="@array/vosk_model_values"
-        android:defaultValue="cn_small"
-        app1:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        android:defaultValue="@string/whisper_model_default_url"
+        android:key="@string/pref_whisper_model_url_key"
+        android:title="@string/whisper_model_url_title"
+        android:dialogTitle="@string/whisper_model_url_title"
+        android:summary="@string/whisper_model_url_summary"
+        android:inputType="textUri"
+        app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        android:defaultValue=""
+        android:key="@string/pref_whisper_model_local_path_key"
+        android:title="@string/whisper_model_local_path_title"
+        android:dialogTitle="@string/whisper_model_local_path_title"
+        android:summary="@string/whisper_model_local_path_summary"
+        android:inputType="textUri"
+        app:useSimpleSummaryProvider="true" />
     <Preference
-        android:key="@string/pref_vosk_model_key"
-        android:title="@string/vosk_pref_title"
-        android:summary="@string/vosk_pref_desc_not_loaded" />
+        android:key="@string/pref_whisper_model_status_key"
+        android:title="@string/whisper_model_status_title"
+        android:summary="@string/whisper_model_status_not_ready" />
 </PreferenceScreen>
