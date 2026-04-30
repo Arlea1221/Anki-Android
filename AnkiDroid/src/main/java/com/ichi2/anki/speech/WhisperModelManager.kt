@@ -102,7 +102,7 @@ class WhisperModelManager(
             val request = Request.Builder().url(url).build()
             client.newCall(request).execute().use { resp ->
                 if (!resp.isSuccessful) error("http ${resp.code}")
-                val body = resp.body ?: error("empty body")
+                val body = checkNotNull(resp.body) { "empty body" }
                 val total = body.contentLength().takeIf { it > 0 } ?: -1L
                 body.source().use { source ->
                     tmp.sink().buffer().use { sink ->

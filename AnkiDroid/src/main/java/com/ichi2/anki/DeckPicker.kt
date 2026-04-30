@@ -272,9 +272,6 @@ open class DeckPicker :
 
     private lateinit var floatingActionMenu: DeckPickerFloatingActionMenu
 
-    // flag asking user to do a full sync which is used in upgrade path
-    private var recommendOneWaySync = false
-
     var activeSnackBar: Snackbar? = null
     private val activeSnackbarCallback =
         object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
@@ -1630,31 +1627,9 @@ open class DeckPicker :
      * Automatic sync
      */
     private fun onFinishedStartup() {
-        // Force a one-way sync if flag was set in upgrade path, asking the user to confirm if necessary
-        if (recommendOneWaySync) {
-            recommendOneWaySync = false
-            try {
-                getColUnsafe.modSchema(check = true)
-            } catch (e: ConfirmModSchemaException) {
-                Timber.w("Forcing one-way sync")
-                e.log()
-                // If libanki determines it's necessary to confirm the one-way sync then show a confirmation dialog
-                // We have to show the dialog via the DialogHandler since this method is called via an async task
-                val res = resources
-                val message =
-                    """
-                    ${res.getString(R.string.full_sync_confirmation_upgrade)}
-
-                    ${res.getString(R.string.full_sync_confirmation)}
-                    """.trimIndent()
-
-                dialogHandler.sendMessage(OneWaySyncDialog(message).toMessage())
-            }
-        } else {
-            launchCatchingTask {
-                if (!automaticSync()) {
-                    BackupPromptDialog.showIfAvailable(this@DeckPicker)
-                }
+        launchCatchingTask {
+            if (!automaticSync()) {
+                BackupPromptDialog.showIfAvailable(this@DeckPicker)
             }
         }
     }
@@ -1704,47 +1679,6 @@ open class DeckPicker :
                     current
                 }
             preferences.edit { putLong(DeckPickerViewModel.UPGRADE_VERSION_KEY, current) }
-
-            // Recommend the user to do a full-sync if they're upgrading from before 2.3.1beta8
-            if (previous < 20301208) {
-                Timber.i("Recommend the user to do a full-sync")
-                recommendOneWaySync = true
-            }
-
-            // Fix "font-family" definition in templates created by AnkiDroid before 2.6alpha23
-            if (previous < 20600123) {
-                Timber.i("Fixing font-family definition in templates")
-                try {
-                    val notetypes = getColUnsafe.notetypes
-                    for (noteType in notetypes.all()) {
-                        val css = noteType.css
-                        if (css.contains("font-familiy")) {
-                            noteType.css = css.replace("font-familiy", "font-family")
-                            notetypes.save(noteType)
-                        }
-                    }
-                } catch (e: JSONException) {
-                    Timber.e(e, "Failed to upgrade css definitions.")
-                }
-            }
-
-            // Check if preference upgrade or database check required, otherwise go to new feature screen
-            val upgradeDbVersion = AnkiDroidApp.CHECK_DB_AT_VERSION
-
-            // Specifying a checkpoint in the future is not supported, please don't do it!
-            if (current < upgradeDbVersion) {
-                Timber.e("Invalid value for CHECK_DB_AT_VERSION")
-                postSnackbar("Invalid value for CHECK_DB_AT_VERSION")
-                onFinishedStartup()
-                return
-            }
-
-            // Skip full DB check if the basic check is OK
-            // TODO: remove this variable if we really want to do the full db check on every user
-            val skipDbCheck = false
-            // if (previous < upgradeDbVersion && getCol().basicCheck()) {
-            //    skipDbCheck = true;
-            // }
             val upgradedPreferences = InitialActivity.upgradePreferences(this, previous)
             // Integrity check loads asynchronously and then restart deck picker when finished
             if (upgradedPreferences) {
