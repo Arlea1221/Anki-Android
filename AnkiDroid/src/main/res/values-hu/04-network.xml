@@ -66,7 +66,6 @@
     <string name="lost_mail_instructions">Elfelejtette az emailt?</string>
     <string name="sign_in">Bejelentkezés</string>
     <!-- AndroidManifest.xml -->
-    <string name="deckpreferences_title">XXX lehetőségei</string>
     <string name="sync_title">Szinkronizálás</string>
     <string name="sync_log_uploading_message">Teljes szinkronizáció helyből</string>
     <string name="sync_database_acknowledge">Gyűjtemény szinkronizálva</string>
@@ -78,7 +77,6 @@
     <string name="one_way_sync_title" maxLength="41">Egyirányú szinkronizálás</string>
     <string name="one_way_sync_confirmation">One way sync requested</string>
     <string name="full_sync_confirmation">A módosítás után fel kell tölteni a teljes adatbázis gyűjteményt. Ezzel az eszközzel nem szinkronizált más eszközökkel kapcsolatos tanulási eredmények és módosítások elveszhetnek. Folytatod?</string>
-    <string name="full_sync_confirmation_upgrade">Az AnkiDroid korábban telepített verziójának hibája miatt ajánlott teljes szinkronizálást elvégezni.</string>
     <!-- Deck Picker Sync Icon -->
     <string name="sync_menu_title_one_way_sync">Szinkronizálás (egyirányú)</string>
     <string name="sync_menu_title_no_account">Szinkronizálás (bejelentkezés)</string>

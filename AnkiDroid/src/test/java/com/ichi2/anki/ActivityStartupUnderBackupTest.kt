@@ -21,7 +21,6 @@ import com.ichi2.anki.instantnoteeditor.InstantNoteEditorActivity
 import com.ichi2.anki.preferences.PreferencesActivity
 import com.ichi2.testutils.ActivityList
 import com.ichi2.testutils.ActivityList.ActivityLaunchParam
-import com.ichi2.testutils.EmptyApplication
 import com.ichi2.utils.ExceptionUtil.getFullStackTrace
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
@@ -33,11 +32,9 @@ import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.android.controller.ActivityController
-import org.robolectric.annotation.Config
 import java.util.stream.Collectors
 
 @RunWith(ParameterizedRobolectricTestRunner::class)
-@Config(application = EmptyApplication::class) // no point in Application init if we don't use it
 class ActivityStartupUnderBackupTest : RobolectricTest() {
     @ParameterizedRobolectricTestRunner.Parameter
     @JvmField // required for Parameter
@@ -55,10 +52,6 @@ class ActivityStartupUnderBackupTest : RobolectricTest() {
         notYetHandled(IntentHandler2::class.java.simpleName, "Not working (or implemented) - inherits from Activity")
         notYetHandled(
             PreferencesActivity::class.java.simpleName,
-            "Not working (or implemented) - inherits from AppCompatPreferenceActivity",
-        )
-        notYetHandled(
-            FilteredDeckOptions::class.java.simpleName,
             "Not working (or implemented) - inherits from AppCompatPreferenceActivity",
         )
         notYetHandled(

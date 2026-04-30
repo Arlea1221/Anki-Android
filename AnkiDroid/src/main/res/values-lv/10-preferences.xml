@@ -225,7 +225,7 @@
         Ja nav iestatīts, tiks izmantots noklusējuma AnkiWeb serveris.
         <a href="%s">Uzzināt vairāk</a>
         ]]></string>
-    <string name="custom_sync_server_base_url_title" maxLength="41">Vienādošanas URL</string>
+    <string name="custom_sync_server_base_url_title" maxLength="41">Sync URL</string>
     <string name="custom_sync_certificate_title" maxLength="41">Pielāgots saknes sertifikāts (PEM)</string>
     <!-- Key Bindings -->
     <string name="keyboard">Tastatūra</string>
@@ -245,16 +245,7 @@
     <string name="studyoptions_limit_select_tags">Atlasīt birkas</string>
     <!-- Deck configurations -->
     <string name="deck_conf_general" maxLength="41" comment="Label of the submenu for the general options of new deck">Vispārīgi</string>
-    <string name="deck_conf_cram_filter" maxLength="41">Atsijāt</string>
     <string name="deck_conf_cram_search" maxLength="41" comment="Label of a text field that contains a search query.">Meklēt</string>
-    <string name="deck_conf_cram_limit" maxLength="41">Ierobežot līdz</string>
-    <string name="deck_conf_cram_order" maxLength="41">Atlasītās kartītes pēc</string>
-    <string name="deck_conf_cram_reschedule" maxLength="41" comment="Title of the box labelled by deck_conf_cram_reschedule_summ">Pārplānot</string>
-    <string name="deck_conf_cram_reschedule_summ">Pārplānot kartītes, vadoties pēc manām atbildēm šajā kavā</string>
-    <string name="deck_conf_cram_filter_2_check">Iespējot otrējo atsijāšanu</string>
-    <string name="deck_conf_cram_steps_summ" maxLength="41">Noteikt pielāgotus soļus</string>
-    <string name="deck_conf_cram_preview_delays" maxLength="41">Priekšskatījumu aizkaves</string>
-    <string name="deck_conf_cram_preview_delays_summ">Aizkaves ir sekundēs. 0 atgriež kartīti sākotnējā kavā.</string>
     <!-- analytics options -->
     <string name="analytics_dialog_title">Palīdzi padarīt AnkiDroid labāku!</string>
     <string name="analytics_title" maxLength="41">Kopīgot iespēju lietojumu</string>
@@ -397,4 +388,5 @@
     <string name="flip_and_answer" maxLength="41" comment="Configuration of the \'Answer\' commands to answer the card if on the answer side, and flip it if on the question side">Flip and answer</string>
     <!--Keyboard shortcuts dialog-->
     <string name="open_settings" comment="Description of the shortcut that opens the app settings">Atvērt iestatījumus</string>
+    <string name="related_settings_title" comment="Title of the section for related settings">Related settings</string>
 </resources>

@@ -44,8 +44,7 @@
 ~ this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="check_db_title">Праверыць базу даных?</string>
-    <string name="check_db_warning">Гэта можа заняць шмат часу</string>
+    <string name="check_db_warning">Гэта можа заняць шмат часу. Працягнуць?</string>
     <string name="contextmenu_deckpicker_delete_deck" maxLength="28">Выдаліць калоду</string>
     <string name="delete_deck_title">Выдаліць калоду?</string>
     <plurals name="delete_deck_message">
@@ -87,11 +86,14 @@
     <string name="restore_backup_choose_another">Выбраць іншую</string>
     <string name="dialog_cancel">Адмяніць</string>
     <string name="dialog_ok">Добра</string>
+    <string name="dialog_add" comment="Positive dialog action button label to add \'something\'">Дадаць</string>
+    <string name="restore">Аднавіць</string>
     <string name="dialog_confirm" tools:ignore="UnusedResources">Пацвердзіць</string>
     <string name="dialog_no">Не</string>
     <string name="dialog_yes">Так</string>
     <string name="dialog_keep">Пакінуць</string>
     <string name="dialog_remove">Выдаліць</string>
+    <string name="dialog_exit" comment="Label for a button which will exit/finish the current screen">Выйсці</string>
     <string name="dialog_continue">Працягнуць</string>
     <string name="dialog_processing">Апрацоўка&#8230;</string>
     <string name="dialog_positive_create" comment="Create a new collection, probably erasing the previous one, may be necessary in case of error.">Стварыць</string>
@@ -106,8 +108,7 @@
     <string name="dialog_invalid_custom_certificate_title">Памылка разборкі сертыфіката</string>
     <string name="dialog_updated_custom_certificate">Сертыфікат абноўлены</string>
     <!-- Media checking -->
-    <string name="check_media_title">Праверыць медыяфайлы?</string>
-    <string name="check_media_warning">Гэта можа заняць шмат часу ў тым выпадку, калі калекцыя медыяфайлаў надта вялікая</string>
+    <string name="check_media_warning">Гэта можа заняць шмат часу ў тым выпадку, калі калекцыя медыяфайлаў занадта вялікая. Працягнуць?</string>
     <string name="check_media_message">Праверка медыяфайлаў&#8230;</string>
     <string name="check_media_adding_missing_tag">Дадаванне тэгаў&#8230;</string>
     <string name="check_media_tags_added">Тэгі дададзены</string>
@@ -133,8 +134,6 @@
     <string name="permission_denied">У доступе адмоўлена</string>
     <string name="recording_permission_denied_message">Доступ да мікрафону патрэбны для \"Запісу голасу\". Дайце адпаведны доступ у наладах праграмы.</string>
     <!-- Database Integrity Check -->
-    <string name="integrity_check_startup_title">Праграма AnkiDroid абноўленая</string>
-    <string name="integrity_check_startup_content">Праграма AnkiDroid абноўленая. Дадзенае абнаўленне змяшчае выпраўленні магчымых праблем з базай даных і мы раім вам запусціць яе праверку.</string>
     <string name="integrity_check_continue_anyway">Усё роўна працягнуць</string>
     <string name="integrity_check_insufficient_space">Праверка базы даных патрабуе вялікай колькасці часовага сховішча.\n\nВельмі пажадана мець прынамсі %s свабоднага месца на прыладзе для таго, каб паспяхова выканаць гэту аперацыю.</string>
     <string name="integrity_check_insufficient_space_extra_content">\n\nУ цяперашні час у вас %s вольнага месца.</string>
@@ -221,8 +220,6 @@
     <string name="dismiss_backup_warning_title">Папярэджанне пра страту даных</string>
     <string name="dismiss_backup_warning_new_user">У сувязі са змяненнямі палітыкі прыватнасці Android, пасля выдалення праграмы вашы даныя і аўтаматычныя рэзервовыя копіі будуць выдалены з вашай прылады</string>
     <string name="dismiss_backup_warning_upgrade">У сувязі са змяненнямі палітыкі прыватнасці Android, пасля выдалення праграмы вашы даныя і аўтаматычныя рэзервовыя копіі стануць недаступны</string>
-    <string name="deck_already_exists">Калода ўжо існуе</string>
-    <string name="empty_deck_name">Калода не можа быць пустой</string>
     <string name="create_deck_numeric_hint">Калі ў вас ёсць праблемы з парадкам калод (напрыклад, ‘10’  калода стаіць перад ‘2’), замяніце ‘2’ на ‘02’</string>
     <!-- Set Due Date -->
     <string name="set_due_date_match_interval" comment="when setting a card\'s due date, this checkbox also changes the interval of the card">Задаць інтэрвал на тое ж самае значэнне</string>
@@ -282,8 +279,20 @@
     <!--Change Note Type Dialog Fragment-->
     <string name="card_numbers_unchanged">Нумары картак застануцца без змяненняў</string>
     <!-- Subset of TR.changeNotetypeToFromCloze -->
-    <string name="extra_cloze_deletions_removed">If changing to a regular note type, and there are more cloze deletions than available card templates, any extra cards will be removed.</string>
+    <string name="extra_cloze_deletions_removed">Калі вы змяняеце тып нататкі на звычайны, а заданняў з пропускамі больш, чым даступных шаблонаў картак, то ўсе лішнія карткі будуць выдалены.</string>
     <string name="different_note_types_selected">Выберыце нататкі толькі аднаго тыпу.</string>
     <string name="error_no_changes_to_save">Адсутнічаюць змены для захавання</string>
     <string name="choose_color">Выберыце колер</string>
+    <!-- Special Fields -->
+    <string name="standard_fields_tab_header" comment="Tab header for inserting non-special fields: {{Front}}">Палі</string>
+    <string name="special_fields_tab_header" comment="Tab header for inserting special fields: {{Deck}}">Спецыяльныя</string>
+    <string name="special_field_example_suffix"><![CDATA[: ‘<b>%1$s</b>’]]></string>
+    <string name="special_field_front_side_help">Змесціва пярэдняга шаблона. Аўдыя не будзе прайгравацца аўтаматычна</string>
+    <string name="special_field_deck_help" comment="%s: either blank or \' %s\'">Поўная калода картак, якая ўключае бацькоўскія калоды%s</string>
+    <string name="special_field_subdeck_help" comment="%s: either blank or \' %s\'">Бягучая калода картак, якая выключае бацькоўскія калоды%s</string>
+    <string name="special_field_flag_help">Выводзіць ‘%1$s’, дзе %2$s код пазнакі (%3$s\–%4$s\)</string>
+    <string name="special_field_tags_help" comment="%s: either blank or \' %s\'">Меткі нататкі%s</string>
+    <string name="special_field_card_id_help" comment="%s: either blank or \' %s\'">Ідэнтыфікатар карткі%s</string>
+    <string name="special_field_card_help" comment="%s: either blank or \' %s\'">Назва шаблону карткі%s</string>
+    <string name="special_field_type_help" comment="%s: either blank or \' %s\'">Назва тыпу нататкі%s</string>
 </resources>

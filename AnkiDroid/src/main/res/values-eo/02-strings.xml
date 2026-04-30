@@ -56,7 +56,6 @@
     <string name="CardEditorCards">Kartoj: %1$s</string>
     <string name="edit_occlusions">Redakti vualojn</string>
     <string name="paste_from_clipboard" maxLength="28">Alglui el tondujo</string>
-    <string name="tag_name">Nomo de etikedo</string>
     <string name="add_new_filter_tags">Aldoni/filtri etikedojn</string>
     <string name="add_tag" maxLength="28">Aldoni etikedon</string>
     <string name="check_all_tags" maxLength="28">(Mal)marki ĉiujn etikedojn</string>
@@ -99,6 +98,10 @@
     <string name="webview_crash_loop_dialog_content">La operciuma komponanto WebView malsukcesis bildigi la karton “%1$s”.\n%2$s</string>
     <string name="slide_to_cancel" comment="Message shown when pressing the record button">Deŝovu por nuligi</string>
     <string name="filter_by_flags" maxLength="41">Flagoj</string>
+    <!-- filtered deck options -->
+    <string name="filtered_option_delay_again">Delay for again</string>
+    <string name="filtered_option_delay_hard">Delay for hard</string>
+    <string name="filtered_option_delay_good">Delay for good</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">Kreado de listo de etikedoj&#8230;</string>
     <!-- Study options -->
@@ -120,7 +123,6 @@
     <string name="close">Fermi</string>
     <string name="select">Elekti</string>
     <string name="field_remapping">%1$s (de “%2$s”)</string>
-    <string name="confirm_map_cards_to_nothing">Ĉiuj senasignitaj kartoj estos forigitaj. Se noto ne havas restajn kartojn, ĝi ankaŭ perdiĝos. Ĉu vi certe volas pluigi?</string>
     <string name="missing_note_type">Ne trovis nototipon</string>
     <string name="card_previewer_empty_front_indicator" comment="Extra text appended onto a tab title in the card previewer so that the user can see at a glance whether a card has no front.">%1$s (malplena)</string>
     <!-- Image cropper -->
@@ -149,8 +151,6 @@
     <string name="preview_progress_bar_text" comment="What card we are on out of how many in card previewer progress bar">%1$d el %2$d</string>
     <string name="rename" comment="Confirm that the renaming action should be processed." maxLength="28">Renomi</string>
     <string name="checks_action" maxLength="28">Kontroli</string>
-    <string name="check_db" maxLength="28">Kontroli datumbazon</string>
-    <string name="check_media" maxLength="28">Kontroli aŭdvidaĵojn</string>
     <string name="empty_cards" maxLength="28">Malplenaj kartoj</string>
     <string name="unknown_type_field_warning">Enigu respondon: nekonata kampo %s</string>
     <string name="delete_deck" comment="Message on a progress bar starting a deck is being deleted.">Forigado de kartaro&#8230;</string>
@@ -193,6 +193,7 @@
     <string name="dyn_deck_desc">Tio ĉi estas speciala kartaro por lerni ekster la norma lern-plano. Kartoj aŭtomate revenos al originalaj kartaroj post ripeti ilin. Forigi tiun ĉi kartaron el la listo de kartaroj redonos ĉiujn restantajn kartojn al originalaj kartaroj.</string>
     <string name="tag_editor_add_feedback">Frapetu “%2$s” por konfirmi aldoni “%1$s”</string>
     <string name="tag_editor_add_feedback_existing">Elektis ekzistan etikedon “%1$s”</string>
+    <string name="tag_already_exists">Etikedo jam ekzistas</string>
     <!-- Time spans -->
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">Eraro dum kunhavigado de apkg-dosiero</string>
@@ -206,13 +207,17 @@
     <string name="background_image_title" maxLength="41">Fono</string>
     <string name="choose_an_image" maxLength="41">Elekti bildon</string>
     <string name="remove_wallpaper_image" maxLength="41">Forigi fonon</string>
-    <string name="remove_background_image">Ĉu forigi fonon?</string>
+    <string name="remove_background_image">Are you sure you wish to remove the background?</string>
     <!-- Card Template Browser Appearance -->
     <string name="restore_default" maxLength="28">Restarigi implicitajn</string>
     <string name="reviewer_tts_cloze_spoken_replacement">Malplena</string>
     <!-- Whiteboard eraser mode toggle message in Reviewer -->
     <string name="white_board_eraser_enabled">Reĝimo “forviŝilo” aktiva</string>
     <string name="white_board_eraser_disabled">Reĝimo “forviŝilo” malaktiva</string>
+    <string comment="Progress amount e.g. \'28 MB/141 MB\'. %1$s is the current amount, %2$s is the max." name="progress_amount_bytes">%1$s/%2$s</string>
+    <string name="media_file_size_warning_title">Media too large</string>
+    <string name="media_file_size_warning_message" comment="1$s: File name, 2$s: File size, 3$s: The size limit (e.g. 100MB)">The file \"%1$s\" (%2$s) exceeds the AnkiWeb limit of %3$s and cannot be synced. Add anyway?</string>
+    <string name="media_file_size_add_anyway">Aldoni ĉiuokaze</string>
     <!-- Whiteboard save image message in the Study Screen -->
     <string name="white_board_image_save_failed">Malsukcesis konservi bildon de skribtabulo. %s</string>
     <string name="white_board_image_saved">Konservis bildon de skribtabulo al %s</string>
@@ -261,6 +266,9 @@
     <string name="create_shortcut_error">Eraro dum krei fenestraĵon: %s</string>
     <string name="note_editor_capitalize" comment="This is for a switch with a checkbox - on: enabled" maxLength="28">Majuskligi frazojn</string>
     <string name="menu_scroll_toolbar" comment="Checkbox stating whether note editor toolbar is scrollable or stacked. Checked: Scroll" maxLength="28">Rulumi en ilarstrio</string>
+    <!-- Dialog hints -->
+    <string name="dialog_hint_url">URL</string>
+    <string name="dialog_hint_certificate">Atestilo</string>
     <!-- IncrementNumberRangePreference -->
     <string name="plus_sign" comment="Label for increment button in IncrementerNumberRangePreference">+</string>
     <string name="minus_sign" comment="Label for decrement button in IncrementerNumberRangePreference">-</string>
@@ -270,7 +278,7 @@
     <!-- Used for credential empty warning message -->
     <string name="invalid_email">Enigu ĝustan retpoŝtan adreson</string>
     <string name="password_empty">Pasvorto estas postulata</string>
-    <string name="back_pressed_once">Frapetu denove por eliri</string>
+    <string name="back_pressed_once">Go back again to exit</string>
     <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
     <string name="percentage">%s%%</string>
     <string name="download_deck">Elŝuti kartaron</string>
@@ -382,4 +390,7 @@
     <string name="scheduler_upgrade_required_dialog_title" comment="Shown in a dialog when user has imported a collection using a very old version of the Anki spaced repetition scheduler">Necesas promocii planilon</string>
     <!-- Whitespace is OK -->
     <string name="list_separator" comment="The character and spacing to display between elements of a list, for example \', \' in \'Apple, Banana, Cherry" tools:ignore="TranslationTypo">, </string>
+    <!-- Other errors -->
+    <!-- Similar to TR.qtMiscNameExists(): "Name exists." -->
+    <string name="error_name_exists">Nomo jam ekzistas</string>
 </resources>

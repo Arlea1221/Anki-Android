@@ -116,6 +116,7 @@
     <string name="menu_unmark_note">ᱠᱷᱟᱴᱚ ᱵᱤᱪᱟᱹᱨ ᱚ-ᱪᱤᱱᱦᱟᱹᱭ ᱢᱮ</string>
     <string name="menu_enable_voice_playback" maxLength="28">ᱥᱮᱨᱮᱧ ᱯᱷᱟᱭᱞᱟᱣ ᱮᱱᱮᱡ</string>
     <string name="menu_disable_voice_playback">ᱥᱮᱨᱮᱧ ᱯᱷᱟᱭᱞᱟᱣ ᱵᱚᱫᱚᱞ</string>
+    <string name="menu_create_backup" maxLength="28">Create backup</string>
     <string name="new_deck">ᱱᱟᱶᱟ ᱰᱮᱠ ᱛᱮᱭᱟᱨ ᱢᱮ</string>
     <string name="new_dynamic_deck">ᱯᱷᱤᱞᱴᱚᱨ ᱰᱮᱠ ᱛᱮᱭᱟᱨ ᱢᱮ</string>
     <string name="directory_inaccessible">AnkiDroid ᱩᱱᱩᱫᱩᱜ ᱫᱚ ᱵᱟᱭ ᱦᱟᱛᱟᱣ ᱫᱟᱲᱮᱟᱜ ᱠᱟᱱᱟ</string>
@@ -129,7 +130,7 @@
     <string name="empty_cram_label" maxLength="28">ᱵᱟ.ᱱᱩᱜᱼᱟ</string>
     <string name="create_subdeck">ᱥᱚᱵᱰᱮᱠ ᱛᱮᱭᱟᱨ ᱢᱮ</string>
     <string name="empty_filtered_deck">ᱯᱷᱤᱞᱴᱚᱨ ᱰᱮᱠ ᱠᱷᱟᱹᱞᱤᱜ ᱠᱟᱱᱟ&#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">ᱰᱮᱠ ᱥᱮᱸᱫᱽᱨᱟ</string>
+    <string name="search_deck" comment="Deck search for selecting it">Deck search</string>
     <string name="empty_deck">ᱱᱚᱶᱟ ᱰᱮᱠ ᱫᱚ ᱠᱷᱟᱹᱞᱤ ᱜᱮᱭᱟ</string>
     <string name="invalid_deck_name">ᱰᱮᱠ ᱧᱩᱛᱩᱢ ᱵᱷᱩᱞ</string>
     <string name="studyoptions_congrats_finished">ᱥᱟᱨᱦᱟᱣ! ᱛᱮᱦᱮᱸᱧ ᱞᱟᱹᱜᱤᱫ ᱟᱢ ᱯᱩᱨᱟᱹᱣ ᱦᱩᱭᱠᱮᱜᱼᱟᱢ ᱾</string>
@@ -144,7 +145,6 @@
     <string name="syncing_media">ᱥᱤᱸᱠᱨᱚᱱᱥ ᱢᱮᱰᱤᱭᱟ</string>
     <string name="export_deck" maxLength="28">ᱰᱮᱠ ᱵᱷᱮᱡᱟᱭ ᱢᱮ</string>
     <string name="export_collection">ᱴᱩᱢᱟᱹᱞ ᱵᱷᱮᱡᱟᱭ ᱢᱮ</string>
-    <string name="nothing">ᱵᱟᱹᱱᱩᱜᱼᱟ</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">ᱠᱟᱰ ᱨᱮᱭᱟᱜ ᱯᱨᱚᱠᱟᱨ</string>
     <string name="card_template_editor_front">ᱢᱟᱲᱟᱝ ᱪᱷᱟᱸᱪ</string>
@@ -212,6 +212,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">ᱮᱠᱟᱶᱩᱴ ᱦᱮᱡ ᱢᱮ</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">ᱚᱛᱱᱚᱜ ᱠᱟᱨᱰ</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Internet</string>
+    <string name="permission_access_summary">Required for the app to work</string>
+    <string name="permission_required_message">Please grant AnkiDroid the ‘%s’ permission to continue</string>
     <!-- Multiple profile -->
     <string name="add_profile">Add profile</string>
 </resources>

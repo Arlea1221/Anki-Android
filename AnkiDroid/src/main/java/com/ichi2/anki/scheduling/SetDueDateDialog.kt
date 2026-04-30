@@ -19,6 +19,7 @@ package com.ichi2.anki.scheduling
 import android.app.Dialog
 import android.content.res.Configuration
 import android.os.Bundle
+import android.text.InputFilter
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -46,8 +47,8 @@ import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.R
 import com.ichi2.anki.asyncCatching
 import com.ichi2.anki.databinding.DialogSetDueDateBinding
-import com.ichi2.anki.databinding.SetDueDateRangeBinding
-import com.ichi2.anki.databinding.SetDueDateSingleBinding
+import com.ichi2.anki.databinding.FragmentSetDueDateRangeBinding
+import com.ichi2.anki.databinding.FragmentSetDueDateSingleBinding
 import com.ichi2.anki.launchCatchingTask
 import com.ichi2.anki.libanki.CardId
 import com.ichi2.anki.libanki.sched.Scheduler
@@ -56,7 +57,7 @@ import com.ichi2.anki.scheduling.SetDueDateViewModel.Tab
 import com.ichi2.anki.servicelayer.getFSRSStatus
 import com.ichi2.anki.showThemedToast
 import com.ichi2.anki.snackbar.showSnackbar
-import com.ichi2.anki.ui.internationalization.toSentenceCase
+import com.ichi2.anki.ui.internationalization.sentenceCase
 import com.ichi2.anki.utils.doOnImeHidden
 import com.ichi2.anki.utils.ext.requireBoolean
 import com.ichi2.anki.utils.openUrl
@@ -139,12 +140,7 @@ class SetDueDateDialog : DialogFragment() {
         binding = DialogSetDueDateBinding.inflate(layoutInflater)
         return MaterialAlertDialogBuilder(requireContext())
             .create {
-                title(
-                    text =
-                        TR
-                            .actionsSetDueDate()
-                            .toSentenceCase(R.string.sentence_set_due_date),
-                )
+                title(text = TR.sentenceCase.setDueDate)
                 positiveButton(R.string.dialog_ok) { launchUpdateDueDate() }
                 negativeButton(R.string.dialog_cancel)
                 neutralButton(R.string.help)
@@ -278,10 +274,10 @@ class SetDueDateDialog : DialogFragment() {
         override fun getItemCount() = 2
     }
 
-    class SelectSingleDateFragment : Fragment(R.layout.set_due_date_single) {
+    class SelectSingleDateFragment : Fragment(R.layout.fragment_set_due_date_single) {
         private val viewModel: SetDueDateViewModel by activityViewModels<SetDueDateViewModel>()
 
-        private val binding by viewBinding(SetDueDateSingleBinding::bind)
+        private val binding by viewBinding(FragmentSetDueDateSingleBinding::bind)
 
         override fun onViewCreated(
             view: View,
@@ -290,6 +286,8 @@ class SetDueDateDialog : DialogFragment() {
             super.onViewCreated(view, savedInstanceState)
             binding.setDueDateSingleDayInputLayout.apply {
                 editText!!.apply {
+                    filters = arrayOf(InputFilter.LengthFilter(5))
+
                     viewModel.nextSingleDayDueDate?.let { value -> setText(value.toString()) }
                     doOnTextChanged { text, _, _, _ ->
                         val currentValue = text?.toString()?.toIntOrNull()
@@ -342,10 +340,10 @@ class SetDueDateDialog : DialogFragment() {
     /**
      * Allows a user to select a start and end date
      */
-    class SelectDateRangeFragment : Fragment(R.layout.set_due_date_range) {
+    class SelectDateRangeFragment : Fragment(R.layout.fragment_set_due_date_range) {
         private val viewModel: SetDueDateViewModel by activityViewModels<SetDueDateViewModel>()
 
-        private val binding by viewBinding(SetDueDateRangeBinding::bind)
+        private val binding by viewBinding(FragmentSetDueDateRangeBinding::bind)
 
         override fun onViewCreated(
             view: View,
@@ -354,6 +352,8 @@ class SetDueDateDialog : DialogFragment() {
             super.onViewCreated(view, savedInstanceState)
             binding.dateRangeStartLayout.apply {
                 editText!!.apply {
+                    filters = arrayOf(InputFilter.LengthFilter(5))
+
                     viewModel.dateRange.start?.let { start -> setText(start.toString()) }
                     doOnTextChanged { text, _, _, _ ->
                         val value = text.toString().toIntOrNull()
@@ -370,6 +370,7 @@ class SetDueDateDialog : DialogFragment() {
             }
             binding.dateRangeEndLayout.apply {
                 editText!!.apply {
+                    filters = arrayOf(InputFilter.LengthFilter(5))
                     doOnTextChanged { text, _, _, _ ->
                         val value = text.toString().toIntOrNull()
                         viewModel.setNextDateRangeEnd(value)

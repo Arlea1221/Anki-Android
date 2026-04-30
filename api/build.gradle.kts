@@ -1,9 +1,8 @@
+import com.android.build.api.dsl.LibraryExtension
 import com.android.build.gradle.internal.tasks.factory.dependsOn
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     id("maven-publish")
 }
 
@@ -12,9 +11,14 @@ version = "2.0.0"
 
 kotlin {
     explicitApi()
+    compilerOptions {
+        // enable explicit api mode for additional checks related to the public api
+        // see https://kotlinlang.org/docs/whatsnew14.html#explicit-api-mode-for-library-authors
+        freeCompilerArgs.add("-Xexplicit-api=strict")
+    }
 }
 
-android {
+configure<LibraryExtension> {
     namespace = "com.ichi2.anki.api"
     compileSdk =
         libs.versions.compileSdk
@@ -27,7 +31,7 @@ android {
 
     defaultConfig {
         minSdk =
-            libs.versions.minSdk
+            libs.versions.apiMinSdk
                 .get()
                 .toInt()
         buildConfigField(
@@ -48,21 +52,13 @@ android {
         }
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
     compileOptions {
         // API remains on VERSION_11 for compatibility
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlin {
-        compilerOptions {
-            // enable explicit api mode for additional checks related to the public api
-            // see https://kotlinlang.org/docs/whatsnew14.html#explicit-api-mode-for-library-authors
-            freeCompilerArgs.add("-Xexplicit-api=strict")
-            jvmTarget = JvmTarget.JVM_11
-        }
     }
 
     publishing {

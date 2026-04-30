@@ -113,6 +113,7 @@
     <string name="menu_unmark_note">ノートのマークをはずす</string>
     <string name="menu_enable_voice_playback" maxLength="28">発音チェック機能をオン</string>
     <string name="menu_disable_voice_playback">発音チェック機能をオフ</string>
+    <string name="menu_create_backup" maxLength="28">バックアップを作成</string>
     <string name="new_deck">デッキを新規作成</string>
     <string name="new_dynamic_deck">フィルターデッキを作成</string>
     <string name="directory_inaccessible">AnkiDroidディレクトリにアクセスできません</string>
@@ -126,7 +127,7 @@
     <string name="empty_cram_label" maxLength="28">空にする</string>
     <string name="create_subdeck">サブデッキを作成</string>
     <string name="empty_filtered_deck">フィルターデッキを空にしています&#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">デッキ検索</string>
+    <string name="search_deck" comment="Deck search for selecting it">Deck search</string>
     <string name="empty_deck">このデッキにはカードがありません</string>
     <string name="invalid_deck_name">無効なデッキ名です</string>
     <string name="studyoptions_congrats_finished">おめでとうございます！ このデッキの今日の課題をすべて達成しました！</string>
@@ -141,7 +142,6 @@
     <string name="syncing_media">メディアを同期中</string>
     <string name="export_deck" maxLength="28">デッキをエクスポート</string>
     <string name="export_collection">コレクションをエクスポート</string>
-    <string name="nothing">なし</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">カードタイプ</string>
     <string name="card_template_editor_front">表面のテンプレート</string>
@@ -207,6 +207,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">アカウントを削除</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">穴埋めクイック作成</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">インターネット</string>
+    <string name="permission_access_summary">Required for the app to work</string>
+    <string name="permission_required_message">Please grant AnkiDroid the ‘%s’ permission to continue</string>
     <!-- Multiple profile -->
     <string name="add_profile">プロファイルを追加</string>
 </resources>

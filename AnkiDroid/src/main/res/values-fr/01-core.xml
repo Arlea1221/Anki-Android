@@ -116,6 +116,7 @@
     <string name="menu_unmark_note">Démarquer la note</string>
     <string name="menu_enable_voice_playback" maxLength="28">Activer la voix</string>
     <string name="menu_disable_voice_playback">Désactiver la voix</string>
+    <string name="menu_create_backup" maxLength="28">Créer une sauvegarde</string>
     <string name="new_deck">Créer un jeu de cartes</string>
     <string name="new_dynamic_deck">Créer un paquet filtré</string>
     <string name="directory_inaccessible">Le répertoire d\'AnkiDroid est inaccessible</string>
@@ -129,7 +130,7 @@
     <string name="empty_cram_label" maxLength="28">Vide</string>
     <string name="create_subdeck">Créer un sous-paquet</string>
     <string name="empty_filtered_deck">Vidage du paquet filtré&#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">Recherche de paquet</string>
+    <string name="search_deck" comment="Deck search for selecting it">Chercher un deck</string>
     <string name="empty_deck">Ce paquet est vide</string>
     <string name="invalid_deck_name">Nom de paquet invalide</string>
     <string name="studyoptions_congrats_finished">Félicitations ! Vous avez terminé pour aujourd\'hui.</string>
@@ -144,7 +145,6 @@
     <string name="syncing_media">Synchronisation des médias</string>
     <string name="export_deck" maxLength="28">Exporter le paquet</string>
     <string name="export_collection">Exporter la collection</string>
-    <string name="nothing">Rien</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">Types de cartes</string>
     <string name="card_template_editor_front">Modèle du recto</string>
@@ -212,6 +212,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">Supprimer le compte</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">Carte instantanée</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Internet</string>
+    <string name="permission_access_summary">Requis pour que l\'application fonctionne</string>
+    <string name="permission_required_message">Veuillez accorder à AnkiDroid la permission «%s» pour continuer</string>
     <!-- Multiple profile -->
     <string name="add_profile">Ajouter un profil</string>
 </resources>

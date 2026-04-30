@@ -137,6 +137,10 @@
     <string name="replay_voice_command_key">binding_REPLAY_VOICE</string>
     <string name="save_voice_command_key">binding_SAVE_VOICE</string>
     <string name="toggle_whiteboard_command_key">binding_TOGGLE_WHITEBOARD</string>
+    <string name="pref_key_whiteboard_toggle_eraser">binding_whiteboard_TOGGLE_ERASER</string>
+    <string name="pref_key_whiteboard_clear">binding_whiteboard_CLEAR</string>
+    <string name="pref_key_whiteboard_undo">binding_whiteboard_UNDO</string>
+    <string name="pref_key_whiteboard_redo">binding_whiteboard_REDO</string>
     <string name="toggle_eraser_command_key">binding_TOGGLE_ERASER</string>
     <string name="clear_whiteboard_command_key">binding_CLEAR_WHITEBOARD</string>
     <string name="change_whiteboard_pen_color_command_key">binding_CHANGE_WHITEBOARD_PEN_COLOR</string>
@@ -213,6 +217,7 @@
     <string name="pref_review_reminders_screen_key">reviewRemindersScreen</string>
     <string name="review_reminders_next_free_id">reviewRemindersNextFreeId</string>
     <string name="reminder_notifs_request_shown_key">reminderNotifsRequestShown</string>
+    <string name="review_reminder_deserialization_errors_key">reviewReminderDeserializationErrors</string>
     <!-- Notifications -->
     <string name="notifications_permission_requested_key">notificationsPermissionRequested</string>
     <string name="record_audio_permission_requested_key">recordAudioPermissionRequested</string>
@@ -263,4 +268,6 @@
     <string name="reviewer_frame_style_key">reviewerFrameStyle</string>
     <string name="reviewer_toolbar_position_key">reviewerToolbarPosition</string>
 
+    <!-- Onboarding -->
+    <string name="internet_permission_requested_key">internetPermissionRequested</string>
 </resources>

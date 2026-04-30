@@ -44,8 +44,7 @@
 ~ this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="check_db_title">ડેટાબેઝ તપાસો?</string>
-    <string name="check_db_warning">આમાં ઘણો સમય લાગી શકે છે</string>
+    <string name="check_db_warning">This may take a long time. Proceed?</string>
     <string name="contextmenu_deckpicker_delete_deck" maxLength="28">ડેક કાઢી નાખો</string>
     <string name="delete_deck_title">ડેક કાઢી નાખીએ?</string>
     <plurals name="delete_deck_message">
@@ -83,11 +82,14 @@
     <string name="restore_backup_choose_another">બીજું પસંદ કરો</string>
     <string name="dialog_cancel">રદ કરો</string>
     <string name="dialog_ok">બરાબર</string>
+    <string name="dialog_add" comment="Positive dialog action button label to add \'something\'">Add</string>
+    <string name="restore">Restore</string>
     <string name="dialog_confirm" tools:ignore="UnusedResources">પુષ્ટિ કરો</string>
     <string name="dialog_no">ના</string>
     <string name="dialog_yes">નહી</string>
     <string name="dialog_keep">રાખવું</string>
     <string name="dialog_remove">દૂર કરો</string>
+    <string name="dialog_exit" comment="Label for a button which will exit/finish the current screen">Exit</string>
     <string name="dialog_continue">ચાલુ રાખો</string>
     <string name="dialog_processing">પ્રક્રિયા&#8230;</string>
     <string name="dialog_positive_create" comment="Create a new collection, probably erasing the previous one, may be necessary in case of error.">બનાવો</string>
@@ -102,8 +104,7 @@
     <string name="dialog_invalid_custom_certificate_title">પ્રમાણપત્રનું પદચ્છેદન કરવામાં ભૂલ</string>
     <string name="dialog_updated_custom_certificate">પ્રમાણપત્ર અપડેટ કર્યું</string>
     <!-- Media checking -->
-    <string name="check_media_title">મીડિયા તપાસીએ?</string>
-    <string name="check_media_warning">મોટા મીડિયા સંગ્રહ સાથે આમાં લાંબો સમય લાગી શકે છે</string>
+    <string name="check_media_warning">This may take a long time with large media collections. Proceed?</string>
     <string name="check_media_message">મીડિયા તપાસી રહ્યું છે&#8230;</string>
     <string name="check_media_adding_missing_tag">Adding tags&#8230;</string>
     <string name="check_media_tags_added">Tags added</string>
@@ -127,8 +128,6 @@
     <string name="permission_denied">Permission denied</string>
     <string name="recording_permission_denied_message">Microphone permission is necessary for the “Record voice” feature. Please grant it in the app settings.</string>
     <!-- Database Integrity Check -->
-    <string name="integrity_check_startup_title">AnkiDroid અપગ્રેડ કર્યું</string>
-    <string name="integrity_check_startup_content">AnkiDroid ને અપગ્રેડ કરવામાં આવ્યું છે. આ અપગ્રેડમાં સંભવિત ડેટાબેઝ સમસ્યાઓ માટેના ફિક્સેસનો સમાવેશ થાય છે, અને અમે તમને હમણાં જ ડેટાબેઝ ચેક કરવા માટે સલાહ આપીએ છીએ.</string>
     <string name="integrity_check_continue_anyway">કોઈપણ રીતે ચાલુ રાખો</string>
     <string name="integrity_check_insufficient_space">ચેક ડેટાબેઝ મોટી માત્રામાં અસ્થાયી સ્ટોરેજનો ઉપયોગ કરે છે.\n\nતેની ભારપૂર્વક ભલામણ કરવામાં આવે છે કે ચાલુ રાખતા પહેલા તમારી પાસે તમારા ઉપકરણ પર ઓછામાં ઓછી %s ખાલી જગ્યા હોય.</string>
     <string name="integrity_check_insufficient_space_extra_content">\n\nતમારી પાસે હાલમાં %s મફત છે.</string>
@@ -213,8 +212,6 @@
     <string name="dismiss_backup_warning_title">ડેટા નુકશાન ચેતવણી</string>
     <string name="dismiss_backup_warning_new_user">Due to Android privacy changes, your data and automated backups will be deleted from your phone if the app is uninstalled</string>
     <string name="dismiss_backup_warning_upgrade">Due to Android privacy changes, your data and automated backups will be inaccessible if the app is uninstalled</string>
-    <string name="deck_already_exists">ડેક પહેલેથી જ અસ્તિત્વમાં છે</string>
-    <string name="empty_deck_name">Deck name cannot be empty</string>
     <string name="create_deck_numeric_hint">જો તમને ડેક ઓર્ડરિંગ સમસ્યાઓ છે (દા.ત. \'10\' \'2\' પહેલાં દેખાય છે), તો \'2\' ને \'02\' સાથે બદલો</string>
     <!-- Set Due Date -->
     <string name="set_due_date_match_interval" comment="when setting a card\'s due date, this checkbox also changes the interval of the card">અંતરાલને સમાન મૂલ્ય પર સેટ કરો</string>
@@ -270,4 +267,16 @@
     <string name="different_note_types_selected">Please select notes from only one notetype.</string>
     <string name="error_no_changes_to_save">No changes to save</string>
     <string name="choose_color">Choose color</string>
+    <!-- Special Fields -->
+    <string name="standard_fields_tab_header" comment="Tab header for inserting non-special fields: {{Front}}">Fields</string>
+    <string name="special_fields_tab_header" comment="Tab header for inserting special fields: {{Deck}}">Special</string>
+    <string name="special_field_example_suffix"><![CDATA[: ‘<b>%1$s</b>’]]></string>
+    <string name="special_field_front_side_help">The front template content. Audio is not automatically played</string>
+    <string name="special_field_deck_help" comment="%s: either blank or \' %s\'">The full deck of the card, including parent decks%s</string>
+    <string name="special_field_subdeck_help" comment="%s: either blank or \' %s\'">The current deck of the card, excluding parent decks%s</string>
+    <string name="special_field_flag_help">Outputs ‘%1$s’, where %2$s is the flag code (%3$s\–%4$s\)</string>
+    <string name="special_field_tags_help" comment="%s: either blank or \' %s\'">The tags of the note%s</string>
+    <string name="special_field_card_id_help" comment="%s: either blank or \' %s\'">The ID of the card%s</string>
+    <string name="special_field_card_help" comment="%s: either blank or \' %s\'">The name of the card template%s</string>
+    <string name="special_field_type_help" comment="%s: either blank or \' %s\'">The name of the note type%s</string>
 </resources>

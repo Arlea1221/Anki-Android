@@ -116,6 +116,7 @@
     <string name="menu_unmark_note">Malmarki noton</string>
     <string name="menu_enable_voice_playback" maxLength="28">Aktivigi ludadon de voĉo</string>
     <string name="menu_disable_voice_playback">Malebligi la ludadon de la voĉoj</string>
+    <string name="menu_create_backup" maxLength="28">Create backup</string>
     <string name="new_deck">Krei kartaron</string>
     <string name="new_dynamic_deck">Krei filtritan kartaron</string>
     <string name="directory_inaccessible">La dosierujo de AnkiDroid estas nealirebla</string>
@@ -144,7 +145,6 @@
     <string name="syncing_media">Samhavigado de la vidaŭdaĵoj</string>
     <string name="export_deck" maxLength="28">Elporti kartaron</string>
     <string name="export_collection">Elporti kolekton</string>
-    <string name="nothing">Nenio</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">Kartotipoj</string>
     <string name="card_template_editor_front">Ŝablono fronta</string>
@@ -152,8 +152,8 @@
     <string name="card_template_editor_styling" maxLength="28">Stilo</string>
     <string name="card_template_editor_menu_card_browser_appearance" maxLength="28">Aspekto de kart-foliumilo</string>
     <string name="card_template_editor_deck_override" maxLength="28">Superskribi kartaron</string>
-    <string name="card_template_editor_insert_field" maxLength="28">Eniga kampo</string>
-    <string name="card_template_editor_select_field">Elekta kampo</string>
+    <string name="card_template_editor_insert_field" maxLength="28">Enmeti kampon</string>
+    <string name="card_template_editor_select_field">Elekti kampon</string>
     <string name="card_template_editor_cant_delete">Almenaŭ unu kartotipo estas postulata</string>
     <plurals name="card_template_editor_confirm_add">
         <item quantity="one">%1$d karto estos kreita. Ĉu pluigi?</item>
@@ -212,6 +212,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">Forigi konton</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">Tuja karto</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Interreto</string>
+    <string name="permission_access_summary">Postulata de la aplikaĵo por funkcii</string>
+    <string name="permission_required_message">Donu al AnkiDroid la permeson “%s” por pluigi</string>
     <!-- Multiple profile -->
     <string name="add_profile">Aldoni profilon</string>
 </resources>

@@ -54,9 +54,8 @@
     <string name="CardEditorModel">Loại:</string>
     <string name="CardEditorTags">Các đuôi: %1$s</string>
     <string name="CardEditorCards">Các thẻ: %1$s</string>
-    <string name="edit_occlusions">Sửa Occlusions</string>
+    <string name="edit_occlusions">Edit occlusions</string>
     <string name="paste_from_clipboard" maxLength="28">Paste from clipboard</string>
-    <string name="tag_name">Tên đuôi</string>
     <string name="add_new_filter_tags">Thêm/lọc các đuôi</string>
     <string name="add_tag" maxLength="28">Thêm đuôi</string>
     <string name="check_all_tags" maxLength="28">Chọn/bỏ chọn toàn bộ đuôi</string>
@@ -99,6 +98,10 @@
     <string name="webview_crash_loop_dialog_content">Hệ thống WebView không thể hiển thị thẻ \'%1$s\'.\ n%2$s</string>
     <string name="slide_to_cancel" comment="Message shown when pressing the record button">Slide to cancel</string>
     <string name="filter_by_flags" maxLength="41">Cờ</string>
+    <!-- filtered deck options -->
+    <string name="filtered_option_delay_again">Delay for again</string>
+    <string name="filtered_option_delay_hard">Delay for hard</string>
+    <string name="filtered_option_delay_good">Delay for good</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">Đang làm danh sách tag&#8230;</string>
     <!-- Study options -->
@@ -119,7 +122,6 @@
     <string name="close">Đóng</string>
     <string name="select">Chọn</string>
     <string name="field_remapping">%1$s (từ \"%2$s\")</string>
-    <string name="confirm_map_cards_to_nothing">Bất kỳ thẻ nào không được gán sẽ bị xoá. Nếu một ghi chú không có thẻ nào kèm theo, nó sẽ bị mất. Có chắc là bạn muốn tiếp tục?</string>
     <string name="missing_note_type">Không tìm thấy loại ghi chú nào</string>
     <string name="card_previewer_empty_front_indicator" comment="Extra text appended onto a tab title in the card previewer so that the user can see at a glance whether a card has no front.">%1$s (trống)</string>
     <!-- Image cropper -->
@@ -146,8 +148,6 @@
     <string name="preview_progress_bar_text" comment="What card we are on out of how many in card previewer progress bar">%1$d của %2$d</string>
     <string name="rename" comment="Confirm that the renaming action should be processed." maxLength="28">Đổi tên</string>
     <string name="checks_action" maxLength="28">Kiểm tra</string>
-    <string name="check_db" maxLength="28">Kiểm tra CSDL</string>
-    <string name="check_media" maxLength="28">Kiểm tra các tệp đa phương tiện</string>
     <string name="empty_cards" maxLength="28">Các thẻ rỗng</string>
     <string name="unknown_type_field_warning">Gõ đáp án: trường lạ %s</string>
     <string name="delete_deck" comment="Message on a progress bar starting a deck is being deleted.">Đang xoá bộ thẻ&#8230;</string>
@@ -190,6 +190,7 @@
     <string name="dyn_deck_desc">Đây là bộ thẻ đặc biệt phục vụ cho việc học ngoài lịch trình thông thường. Các thẻ sẽ tự động quay lại bộ thẻ ban đầu của chúng sau khi ôn tập. Xoá bộ thẻ này khỏi danh sách sẽ chuyển toàn bộ thẻ còn lại về bộ thẻ ban đầu của chúng.</string>
     <string name="tag_editor_add_feedback">Bấm \"%2$s\" để xác nhận thêm \"%1$s\"</string>
     <string name="tag_editor_add_feedback_existing">Đã chọn đuôi hiện hữu \"%1$s\"</string>
+    <string name="tag_already_exists">Tag already exists</string>
     <!-- Time spans -->
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">Lỗi chia sẻ tệp tin apkg</string>
@@ -203,13 +204,17 @@
     <string name="background_image_title" maxLength="41">Hình nền</string>
     <string name="choose_an_image" maxLength="41">Chọn một hình ảnh</string>
     <string name="remove_wallpaper_image" maxLength="41">Gỡ Hình Nền</string>
-    <string name="remove_background_image">Gỡ bỏ nền?</string>
+    <string name="remove_background_image">Are you sure you wish to remove the background?</string>
     <!-- Card Template Browser Appearance -->
-    <string name="restore_default" maxLength="28">Khôi phục mặc định</string>
+    <string name="restore_default" maxLength="28">Restore default</string>
     <string name="reviewer_tts_cloze_spoken_replacement">Chỗ trống</string>
     <!-- Whiteboard eraser mode toggle message in Reviewer -->
     <string name="white_board_eraser_enabled">Đã kích hoạt tẩy</string>
     <string name="white_board_eraser_disabled">Đã tắt tẩy</string>
+    <string comment="Progress amount e.g. \'28 MB/141 MB\'. %1$s is the current amount, %2$s is the max." name="progress_amount_bytes">%1$s/%2$s</string>
+    <string name="media_file_size_warning_title">Media too large</string>
+    <string name="media_file_size_warning_message" comment="1$s: File name, 2$s: File size, 3$s: The size limit (e.g. 100MB)">The file \"%1$s\" (%2$s) exceeds the AnkiWeb limit of %3$s and cannot be synced. Add anyway?</string>
+    <string name="media_file_size_add_anyway">Add anyway</string>
     <!-- Whiteboard save image message in the Study Screen -->
     <string name="white_board_image_save_failed">Không thể lưu hình ảnh bảng trắng. %s</string>
     <string name="white_board_image_saved">Hình ảnh bảng trắng được lưu vào %s</string>
@@ -235,20 +240,20 @@
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">Cỡ chữ</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">Hiển thị thanh công cụ</string>
-    <string name="format_insert_bold">In đậm</string>
-    <string name="format_insert_italic">In nghiêng</string>
-    <string name="format_insert_underline">Gạch chân</string>
-    <string name="insert_horizontal_line">Chèn đường ngang</string>
-    <string name="insert_heading">Chèn tiêu đề</string>
-    <string name="format_font_size">Thay đổi cỡ chữ</string>
-    <string name="insert_mathjax">Chèn công thức toán</string>
+    <string name="format_insert_bold">Format as bold</string>
+    <string name="format_insert_italic">Format as italic</string>
+    <string name="format_insert_underline">Format as underline</string>
+    <string name="insert_horizontal_line">Insert horizontal line</string>
+    <string name="insert_heading">Insert heading</string>
+    <string name="format_font_size">Change font size</string>
+    <string name="insert_mathjax">Insert MathJax equation</string>
     <string name="note_editor_toolbar_icon">Chữ trên nút</string>
-    <string name="before_text">HTML trước vùng chọn</string>
-    <string name="after_text">HTML Sau Vùng chọn</string>
-    <string name="add_toolbar_item">Tạo mục trên Thanh công cụ</string>
-    <string name="edit_toolbar_item">Chỉnh sửa mục Thanh công cụ</string>
+    <string name="before_text">HTML before selection</string>
+    <string name="after_text">HTML after selection</string>
+    <string name="add_toolbar_item">Create toolbar item</string>
+    <string name="edit_toolbar_item">Edit toolbar item</string>
     <string name="toolbar_item_explain_edit_or_remove">Nhập HTML sẽ được chèn vào trước và sau văn bản đã chọn\n\nNhấn và giữ một mục trên thanh công cụ để chỉnh sửa hoặc xóa nó</string>
-    <string name="remove_toolbar_item">Xóa Mục Thanh công cụ?</string>
+    <string name="remove_toolbar_item">Remove toolbar item?</string>
     <string name="note_editor_image_too_large">Hình ảnh quá lớn, vui lòng chèn hình ảnh theo cách thủ công</string>
     <string name="note_editor_video_too_large">Tập tin video quá lớn, vui lòng chèn video theo cách thủ công</string>
     <string name="note_editor_audio_too_large">Tệp âm thanh quá lớn, vui lòng chèn âm thanh thủ công</string>
@@ -258,6 +263,9 @@
     <string name="create_shortcut_error">Không thể thêm shortcut: %s</string>
     <string name="note_editor_capitalize" comment="This is for a switch with a checkbox - on: enabled" maxLength="28">Viết hoa các câu</string>
     <string name="menu_scroll_toolbar" comment="Checkbox stating whether note editor toolbar is scrollable or stacked. Checked: Scroll" maxLength="28">Scroll toolbar</string>
+    <!-- Dialog hints -->
+    <string name="dialog_hint_url">URL</string>
+    <string name="dialog_hint_certificate">Certificate</string>
     <!-- IncrementNumberRangePreference -->
     <string name="plus_sign" comment="Label for increment button in IncrementerNumberRangePreference">+</string>
     <string name="minus_sign" comment="Label for decrement button in IncrementerNumberRangePreference">-</string>
@@ -267,7 +275,7 @@
     <!-- Used for credential empty warning message -->
     <string name="invalid_email">Nhập email hợp lệ</string>
     <string name="password_empty">Bắt buộc có mật khẩu</string>
-    <string name="back_pressed_once">Bấm trở lại một lần nữa để thoát</string>
+    <string name="back_pressed_once">Go back again to exit</string>
     <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
     <string name="percentage">%s%%</string>
     <string name="download_deck">Tải bộ thẻ xuống</string>
@@ -323,7 +331,7 @@
     <!-- Browser Options Dialog -->
     <string name="show_cards" comment="Label for toggle cards button in BrowserOptionsDialog">Các thẻ</string>
     <string name="show_notes" comment="Label for toggle notes button in BrowserOptionsDialog">Ghi chú</string>
-    <string name="toggle_cards_notes">Chuyển đổi thẻ/ghi chú</string>
+    <string name="toggle_cards_notes">Toggle cards/notes</string>
     <string name="truncate_content_help">Cắt bớt chiều cao của mỗi hàng của Trình duyệt để chỉ hiển thị 3 dòng nội dung đầu tiên</string>
     <string name="browser_options_dialog_heading">Tuỳ chọn trình duyệt</string>
     <string name="audio_saved">Đã lưu bản ghi âm</string>
@@ -339,7 +347,7 @@
     <string name="shared_decks_login_required">Vui lòng đăng nhập để tải thêm các bộ thẻ</string>
     <string name="deck_description_field_hint">Mô tả</string>
     <string name="deck_description_saved">Mô tả đã được cập nhật</string>
-    <string name="format_deck_description_as_markdown">Định dạng dưới dạng Markdown</string>
+    <string name="format_deck_description_as_markdown">Format as markdown</string>
     <string name="help_button_content_description">Mở trợ giúp cho ‘%s’</string>
     <string name="failed_to_copy">Không sao chép được</string>
     <plurals name="unbury_cards_feedback">
@@ -353,7 +361,7 @@
     <string name="play_recording">Phát</string>
     <string name="next_recording" comment="Description of a button to go to the next recording">Tiếp theo</string>
     <!--  AlertDialog in the deleteCardTemplate  -->
-    <string name="orphan_note_title">Không thể xoá loại thẻ</string>
+    <string name="orphan_note_title">Cannot delete card type</string>
     <string name="orphan_note_message">Việc xóa loại thẻ này sẽ để lại một số ghi chú không có thẻ nào liên kết.</string>
     <string name="voice_not_supported">Giọng nói không được hỗ trợ. Hãy thử cái khác hoặc cài đặt một công cụ giọng nói.</string>
     <!--Keyboard shortcuts dialog-->
@@ -376,4 +384,7 @@
     <string name="scheduler_upgrade_required_dialog_title" comment="Shown in a dialog when user has imported a collection using a very old version of the Anki spaced repetition scheduler">Yêu cầu nâng cấp bộ lập lịch</string>
     <!-- Whitespace is OK -->
     <string name="list_separator" comment="The character and spacing to display between elements of a list, for example \', \' in \'Apple, Banana, Cherry" tools:ignore="TranslationTypo">, </string>
+    <!-- Other errors -->
+    <!-- Similar to TR.qtMiscNameExists(): "Name exists." -->
+    <string name="error_name_exists">Name already exists</string>
 </resources>

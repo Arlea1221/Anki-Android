@@ -116,6 +116,7 @@
     <string name="menu_unmark_note">𐌼𐌴𐌻𐌴𐌹𐌽 𐌿𐌽𐌲𐌰𐍄𐌰𐍂𐌷𐌾𐌰𐌽</string>
     <string name="menu_enable_voice_playback" maxLength="28">𐍃𐍄𐌹𐌱𐌽𐍉𐍃 𐌰𐍆𐍄𐍂𐌰𐍃𐍀𐌹𐌻𐍉𐌽 𐌲𐌰𐌻𐌰𐌲𐌾𐌰𐌽</string>
     <string name="menu_disable_voice_playback">𐍃𐍄𐌹𐌱𐌽𐍉𐍃 𐌰𐍆𐍄𐍂𐌰𐍃𐍀𐌹𐌻𐍉𐌽 𐌿𐌽𐌲𐌰𐌻𐌰𐌲𐌾𐌰𐌽</string>
+    <string name="menu_create_backup" maxLength="28">Create backup</string>
     <string name="new_deck">𐌺𐌰𐍂𐍄𐌰𐌷𐌿𐌶𐌳 𐍃𐌺𐌰𐍀𐌾𐌰𐌽</string>
     <string name="new_dynamic_deck">𐌺𐌰𐍂𐍄𐌰𐌷𐌿𐌶𐌳 𐌼𐌹𐌸 𐍆𐌹𐌻𐍄𐍂𐌰 𐍃𐌺𐌰𐍀𐌾𐌰𐌽</string>
     <string name="directory_inaccessible">𐌰𐌽𐌺𐌴𐌹𐌳𐍂𐌰𐌿𐌳 𐍃𐍄𐌰𐌸 𐌰𐍄𐌲𐌰𐌲𐌲𐌰𐌽 𐌼𐌰𐌷𐍄𐍃 𐌽𐌹𐍃𐍄</string>
@@ -129,7 +130,7 @@
     <string name="empty_cram_label" maxLength="28">𐌻𐌰𐌿𐍃</string>
     <string name="create_subdeck">𐌿𐍆𐌺𐌰𐍂𐍄𐌰𐌷𐌿𐌶𐌳 𐍃𐌺𐌰𐍀𐌾𐌰𐌽</string>
     <string name="empty_filtered_deck">𐌻𐌰𐌿𐍃𐌾𐌰𐌳𐌰 𐍆𐌹𐌻𐌻𐌾𐌹𐌽𐍃 𐌺𐌰𐍂𐍄𐌰𐌷𐌿𐌶𐌳&#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">𐌺𐌰𐍂𐍄𐌰𐌷𐌿𐌶𐌳 𐍃𐍉𐌺𐌾𐌰𐌽</string>
+    <string name="search_deck" comment="Deck search for selecting it">Deck search</string>
     <string name="empty_deck">𐌸𐌰𐍄𐌰 𐌺𐌰𐍂𐍄𐌰𐌷𐌿𐌶𐌳 𐌻𐌰𐌿𐍃 𐌹𐍃𐍄</string>
     <string name="invalid_deck_name">𐌽𐌰𐌼𐍉 𐌿𐌽𐍂𐌰𐌹𐌷𐍄 𐌺𐌰𐍂𐍄𐌰𐌷𐌿𐌶𐌳𐌹𐍃</string>
     <string name="studyoptions_congrats_finished">𐍅𐌰𐌹𐌻𐌰 𐍄𐌰𐍅𐌹𐌳𐌴𐍃! 𐌿𐍃𐍄𐌰𐌿𐌷𐍄 𐌷𐌹𐌼𐌼𐌰 𐌳𐌰𐌲𐌰.</string>
@@ -144,7 +145,6 @@
     <string name="syncing_media">𐌲𐌰𐌻𐌴𐌹𐌺𐍉𐌽𐌳𐍉 𐌼𐌰𐌹𐌳𐌾𐌰</string>
     <string name="export_deck" maxLength="28">𐌿𐍄𐌱𐌰𐌹𐍂 𐌺𐌰𐍂𐍄𐌰𐌷𐌿𐌶𐌳</string>
     <string name="export_collection">𐌿𐍄𐌱𐌰𐌹𐍂 𐌷𐌿𐌶𐌳</string>
-    <string name="nothing">𐌽𐌹 𐍅𐌰𐌹𐌷𐍄𐍃</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">𐌺𐌰𐍂𐍄𐌰𐌷𐌰𐌹𐌳𐌾𐌿𐍃</string>
     <string name="card_template_editor_front">𐍆𐍂𐌿𐌼𐌰𐍅𐌻𐌹𐍄𐍃</string>
@@ -212,6 +212,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">𐍂𐌰𐌷𐌽𐌴𐌹𐌽 𐌿𐍃𐌽𐌹𐌼𐌰𐌽</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">𐌰𐌽𐌰𐌺𐍃 𐌺𐌰𐍂𐍄𐌰</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Internet</string>
+    <string name="permission_access_summary">Required for the app to work</string>
+    <string name="permission_required_message">Please grant AnkiDroid the ‘%s’ permission to continue</string>
     <!-- Multiple profile -->
     <string name="add_profile">Add profile</string>
 </resources>

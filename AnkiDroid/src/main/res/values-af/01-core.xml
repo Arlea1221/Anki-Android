@@ -116,6 +116,7 @@
     <string name="menu_unmark_note">Ontmerk</string>
     <string name="menu_enable_voice_playback" maxLength="28">Aktiveer stemweergawe</string>
     <string name="menu_disable_voice_playback">Deaktiveer stemweergawe</string>
+    <string name="menu_create_backup" maxLength="28">Create backup</string>
     <string name="new_deck">Skep pak</string>
     <string name="new_dynamic_deck">Skep gefiltreerde kaartpak</string>
     <string name="directory_inaccessible">AnkiDroid gids is onbereikbaar</string>
@@ -129,7 +130,7 @@
     <string name="empty_cram_label" maxLength="28">Maak leeg</string>
     <string name="create_subdeck">Skep subpak</string>
     <string name="empty_filtered_deck">Besig om die gefilterde pak leeg te maak&#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">Pak Soek</string>
+    <string name="search_deck" comment="Deck search for selecting it">Deck search</string>
     <string name="empty_deck">Hierdie pak is leeg</string>
     <string name="invalid_deck_name">Ongeldige pak naam</string>
     <string name="studyoptions_congrats_finished">Congratulations! You have finished for today.</string>
@@ -144,7 +145,6 @@
     <string name="syncing_media">Sinkronisering van media</string>
     <string name="export_deck" maxLength="28">Voer pak uit</string>
     <string name="export_collection">Uitvoer versameling</string>
-    <string name="nothing">Niks</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">Kaarttipes</string>
     <string name="card_template_editor_front">Voorste sjabloon</string>
@@ -212,6 +212,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">Verwyder rekening</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">Onmiddellike kaart</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Internet</string>
+    <string name="permission_access_summary">Required for the app to work</string>
+    <string name="permission_required_message">Please grant AnkiDroid the ‘%s’ permission to continue</string>
     <!-- Multiple profile -->
     <string name="add_profile">Add profile</string>
 </resources>

@@ -48,7 +48,7 @@
     <string name="model_browser_template">I-edit ang mga card</string>
     <!--Rename-->
     <string name="rename_model">Palitan ang pangalan ng uri ng tala.</string>
-    <string name="rename_card_type">Rename card type</string>
+    <string name="rename_card_type" maxLength="28">Rename card type</string>
     <!--Language Hint-->
     <string name="model_field_editor_language_hint_dialog_success_result">I-set ang hint sa wika sa %s</string>
     <!--Field Editing-->
@@ -59,6 +59,9 @@
     <string name="model_field_editor_reposition_menu">Reposition field</string>
     <string name="model_field_editor_changing">Ina-update ang mga patlang</string>
     <string name="model_field_editor_sort_field">Ayusin ayon sa patlang na ito</string>
+    <!-- Card type -->
+    <string name="delete_card_type" maxLength="28">Delete card type</string>
+    <string name="add_card_type" maxLength="28">Add card type</string>
     <!--Warnings-->
     <string name="model_delete_warning">Sigurado ka ba na nais mong burahin ang uri ng tala na ito?</string>
     <!--
@@ -74,9 +77,9 @@
     <string name="model_browser_add_clone">Clone: %1$s</string>
     <!--Browser Appearance-->
     <string name="card_template_browser_appearance_summary">Ilagay ang template na gagamitin ng card browser upang maipakita ang iyong mga card. Gamitin ito upang maipakita ang mas maiksi na sagot.\n\nAng harap na template ng\n\"Ang kabisera ng {{Country}} ay:\"\nay maaaring paiksiin sa card browser bilang\n\"Kabisera: {{Country}}\"</string>
-    <string name="card_template_browser_appearance_question_format">Format ng Tanong</string>
-    <string name="card_template_browser_appearance_answer_format">Format ng Sagot</string>
-    <string name="card_template_browser_appearance_restore_default_dialog">Ibalik sa Default na Halaga?</string>
+    <string name="card_template_browser_appearance_question_format">Question format</string>
+    <string name="card_template_browser_appearance_answer_format">Answer format</string>
+    <string name="card_template_browser_appearance_restore_default_dialog">Are you sure you want to restore the browser appearance to default?</string>
     <string name="card_template_browser_appearance_saving_note">Ang pagbabagong ito ay ma-aapply tuwing isesave ang card template</string>
     <!-- Deck Override -->
     <string name="card_template_editor_deck_override_on">I-override ang deck (bukas)</string>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/tags_dialog_title"
+    <include layout="@layout/include_tags_dialog_title"
         android:id="@+id/toolbar"/>
     <com.ichi2.ui.FixedTextView android:id="@+id/no_tags_text_view"
         android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/options_group"
         android:layout_below="@id/toolbar"
-        tools:listitem="@layout/tags_item_list_dialog" />
+        tools:listitem="@layout/item_tag" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="wrap_content"

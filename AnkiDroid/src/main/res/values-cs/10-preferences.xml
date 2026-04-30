@@ -226,7 +226,7 @@
         Pokud není nastaven, bude místo toho použit výchozí AnkiWeb server.
         <a href="%s">Zjistit více</a>
         ]]></string>
-    <string name="custom_sync_server_base_url_title" maxLength="41">Synchronizovat url</string>
+    <string name="custom_sync_server_base_url_title" maxLength="41">Sync URL</string>
     <string name="custom_sync_certificate_title" maxLength="41">Vlastní kořenový certifikát (PEM)</string>
     <!-- Key Bindings -->
     <string name="keyboard">Klávesnice</string>
@@ -246,16 +246,7 @@
     <string name="studyoptions_limit_select_tags">Výběr štítků</string>
     <!-- Deck configurations -->
     <string name="deck_conf_general" maxLength="41" comment="Label of the submenu for the general options of new deck">Obecné</string>
-    <string name="deck_conf_cram_filter" maxLength="41">Filtr</string>
     <string name="deck_conf_cram_search" maxLength="41" comment="Label of a text field that contains a search query.">Hledat</string>
-    <string name="deck_conf_cram_limit" maxLength="41">Omezit na</string>
-    <string name="deck_conf_cram_order" maxLength="41">Karty vybrány podle</string>
-    <string name="deck_conf_cram_reschedule" maxLength="41" comment="Title of the box labelled by deck_conf_cram_reschedule_summ">Přeplánovat</string>
-    <string name="deck_conf_cram_reschedule_summ">Přeplánovat karty podle mých odpovědí v tomto balíčku</string>
-    <string name="deck_conf_cram_filter_2_check">Povolit druhý filtr</string>
-    <string name="deck_conf_cram_steps_summ" maxLength="41">Definovat vlastní kroky</string>
-    <string name="deck_conf_cram_preview_delays" maxLength="41">Prodlevy náhledu</string>
-    <string name="deck_conf_cram_preview_delays_summ">Prodlevy jsou v sekundách. 0 vrátí kartu do původního balíčku.</string>
     <!-- analytics options -->
     <string name="analytics_dialog_title">Pomozte udělat AnkiDroid lepší!</string>
     <string name="analytics_title" maxLength="41">Sdílet používání funkcí</string>
@@ -398,4 +389,5 @@
     <string name="flip_and_answer" maxLength="41" comment="Configuration of the \'Answer\' commands to answer the card if on the answer side, and flip it if on the question side">Flip and answer</string>
     <!--Keyboard shortcuts dialog-->
     <string name="open_settings" comment="Description of the shortcut that opens the app settings">Otevřít nastavení</string>
+    <string name="related_settings_title" comment="Title of the section for related settings">Related settings</string>
 </resources>

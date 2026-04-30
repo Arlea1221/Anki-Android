@@ -27,16 +27,18 @@ import android.os.Parcelable
 import androidx.annotation.CheckResult
 import androidx.annotation.RequiresApi
 import androidx.core.content.edit
+import com.ichi2.anki.common.crashreporting.CrashReportService
+import com.ichi2.anki.compat.CompatHelper.Companion.sdkVersion
 import com.ichi2.anki.dialogs.DatabaseErrorDialog
 import com.ichi2.anki.exception.StorageAccessException
 import com.ichi2.anki.servicelayer.PreferenceUpgradeService
 import com.ichi2.anki.servicelayer.PreferenceUpgradeService.setPreferencesUpToDate
 import com.ichi2.anki.servicelayer.ScopedStorageService.isLegacyStorage
+import com.ichi2.anki.ui.windows.permissions.InternetPermissionFragment
 import com.ichi2.anki.ui.windows.permissions.NotificationsPermissionFragment
 import com.ichi2.anki.ui.windows.permissions.PermissionsFragment
 import com.ichi2.anki.ui.windows.permissions.PermissionsStartingAt30Fragment
 import com.ichi2.anki.ui.windows.permissions.PermissionsUntil29Fragment
-import com.ichi2.compat.CompatHelper.Companion.sdkVersion
 import com.ichi2.utils.Permissions
 import com.ichi2.utils.VersionUtils.pkgVersionName
 import kotlinx.parcelize.Parcelize
@@ -215,12 +217,12 @@ enum class PermissionSet(
     val permissions: List<String>,
     val permissionsFragment: Class<out PermissionsFragment>?,
 ) : Parcelable {
-    LEGACY_ACCESS(Permissions.legacyStorageAccessPermissions, PermissionsUntil29Fragment::class.java),
+    LEGACY_ACCESS(Permissions.legacyStorageAccessStartupPermissions, PermissionsUntil29Fragment::class.java),
 
     @RequiresApi(Build.VERSION_CODES.R)
-    EXTERNAL_MANAGER(listOf(Permissions.MANAGE_EXTERNAL_STORAGE), PermissionsStartingAt30Fragment::class.java),
+    EXTERNAL_MANAGER(Permissions.externalManagerStorageAccessStartupPermissions, PermissionsStartingAt30Fragment::class.java),
 
-    APP_PRIVATE(emptyList(), null),
+    APP_PRIVATE(Permissions.appPrivateStartupPermissions, InternetPermissionFragment::class.java),
 
     /** Optional. */
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -249,7 +251,7 @@ internal fun selectAnkiDroidFolder(
     return if (canManageExternalStorage) {
         AnkiDroidFolder.PublicFolder(PermissionSet.EXTERNAL_MANAGER)
     } else {
-        return AnkiDroidFolder.AppPrivateFolder
+        AnkiDroidFolder.AppPrivateFolder
     }
 }
 

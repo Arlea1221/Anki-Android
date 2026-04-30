@@ -115,7 +115,7 @@ class BrowserOptionsDialog : AppCompatDialogFragment(R.layout.dialog_browser_opt
         return MaterialAlertDialogBuilder(requireContext()).create {
             setView(binding.root)
             setTitle(getString(R.string.browser_options_dialog_heading))
-            positiveButton(R.string.dialog_ok) { saveChanges() }
+            positiveButton(R.string.save) { saveChanges() }
             negativeButton(R.string.dialog_cancel)
         }
     }

@@ -71,16 +71,16 @@
         <item quantity="other">Ostáva %d minút</item>
     </plurals>
     <plurals name="reviewer_window_title_hours_new" comment="Header of the reviewer, telling the users how many minutes remains before they have seen all cards. The second parameter is the number of minutes.">
-        <item quantity="one">%1$d hour %2$d left</item>
-        <item quantity="few">%1$d hours %2$d left</item>
-        <item quantity="many">%1$d hours %2$d left</item>
-        <item quantity="other">%1$d hours %2$d left</item>
+        <item quantity="one">Zostáva %1$d hodina %2$d min</item>
+        <item quantity="few">Zostávajú %1$d hodiny %2$d min</item>
+        <item quantity="many">Zostáva %1$d hodiny %2$d min</item>
+        <item quantity="other">Zostáva %1$d hodín %2$d min</item>
     </plurals>
     <plurals name="reviewer_window_title_days_new" comment="Header of the reviewer, telling the users how many minutes remains before they have seen all cards. The second parameter is the number of hours.">
-        <item quantity="one">%1$d day %2$dh left</item>
-        <item quantity="few">%1$d days %2$dh left</item>
-        <item quantity="many">%1$d days %2$dh left</item>
-        <item quantity="other">%1$d days %2$dh left</item>
+        <item quantity="one">Zostáva %1$d deň %2$dh</item>
+        <item quantity="few">Zostávajú %1$d dni %2$dh</item>
+        <item quantity="many">Zostáva %1$d dňa %2$dh</item>
+        <item quantity="other">Zostáva %1$d dní %2$dh</item>
     </plurals>
     <string name="type_answer_hint" comment="In the reviewer. When the user use note type with hint. It\'s the default content of the text field in which the user is invited to type their answer. It disappears as soon as the user start to type.">Napísať odpoveď</string>
     <string name="show_answer" maxLength="41" comment="When displaying the question side of a card. This is the label of a button that display the answer side.">Zobraziť odpoveď</string>
@@ -113,7 +113,7 @@
     <string name="menu_suspend" maxLength="28">Pozastaviť</string>
     <string name="menu_delete_note" maxLength="28">Vymazať poznámku</string>
     <string name="menu_flag" maxLength="41">Vlajočka</string>
-    <string name="rename_flag">Rename flags</string>
+    <string name="rename_flag">Premenovať príznaky</string>
     <string name="menu_flag_card" maxLength="28">Červená vlajočka</string>
     <string name="menu_edit_tags" maxLength="28">Upraviť štítky</string>
     <string name="delete_note_message">Naozaj chcete odstrániť túto poznámku a všetky jej kartičky?\n%s</string>
@@ -122,6 +122,7 @@
     <string name="menu_unmark_note">Odznačiť poznámku</string>
     <string name="menu_enable_voice_playback" maxLength="28">Enable voice playback</string>
     <string name="menu_disable_voice_playback">Disable voice playback</string>
+    <string name="menu_create_backup" maxLength="28">Create backup</string>
     <string name="new_deck">Vytvoriť balíček</string>
     <string name="new_dynamic_deck">Vytvoriť filtrovaný balíček</string>
     <string name="directory_inaccessible">Adresár AnkiDroid je neprístupný</string>
@@ -135,11 +136,11 @@
     <string name="empty_cram_label" maxLength="28">Vyprázdniť</string>
     <string name="create_subdeck">Vytvoriť podbalíček</string>
     <string name="empty_filtered_deck">Vyprázdňujem filtrovaný balíček&#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">Vyhľadávanie v balíčku</string>
+    <string name="search_deck" comment="Deck search for selecting it">Deck search</string>
     <string name="empty_deck">Tento balíček je prázdny</string>
     <string name="invalid_deck_name">Neplatný názov balíčka</string>
-    <string name="studyoptions_congrats_finished">Congratulations! You have finished for today.</string>
-    <string name="studyoptions_congrats_next_due_in" comment="The param will be replaced with \'The next card will be ready in X time\'">Deck finished for now! %s</string>
+    <string name="studyoptions_congrats_finished">Blahoželáme! Na dnes ste tento balíček dokončili.</string>
+    <string name="studyoptions_congrats_next_due_in" comment="The param will be replaced with \'The next card will be ready in X time\'">Balíček je na teraz dokončený! %s</string>
     <string name="studyoptions_no_cards_due">Ešte nie sú žiadne kartičky na preskúšanie</string>
     <string name="sd_card_not_mounted">Ukladacie zariadenie nepripojené</string>
     <string name="button_sync" comment="Text of the sync button" maxLength="28">Synchronizácia</string>
@@ -150,7 +151,6 @@
     <string name="syncing_media">Syncing media</string>
     <string name="export_deck" maxLength="28">Exportovať balíček</string>
     <string name="export_collection">Export collection</string>
-    <string name="nothing">Nič</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">Typy kartičiek</string>
     <string name="card_template_editor_front">Šablóna prednej strany</string>
@@ -222,6 +222,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">Remove account</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">Instant card</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Internet</string>
+    <string name="permission_access_summary">Required for the app to work</string>
+    <string name="permission_required_message">Please grant AnkiDroid the ‘%s’ permission to continue</string>
     <!-- Multiple profile -->
     <string name="add_profile">Add profile</string>
 </resources>

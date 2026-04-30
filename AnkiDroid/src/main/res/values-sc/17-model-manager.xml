@@ -48,7 +48,7 @@
     <string name="model_browser_template">Modìfica sas cartas</string>
     <!--Rename-->
     <string name="rename_model">Càmbia nùmene a sa casta de nota</string>
-    <string name="rename_card_type">Rename card type</string>
+    <string name="rename_card_type" maxLength="28">Rename card type</string>
     <!--Language Hint-->
     <string name="model_field_editor_language_hint_dialog_success_result">Imposta s\'impòsitu de limba a %s</string>
     <!--Field Editing-->
@@ -59,6 +59,9 @@
     <string name="model_field_editor_reposition_menu">Torra a positzionare su campu</string>
     <string name="model_field_editor_changing">Atualizatzione de sos campos</string>
     <string name="model_field_editor_sort_field">Òrdina sighende custu campu</string>
+    <!-- Card type -->
+    <string name="delete_card_type" maxLength="28">Delete card type</string>
+    <string name="add_card_type" maxLength="28">Add card type</string>
     <!--Warnings-->
     <string name="model_delete_warning">Ses seguru de chèrrere iscantzellare custa casta de nota?</string>
     <!--
@@ -79,9 +82,9 @@
                                              “Sa capitale de {{Country}} est:”\n
                                              si diat pòdere cumprimire in su navigadore de cartas comente\n
                                              “Capitale: {{Country}}”</string>
-    <string name="card_template_browser_appearance_question_format">Formadu de sa pregunta</string>
-    <string name="card_template_browser_appearance_answer_format">Formadu de sa risposta</string>
-    <string name="card_template_browser_appearance_restore_default_dialog">Ripristinare sos valores predefinidos?</string>
+    <string name="card_template_browser_appearance_question_format">Question format</string>
+    <string name="card_template_browser_appearance_answer_format">Answer format</string>
+    <string name="card_template_browser_appearance_restore_default_dialog">Are you sure you want to restore the browser appearance to default?</string>
     <string name="card_template_browser_appearance_saving_note">Custas modìficas s\'ant a aplicare cando s\'at a sarvare su mollu de carta</string>
     <!-- Deck Override -->
     <string name="card_template_editor_deck_override_on">Subraiscritura de su matzu (alluta)</string>

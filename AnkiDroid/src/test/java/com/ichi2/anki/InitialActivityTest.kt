@@ -34,6 +34,7 @@ import org.hamcrest.Matchers.contains
 import org.hamcrest.core.IsInstanceOf.instanceOf
 import org.junit.Before
 import org.junit.Test
+import org.junit.experimental.categories.Category
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mockStatic
 import org.mockito.Mockito.times
@@ -42,7 +43,8 @@ import org.robolectric.annotation.Config
 import kotlin.test.assertTrue
 
 @RunWith(AndroidJUnit4::class)
-@Config(application = EmptyApplication::class) // no point in Application init if we don't use it
+@Config(application = EmptyApplication::class)
+@Category(EmptyApplicationCategory::class) // no point in Application init if we don't use it
 class InitialActivityTest : RobolectricTest() {
     private lateinit var sharedPreferences: SharedPreferences
     private val appContext: Context
@@ -126,6 +128,7 @@ class InitialActivityTest : RobolectricTest() {
             arrayOf(
                 android.Manifest.permission.READ_EXTERNAL_STORAGE,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.INTERNET,
             )
 
         // force a safe startup before Q
@@ -161,6 +164,7 @@ class InitialActivityTest : RobolectricTest() {
             arrayOf(
                 android.Manifest.permission.READ_EXTERNAL_STORAGE,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.INTERNET,
             )
 
         selectAnkiDroidFolder(

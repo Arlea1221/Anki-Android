@@ -107,7 +107,7 @@
     <string name="menu_suspend" maxLength="28">ନିଲମ୍ବନ କରନ୍ତୁ</string>
     <string name="menu_delete_note" maxLength="28">ନୋଟ୍ ଵିଲୋପ କରିବା</string>
     <string name="menu_flag" maxLength="41">ପତାକା</string>
-    <string name="rename_flag">Rename flags</string>
+    <string name="rename_flag">ପତାକାର ନାମ ବଦଳାଇବା</string>
     <string name="menu_flag_card" maxLength="28">ପତ୍ରକୁ ଏକ ପତାକା ନ୍ୟସ୍ତ କରନ୍ତୁ</string>
     <string name="menu_edit_tags" maxLength="28">ଟ୍ୟାଗ୍ ସମ୍ପାଦନା</string>
     <string name="delete_note_message">ଆପଣ ପ୍ରକୃତରେ ଏହି ନୋଟ୍ ଏଵଂ ଏହାର ସମସ୍ତ ପତ୍ର ଵିଲୋପ କରିବାକୁ ଚାହୁଁଛନ୍ତି କି?\n%s</string>
@@ -116,6 +116,7 @@
     <string name="menu_unmark_note">ନୋଟ ଅଣଚିନ୍ହିତ କରନ୍ତୁ</string>
     <string name="menu_enable_voice_playback" maxLength="28">Enable voice playback</string>
     <string name="menu_disable_voice_playback">Disable voice playback</string>
+    <string name="menu_create_backup" maxLength="28">Create backup</string>
     <string name="new_deck">କେରୀ ସୃଷ୍ଟି କରିବା</string>
     <string name="new_dynamic_deck">ଶୋଧିତ କେରୀ ସୃଷ୍ଟି କରିବା</string>
     <string name="directory_inaccessible">AnkiDroid directory ଅଗମ୍ୟ ଅଟେ</string>
@@ -129,7 +130,7 @@
     <string name="empty_cram_label" maxLength="28">ଖାଲି</string>
     <string name="create_subdeck">ଉପ-କେରୀ ସୃଷ୍ଟି କରିବା</string>
     <string name="empty_filtered_deck">ଶୋଧିତ କେରୀ ଖାଲି କରାଚାଲିଛି&#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">କେରୀ ସନ୍ଧାନ</string>
+    <string name="search_deck" comment="Deck search for selecting it">Deck search</string>
     <string name="empty_deck">କେରୀଟି ଖାଲି ଅଛି</string>
     <string name="invalid_deck_name">ଅବୈଧ କେରୀ ନାମ</string>
     <string name="studyoptions_congrats_finished">ଅଭିନନ୍ଦନ! ଆପଣ ଆଜି ପାଇଁ ସବୁ ସାରିଛନ୍ତି।</string>
@@ -144,7 +145,6 @@
     <string name="syncing_media">ମିଡ଼ିଆ ସୀଙ୍କ୍ ଚାଲିଛି</string>
     <string name="export_deck" maxLength="28">କେରୀ ରପ୍ତାନି କରିବା</string>
     <string name="export_collection">ସଂଗ୍ରହ ରପ୍ତାନି କରିବା</string>
-    <string name="nothing">କିଛି ନାହିଁ</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">ପତ୍ର ପ୍ରକାର</string>
     <string name="card_template_editor_front">ସାମ୍ନା ଟେମ୍ପଲେଟ୍</string>
@@ -212,6 +212,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">Remove account</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">Instant card</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Internet</string>
+    <string name="permission_access_summary">Required for the app to work</string>
+    <string name="permission_required_message">Please grant AnkiDroid the ‘%s’ permission to continue</string>
     <!-- Multiple profile -->
     <string name="add_profile">Add profile</string>
 </resources>

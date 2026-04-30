@@ -222,7 +222,7 @@
         ਤੁਸੀਂ ਸਮਕਾਲੀਕਰਨ ਲਈ ਆਪਣੇ ਸਰਵਰ ਦੀ ਵਰਤੋਂ ਕਰ ਸਕਦੇ ਹੋ।
         ਜੇਕਰ ਸੈੱਟ ਨਹੀਂ ਕੀਤਾ ਗਿਆ, ਤਾਂ ਇਸਦੀ ਬਜਾਏ ਡਿਫੌਲਟ AnkiWeb ਸਰਵਰ ਵਰਤਿਆ ਜਾਵੇਗਾ।
         <a href="%s">ਹੋਰ ਜਾਣੋ</a>]]></string>
-    <string name="custom_sync_server_base_url_title" maxLength="41">url ਸਿੰਕ ਕਰੋ</string>
+    <string name="custom_sync_server_base_url_title" maxLength="41">Sync URL</string>
     <string name="custom_sync_certificate_title" maxLength="41">ਕਸਟਮ ਰੂਟ ਸਰਟੀਫਿਕੇਟ (PEM)</string>
     <!-- Key Bindings -->
     <string name="keyboard">ਕੀਬੋਰਡ</string>
@@ -242,16 +242,7 @@
     <string name="studyoptions_limit_select_tags">ਟੈਗ ਚੁਣੋ</string>
     <!-- Deck configurations -->
     <string name="deck_conf_general" maxLength="41" comment="Label of the submenu for the general options of new deck">ਜਨਰਲ</string>
-    <string name="deck_conf_cram_filter" maxLength="41">ਫਿਲਟਰ</string>
     <string name="deck_conf_cram_search" maxLength="41" comment="Label of a text field that contains a search query.">ਖੋਜ</string>
-    <string name="deck_conf_cram_limit" maxLength="41">ਤੱਕ ਸੀਮਾ</string>
-    <string name="deck_conf_cram_order" maxLength="41">ਦੁਆਰਾ ਚੁਣੇ ਗਏ ਕਾਰਡ</string>
-    <string name="deck_conf_cram_reschedule" maxLength="41" comment="Title of the box labelled by deck_conf_cram_reschedule_summ">ਮੁੜ ਤਹਿ ਕਰੋ</string>
-    <string name="deck_conf_cram_reschedule_summ">ਇਸ ਡੈੱਕ ਵਿੱਚ ਮੇਰੇ ਜਵਾਬਾਂ ਦੇ ਆਧਾਰ \'ਤੇ ਕਾਰਡਾਂ ਨੂੰ ਮੁੜ-ਨਿਯਤ ਕਰੋ</string>
-    <string name="deck_conf_cram_filter_2_check">ਦੂਜਾ ਫਿਲਟਰ ਚਾਲੂ ਕਰੋ</string>
-    <string name="deck_conf_cram_steps_summ" maxLength="41">ਕਸਟਮ ਕਦਮਾਂ ਨੂੰ ਪਰਿਭਾਸ਼ਿਤ ਕਰੋ</string>
-    <string name="deck_conf_cram_preview_delays" maxLength="41">ਝਲਕ ਦੇਰੀ</string>
-    <string name="deck_conf_cram_preview_delays_summ">ਦੇਰੀ ਸਕਿੰਟਾਂ ਵਿੱਚ ਹੁੰਦੀ ਹੈ। 0 ਕਾਰਡ ਨੂੰ ਮੂਲ ਡੈੱਕ \'ਤੇ ਵਾਪਸ ਕਰਦਾ ਹੈ।</string>
     <!-- analytics options -->
     <string name="analytics_dialog_title">AnkiDroid ਨੂੰ ਬਿਹਤਰ ਬਣਾਉਣ ਵਿੱਚ ਮਦਦ ਕਰੋ!</string>
     <string name="analytics_title" maxLength="41">ਵਿਸ਼ੇਸ਼ਤਾ ਦੀ ਵਰਤੋਂ ਸਾਂਝੀ ਕਰੋ</string>
@@ -392,4 +383,5 @@
     <string name="flip_and_answer" maxLength="41" comment="Configuration of the \'Answer\' commands to answer the card if on the answer side, and flip it if on the question side">Flip and answer</string>
     <!--Keyboard shortcuts dialog-->
     <string name="open_settings" comment="Description of the shortcut that opens the app settings">ਸੈਟਿੰਗਾਂ ਖੋਲ੍ਹੋ</string>
+    <string name="related_settings_title" comment="Title of the section for related settings">Related settings</string>
 </resources>

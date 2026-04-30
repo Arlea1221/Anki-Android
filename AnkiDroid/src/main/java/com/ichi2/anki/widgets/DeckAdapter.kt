@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ichi2.anki.R
 import com.ichi2.anki.common.annotations.NeedsTest
-import com.ichi2.anki.databinding.DeckItemBinding
+import com.ichi2.anki.databinding.ItemDeckBinding
 import com.ichi2.anki.deckpicker.DisplayDeckNode
 import com.ichi2.anki.libanki.DeckId
 import kotlinx.coroutines.runBlocking
@@ -89,7 +89,7 @@ class DeckAdapter(
         }
 
     class ViewHolder(
-        val binding: DeckItemBinding,
+        val binding: ItemDeckBinding,
     ) : RecyclerView.ViewHolder(binding.root)
 
     /**
@@ -112,7 +112,6 @@ class DeckAdapter(
      * Update the current selected deck so the adapter shows the proper backgrounds.
      * Calls [notifyDataSetChanged].
      */
-    @NeedsTest("18658: ensure a deck can be selected after this")
     fun updateSelectedDeck(deckId: DeckId) {
         submitList(
             this.currentList.map { it.withUpdatedDeckId(deckId) },
@@ -122,7 +121,7 @@ class DeckAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ViewHolder = ViewHolder(DeckItemBinding.inflate(layoutInflater, parent, false))
+    ): ViewHolder = ViewHolder(ItemDeckBinding.inflate(layoutInflater, parent, false))
 
     override fun onBindViewHolder(
         holder: ViewHolder,

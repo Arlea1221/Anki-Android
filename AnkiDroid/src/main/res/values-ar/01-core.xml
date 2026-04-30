@@ -128,6 +128,7 @@
     <string name="menu_unmark_note">إلغاء تعليم الملحوظة</string>
     <string name="menu_enable_voice_playback" maxLength="28">تفعيل مسجل الصوت</string>
     <string name="menu_disable_voice_playback">تعطيل مسجل الصوت</string>
+    <string name="menu_create_backup" maxLength="28">إنشاء نسخة احتياطية</string>
     <string name="new_deck">إنشاء رِزمة</string>
     <string name="new_dynamic_deck">إنشاء رِزمة مفروزة</string>
     <string name="directory_inaccessible">تعذر الوصول إلى مجلد آنكي درويد</string>
@@ -141,7 +142,7 @@
     <string name="empty_cram_label" maxLength="28">إفراغ</string>
     <string name="create_subdeck">إنشاء رِزمة فرعية</string>
     <string name="empty_filtered_deck">يتم إفراغ الرزمة المفروزة&#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">البحث عن رزمة</string>
+    <string name="search_deck" comment="Deck search for selecting it">بحث عن رِزمة</string>
     <string name="empty_deck">هذه الرزمة فارغة</string>
     <string name="invalid_deck_name">اسم رزمة غير صالح</string>
     <string name="studyoptions_congrats_finished">مبروك! لقد أتممت مهامَّك لهذا اليوم.</string>
@@ -156,7 +157,6 @@
     <string name="syncing_media">تتم مزامنة الوسائط</string>
     <string name="export_deck" maxLength="28">تصدير الرِزمة</string>
     <string name="export_collection">صدِّر المجموعة</string>
-    <string name="nothing">فارغ</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">أنواع البطاقات</string>
     <string name="card_template_editor_front">القالب الأمامي</string>
@@ -232,6 +232,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">حذف الحساب</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">بطاقة فورية</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">إنترنت</string>
+    <string name="permission_access_summary">مطلوب لعمل التطبيق</string>
+    <string name="permission_required_message">من فضلك امنح آنكي درويد إذن «%s» لكي تستمر</string>
     <!-- Multiple profile -->
     <string name="add_profile">إضافة مِلَفّ شخصي</string>
 </resources>

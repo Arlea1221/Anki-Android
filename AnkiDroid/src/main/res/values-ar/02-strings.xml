@@ -56,7 +56,6 @@
     <string name="CardEditorCards">البطاقات: %1$s</string>
     <string name="edit_occlusions">تحرير الصور المُعَمَّاة</string>
     <string name="paste_from_clipboard" maxLength="28">لصق من الحافظة</string>
-    <string name="tag_name">اسم الوسم</string>
     <string name="add_new_filter_tags">إضافة وفرز الوسوم</string>
     <string name="add_tag" maxLength="28">إضافة وسم</string>
     <string name="check_all_tags" maxLength="28">تحديد/إلغاء تحديد كل الوسوم</string>
@@ -99,6 +98,10 @@
     <string name="webview_crash_loop_dialog_content">فَشِلَ ويب فيو الخاص بالنظام في عرض البطاقة %1$s.\n %2$s</string>
     <string name="slide_to_cancel" comment="Message shown when pressing the record button">اسحب للإلغاء</string>
     <string name="filter_by_flags" maxLength="41">الأعلام</string>
+    <!-- filtered deck options -->
+    <string name="filtered_option_delay_again">فاصل مجددًا</string>
+    <string name="filtered_option_delay_hard">فاصل صعب</string>
+    <string name="filtered_option_delay_good">فاصل جيد</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">يتم بناء مجموعة الوسوم&#8230;</string>
     <!-- Study options -->
@@ -124,7 +127,6 @@
     <string name="close">أغلق</string>
     <string name="select">حدد</string>
     <string name="field_remapping">%1$s (من «%2$s»)</string>
-    <string name="confirm_map_cards_to_nothing">ستُحذف البطاقات غير المُوزعة. ستُحذف أي ملحوظة ليس لها بطاقات.  أواثق أنك ترغب بذلك؟</string>
     <string name="missing_note_type">لا يوجد نوع ملحوظات</string>
     <string name="card_previewer_empty_front_indicator" comment="Extra text appended onto a tab title in the card previewer so that the user can see at a glance whether a card has no front.">%1$s (فارغ)</string>
     <!-- Image cropper -->
@@ -161,8 +163,6 @@
     <string name="preview_progress_bar_text" comment="What card we are on out of how many in card previewer progress bar">%1$d من %2$d</string>
     <string name="rename" comment="Confirm that the renaming action should be processed." maxLength="28">إعادة تسمية</string>
     <string name="checks_action" maxLength="28">تحقق</string>
-    <string name="check_db" maxLength="28">فحص قاعدة البيانات</string>
-    <string name="check_media" maxLength="28">فحص الوسائط</string>
     <string name="empty_cards" maxLength="28">بطاقات فارغة</string>
     <string name="unknown_type_field_warning">إدخال الجواب: حقل مجهول %s</string>
     <string name="delete_deck" comment="Message on a progress bar starting a deck is being deleted.">جارٍ حذف الرزمة&#8230;</string>
@@ -205,6 +205,7 @@
     <string name="dyn_deck_desc">هذه رزمة خاصة للدراسة خارج الجدول المعتاد. ستعود البطاقات إلى رزمها الأصلية تلقائيًا بعد مراجعتها. يؤدي حذف هذه الرزمة من قائمة الرزم إلى إعادة كل البطاقات المتبقية إلى رزمها الأصلية.</string>
     <string name="tag_editor_add_feedback">انقر «%2$s» لتُأكِّد إضافة «%1$s»</string>
     <string name="tag_editor_add_feedback_existing">تم تحديد الوسم الموجود «%1$s»</string>
+    <string name="tag_already_exists">الوسم موجود</string>
     <!-- Time spans -->
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">حدث خطأ أثناء مشاركة ملف «apkg»</string>
@@ -218,13 +219,17 @@
     <string name="background_image_title" maxLength="41">الخلفية</string>
     <string name="choose_an_image" maxLength="41">اختيار صورة</string>
     <string name="remove_wallpaper_image" maxLength="41">إزالة الخلفية</string>
-    <string name="remove_background_image">هل تريد إزالة الخلفية؟</string>
+    <string name="remove_background_image">ءأنت واثق من إزالة الخلفية؟</string>
     <!-- Card Template Browser Appearance -->
     <string name="restore_default" maxLength="28">استعادة الافتراضي</string>
     <string name="reviewer_tts_cloze_spoken_replacement">فارغ</string>
     <!-- Whiteboard eraser mode toggle message in Reviewer -->
     <string name="white_board_eraser_enabled">تم تفعيل وضع الممحاة</string>
     <string name="white_board_eraser_disabled">تم تعطيل وضع الممحاة</string>
+    <string comment="Progress amount e.g. \'28 MB/141 MB\'. %1$s is the current amount, %2$s is the max." name="progress_amount_bytes">%1$s/%2$s</string>
+    <string name="media_file_size_warning_title">مِلف الوسائط كبير جدًا</string>
+    <string name="media_file_size_warning_message" comment="1$s: File name, 2$s: File size, 3$s: The size limit (e.g. 100MB)">المِلف «%1$s» (%2$s) يفوق حد آنكي ويب الذي هو %3$s ولا يمكن مزامنته. أتريد إضافته مع ذلك؟</string>
+    <string name="media_file_size_add_anyway">إضافة على أي حال</string>
     <!-- Whiteboard save image message in the Study Screen -->
     <string name="white_board_image_save_failed">فشل حفظ صورة السبورة. %s</string>
     <string name="white_board_image_saved">تم حفظ صورة السبورة في %s</string>
@@ -273,6 +278,9 @@
     <string name="create_shortcut_error">خلل في إضافة الاختصار: %s</string>
     <string name="note_editor_capitalize" comment="This is for a switch with a checkbox - on: enabled" maxLength="28">ضع الجمل في حروف كبيرة</string>
     <string name="menu_scroll_toolbar" comment="Checkbox stating whether note editor toolbar is scrollable or stacked. Checked: Scroll" maxLength="28">تمرير شريط الأدوات</string>
+    <!-- Dialog hints -->
+    <string name="dialog_hint_url">الرابط</string>
+    <string name="dialog_hint_certificate">الرخصة</string>
     <!-- IncrementNumberRangePreference -->
     <string name="plus_sign" comment="Label for increment button in IncrementerNumberRangePreference">+</string>
     <string name="minus_sign" comment="Label for decrement button in IncrementerNumberRangePreference">-</string>
@@ -282,7 +290,7 @@
     <!-- Used for credential empty warning message -->
     <string name="invalid_email">أدخل بريدًا إلكترونيًا صالحًا</string>
     <string name="password_empty">تلزمك كلمة مرور</string>
-    <string name="back_pressed_once">اضغط رجوع مجددًا للخروج</string>
+    <string name="back_pressed_once">عُد للوراء مجددًا لتخرج</string>
     <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
     <string name="percentage">%s%%</string>
     <string name="download_deck">تنزيل الرزمة</string>
@@ -406,4 +414,7 @@
     <string name="scheduler_upgrade_required_dialog_title" comment="Shown in a dialog when user has imported a collection using a very old version of the Anki spaced repetition scheduler">يلزمك تطوير المُجَدوِل</string>
     <!-- Whitespace is OK -->
     <string name="list_separator" comment="The character and spacing to display between elements of a list, for example \', \' in \'Apple, Banana, Cherry" tools:ignore="TranslationTypo">، </string>
+    <!-- Other errors -->
+    <!-- Similar to TR.qtMiscNameExists(): "Name exists." -->
+    <string name="error_name_exists">الاِسم موجود</string>
 </resources>

@@ -19,8 +19,9 @@ import android.content.Context
 import android.util.AttributeSet
 import com.ichi2.anki.R
 import com.ichi2.anki.cardviewer.GestureProcessor
-import com.ichi2.anki.cardviewer.SingleCardSide
+import com.ichi2.anki.common.annotations.NeedsTest
 import com.ichi2.anki.dialogs.CardSideSelectionDialog
+import com.ichi2.anki.preferences.allPreferences
 import com.ichi2.anki.reviewer.Binding
 import com.ichi2.anki.reviewer.CardSide
 import com.ichi2.anki.reviewer.MappableBinding.Companion.toPreferenceString
@@ -28,8 +29,8 @@ import com.ichi2.anki.reviewer.ReviewerBinding
 import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.utils.ext.usingStyledAttributes
 
-class ReviewerControlPreference : ControlPreference {
-    private val side: SingleCardSide?
+open class ReviewerControlPreference : ControlPreference {
+    protected open var side: CardSide? = null
 
     @Suppress("unused")
     constructor(context: Context) : this(context, null)
@@ -49,8 +50,9 @@ class ReviewerControlPreference : ControlPreference {
             context.usingStyledAttributes(attrs, R.styleable.ReviewerControlPreference) {
                 val value = getInt(R.styleable.ReviewerControlPreference_cardSide, -1)
                 when (value) {
-                    0 -> SingleCardSide.FRONT
-                    1 -> SingleCardSide.BACK
+                    0 -> CardSide.QUESTION
+                    1 -> CardSide.ANSWER
+                    2 -> CardSide.BOTH
                     else -> null
                 }
             }
@@ -68,6 +70,26 @@ class ReviewerControlPreference : ControlPreference {
         get() = Prefs.isNewStudyScreenEnabled || sharedPreferences?.getBoolean(GestureProcessor.PREF_KEY, false) ?: false
 
     override fun getMappableBindings(): List<ReviewerBinding> = ReviewerBinding.fromPreferenceString(value).toList()
+
+    @Suppress("UNCHECKED_CAST")
+    override fun getRelatedPreferences(): List<ReviewerControlPreference> =
+        preferenceManager.preferenceScreen
+            .allPreferences()
+            .filter {
+                it::class == ReviewerControlPreference::class
+            } as List<ReviewerControlPreference>
+
+    @NeedsTest("Ensure correct preference is returned for side-specific binding")
+    override fun getPreferenceAssignedTo(binding: Binding): ControlPreference? {
+        val cardSide = side ?: return super.getPreferenceAssignedTo(binding)
+        val reviewerBinding = ReviewerBinding(binding, cardSide)
+        // Bindings only conflict when the card sides overlap
+        return getPreferencesAssignedTo(reviewerBinding).firstOrNull()
+    }
+
+    @NeedsTest("Ensure correct preferences are returned for side-specific binding")
+    private fun getPreferencesAssignedTo(binding: ReviewerBinding): List<ReviewerControlPreference> =
+        getRelatedPreferences().filter { preference -> binding in preference.getMappableBindings() }
 
     fun interface OnBindingSelectedListener {
         /**
@@ -105,9 +127,19 @@ class ReviewerControlPreference : ControlPreference {
         side: CardSide,
     ) {
         val newBinding = ReviewerBinding(binding, side)
-        getPreferenceAssignedTo(binding)?.removeMappableBinding(newBinding)
+        // Before adding new binding, remove all conflicting bindings
+        getPreferencesAssignedTo(newBinding).forEach { preference ->
+            preference.removeDuplicateBindings(newBinding)
+        }
         val bindings = ReviewerBinding.fromPreferenceString(value).toMutableList()
         bindings.add(newBinding)
+        value = bindings.toPreferenceString()
+    }
+
+    @NeedsTest("Check dup removal, including partial side overlap: e.g. QUESTION & BOTH")
+    private fun removeDuplicateBindings(binding: ReviewerBinding) {
+        val bindings = ReviewerBinding.fromPreferenceString(value).toMutableList()
+        bindings.removeAll { it == binding } // Uses overridden .equals() to detect overlaps
         value = bindings.toPreferenceString()
     }
 
@@ -116,8 +148,9 @@ class ReviewerControlPreference : ControlPreference {
      * Otherwise, ask the user to select one or two side(s) and execute the callback on them.
      */
     private fun selectSide(callback: (c: CardSide) -> Unit) {
-        if (side != null) {
-            callback(side.toCardSide())
+        val cardSide = side
+        if (cardSide != null) {
+            callback(cardSide)
         } else {
             CardSideSelectionDialog.displayInstance(context, callback)
         }

@@ -24,6 +24,7 @@
         <item name="android:textColorSecondary">@color/text_color_secondary_dark</item>
         <item name="android:colorBackground">@color/material_theme_grey</item>
         <item name="android:windowBackground">@color/material_theme_grey</item>
+        <item name="colorSecondaryContainer">#3C5A6E</item>
 
         <item name="colorSurfaceContainerHighest">?attr/colorSurfaceContainer</item>
         <item name="colorSurfaceContainerHigh">#424C54</item>
@@ -54,7 +55,7 @@
         <item name="currentDeckBackground">@drawable/item_background_selected</item>
         <item name="currentDeckBackgroundColor">@color/theme_dark_row_current</item>
         <item name="focusedRowBackgroundColor">@color/theme_dark_row_current</item>
-        <item name="dynDeckColor">#6699d6</item>
+        <item name="dynDeckColor">@color/material_light_blue_500</item>
         <item name="deckDivider">@drawable/divider_dark</item>
         <item name="expandRef">@drawable/ic_chevron_right_white</item>
         <item name="collapseRef">@drawable/ic_expand_more_white</item>
@@ -172,8 +173,10 @@
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
 
         <item name="incrementerButtonBackground">@color/material_theme_grey</item>
-        <item name="incrementerInputBackground">@color/material_theme_grey</item>
-        <item name="incrementerIconColor">@color/material_blue_400</item>
+
+        <!-- Reminder troubleshooting -->
+        <item name="reminderTroubleshootingOk">@color/google_green_300</item>
+        <item name="reminderTroubleshootingWarning">@color/google_yellow_300</item>
     </style>
 
     <style name="Theme_Dark" parent="Base.Theme.Dark"/>

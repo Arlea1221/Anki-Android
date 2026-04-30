@@ -223,7 +223,7 @@
         Kung hindi naka-set, gagamitin nito ang default na server ng AnkiWeb.
         <a href="%s">Alamin pa</a>
         ]]></string>
-    <string name="custom_sync_server_base_url_title" maxLength="41">Sync url</string>
+    <string name="custom_sync_server_base_url_title" maxLength="41">Sync URL</string>
     <string name="custom_sync_certificate_title" maxLength="41">Custom root certificate (PEM)</string>
     <!-- Key Bindings -->
     <string name="keyboard">Keyboard</string>
@@ -243,16 +243,7 @@
     <string name="studyoptions_limit_select_tags">Piliin ang mga tag</string>
     <!-- Deck configurations -->
     <string name="deck_conf_general" maxLength="41" comment="Label of the submenu for the general options of new deck">Pangkalahatan</string>
-    <string name="deck_conf_cram_filter" maxLength="41">Salain</string>
     <string name="deck_conf_cram_search" maxLength="41" comment="Label of a text field that contains a search query.">Paghahanap</string>
-    <string name="deck_conf_cram_limit" maxLength="41">Limitasyon sa</string>
-    <string name="deck_conf_cram_order" maxLength="41">Cards selected by</string>
-    <string name="deck_conf_cram_reschedule" maxLength="41" comment="Title of the box labelled by deck_conf_cram_reschedule_summ">Reschedule</string>
-    <string name="deck_conf_cram_reschedule_summ">Reschedule cards batay sa aking mga sagot sa deck na ito</string>
-    <string name="deck_conf_cram_filter_2_check">Paganahin ang pangalawang pansala</string>
-    <string name="deck_conf_cram_steps_summ" maxLength="41">Tukuyin ang mga pasadyang hakbang</string>
-    <string name="deck_conf_cram_preview_delays" maxLength="41">Antala sa pag-preview</string>
-    <string name="deck_conf_cram_preview_delays_summ">Ang antala ay naka-segundo. 0 kung ibabalik ang card sa orihinal nito na deck.</string>
     <!-- analytics options -->
     <string name="analytics_dialog_title">Tulungang pabutihin pa ang AnkiDroid!</string>
     <string name="analytics_title" maxLength="41">Ibahagi ang paggamit ng mga katangian</string>
@@ -394,4 +385,5 @@
     <string name="flip_and_answer" maxLength="41" comment="Configuration of the \'Answer\' commands to answer the card if on the answer side, and flip it if on the question side">Flip and answer</string>
     <!--Keyboard shortcuts dialog-->
     <string name="open_settings" comment="Description of the shortcut that opens the app settings">Open settings</string>
+    <string name="related_settings_title" comment="Title of the section for related settings">Related settings</string>
 </resources>

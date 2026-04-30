@@ -48,7 +48,7 @@
     <string name="model_browser_template">𐌺𐌰𐍂𐍄𐍉𐍃 𐌹𐌽𐌼𐌰𐌹𐌳𐌾𐌰𐌽</string>
     <!--Rename-->
     <string name="rename_model">𐌼𐌴𐌻𐌴𐌹𐌽𐌰𐌹𐍃 𐌺𐌹𐌽𐌸 𐌰𐍆𐍄𐍂𐌰𐌷𐌰𐌹𐍄𐌰𐌽</string>
-    <string name="rename_card_type">𐌺𐌹𐌽𐌸 𐌺𐌰𐍂𐍄𐍉𐍃 𐌰𐍆𐍄𐍂𐌰𐌷𐌰𐌹𐍄𐌰𐌽</string>
+    <string name="rename_card_type" maxLength="28">𐌺𐌹𐌽𐌸 𐌺𐌰𐍂𐍄𐍉𐍃 𐌰𐍆𐍄𐍂𐌰𐌷𐌰𐌹𐍄𐌰𐌽</string>
     <!--Language Hint-->
     <string name="model_field_editor_language_hint_dialog_success_result">𐌷𐌹𐌻𐍀𐌰 𐍂𐌰𐌶𐌳𐍉𐍃 𐌻𐌰𐌲𐌾𐌰𐌽 𐌳𐌿 %s</string>
     <!--Field Editing-->
@@ -59,6 +59,9 @@
     <string name="model_field_editor_reposition_menu">Reposition field</string>
     <string name="model_field_editor_changing">𐌰𐍆𐍄𐍂𐌰𐌰𐌽𐌰𐌽𐌹𐌿𐌾𐌰𐌽𐌳𐌰 𐍅𐌰𐌹𐍂𐌸𐌰</string>
     <string name="model_field_editor_sort_field">Sort by this field</string>
+    <!-- Card type -->
+    <string name="delete_card_type" maxLength="28">Delete card type</string>
+    <string name="add_card_type" maxLength="28">Add card type</string>
     <!--Warnings-->
     <string name="model_delete_warning">𐌱𐌹 𐍃𐌿𐌽𐌾𐌰𐌹 𐍅𐌹𐌻𐌴𐌹𐌶𐌿 𐌸𐌹𐌶𐌰𐌹 𐌺𐌹𐌽𐌸𐌰𐌹 𐌼𐌴𐌻𐌴𐌹𐌽𐍉 𐌿𐍃𐌵𐌹𐍃𐍄𐌾𐌰𐌽?</string>
     <!--
@@ -74,9 +77,9 @@
     <string name="model_browser_add_clone">𐌲𐌰𐌲𐌰𐌻𐌴𐌹𐌺𐍉𐌽𐍃: %1$s</string>
     <!--Browser Appearance-->
     <string name="card_template_browser_appearance_summary">Enter the template that the card browser will use to display your cards. Use this to display a more concise answer.\n\nA front template of\n“The capital of {{Country}} is:”\ncould be compressed in the card browser to\n“Capital: {{Country}}”</string>
-    <string name="card_template_browser_appearance_question_format">𐌷𐌰𐌹𐌳𐌿𐍃 𐍃𐍉𐌺𐌽𐌰𐌹𐍃</string>
-    <string name="card_template_browser_appearance_answer_format">𐌷𐌰𐌹𐌳𐌿𐍃 𐌰𐌽𐌳𐌰𐌷𐌰𐍆𐍄𐌰𐌹𐍃</string>
-    <string name="card_template_browser_appearance_restore_default_dialog">𐌱𐌹𐌿𐌷𐍄𐌰 𐍅𐌰𐌹𐍂𐌸𐌰 𐌽𐌰𐍃𐌾𐌰𐌽?</string>
+    <string name="card_template_browser_appearance_question_format">Question format</string>
+    <string name="card_template_browser_appearance_answer_format">Answer format</string>
+    <string name="card_template_browser_appearance_restore_default_dialog">Are you sure you want to restore the browser appearance to default?</string>
     <string name="card_template_browser_appearance_saving_note">𐌸𐍉𐍃 𐌹𐌽𐌼𐌰𐌹𐌳𐌴𐌹𐌽𐍉𐍃 𐌲𐌰𐌻𐌰𐌲𐌾𐌰𐌽𐌳𐌰 𐌾𐌰𐌱𐌰𐌹 𐌲𐌰𐍆𐌰𐍃𐍄𐌰𐌳𐌰 𐍆𐌰𐌿𐍂𐌰𐌼𐌴𐌻𐌴𐌹𐌽𐍃 𐌺𐌰𐍂𐍄𐍉</string>
     <!-- Deck Override -->
     <string name="card_template_editor_deck_override_on">𐌿𐍆𐌰𐍂𐌼𐌴𐌻𐌴𐌹𐌽𐍃 𐌺𐌰𐍂𐍄𐌰𐌷𐌿𐌶𐌳𐌹𐍃 (𐌰𐌽𐌰)</string>

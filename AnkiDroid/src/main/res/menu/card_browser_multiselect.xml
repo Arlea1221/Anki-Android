@@ -11,11 +11,6 @@
         android:icon="@drawable/ic_mode_edit_white"/>
 
     <item
-        android:id="@+id/action_delete_card"
-        android:icon="@drawable/ic_delete_white"
-        tools:title="Delete card" />
-
-    <item
         android:id="@+id/action_view_card_info"
         android:icon="@drawable/ic_dialog_info"
         android:title="@string/card_info_title" />
@@ -51,7 +46,7 @@
 
     <item
         android:id="@+id/action_change_note_type"
-        android:title="@string/sentence_change_note_type"/>
+        tools:title="Change note type"/>
 
     <item
         android:id="@+id/action_change_deck"
@@ -79,7 +74,7 @@
 
     <!-- TODO: ankidroid:showAsAction="ifRoom" once 'no hamburger' padding issues are resolved -->
     <item
-        android:id="@+id/action_preview"
+        android:id="@+id/action_preview_many"
         android:title="@string/card_editor_preview_card"
         android:icon="@drawable/ic_remove_red_eye_white"
     />
@@ -88,15 +83,22 @@
         android:id="@+id/action_export_selected"
         tools:title="Export cards"/>
 
+
+    <item
+        android:id="@+id/action_find_replace"
+        android:visible="false"
+        app:showAsAction="never"/>
+
+    <!-- Delete should be last, if undo is not visible -->
+    <item
+        android:id="@+id/action_delete_card"
+        android:icon="@drawable/ic_delete_white"
+        tools:title="Delete card" />
+
     <item
         ankidroid:showAsAction="ifRoom"
         android:id="@+id/action_undo"
         android:title="@string/undo"
         ankidroid:actionProviderClass="com.ichi2.ui.RtlCompliantActionProvider"
         android:icon="@drawable/ic_undo_white"/>
-
-    <item
-        android:id="@+id/action_find_replace"
-        android:visible="false"
-        app:showAsAction="never"/>
 </menu>

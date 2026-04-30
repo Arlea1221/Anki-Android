@@ -221,7 +221,7 @@
         సమకాలీకరణ కోసం మీరు మీ స్వంత సర్వర్‌ని ఉపయోగించవచ్చు.
         సెట్ చేయకుంటే, డిఫాల్ట్ AnkiWeb సర్వర్ బదులుగా ఉపయోగించబడుతుంది.
         <a href="%s">మరింత తెలుసుకోండి</a>]]></string>
-    <string name="custom_sync_server_base_url_title" maxLength="41">Url ని సమకాలీకరించండి</string>
+    <string name="custom_sync_server_base_url_title" maxLength="41">Sync URL</string>
     <string name="custom_sync_certificate_title" maxLength="41">కస్టమ్ రూట్ సర్టిఫికేట్ (PEM)</string>
     <!-- Key Bindings -->
     <string name="keyboard">కీబోర్డ్</string>
@@ -241,16 +241,7 @@
     <string name="studyoptions_limit_select_tags">ట్యాగ్లను ఎంచుకోండి</string>
     <!-- Deck configurations -->
     <string name="deck_conf_general" maxLength="41" comment="Label of the submenu for the general options of new deck">సాధారణం</string>
-    <string name="deck_conf_cram_filter" maxLength="41">వడపోత</string>
     <string name="deck_conf_cram_search" maxLength="41" comment="Label of a text field that contains a search query.">శోధన</string>
-    <string name="deck_conf_cram_limit" maxLength="41">పరిమితి</string>
-    <string name="deck_conf_cram_order" maxLength="41">ద్వారా ఎంపిక చేయబడిన కార్డ్‌లు</string>
-    <string name="deck_conf_cram_reschedule" maxLength="41" comment="Title of the box labelled by deck_conf_cram_reschedule_summ">వాయిదా</string>
-    <string name="deck_conf_cram_reschedule_summ">ఈ డెక్లో నా సమాధానాల ఆధారంగా కార్డులను రిచెస్ చేయండి</string>
-    <string name="deck_conf_cram_filter_2_check">రెండవ ఫిల్టర్‌ని ప్రారంభించండి</string>
-    <string name="deck_conf_cram_steps_summ" maxLength="41">అనుకూల దశలను నిర్వచించండి</string>
-    <string name="deck_conf_cram_preview_delays" maxLength="41">ప్రివ్యూ ఆలస్యం</string>
-    <string name="deck_conf_cram_preview_delays_summ">సెకన్లలో ఆలస్యం జరుగుతుంది. 0 కార్డ్ అసలు డెక్‌కి తిరిగి వస్తుంది.</string>
     <!-- analytics options -->
     <string name="analytics_dialog_title">AnkiDroidని మెరుగుపరచడంలో సహాయపడండి!</string>
     <string name="analytics_title" maxLength="41">ఫీచర్ వినియోగాన్ని భాగస్వామ్యం చేయండి</string>
@@ -391,4 +382,5 @@
     <string name="flip_and_answer" maxLength="41" comment="Configuration of the \'Answer\' commands to answer the card if on the answer side, and flip it if on the question side">Flip and answer</string>
     <!--Keyboard shortcuts dialog-->
     <string name="open_settings" comment="Description of the shortcut that opens the app settings">సెట్టింగ్‌లను తెరవండి</string>
+    <string name="related_settings_title" comment="Title of the section for related settings">Related settings</string>
 </resources>

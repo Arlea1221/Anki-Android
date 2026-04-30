@@ -119,6 +119,7 @@
     <string name="menu_unmark_note">Odznači bilješku</string>
     <string name="menu_enable_voice_playback" maxLength="28">Omogući reprodukciju glasa</string>
     <string name="menu_disable_voice_playback">Onemogući reprodukciju glasa</string>
+    <string name="menu_create_backup" maxLength="28">Create backup</string>
     <string name="new_deck">Stvori skupinu</string>
     <string name="new_dynamic_deck">Stvori filtriranu skupinu</string>
     <string name="directory_inaccessible">AnkiDroid mapa nije dostupna</string>
@@ -132,7 +133,7 @@
     <string name="empty_cram_label" maxLength="28">Isprazni</string>
     <string name="create_subdeck">Stvori podšpil</string>
     <string name="empty_filtered_deck">Pražnjenje filtriranog špila&#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">Pretraga špila</string>
+    <string name="search_deck" comment="Deck search for selecting it">Deck search</string>
     <string name="empty_deck">Ova skupina je prazna</string>
     <string name="invalid_deck_name">Neispravan naziv špila</string>
     <string name="studyoptions_congrats_finished">Čestitke! Gotovi ste za danas.</string>
@@ -147,7 +148,6 @@
     <string name="syncing_media">Sinkronizacija medija</string>
     <string name="export_deck" maxLength="28">Izvezi skupinu</string>
     <string name="export_collection">Izvezi kolekciju</string>
-    <string name="nothing">Ništa</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">Vrste kartica</string>
     <string name="card_template_editor_front">Prednji predložak</string>
@@ -217,6 +217,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">Ukloni račun</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">Instantna kartica</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Internet</string>
+    <string name="permission_access_summary">Required for the app to work</string>
+    <string name="permission_required_message">Please grant AnkiDroid the ‘%s’ permission to continue</string>
     <!-- Multiple profile -->
     <string name="add_profile">Dodaj profil</string>
 </resources>

@@ -76,13 +76,13 @@
     <string name="reset_languages" maxLength="41">Restabelecer idiomas</string>
     <string name="reset_languages_summ">Restabelecer as asignacións de idioma (para texto a voz e dicionarios) en tódalas barallas</string>
     <string name="reset_languages_question">Queres reiniciar todas as asignacións de idiomas?</string>
-    <string name="reset_confirmation">Restabelecéronse tódolos estados</string>
+    <string name="reset_confirmation">Restabelecéronse todos os estados</string>
     <string name="card_zoom" maxLength="41">Ampliar tarxeta</string>
     <string name="image_zoom" maxLength="41">Ampliar imaxe</string>
     <string name="button_size" maxLength="41">Tamaño dos botóns de resposta</string>
     <string name="card_browser_font_size" maxLength="41">Escalado do texto do explorador de tarxetas</string>
     <string name="card_browser_hide_media" maxLength="41">Amosar nomes dos ficheiros no explorador</string>
-    <string name="card_browser_hide_media_summary">Amosar ficheiros de audio nos campos pregunta/resposta no explorador de tarxetas</string>
+    <string name="card_browser_hide_media_summary">Amosar os nomes dos ficheiros de son nos campos de pregunta/resposta no explorador de tarxetas</string>
     <string name="col_path" maxLength="41">Directorio do AnkiDroid</string>
     <string name="fullscreen_review" maxLength="41">Modo pantalla completa</string>
     <string name="full_screen_off">Desactivado</string>
@@ -213,7 +213,7 @@
     <string name="exit_via_double_tap_back" maxLength="41">Preme dúas veces atrás para volver/saír</string>
     <string name="exit_via_double_tap_back_summ">Para evitar saír accidentalmente da pantalla de estudo ou da aplicación</string>
     <!-- Allow all files in media imports -->
-    <string name="media_import_allow_all_files" maxLength="41">Permitir tódolos ficheiros nas importacións multimedia</string>
+    <string name="media_import_allow_all_files" maxLength="41">Permitir todos os ficheiros nas importacións multimedia</string>
     <string name="media_import_allow_all_files_summ">Se o Android non recoñece un ficheiro multimedia</string>
     <!-- Custom sync server settings -->
     <string name="custom_sync_server_title" maxLength="41">Servidor de sincronización personalizado</string>
@@ -223,7 +223,7 @@
         Se non se configura, usarase por defecto o servidor de AnkiWeb.
         <a href="%s">Máis información</a>
         ]]></string>
-    <string name="custom_sync_server_base_url_title" maxLength="41">URL de sincronización</string>
+    <string name="custom_sync_server_base_url_title" maxLength="41">URL para a sincronización</string>
     <string name="custom_sync_certificate_title" maxLength="41">Certificado raíz personalizado (PEM)</string>
     <!-- Key Bindings -->
     <string name="keyboard">Teclado</string>
@@ -243,16 +243,7 @@
     <string name="studyoptions_limit_select_tags">Seleccionar etiquetas</string>
     <!-- Deck configurations -->
     <string name="deck_conf_general" maxLength="41" comment="Label of the submenu for the general options of new deck">Xeral</string>
-    <string name="deck_conf_cram_filter" maxLength="41">Filtrar</string>
     <string name="deck_conf_cram_search" maxLength="41" comment="Label of a text field that contains a search query.">Buscar</string>
-    <string name="deck_conf_cram_limit" maxLength="41">Limitar a</string>
-    <string name="deck_conf_cram_order" maxLength="41">Tarxetas seleccionadas por</string>
-    <string name="deck_conf_cram_reschedule" maxLength="41" comment="Title of the box labelled by deck_conf_cram_reschedule_summ">Reprogramar</string>
-    <string name="deck_conf_cram_reschedule_summ">Reprogramar tarxetas en base ás miñas respostas nesta baralla</string>
-    <string name="deck_conf_cram_filter_2_check">Activar segundo filtro</string>
-    <string name="deck_conf_cram_steps_summ" maxLength="41">Definir pasos personalizados</string>
-    <string name="deck_conf_cram_preview_delays" maxLength="41">Previsualizar atrasos</string>
-    <string name="deck_conf_cram_preview_delays_summ">Os atrasos están en segundos. 0 devolve a tarxeta á baralla orixinal</string>
     <!-- analytics options -->
     <string name="analytics_dialog_title">Axuda a mellorar AnkiDroid!</string>
     <string name="analytics_title" maxLength="41">Compartir o uso das funcións</string>
@@ -353,7 +344,7 @@
     <string name="pref__delete_everything__title" maxLength="41" comment="Preference title">Eliminar todo</string>
     <string name="pref__delete_everything__summary">Eliminar colección, multimedia, copias de seguranza e configuracións</string>
     <string name="dialog__delete_everything__title" comment="Confirmation dialog title">Eliminar todo</string>
-    <string name="dialog__delete_everything__message" comment="“Close the window” here refers to the activity that the user is currently seeing.         Deleting app data forcibly closes AnkiDroid, which closes the activity without animation.         On some devices the entire settings app may be closed.         User might not realize that this activity comes directly from AnkiDroid,         so it might be wise to avoid words such as “AnkiDroid or “app”.">Tes a certeza de querer eliminar tódolos teus datos? Isto inclúe a túa colección, contidos multimedia, copias de seguranza e configuracións.\n\nNota: esta acción pechará a xanela</string>
+    <string name="dialog__delete_everything__message" comment="“Close the window” here refers to the activity that the user is currently seeing.         Deleting app data forcibly closes AnkiDroid, which closes the activity without animation.         On some devices the entire settings app may be closed.         User might not realize that this activity comes directly from AnkiDroid,         so it might be wise to avoid words such as “AnkiDroid or “app”.">Tes a certeza de querer eliminar todos os teus datos? Isto inclúe a túa colección, contidos multimedia, copias de seguranza e configuracións.\n\nNota: esta acción pechará a xanela.</string>
     <!-- Delete app data -->
     <string name="pref__delete_app_data__title" maxLength="41" comment="Preference title">Eliminar datos da aplicación</string>
     <string name="pref__delete_app_data__summary">Eliminar configuracións e outros datos</string>
@@ -393,4 +384,5 @@
     <string name="flip_and_answer" maxLength="41" comment="Configuration of the \'Answer\' commands to answer the card if on the answer side, and flip it if on the question side">Voltear e responder</string>
     <!--Keyboard shortcuts dialog-->
     <string name="open_settings" comment="Description of the shortcut that opens the app settings">Abrir configuración</string>
+    <string name="related_settings_title" comment="Title of the section for related settings">Related settings</string>
 </resources>

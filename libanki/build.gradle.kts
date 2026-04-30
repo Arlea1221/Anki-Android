@@ -1,14 +1,15 @@
+import com.android.build.api.dsl.LibraryExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
+configure<LibraryExtension> {
     namespace = "com.ichi2.anki.libanki"
+    testFixtures.enable = true
     compileSdk =
         libs.versions.compileSdk
             .get()
@@ -19,18 +20,11 @@ android {
             libs.versions.minSdk
                 .get()
                 .toInt()
-
-        consumerProguardFiles("consumer-rules.pro")
     }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_17
-        }
     }
 }
 
@@ -51,9 +45,13 @@ dependencies {
     if (localProperties["local_backend"] == "true") {
         implementation(files(rootProject.file("../Anki-Android-Backend/rsdroid/build/outputs/aar/rsdroid-release.aar")))
         testImplementation(files(rootProject.file("../Anki-Android-Backend/rsdroid-testing/build/libs/rsdroid-testing.jar")))
+        testFixturesImplementation(files(rootProject.file("../Anki-Android-Backend/rsdroid/build/outputs/aar/rsdroid-release.aar")))
+        testFixturesImplementation(files(rootProject.file("../Anki-Android-Backend/rsdroid-testing/build/libs/rsdroid-testing.jar")))
     } else {
         implementation(libs.ankiBackend.backend)
         testImplementation(libs.ankiBackend.testing)
+        testFixturesImplementation(libs.ankiBackend.backend)
+        testFixturesImplementation(libs.ankiBackend.testing)
     }
 
     // JVM dependencies
@@ -76,7 +74,14 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.json)
 
-    testImplementation(project(":libanki:testutils"))
+    // testFixtures dependencies
+    testFixturesImplementation(project(":common"))
+    testFixturesImplementation(libs.protobuf.kotlin.lite)
+    testFixturesImplementation(libs.jakewharton.timber)
+    testFixturesImplementation(libs.junit.vintage.engine)
+    testFixturesImplementation(libs.kotlinx.coroutines.core)
+    testFixturesImplementation(libs.kotlinx.coroutines.test)
+    testFixturesImplementation(libs.androidx.sqlite.framework)
 
     // project lint checks
     // PERF: some rules do not need to be applied... but the full run was 3s

@@ -116,6 +116,7 @@
     <string name="menu_unmark_note">ምልክት ዝገበርካሉ ጽሑፍ ምልክቱ ደምስስ</string>
     <string name="menu_enable_voice_playback" maxLength="28">Enable voice playback</string>
     <string name="menu_disable_voice_playback">Disable voice playback</string>
+    <string name="menu_create_backup" maxLength="28">Create backup</string>
     <string name="new_deck">ሓዲሽ ባይታ ፍጠር</string>
     <string name="new_dynamic_deck">ዝፍለ ባይታ ፍጠር</string>
     <string name="directory_inaccessible">ዲክሽነርይ AnkiDroid ክእቶ ኣይክእልን ኢዩ።</string>
@@ -129,7 +130,7 @@
     <string name="empty_cram_label" maxLength="28">ባዶ ቦታ</string>
     <string name="create_subdeck">Create subdeck</string>
     <string name="empty_filtered_deck">Emptying filtered deck&#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">Deck Search</string>
+    <string name="search_deck" comment="Deck search for selecting it">Deck search</string>
     <string name="empty_deck">እዚ ባይታ እዚ ጥርሑ እዩ ዘሎ።</string>
     <string name="invalid_deck_name">Invalid deck name</string>
     <string name="studyoptions_congrats_finished">Congratulations! You have finished for today.</string>
@@ -144,7 +145,6 @@
     <string name="syncing_media">Syncing media</string>
     <string name="export_deck" maxLength="28">ባይታ ስደድ</string>
     <string name="export_collection">Export collection</string>
-    <string name="nothing">የለን</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">ዓይነት ካርድ</string>
     <string name="card_template_editor_front">ቅድመ ባይታ</string>
@@ -212,6 +212,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">Remove account</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">Instant card</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Internet</string>
+    <string name="permission_access_summary">Required for the app to work</string>
+    <string name="permission_required_message">Please grant AnkiDroid the ‘%s’ permission to continue</string>
     <!-- Multiple profile -->
     <string name="add_profile">Add profile</string>
 </resources>

@@ -46,7 +46,7 @@
     <string name="model_browser_template">Chỉnh sửa thẻ</string>
     <!--Rename-->
     <string name="rename_model">Đổi tên loại ghi chú</string>
-    <string name="rename_card_type">Đổi tên loại thẻ</string>
+    <string name="rename_card_type" maxLength="28">Đổi tên loại thẻ</string>
     <!--Language Hint-->
     <string name="model_field_editor_language_hint_dialog_success_result">Đặt gợi ý ngôn ngữ thành %s</string>
     <!--Field Editing-->
@@ -57,6 +57,9 @@
     <string name="model_field_editor_reposition_menu">Định vị lại trường</string>
     <string name="model_field_editor_changing">Cập nhật các trường</string>
     <string name="model_field_editor_sort_field">Sắp xếp theo trường này</string>
+    <!-- Card type -->
+    <string name="delete_card_type" maxLength="28">Delete card type</string>
+    <string name="add_card_type" maxLength="28">Add card type</string>
     <!--Warnings-->
     <string name="model_delete_warning">Bạn có chắc chắn muốn xóa loại ghi chú này không?</string>
     <!--
@@ -72,9 +75,9 @@
     <string name="model_browser_add_clone">Nhân bản: %1$s</string>
     <!--Browser Appearance-->
     <string name="card_template_browser_appearance_summary">Nhập mẫu mà trình duyệt thẻ sẽ sử dụng để hiển thị thẻ của bạn. Sử dụng tùy chọn này để hiển thị câu trả lời ngắn gọn hơn.\n\nMẫu trước của thẻ\n“Thủ đô của {{Country}} là:” \ncó thể được nén trong trình duyệt thẻ thành\n“Thủ đô: {{Country}}”</string>
-    <string name="card_template_browser_appearance_question_format">Định dạng câu hỏi</string>
-    <string name="card_template_browser_appearance_answer_format">Định dạng câu trả lời</string>
-    <string name="card_template_browser_appearance_restore_default_dialog">Khôi phục giá trị mặc định?</string>
+    <string name="card_template_browser_appearance_question_format">Question format</string>
+    <string name="card_template_browser_appearance_answer_format">Answer format</string>
+    <string name="card_template_browser_appearance_restore_default_dialog">Are you sure you want to restore the browser appearance to default?</string>
     <string name="card_template_browser_appearance_saving_note">Những thay đổi này được áp dụng khi mẫu thẻ được lưu</string>
     <!-- Deck Override -->
     <string name="card_template_editor_deck_override_on">Ghi đè bộ thẻ (bật)</string>

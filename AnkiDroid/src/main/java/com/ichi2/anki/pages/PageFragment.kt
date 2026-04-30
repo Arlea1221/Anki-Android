@@ -36,7 +36,7 @@ import timber.log.Timber
  * Base class for displaying Anki HTML pages
  */
 abstract class PageFragment(
-    @LayoutRes contentLayoutId: Int = R.layout.page_fragment,
+    @LayoutRes contentLayoutId: Int = R.layout.fragment_page,
 ) : Fragment(contentLayoutId),
     PostRequestHandler,
     OnWebViewRecreatedListener {
@@ -100,7 +100,11 @@ abstract class PageFragment(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        server = AnkiServer(this).also { it.start() }
+        server =
+            AnkiServer(
+                this,
+                getAssetManager = { context?.assets },
+            ).also { it.start() }
         webViewLayout = view.findViewById(R.id.webview_layout)
 
         view.findViewById<MaterialToolbar>(R.id.toolbar)?.setNavigationOnClickListener {

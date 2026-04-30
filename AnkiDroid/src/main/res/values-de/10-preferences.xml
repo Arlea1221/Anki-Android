@@ -222,7 +222,7 @@
         Falls nicht gesetzt, wird der Standard AnkiWeb Server verwendet.
         <a href="%s">Mehr erfahren</a>
         ]]></string>
-    <string name="custom_sync_server_base_url_title" maxLength="41">Synchronisations-URL</string>
+    <string name="custom_sync_server_base_url_title" maxLength="41">Sync URL</string>
     <string name="custom_sync_certificate_title" maxLength="41">Benutzerdefiniertes Root-Zertifikat (PEM)</string>
     <!-- Key Bindings -->
     <string name="keyboard">Tastatur</string>
@@ -242,16 +242,7 @@
     <string name="studyoptions_limit_select_tags">Schlagwörter auswählen</string>
     <!-- Deck configurations -->
     <string name="deck_conf_general" maxLength="41" comment="Label of the submenu for the general options of new deck">Allgemein</string>
-    <string name="deck_conf_cram_filter" maxLength="41">Filter</string>
     <string name="deck_conf_cram_search" maxLength="41" comment="Label of a text field that contains a search query.">Suchen</string>
-    <string name="deck_conf_cram_limit" maxLength="41">Beschränken auf</string>
-    <string name="deck_conf_cram_order" maxLength="41">Karten ausgewählt nach</string>
-    <string name="deck_conf_cram_reschedule" maxLength="41" comment="Title of the box labelled by deck_conf_cram_reschedule_summ">Neu planen</string>
-    <string name="deck_conf_cram_reschedule_summ">Karten basierend auf meinen Antworten in diesem Stapel umplanen</string>
-    <string name="deck_conf_cram_filter_2_check">Zweiten Filter einschalten</string>
-    <string name="deck_conf_cram_steps_summ" maxLength="41">Personalisierte Schritte definieren</string>
-    <string name="deck_conf_cram_preview_delays" maxLength="41">Verzögerungen vorhersehen</string>
-    <string name="deck_conf_cram_preview_delays_summ">Verspätungen werden in Sekunden angezeigt. 0 wird die Karte zum ursprünglichen Stapel zurückbringen.</string>
     <!-- analytics options -->
     <string name="analytics_dialog_title">Helfen Sie mit, AnkiDroid zu verbessern!</string>
     <string name="analytics_title" maxLength="41">Funktionsnutzung teilen</string>
@@ -389,8 +380,9 @@
     <string name="new_study_screen_summ"><![CDATA[Verbesserter Lernbildschirm, der den aktuellen Bildschirm ersetzen wird. Einige Funktionen des alten Bildschirms wurden geändert oder entfernt. Bitte melden Sie <a href="%1$s">Feedback</a> oder <a href="%2$s">Fehler</a>.]]></string>
     <string name="show_answer_feedback" maxLength="41">Antwort-Feedback anzeigen</string>
     <string name="screen" maxLength="41">Bildschirm</string>
-    <string name="only_answer" maxLength="41" comment="Configuration of the \'Answer\' commands to only answer the card">Only answer</string>
-    <string name="flip_and_answer" maxLength="41" comment="Configuration of the \'Answer\' commands to answer the card if on the answer side, and flip it if on the question side">Flip and answer</string>
+    <string name="only_answer" maxLength="41" comment="Configuration of the \'Answer\' commands to only answer the card">Nur Antwort</string>
+    <string name="flip_and_answer" maxLength="41" comment="Configuration of the \'Answer\' commands to answer the card if on the answer side, and flip it if on the question side">Umdrehen und Antworten</string>
     <!--Keyboard shortcuts dialog-->
     <string name="open_settings" comment="Description of the shortcut that opens the app settings">Einstellungen öffnen</string>
+    <string name="related_settings_title" comment="Title of the section for related settings">Related settings</string>
 </resources>

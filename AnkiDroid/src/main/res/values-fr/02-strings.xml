@@ -54,9 +54,8 @@
     <string name="CardEditorModel">Type :</string>
     <string name="CardEditorTags">Étiquettes : %1$s</string>
     <string name="CardEditorCards">Cartes : %1$s</string>
-    <string name="edit_occlusions">Modifier les Occlusions</string>
+    <string name="edit_occlusions">Modifier les occlusions</string>
     <string name="paste_from_clipboard" maxLength="28">Coller</string>
-    <string name="tag_name">Nom d\'étiquette</string>
     <string name="add_new_filter_tags">Ajouter/filtrer étiquettes</string>
     <string name="add_tag" maxLength="28">Ajouter une étiquette</string>
     <string name="check_all_tags" maxLength="28">Cocher/décocher toutes les étiquettes</string>
@@ -99,6 +98,10 @@
     <string name="webview_crash_loop_dialog_content">Le système WebView n\'a pas réussi à afficher la carte « %1$s ».\n %2$s</string>
     <string name="slide_to_cancel" comment="Message shown when pressing the record button">Glissez pour annuler</string>
     <string name="filter_by_flags" maxLength="41">Marqueurs</string>
+    <!-- filtered deck options -->
+    <string name="filtered_option_delay_again">Retarder encore pour</string>
+    <string name="filtered_option_delay_hard">Delay for hard</string>
+    <string name="filtered_option_delay_good">Delay for good</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">Création de la liste des labels en cours&#8230;</string>
     <!-- Study options -->
@@ -120,7 +123,6 @@
     <string name="close">Fermer</string>
     <string name="select">Sélectionner</string>
     <string name="field_remapping">%1$s (de « %2$s »)</string>
-    <string name="confirm_map_cards_to_nothing">Toute carte sans connexion sera effacée. Si une note n’a aucune carte restante, elle sera perdue. Êtes-vous sûr de vouloir continuer ?</string>
     <string name="missing_note_type">Aucun type de note trouvé</string>
     <string name="card_previewer_empty_front_indicator" comment="Extra text appended onto a tab title in the card previewer so that the user can see at a glance whether a card has no front.">%1$s (vide)</string>
     <!-- Image cropper -->
@@ -149,8 +151,6 @@
     <string name="preview_progress_bar_text" comment="What card we are on out of how many in card previewer progress bar">%1$d sur %2$d</string>
     <string name="rename" comment="Confirm that the renaming action should be processed." maxLength="28">Renommer</string>
     <string name="checks_action" maxLength="28">Vérifier</string>
-    <string name="check_db" maxLength="28">Vérifier la base de données</string>
-    <string name="check_media" maxLength="28">Vérifier les médias</string>
     <string name="empty_cards" maxLength="28">Cartes vides</string>
     <string name="unknown_type_field_warning">Taper la réponse : champ inconnu %s</string>
     <string name="delete_deck" comment="Message on a progress bar starting a deck is being deleted.">Suppression du paquet&#8230;</string>
@@ -193,6 +193,7 @@
     <string name="dyn_deck_desc">Ceci est un paquet pour l\'étude en dehors des horaires normaux. Les cartes reviendront automatiquement à leur paquet d\'origine après leur révision. La suppression de ce paquet remettra toutes les cartes restantes dans leur paquet d\'origine.</string>
     <string name="tag_editor_add_feedback">Appuyez sur « %2$s » pour confirmer l\'addition de « %1$s »</string>
     <string name="tag_editor_add_feedback_existing">Étiquette existante «%1$s» sélectionnée</string>
+    <string name="tag_already_exists">Le mot-clé existe déjà</string>
     <!-- Time spans -->
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">Erreur lors du partage du fichier apkg</string>
@@ -206,13 +207,17 @@
     <string name="background_image_title" maxLength="41">Arrière-plan</string>
     <string name="choose_an_image" maxLength="41">Sélectionner une image</string>
     <string name="remove_wallpaper_image" maxLength="41">Retirer le fond d\'écran</string>
-    <string name="remove_background_image">Retirer l\'arrière-plan ?</string>
+    <string name="remove_background_image">Êtes-vous sûr de vouloir supprimer l\'arrière-plan ?</string>
     <!-- Card Template Browser Appearance -->
-    <string name="restore_default" maxLength="28">Rétablir par défaut</string>
+    <string name="restore_default" maxLength="28">Restaurer les valeurs par défaut</string>
     <string name="reviewer_tts_cloze_spoken_replacement">Vide</string>
     <!-- Whiteboard eraser mode toggle message in Reviewer -->
     <string name="white_board_eraser_enabled">Mode efface activé</string>
     <string name="white_board_eraser_disabled">Mode efface désactivé</string>
+    <string comment="Progress amount e.g. \'28 MB/141 MB\'. %1$s is the current amount, %2$s is the max." name="progress_amount_bytes">%1$s/%2$s</string>
+    <string name="media_file_size_warning_title">Média trop volumineux</string>
+    <string name="media_file_size_warning_message" comment="1$s: File name, 2$s: File size, 3$s: The size limit (e.g. 100MB)">Le fichier \"%1$s\" (%2$s) dépasse la limite AnkiWeb de %3$s et ne peut pas être synchronisé. Ajouter quand même ?</string>
+    <string name="media_file_size_add_anyway">Ajouter quand même</string>
     <!-- Whiteboard save image message in the Study Screen -->
     <string name="white_board_image_save_failed">Impossible d\'enregistrer l\'image du tableau blanc. %s</string>
     <string name="white_board_image_saved">Image du tableau blanc enregistrée dans %s</string>
@@ -238,18 +243,18 @@
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">Taille de la police</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">Afficher la barre d\'outils</string>
-    <string name="format_insert_bold">Formater comme gras</string>
-    <string name="format_insert_italic">Formater comme italique</string>
-    <string name="format_insert_underline">Formater comme souligné</string>
+    <string name="format_insert_bold">Formater en gras</string>
+    <string name="format_insert_italic">Formater en italique</string>
+    <string name="format_insert_underline">Souligner</string>
     <string name="insert_horizontal_line">Insérer une ligne horizontale</string>
     <string name="insert_heading">Insérer un entête</string>
-    <string name="format_font_size">Changer la taille de la police</string>
+    <string name="format_font_size">Modifier la taille de police</string>
     <string name="insert_mathjax">Insérer une équation MathJax</string>
     <string name="note_editor_toolbar_icon">Texte du bouton</string>
     <string name="before_text">HTML avant sélection</string>
     <string name="after_text">HTML après sélection</string>
     <string name="add_toolbar_item">Créer un élément de la barre d\'outils</string>
-    <string name="edit_toolbar_item">Modifier la barre d’outils</string>
+    <string name="edit_toolbar_item">Modifier un élément de la barre d’outils</string>
     <string name="toolbar_item_explain_edit_or_remove">Entrez le code HTML à insérer avant et après le texte sélectionné\n\nAppuyez longuement sur un élément de la barre d\'outils pour le modifier ou le supprimer</string>
     <string name="remove_toolbar_item">Supprimer l\'élément de la barre d\'outils ?</string>
     <string name="note_editor_image_too_large">L’image est trop grande, veuillez insérer l’image manuellement</string>
@@ -261,6 +266,9 @@
     <string name="create_shortcut_error">Erreur lors de l\'ajout du raccourci : %s</string>
     <string name="note_editor_capitalize" comment="This is for a switch with a checkbox - on: enabled" maxLength="28">Mettre en majuscules les phrases</string>
     <string name="menu_scroll_toolbar" comment="Checkbox stating whether note editor toolbar is scrollable or stacked. Checked: Scroll" maxLength="28">Barre d\'outils à défilement</string>
+    <!-- Dialog hints -->
+    <string name="dialog_hint_url">URL</string>
+    <string name="dialog_hint_certificate">Certificat</string>
     <!-- IncrementNumberRangePreference -->
     <string name="plus_sign" comment="Label for increment button in IncrementerNumberRangePreference">+</string>
     <string name="minus_sign" comment="Label for decrement button in IncrementerNumberRangePreference">-</string>
@@ -270,7 +278,7 @@
     <!-- Used for credential empty warning message -->
     <string name="invalid_email">Saisir un email valide</string>
     <string name="password_empty">Mot de passe requis</string>
-    <string name="back_pressed_once">Réappuyez sur la touche Retour pour quitter</string>
+    <string name="back_pressed_once">Go back again to exit</string>
     <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
     <string name="percentage">%s %%</string>
     <string name="download_deck">Télécharger le paquet</string>
@@ -328,7 +336,7 @@
     <!-- Browser Options Dialog -->
     <string name="show_cards" comment="Label for toggle cards button in BrowserOptionsDialog">Cartes</string>
     <string name="show_notes" comment="Label for toggle notes button in BrowserOptionsDialog">Notes</string>
-    <string name="toggle_cards_notes">Activer/Désactiver les Cartes/Notes</string>
+    <string name="toggle_cards_notes">Basculer entre cartes / notes</string>
     <string name="truncate_content_help">Tronquer la hauteur de chaque ligne du navigateur pour ne montrer que les 3 premières lignes de contenu</string>
     <string name="browser_options_dialog_heading">Options du navigateur</string>
     <string name="audio_saved">Enregistrement sauvegardé</string>
@@ -382,4 +390,7 @@
     <string name="scheduler_upgrade_required_dialog_title" comment="Shown in a dialog when user has imported a collection using a very old version of the Anki spaced repetition scheduler">Mise à jour du planificateur requise</string>
     <!-- Whitespace is OK -->
     <string name="list_separator" comment="The character and spacing to display between elements of a list, for example \', \' in \'Apple, Banana, Cherry" tools:ignore="TranslationTypo">, </string>
+    <!-- Other errors -->
+    <!-- Similar to TR.qtMiscNameExists(): "Name exists." -->
+    <string name="error_name_exists">Le nom existe déjà</string>
 </resources>

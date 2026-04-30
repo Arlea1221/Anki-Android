@@ -44,8 +44,7 @@
 ~ this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="check_db_title">ساندان تەكشۈرەمدۇ؟</string>
-    <string name="check_db_warning">بۇنىڭغا ئۇزۇن ۋاقىت كېتىشى مۇمكىن</string>
+    <string name="check_db_warning">This may take a long time. Proceed?</string>
     <string name="contextmenu_deckpicker_delete_deck" maxLength="28">دەستە ئۆچۈر</string>
     <string name="delete_deck_title">دەستە ئۆچۈرەمدۇ؟</string>
     <plurals name="delete_deck_message">
@@ -83,11 +82,14 @@
     <string name="restore_backup_choose_another">باشقىسى تاللىنىدۇ</string>
     <string name="dialog_cancel">ۋاز كەچ</string>
     <string name="dialog_ok">جەزملە</string>
+    <string name="dialog_add" comment="Positive dialog action button label to add \'something\'">Add</string>
+    <string name="restore">Restore</string>
     <string name="dialog_confirm" tools:ignore="UnusedResources">جەزملە</string>
     <string name="dialog_no">ياق</string>
     <string name="dialog_yes">ھەئە</string>
     <string name="dialog_keep">ساقلاپ قال</string>
     <string name="dialog_remove">چىقىرىۋەت</string>
+    <string name="dialog_exit" comment="Label for a button which will exit/finish the current screen">Exit</string>
     <string name="dialog_continue">داۋاملاشتۇر</string>
     <string name="dialog_processing">بىر تەرەپ قىلىۋاتىدۇ&#8230;</string>
     <string name="dialog_positive_create" comment="Create a new collection, probably erasing the previous one, may be necessary in case of error.">قۇر</string>
@@ -102,8 +104,7 @@
     <string name="dialog_invalid_custom_certificate_title">گۇۋاھنامە يېشىش خاتالىقى</string>
     <string name="dialog_updated_custom_certificate">گۇۋاھنامە يېڭىلاندى</string>
     <!-- Media checking -->
-    <string name="check_media_title">ۋاسىتە تەكشۈرەمدۇ؟</string>
-    <string name="check_media_warning">چوڭ ۋاسىتە توپلىمىغا ئۇزۇن ۋاقىت كېتىشى مۇمكىن</string>
+    <string name="check_media_warning">This may take a long time with large media collections. Proceed?</string>
     <string name="check_media_message">ۋاسىتە تەكشۈرۈۋاتىدۇ&#8230;</string>
     <string name="check_media_adding_missing_tag">بەلگە قوش&#8230;</string>
     <string name="check_media_tags_added">بەلگە قوشۇلدى</string>
@@ -127,8 +128,6 @@
     <string name="permission_denied">ئىجازەت رەت قىلىندى</string>
     <string name="recording_permission_denied_message">مىكروفون ئىجازىتى «ئاۋاز خاتىرىلەش» ئىقتىدارى ئۈچۈن زۆرۈر. ئەپ تەڭشىكىدە ئىجازەت بېرىڭ.</string>
     <!-- Database Integrity Check -->
-    <string name="integrity_check_startup_title">AnkiDroid يېڭىلاندى</string>
-    <string name="integrity_check_startup_content">AnkiDroid يېڭىلانغان. بۇ يۈكسەلتىش بەلكىم ساندان مەسىلىلىرىنى ھەل قىلىشنى ئۆز ئىچىگە ئالىدۇ، ھازىر «ساندان تەكشۈر» نى ئىجرا قىلىشىڭىزنى تەۋسىيە قىلىمىز.</string>
     <string name="integrity_check_continue_anyway">داۋاملاشتۇرۇۋەر</string>
     <string name="integrity_check_insufficient_space">ساندان تەكشۈرۈشكە ئىشلىتىدىغان ۋاقىتلىق بوشلۇق چوڭ.\n\nداۋاملاشتۇرۇشتىن ئىلگىرى ئۈسكۈنىڭىزدە كەم دېگەندە %s ئەركىن بوشلۇق بولۇشىنى كۈچلۈك تەۋسىيە قىلىمىز.</string>
     <string name="integrity_check_insufficient_space_extra_content">\n\nھازىر %s ئەركىن بوشلۇقىڭىز بار.</string>
@@ -213,8 +212,6 @@
     <string name="dismiss_backup_warning_title">سانلىق-مەلۇمات يوقۇلۇش ئاگاھلاندۇرۇشى</string>
     <string name="dismiss_backup_warning_new_user">Android شەخسىيەت تۈزۈمى ئۆزگەرگەنلىكتىن، ئەگەر ئەپ ئۆچۈرۈلسە، سانلىق مەلۇماتىڭىز ۋە ئۆزلۈكىدىن زاپاسلانغانلار تېلېفونىڭىزدىن ئۆچۈرۈلىدۇ</string>
     <string name="dismiss_backup_warning_upgrade">Android شەخسىيەت تۈزۈمى ئۆزگەرگەنلىكتىن، ئەگەر ئەپ ئۆچۈرۈلسە، سانلىق مەلۇماتىڭىز ۋە ئۆزلۈكىدىن زاپاسلانغانلارنى زىيارەت قىلغىلى بولمايدۇ</string>
-    <string name="deck_already_exists">دەستە مەۋجۇت</string>
-    <string name="empty_deck_name">دەستە ئىسمى بوش قالمايدۇ</string>
     <string name="create_deck_numeric_hint">ئەگەر دەستە تەرتىپ مەسىلىسى بولسا (مەسىلەن، «10»«2»)دىن ئىلگىرى كۆرۈنسە، «2» نى «02» گە ئالماشتۇرۇڭ)</string>
     <!-- Set Due Date -->
     <string name="set_due_date_match_interval" comment="when setting a card\'s due date, this checkbox also changes the interval of the card">ئارىلىقنى ئوخشاش قىممەتكە تەڭشەڭ</string>
@@ -270,4 +267,16 @@
     <string name="different_note_types_selected">بىر خاتىرە تۈرىدىن بىرلا خاتىرە تۈرىنى تاللاڭ.</string>
     <string name="error_no_changes_to_save">ساقلايدىغان ئۆزگىرىش يوق</string>
     <string name="choose_color">رەڭ تاللىنىدۇ</string>
+    <!-- Special Fields -->
+    <string name="standard_fields_tab_header" comment="Tab header for inserting non-special fields: {{Front}}">Fields</string>
+    <string name="special_fields_tab_header" comment="Tab header for inserting special fields: {{Deck}}">Special</string>
+    <string name="special_field_example_suffix"><![CDATA[: ‘<b>%1$s</b>’]]></string>
+    <string name="special_field_front_side_help">The front template content. Audio is not automatically played</string>
+    <string name="special_field_deck_help" comment="%s: either blank or \' %s\'">The full deck of the card, including parent decks%s</string>
+    <string name="special_field_subdeck_help" comment="%s: either blank or \' %s\'">The current deck of the card, excluding parent decks%s</string>
+    <string name="special_field_flag_help">Outputs ‘%1$s’, where %2$s is the flag code (%3$s\–%4$s\)</string>
+    <string name="special_field_tags_help" comment="%s: either blank or \' %s\'">The tags of the note%s</string>
+    <string name="special_field_card_id_help" comment="%s: either blank or \' %s\'">The ID of the card%s</string>
+    <string name="special_field_card_help" comment="%s: either blank or \' %s\'">The name of the card template%s</string>
+    <string name="special_field_type_help" comment="%s: either blank or \' %s\'">The name of the note type%s</string>
 </resources>

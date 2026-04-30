@@ -116,6 +116,7 @@
     <string name="menu_unmark_note">Ξεμαρκάρισμα σημείωσης</string>
     <string name="menu_enable_voice_playback" maxLength="28">Ενεργοποίηση αναπαραγωγής φωνής</string>
     <string name="menu_disable_voice_playback">Απενεργοποίηση αναπαραγωγής φωνής</string>
+    <string name="menu_create_backup" maxLength="28">Create backup</string>
     <string name="new_deck">Δημιουργία τράπουλας</string>
     <string name="new_dynamic_deck">Δημιουργία φιλτραρισμένης τράπουλας</string>
     <string name="directory_inaccessible">Δεν είναι δυνατή η πρόσβαση στον κατάλογο του AnkiDroid</string>
@@ -129,7 +130,7 @@
     <string name="empty_cram_label" maxLength="28">Άδειασμα</string>
     <string name="create_subdeck">Δημιουργία υποτράπουλας</string>
     <string name="empty_filtered_deck">Άδειασμα φιλτραρισμένης τράπουλας&#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">Αναζήτηση</string>
+    <string name="search_deck" comment="Deck search for selecting it">Deck search</string>
     <string name="empty_deck">Αυτή η τράπουλα είναι κενή</string>
     <string name="invalid_deck_name">Μη έγκυρο όνομα</string>
     <string name="studyoptions_congrats_finished">Συγχαρητήρια! Τελειώσατε για σήμερα.</string>
@@ -144,7 +145,6 @@
     <string name="syncing_media">Συγχρονισμός πολυμέσων</string>
     <string name="export_deck" maxLength="28">Εξαγωγή τράπουλας</string>
     <string name="export_collection">Εξαγωγή συλλογής</string>
-    <string name="nothing">Τίποτε</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">Τύποι κάρτας</string>
     <string name="card_template_editor_front">Μπροστινό πρότυπο</string>
@@ -212,6 +212,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">Αφαίρεση λογαριασμού</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">Άμεση κάρτα</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Internet</string>
+    <string name="permission_access_summary">Required for the app to work</string>
+    <string name="permission_required_message">Please grant AnkiDroid the ‘%s’ permission to continue</string>
     <!-- Multiple profile -->
     <string name="add_profile">Add profile</string>
 </resources>

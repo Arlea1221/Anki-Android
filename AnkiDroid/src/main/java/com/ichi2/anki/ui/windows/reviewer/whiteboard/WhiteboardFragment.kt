@@ -21,6 +21,7 @@ import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -35,11 +36,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.ichi2.anki.AnkiDroidApp
+import com.ichi2.anki.DispatchKeyEventListener
 import com.ichi2.anki.R
+import com.ichi2.anki.cardviewer.Gesture
 import com.ichi2.anki.databinding.FragmentWhiteboardBinding
 import com.ichi2.anki.databinding.PopupBrushOptionsBinding
 import com.ichi2.anki.databinding.PopupEraserOptionsBinding
+import com.ichi2.anki.preferences.reviewer.WhiteboardAction
+import com.ichi2.anki.reviewer.BindingMap
+import com.ichi2.anki.reviewer.ReviewerBinding
 import com.ichi2.anki.snackbar.showSnackbar
+import com.ichi2.anki.utils.ext.sharedPrefs
 import com.ichi2.themes.Themes
 import com.ichi2.utils.dp
 import com.ichi2.utils.increaseHorizontalPaddingOfMenuIcons
@@ -56,16 +63,21 @@ import kotlin.math.roundToInt
  */
 class WhiteboardFragment :
     Fragment(R.layout.fragment_whiteboard),
-    PopupMenu.OnMenuItemClickListener {
+    PopupMenu.OnMenuItemClickListener,
+    DispatchKeyEventListener {
     private val viewModel: WhiteboardViewModel by viewModels {
         WhiteboardViewModel.factory(AnkiDroidApp.sharedPrefs())
     }
 
     val binding by viewBinding(FragmentWhiteboardBinding::bind)
+    private lateinit var bindingMap: BindingMap<ReviewerBinding, WhiteboardAction>
 
     private var eraserPopup: PopupWindow? = null
     private var brushConfigPopup: PopupWindow? = null
     private var force_stylus_mode_off = false
+
+    /** Called when no bindings used the triggered gestures */
+    var gestureFallbackListener: ((Gesture) -> Unit)? = null
 
     override fun onViewCreated(
         view: View,
@@ -81,7 +93,7 @@ class WhiteboardFragment :
 
         binding.whiteboardView.onNewPath = viewModel::addPath
         binding.whiteboardView.onEraseGestureStart = viewModel::startPathEraseGesture
-        binding.whiteboardView.onEraseGestureMove = viewModel::erasePathsAtPoint
+        binding.whiteboardView.onEraseGestureMove = viewModel::erasePathsToPoint
         binding.whiteboardView.onEraseGestureEnd = viewModel::endPathEraseGesture
     }
 
@@ -146,7 +158,32 @@ class WhiteboardFragment :
         binding.whiteboardToolbar.onToolbarVisibilityChanged = { isShown ->
             viewModel.setIsToolbarShown(isShown)
         }
+
+        bindingMap = BindingMap(sharedPrefs(), WhiteboardAction.entries, viewModel)
+        binding.root.setOnGenericMotionListener { _, event ->
+            bindingMap.onGenericMotionEvent(event)
+        }
+        binding.whiteboardView.setOnMultiTouchListener { touchNumber ->
+            val gesture =
+                when (touchNumber) {
+                    2 -> Gesture.TWO_FINGER_TAP
+                    3 -> Gesture.THREE_FINGER_TAP
+                    4 -> Gesture.FOUR_FINGER_TAP
+                    else -> return@setOnMultiTouchListener
+                }
+            val result = bindingMap.onGesture(gesture)
+            if (!result) {
+                gestureFallbackListener?.invoke(gesture)
+            }
+        }
     }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (event.action != KeyEvent.ACTION_DOWN) return false
+        return bindingMap.onKeyDown(event)
+    }
+
+    fun onScreenShake(): Boolean = bindingMap.onGesture(Gesture.SHAKE)
 
     /**
      * Sets up observers for the ViewModel's flows.

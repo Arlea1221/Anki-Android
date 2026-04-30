@@ -220,7 +220,7 @@
         如果未設定，預設的 AnkiWeb 伺服器將被使用。
         <a href="%s">了解更多</a>
         ]]></string>
-    <string name="custom_sync_server_base_url_title" maxLength="41">同步地址</string>
+    <string name="custom_sync_server_base_url_title" maxLength="41">Sync URL</string>
     <string name="custom_sync_certificate_title" maxLength="41">自訂根憑證 (PEM)</string>
     <!-- Key Bindings -->
     <string name="keyboard">鍵盤</string>
@@ -240,16 +240,7 @@
     <string name="studyoptions_limit_select_tags">選擇標籤</string>
     <!-- Deck configurations -->
     <string name="deck_conf_general" maxLength="41" comment="Label of the submenu for the general options of new deck">一般</string>
-    <string name="deck_conf_cram_filter" maxLength="41">篩選器</string>
     <string name="deck_conf_cram_search" maxLength="41" comment="Label of a text field that contains a search query.">搜尋</string>
-    <string name="deck_conf_cram_limit" maxLength="41">上限為</string>
-    <string name="deck_conf_cram_order" maxLength="41">Cards selected by</string>
-    <string name="deck_conf_cram_reschedule" maxLength="41" comment="Title of the box labelled by deck_conf_cram_reschedule_summ">重新排程</string>
-    <string name="deck_conf_cram_reschedule_summ">依據我在本牌組的回答狀況來重新排程卡片</string>
-    <string name="deck_conf_cram_filter_2_check">開啟第二個過濾器</string>
-    <string name="deck_conf_cram_steps_summ" maxLength="41">設定自訂步數</string>
-    <string name="deck_conf_cram_preview_delays" maxLength="41">預覽延遲</string>
-    <string name="deck_conf_cram_preview_delays_summ">延遲以秒為單位。0 會將卡片送回原來的卡組。</string>
     <!-- analytics options -->
     <string name="analytics_dialog_title">幫助 AnkiDroid 做得更好！</string>
     <string name="analytics_title" maxLength="41">分享功能使用方式</string>
@@ -390,4 +381,5 @@
     <string name="flip_and_answer" maxLength="41" comment="Configuration of the \'Answer\' commands to answer the card if on the answer side, and flip it if on the question side">Flip and answer</string>
     <!--Keyboard shortcuts dialog-->
     <string name="open_settings" comment="Description of the shortcut that opens the app settings">Open settings</string>
+    <string name="related_settings_title" comment="Title of the section for related settings">Related settings</string>
 </resources>

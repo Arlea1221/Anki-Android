@@ -222,7 +222,7 @@
         ᱡᱩᱫᱤ ᱵᱟᱝ ᱥᱚᱫᱚᱨ ᱟᱠᱟᱱᱟ, ᱮᱱᱠᱷᱟᱱ ᱰᱤᱯᱚᱞᱴ AnkiWeb ᱥᱟᱨᱵᱟᱨ ᱵᱮᱵᱷᱟᱨ ᱦᱩᱭᱩᱜᱼᱟ ᱾
         <a href="%s">ᱟᱨᱦᱚᱸ ᱵᱟᱰᱟᱭ ᱢᱮ</a>
         ]]></string>
-    <string name="custom_sync_server_base_url_title" maxLength="41">Sync url</string>
+    <string name="custom_sync_server_base_url_title" maxLength="41">Sync URL</string>
     <string name="custom_sync_certificate_title" maxLength="41">ᱟᱹᱫᱤᱢ ᱨᱩᱴ ᱥᱟᱨᱴᱤᱯᱷᱤᱠᱮᱴ (PEM)</string>
     <!-- Key Bindings -->
     <string name="keyboard">ᱠᱤᱵᱚᱨᱰ</string>
@@ -242,16 +242,7 @@
     <string name="studyoptions_limit_select_tags">Select tags</string>
     <!-- Deck configurations -->
     <string name="deck_conf_general" maxLength="41" comment="Label of the submenu for the general options of new deck">ᱥᱟᱱᱟᱢ</string>
-    <string name="deck_conf_cram_filter" maxLength="41">ᱪᱷᱟᱹᱱᱤᱭᱟᱜ</string>
     <string name="deck_conf_cram_search" maxLength="41" comment="Label of a text field that contains a search query.">ᱥᱮᱸᱫᱽᱨᱟ</string>
-    <string name="deck_conf_cram_limit" maxLength="41">ᱥᱤᱢᱟᱹ ᱛᱮ</string>
-    <string name="deck_conf_cram_order" maxLength="41">ᱠᱟᱨᱰ ᱠᱚ ᱵᱟᱪᱷᱟᱣ ᱟᱠᱟᱱᱟ</string>
-    <string name="deck_conf_cram_reschedule" maxLength="41" comment="Title of the box labelled by deck_conf_cram_reschedule_summ">ᱨᱤᱥᱮᱰᱭᱩᱞ ᱢᱮ</string>
-    <string name="deck_conf_cram_reschedule_summ">Reschedule cards based on my answers in this deck</string>
-    <string name="deck_conf_cram_filter_2_check">ᱫᱚᱥᱟᱨ ᱯᱷᱤᱞᱴᱚᱨ ᱜᱚᱱᱚᱪᱚ</string>
-    <string name="deck_conf_cram_steps_summ" maxLength="41">Define custom steps</string>
-    <string name="deck_conf_cram_preview_delays" maxLength="41">ᱯᱩᱭᱞᱩ ᱧᱮᱞ ᱛᱟᱵᱚᱱ ᱠᱚ</string>
-    <string name="deck_conf_cram_preview_delays_summ">᱐ ᱫᱚ ᱚᱞ ᱪᱤᱠᱤ ᱨᱮ ᱠᱟᱨᱰ ᱮ ᱨᱩᱣᱟ.</string>
     <!-- analytics options -->
     <string name="analytics_dialog_title">Help make AnkiDroid better!</string>
     <string name="analytics_title" maxLength="41">Share feature usage</string>
@@ -393,4 +384,5 @@
     <string name="flip_and_answer" maxLength="41" comment="Configuration of the \'Answer\' commands to answer the card if on the answer side, and flip it if on the question side">Flip and answer</string>
     <!--Keyboard shortcuts dialog-->
     <string name="open_settings" comment="Description of the shortcut that opens the app settings">ᱚᱯᱮᱱ ᱥᱮᱴᱤᱝ</string>
+    <string name="related_settings_title" comment="Title of the section for related settings">Related settings</string>
 </resources>

@@ -54,9 +54,8 @@
     <string name="CardEditorModel">Tipo:</string>
     <string name="CardEditorTags">Etichette: %1$s</string>
     <string name="CardEditorCards">Carte: %1$s</string>
-    <string name="edit_occlusions">Modifica occlusioni</string>
+    <string name="edit_occlusions">Edit occlusions</string>
     <string name="paste_from_clipboard" maxLength="28">Incolla dagli appunti</string>
-    <string name="tag_name">Nome etichetta</string>
     <string name="add_new_filter_tags">Aggiungi/filtra etichette</string>
     <string name="add_tag" maxLength="28">Aggiungi etichetta</string>
     <string name="check_all_tags" maxLength="28">Seleziona/deseleziona tutte le etichette</string>
@@ -75,8 +74,8 @@
     <string name="whiteboard_more_options" comment="Tooltip of the whiteboard \'More\' button" maxLength="28">Più opzioni</string>
     <string name="whiteboard_remove_brush_message">Sei sicuro di voler rimuovere questo pennello dalla tavolozza?</string>
     <string name="whiteboard_ink_eraser" comment="Title of the whiteboard Ink eraser">Inchiostro</string>
-    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">Stroke</string>
-    <string name="stylus_mode" comment="Title of the menu item that toggles the whiteboard stylus mode" maxLength="28">Stylus mode</string>
+    <string name="whiteboard_stroke_eraser" comment="Title of the whiteboard Stroke eraser">Tratto</string>
+    <string name="stylus_mode" comment="Title of the menu item that toggles the whiteboard stylus mode" maxLength="28">Modalità stilo</string>
     <string name="cannot_remove_last_brush_message">The last brush may not be removed</string>
     <string name="enable_whiteboard" maxLength="28">Abilita la lavagna</string>
     <string name="disable_whiteboard">Disabilita la lavagna</string>
@@ -99,6 +98,10 @@
     <string name="webview_crash_loop_dialog_content">La WebView sistema non è riuscita a rendere la carta «%1$s».\n %2$s</string>
     <string name="slide_to_cancel" comment="Message shown when pressing the record button">Slide to cancel</string>
     <string name="filter_by_flags" maxLength="41">Contrassegni</string>
+    <!-- filtered deck options -->
+    <string name="filtered_option_delay_again">Delay for again</string>
+    <string name="filtered_option_delay_hard">Delay for hard</string>
+    <string name="filtered_option_delay_good">Delay for good</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">Costruendo lista di tag&#8230;</string>
     <!-- Study options -->
@@ -120,7 +123,6 @@
     <string name="close">Chiudi</string>
     <string name="select">Seleziona</string>
     <string name="field_remapping">%1$s (di \'%2$s\')</string>
-    <string name="confirm_map_cards_to_nothing">Verranno eliminate eventuali carte senza connessione. Se una nota non ha nessuna carta rimanente, sarà perduta. Sei sicuro/a di voler continuare?</string>
     <string name="missing_note_type">Nessun tipo di nota trovato</string>
     <string name="card_previewer_empty_front_indicator" comment="Extra text appended onto a tab title in the card previewer so that the user can see at a glance whether a card has no front.">%1$s (vuoto)</string>
     <!-- Image cropper -->
@@ -149,8 +151,6 @@
     <string name="preview_progress_bar_text" comment="What card we are on out of how many in card previewer progress bar">%1$d di %2$d</string>
     <string name="rename" comment="Confirm that the renaming action should be processed." maxLength="28">Rinomina</string>
     <string name="checks_action" maxLength="28">Verifica</string>
-    <string name="check_db" maxLength="28">Controlla database</string>
-    <string name="check_media" maxLength="28">Controlla file multimediali</string>
     <string name="empty_cards" maxLength="28">Carte vuote</string>
     <string name="unknown_type_field_warning">Digita la risposta: campo sconosciuto %s</string>
     <string name="delete_deck" comment="Message on a progress bar starting a deck is being deleted.">Eliminazione mazzo in corso&#8230;</string>
@@ -167,7 +167,7 @@
     <string name="import_error_load_imported_database">Le sostituzioni di Anki Database (.anki2) non sono ancora supportate. Consultare il manuale per le istruzioni di sostituzione.</string>
     <string name="import_error_content_provider">Il file selezionato non ha potuto essere importato automaticamente da AnkiDroid. Consulta il manuale utente per importare manualmente i file Anki: \n %s</string>
     <string name="import_error_copy_to_cache_title">Impossibile cache del file</string>
-    <string name="import_error_copy_to_cache_explanation" comment="The substitution is a list of suggested fixes in bullet point form">This is often caused by a bug in the app you used to select the file. Please try the following fixes:\n\n%s</string>
+    <string name="import_error_copy_to_cache_explanation" comment="The substitution is a list of suggested fixes in bullet point form">Questo è spesso causato da un bug nell\'app che hai usato per selezionare il file. Si prega di provare le seguenti correzioni:\n\n%s</string>
     <string name="import_interrupted">Importazione interrotta</string>
     <string name="export_ready_title">Esportazione pronta</string>
     <string name="export_send_no_handlers">Nessuna applicazione disponibile per gestire apkg. Salvataggio&#8230;</string>
@@ -193,6 +193,7 @@
     <string name="dyn_deck_desc">Questo è un mazzo speciale per studiare al di fuori della pianificazione normale. Le carte ritorneranno automaticamente nel mazzo originale dopo che le hai ripetute. L\'eliminazione di questo mazzo dall\'elenco dei mazzi riporterà tutte le carte rimanenti nel loro mazzo originale.</string>
     <string name="tag_editor_add_feedback">Tocca \"%2$s\" per confermare l\'aggiunta di \"%1$s\"</string>
     <string name="tag_editor_add_feedback_existing">Etichetta esistente \"%1$s\" selezionata</string>
+    <string name="tag_already_exists">Tag già esistente</string>
     <!-- Time spans -->
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">Errore nella condivisione del file apkg</string>
@@ -206,13 +207,17 @@
     <string name="background_image_title" maxLength="41">Sfondo</string>
     <string name="choose_an_image" maxLength="41">Scegli un\'immagine</string>
     <string name="remove_wallpaper_image" maxLength="41">Rimuovi sfondo</string>
-    <string name="remove_background_image">Rimuovere lo sfondo?</string>
+    <string name="remove_background_image">Sei sicuro di voler rimuovere lo sfondo?</string>
     <!-- Card Template Browser Appearance -->
-    <string name="restore_default" maxLength="28">Ripristina predefiniti</string>
+    <string name="restore_default" maxLength="28">Restore default</string>
     <string name="reviewer_tts_cloze_spoken_replacement">Vuoto</string>
     <!-- Whiteboard eraser mode toggle message in Reviewer -->
     <string name="white_board_eraser_enabled">Modalità gomma attivata</string>
     <string name="white_board_eraser_disabled">Modalità gomma disattivata</string>
+    <string comment="Progress amount e.g. \'28 MB/141 MB\'. %1$s is the current amount, %2$s is the max." name="progress_amount_bytes">%1$s/%2$s</string>
+    <string name="media_file_size_warning_title">Media too large</string>
+    <string name="media_file_size_warning_message" comment="1$s: File name, 2$s: File size, 3$s: The size limit (e.g. 100MB)">Il file \"%1$s\" (%2$s) supera il limite AnkiWeb di %3$s e non può essere sincronizzato. Aggiungere comunque?</string>
+    <string name="media_file_size_add_anyway">Aggiungi comunque</string>
     <!-- Whiteboard save image message in the Study Screen -->
     <string name="white_board_image_save_failed">Salvataggio dell\'immagine della lavagna fallito. %s</string>
     <string name="white_board_image_saved">Immagine lavagna salvata in %s</string>
@@ -234,24 +239,24 @@
     <string name="search_decks" maxLength="28">Cerca mazzi</string>
     <string name="ankidroid_init_failed_webview_title">Errore Fatale</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid si basa sulla WebView di Sistema che non è disponibile. Questo può verificarsi se il sistema sta installando aggiornamenti. Sei pregato di riprovare tra qualche minuto.\n\n%s</string>
-    <string name="ankidroid_init_failed_storage">AnkiDroid cannot access storage due to an Android error.\n\n%s</string>
+    <string name="ankidroid_init_failed_storage">AnkiDroid non può accedere all\'archivio a causa di un errore di Android.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">Dimensione Carattere</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">Mostra barra strumenti</string>
-    <string name="format_insert_bold">Formatta in Grassetto</string>
-    <string name="format_insert_italic">Formata in Corsivo</string>
-    <string name="format_insert_underline">Formatta come Sottolineato</string>
-    <string name="insert_horizontal_line">Inserisci Riga Orizzontale</string>
-    <string name="insert_heading">Inserisci Intestazione</string>
-    <string name="format_font_size">Cambia Dimensione Carattere</string>
+    <string name="format_insert_bold">Formatta in grassetto</string>
+    <string name="format_insert_italic">Formata in corsivo</string>
+    <string name="format_insert_underline">Formatta come sottolineato</string>
+    <string name="insert_horizontal_line">Inserisci riga orizzontale</string>
+    <string name="insert_heading">Inserisci titolo</string>
+    <string name="format_font_size">Cambia le dimensioni di carattere</string>
     <string name="insert_mathjax">Inserisci equazione MathJax</string>
     <string name="note_editor_toolbar_icon">Testo del pulsante</string>
-    <string name="before_text">HTML Prima della Selezione</string>
-    <string name="after_text">HTML Dopo la Selezione</string>
-    <string name="add_toolbar_item">Crea Elemento Barra degli Strumenti</string>
-    <string name="edit_toolbar_item">Modifica Elemento Barra Strumenti</string>
+    <string name="before_text">HTML prima della selezione</string>
+    <string name="after_text">HTML dopo la selezione</string>
+    <string name="add_toolbar_item">Create toolbar item</string>
+    <string name="edit_toolbar_item">Edit toolbar item</string>
     <string name="toolbar_item_explain_edit_or_remove">Inserisci l\'HTML da inserire prima e dopo il testo selezionato\n\nTieni premuto un elemento della barra per modificarlo o rimuoverlo</string>
-    <string name="remove_toolbar_item">Rimuovere l\'Elemento della Barra Strumenti?</string>
+    <string name="remove_toolbar_item">Remove toolbar item?</string>
     <string name="note_editor_image_too_large">L\'immagine è troppo grande, per favore inserisci l\'immagine manualmente</string>
     <string name="note_editor_video_too_large">Il file video è troppo grande, per favore inserisci il video manualmente.</string>
     <string name="note_editor_audio_too_large">Il file audio è troppo grande,  inserisci manualmente il file audio.</string>
@@ -261,16 +266,19 @@
     <string name="create_shortcut_error">Errore nell\'aggiunta della scorciatoia: %s</string>
     <string name="note_editor_capitalize" comment="This is for a switch with a checkbox - on: enabled" maxLength="28">Frasi in maiuscole</string>
     <string name="menu_scroll_toolbar" comment="Checkbox stating whether note editor toolbar is scrollable or stacked. Checked: Scroll" maxLength="28">Barra di scorrimento</string>
+    <!-- Dialog hints -->
+    <string name="dialog_hint_url">URL</string>
+    <string name="dialog_hint_certificate">Certificate</string>
     <!-- IncrementNumberRangePreference -->
     <string name="plus_sign" comment="Label for increment button in IncrementerNumberRangePreference">+</string>
     <string name="minus_sign" comment="Label for decrement button in IncrementerNumberRangePreference">-</string>
-    <string name="invalid_value" comment="Error message in IncrementerNumberRangePreference when input is not a valid number">Invalid value</string>
-    <string name="maximum_value_is" comment="Error message in IncrementerNumberRangePreference. %d is the maximum allowed value">Maximum value is %d</string>
-    <string name="minimum_value_is" comment="Error message in IncrementerNumberRangePreference. %d is the minimum allowed value">Minimum value is %d</string>
+    <string name="invalid_value" comment="Error message in IncrementerNumberRangePreference when input is not a valid number">Valore non valido</string>
+    <string name="maximum_value_is" comment="Error message in IncrementerNumberRangePreference. %d is the maximum allowed value">Il valore massimo è %d</string>
+    <string name="minimum_value_is" comment="Error message in IncrementerNumberRangePreference. %d is the minimum allowed value">Il valore minimo è %d</string>
     <!-- Used for credential empty warning message -->
     <string name="invalid_email">Inserisci un\'email valida</string>
     <string name="password_empty">La password è obbligatoria</string>
-    <string name="back_pressed_once">Premi di nuovo indietro per uscire</string>
+    <string name="back_pressed_once">Go back again to exit</string>
     <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
     <string name="percentage">%s%%</string>
     <string name="download_deck">Scarica il mazzo</string>
@@ -328,7 +336,7 @@
     <!-- Browser Options Dialog -->
     <string name="show_cards" comment="Label for toggle cards button in BrowserOptionsDialog">Carte</string>
     <string name="show_notes" comment="Label for toggle notes button in BrowserOptionsDialog">Note</string>
-    <string name="toggle_cards_notes">Passa a Carte/Note</string>
+    <string name="toggle_cards_notes">Toggle cards/notes</string>
     <string name="truncate_content_help">Tronca l\'altezza di ogni riga del browser per mostrare solo le prime 3 righe di contenuto</string>
     <string name="browser_options_dialog_heading">Opzioni browser</string>
     <string name="audio_saved">Registrazione salvata</string>
@@ -344,7 +352,7 @@
     <string name="shared_decks_login_required">Accedi per scaricare altri mazzi</string>
     <string name="deck_description_field_hint">Descrizione</string>
     <string name="deck_description_saved">Descrizione aggiornata</string>
-    <string name="format_deck_description_as_markdown">Formatta come Markdown</string>
+    <string name="format_deck_description_as_markdown">Formatta come markdown</string>
     <string name="help_button_content_description">Apri aiuti per \'%s\'</string>
     <string name="failed_to_copy">Copia non riuscita</string>
     <plurals name="unbury_cards_feedback">
@@ -359,7 +367,7 @@
     <string name="play_recording">Riproduci</string>
     <string name="next_recording" comment="Description of a button to go to the next recording">Successivo</string>
     <!--  AlertDialog in the deleteCardTemplate  -->
-    <string name="orphan_note_title">Impossibile eliminare il tipo di carta</string>
+    <string name="orphan_note_title">Cannot delete card type</string>
     <string name="orphan_note_message">L\'eliminazione di questo tipo di carta lascerà alcune note senza alcuna carta.</string>
     <string name="voice_not_supported">Voce non supportata. Scegli un\'altra voce o installa un motore vocale.</string>
     <!--Keyboard shortcuts dialog-->
@@ -376,10 +384,13 @@
     <string name="copy_the_template" comment="Description of the shortcut that copy the template as markdown">Copia il modello come Markdown</string>
     <string name="edit_browser_appearance" comment="Description of the shortcut that edits the browser appearance of card template">Modifica l\'aspetto del browser</string>
     <string name="missing_user_action_dialog_message" comment="%s is the user action number">L\'azione utente %s non è impostata in questo tipo di nota. Si prega di configurarla</string>
-    <string name="feature_not_supported_by_study_screen">This card has features that are not yet supported by the new study screen.</string>
+    <string name="feature_not_supported_by_study_screen">Questa scheda ha caratteristiche che non sono ancora supportate dalla nuova schermata di studio.</string>
     <string name="directory_inaccessible_info">Scopri di più su come ripristinare l\'accesso qui %s o vai alle impostazioni per aggiornare la cartella di raccolta.</string>
     <!-- Scheduler Upgrade Required Dialog title-->
     <string name="scheduler_upgrade_required_dialog_title" comment="Shown in a dialog when user has imported a collection using a very old version of the Anki spaced repetition scheduler">Richiesto aggiornamento dello scheduler</string>
     <!-- Whitespace is OK -->
     <string name="list_separator" comment="The character and spacing to display between elements of a list, for example \', \' in \'Apple, Banana, Cherry" tools:ignore="TranslationTypo">, </string>
+    <!-- Other errors -->
+    <!-- Similar to TR.qtMiscNameExists(): "Name exists." -->
+    <string name="error_name_exists">Nome già esistente</string>
 </resources>

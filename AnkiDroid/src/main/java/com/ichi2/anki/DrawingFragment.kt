@@ -37,17 +37,17 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.ichi2.anki.common.time.TimeManager
 import com.ichi2.anki.common.time.getTimestamp
-import com.ichi2.anki.databinding.DrawingFragmentBinding
+import com.ichi2.anki.compat.CompatHelper
+import com.ichi2.anki.databinding.FragmentDrawingBinding
 import com.ichi2.anki.dialogs.DiscardChangesDialog
 import com.ichi2.anki.ui.windows.reviewer.whiteboard.WhiteboardFragment
 import com.ichi2.anki.ui.windows.reviewer.whiteboard.WhiteboardView
-import com.ichi2.compat.CompatHelper
 import com.ichi2.themes.Themes
 import com.ichi2.utils.openInputStreamSafe
 import dev.androidbroadcast.vbpd.viewBinding
 
-class DrawingFragment : Fragment(R.layout.drawing_fragment) {
-    private val binding by viewBinding(DrawingFragmentBinding::bind)
+class DrawingFragment : Fragment(R.layout.fragment_drawing) {
+    private val binding by viewBinding(FragmentDrawingBinding::bind)
     private var has_background_image = false
     private var zoom_scale = MIN_ZOOM_SCALE
     private var zoom_translation_x = 0f

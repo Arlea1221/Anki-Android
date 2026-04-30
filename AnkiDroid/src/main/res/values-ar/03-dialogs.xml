@@ -44,8 +44,7 @@
 ~ this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="check_db_title">أتريد فحص قاعدة البيانات؟</string>
-    <string name="check_db_warning">قد يستغرق هذا وقتًا طويلاً</string>
+    <string name="check_db_warning">قد يستغرق هذا وقتًا طويلًا. أتود الاستمرار؟</string>
     <string name="contextmenu_deckpicker_delete_deck" maxLength="28">حذف الرزمة</string>
     <string name="delete_deck_title">هل تريد حذف الرزمة؟</string>
     <plurals name="delete_deck_message">
@@ -91,11 +90,14 @@
     <string name="restore_backup_choose_another">اختيار نسخة أخرى</string>
     <string name="dialog_cancel">إلغاء</string>
     <string name="dialog_ok">حسنًا</string>
+    <string name="dialog_add" comment="Positive dialog action button label to add \'something\'">إضافة</string>
+    <string name="restore">استعادة</string>
     <string name="dialog_confirm" tools:ignore="UnusedResources">تأكيد</string>
     <string name="dialog_no">لا</string>
     <string name="dialog_yes">نعم</string>
     <string name="dialog_keep">إبقاء</string>
     <string name="dialog_remove">إزالة</string>
+    <string name="dialog_exit" comment="Label for a button which will exit/finish the current screen">خروج</string>
     <string name="dialog_continue">استمرار</string>
     <string name="dialog_processing">تجري المعالجة&#8230;</string>
     <string name="dialog_positive_create" comment="Create a new collection, probably erasing the previous one, may be necessary in case of error.">إنشاء</string>
@@ -110,8 +112,7 @@
     <string name="dialog_invalid_custom_certificate_title">حدث خطأ في تحليل الشهادة</string>
     <string name="dialog_updated_custom_certificate">تم تحديث الشهادة</string>
     <!-- Media checking -->
-    <string name="check_media_title">أتريد فحص الوسائط؟</string>
-    <string name="check_media_warning">قد يأخذ هذا وقتًا طويلًا لمجموعات الوسائط الكبيرة</string>
+    <string name="check_media_warning">قد يستغرق هذا وقتًا طويلًا مع مجموعات الوسائط الكبيرة. أتود الاستمرار؟</string>
     <string name="check_media_message">يتم فحص الوسائط&#8230;</string>
     <string name="check_media_adding_missing_tag">تجري إضافة الوسوم&#8230;</string>
     <string name="check_media_tags_added">أضيفت الوسوم</string>
@@ -139,8 +140,6 @@
     <string name="permission_denied">رُفِضَ الإذن</string>
     <string name="recording_permission_denied_message">إذن الميكروفون ضروري لميزة «تسجيل الصوت». امنحه من إعدادات التطبيق رجاءًا.</string>
     <!-- Database Integrity Check -->
-    <string name="integrity_check_startup_title">تم تحديث آنكي درويد</string>
-    <string name="integrity_check_startup_content">تم تحديث آنكي درويد. يتضمن هذا التحديث إصلاحًا لأعطال ممكنة في قاعدة البيانات، لذلك ننصح باستخدام ميزة فحص قاعدة البيانات الآن.</string>
     <string name="integrity_check_continue_anyway">استمرار في كل حال</string>
     <string name="integrity_check_insufficient_space">تستخدم ميزة فحص قاعدة البيانات مساحة كبيرة من التخزين المؤقت.\n\nينصح بشدة أن يكون لديك مساحة %s خالية على الأقل في جهازك قبل الاستمرار.</string>
     <string name="integrity_check_insufficient_space_extra_content">\n\nلديك حاليًا مساحة %s خالية.</string>
@@ -229,8 +228,6 @@
     <string name="dismiss_backup_warning_title">تحذير فقدان البيانات</string>
     <string name="dismiss_backup_warning_new_user">نتيجة لتغييرات في سياسة أندرويد الخصوصية، سيتم حذف بياناتك والنسخ الإحتياطية التلقائية من هاتفك إذا حُذف التطبيق</string>
     <string name="dismiss_backup_warning_upgrade">نتيجة لتغييرات في سياسة أندرويد الخصوصية، ستكون غير قابل للوصول إلى بياناتك والنسخ الإحتياطية التلقائية إذا حُذف التطبيق</string>
-    <string name="deck_already_exists">هذه الرزمة موجودة بالفعل</string>
-    <string name="empty_deck_name">لا يمكن أن يكون إسم الرمزة خاليًا</string>
     <string name="create_deck_numeric_hint">إذا كنت تواجه مصاعب في ترتيب الرزم (كأن تظهر «١٠» قبل «٢»)، إستبدل «٢» ب «٠٢»</string>
     <!-- Set Due Date -->
     <string name="set_due_date_match_interval" comment="when setting a card\'s due date, this checkbox also changes the interval of the card">إجعل الفاصل نفس القيمة</string>
@@ -303,4 +300,16 @@
     <string name="different_note_types_selected">رجاءًا اختر ملحوظات ذات نوع واحد.</string>
     <string name="error_no_changes_to_save">ما من تغييرات لتُحفظ</string>
     <string name="choose_color">اختيار لون</string>
+    <!-- Special Fields -->
+    <string name="standard_fields_tab_header" comment="Tab header for inserting non-special fields: {{Front}}">الحقول</string>
+    <string name="special_fields_tab_header" comment="Tab header for inserting special fields: {{Deck}}">خاص</string>
+    <string name="special_field_example_suffix"><![CDATA[: «<b>%1$s</b>»]]></string>
+    <string name="special_field_front_side_help">محتوى القالب الأمامي. لا يُشغل الصوت تلقائيا</string>
+    <string name="special_field_deck_help" comment="%s: either blank or \' %s\'">رِزمة البطاقة كاملةً، بما في ذلك الرِزم الحاوية لها%s</string>
+    <string name="special_field_subdeck_help" comment="%s: either blank or \' %s\'">رِزمة البطاقة، ما عدا الرِزم الحاوية لها%s</string>
+    <string name="special_field_flag_help">يُنتج «%1$s»، حيث إن %2$s هو رمز العلم (%3$s\–%4$s\)</string>
+    <string name="special_field_tags_help" comment="%s: either blank or \' %s\'">وسوم الملحوظة%s</string>
+    <string name="special_field_card_id_help" comment="%s: either blank or \' %s\'">معرف البطاقة%s</string>
+    <string name="special_field_card_help" comment="%s: either blank or \' %s\'">اسم قالب البطاقة%s</string>
+    <string name="special_field_type_help" comment="%s: either blank or \' %s\'">اسم نوع الملحوظة%s</string>
 </resources>

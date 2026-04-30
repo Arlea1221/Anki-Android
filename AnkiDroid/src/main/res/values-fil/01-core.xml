@@ -116,6 +116,7 @@
     <string name="menu_unmark_note">Alisin ang marka sa tala</string>
     <string name="menu_enable_voice_playback" maxLength="28">Buksan ang voice playback</string>
     <string name="menu_disable_voice_playback">Ipatay ang voice playback</string>
+    <string name="menu_create_backup" maxLength="28">Create backup</string>
     <string name="new_deck">Gumawa ng deck</string>
     <string name="new_dynamic_deck">Gumawa ng na-filter na deck</string>
     <string name="directory_inaccessible">Hindi mapuntahan ang AnkiDroid directory</string>
@@ -129,7 +130,7 @@
     <string name="empty_cram_label" maxLength="28">Walang laman</string>
     <string name="create_subdeck">Gumawa ng subdeck</string>
     <string name="empty_filtered_deck">Inaalisan ng laman ang nasala na deck&#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">Maghanap ng Deck</string>
+    <string name="search_deck" comment="Deck search for selecting it">Deck search</string>
     <string name="empty_deck">Ang deck na ito ay walang laman</string>
     <string name="invalid_deck_name">Hindi wasto ang pangalan ng deck</string>
     <string name="studyoptions_congrats_finished">Mahusay! Nakatapos ka para sa araw na ito.</string>
@@ -144,7 +145,6 @@
     <string name="syncing_media">Sini-sync ang media</string>
     <string name="export_deck" maxLength="28">I-export ang deck</string>
     <string name="export_collection">I-export and koleksyon</string>
-    <string name="nothing">Wala</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">Uri ng mga kard</string>
     <string name="card_template_editor_front">Harapan ng template</string>
@@ -212,6 +212,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">Burahin ang account</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">Instant na card</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Internet</string>
+    <string name="permission_access_summary">Required for the app to work</string>
+    <string name="permission_required_message">Please grant AnkiDroid the ‘%s’ permission to continue</string>
     <!-- Multiple profile -->
     <string name="add_profile">Add profile</string>
 </resources>

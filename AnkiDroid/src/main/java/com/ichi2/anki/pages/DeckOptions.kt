@@ -29,20 +29,25 @@ import androidx.fragment.app.FragmentActivity
 import anki.collection.OpChanges
 import anki.collection.Progress
 import com.google.android.material.appbar.MaterialToolbar
+import com.ichi2.anki.AnkiActivity
 import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.CollectionManager.withCol
-import com.ichi2.anki.CrashReportService
 import com.ichi2.anki.ProgressContext
 import com.ichi2.anki.R
 import com.ichi2.anki.SingleFragmentActivity
 import com.ichi2.anki.common.annotations.NeedsTest
+import com.ichi2.anki.common.crashreporting.CrashReportService
 import com.ichi2.anki.launchCatchingTask
 import com.ichi2.anki.libanki.DeckId
 import com.ichi2.anki.libanki.updateDeckConfigsRaw
 import com.ichi2.anki.observability.undoableOp
 import com.ichi2.anki.utils.openUrl
 import com.ichi2.anki.withProgress
+import com.ichi2.utils.checkWebviewVersion
+import com.ichi2.utils.getWebViewInfo
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
@@ -56,6 +61,7 @@ class DeckOptions : PageFragment() {
         "deck-options/$deckId"
     }
     private var webViewIsReady = false
+    private var readyWatchdogJob: Job? = null
 
     /**
      * Callback enabled when the manual is opened in the deck options.
@@ -165,6 +171,7 @@ class DeckOptions : PageFragment() {
     ) {
         pageLoadingIndicator.isVisible = true
         super.onViewCreated(view, savedInstanceState)
+        startReadyWatchdog()
         launchCatchingTask {
             val deckName = withCol { decks.name(deckId, default = true) }
             view.findViewById<MaterialToolbar>(R.id.toolbar).title = deckName
@@ -244,14 +251,51 @@ class DeckOptions : PageFragment() {
     }
 
     fun onWebViewReady() {
+        readyWatchdogJob?.cancel()
+        readyWatchdogJob = null
         Timber.d("WebView ready to receive input")
         webViewIsReady = true
         webViewLayout.isVisible = true
         pageLoadingIndicator.isVisible = false
     }
 
+    override fun onDestroyView() {
+        readyWatchdogJob?.cancel()
+        readyWatchdogJob = null
+        super.onDestroyView()
+    }
+
+    private fun startReadyWatchdog() {
+        readyWatchdogJob?.cancel()
+        readyWatchdogJob =
+            launchCatchingTask {
+                delay(DECK_OPTIONS_READY_TIMEOUT_MS)
+                if (!isAdded || webViewIsReady) {
+                    return@launchCatchingTask
+                }
+
+                Timber.w("DeckOptions timed out waiting for deckOptionsReady callback. deckId=%d", deckId)
+                pageLoadingIndicator.isVisible = false
+                webViewLayout.isVisible = true
+
+                val hostActivity = activity
+                if (hostActivity is AnkiActivity) {
+                    checkWebviewVersion(hostActivity)
+                }
+
+                val webViewInfo = getWebViewInfo(requireContext())
+                Timber.w(
+                    "DeckOptions ready timeout details: webViewPackage=%s, webViewVersionCode=%s, userAgent=%s",
+                    webViewInfo.packageName,
+                    webViewInfo.versionCode,
+                    webViewInfo.userAgent,
+                )
+            }
+    }
+
     companion object {
         private const val KEY_DECK_ID = "deckId"
+        private const val DECK_OPTIONS_READY_TIMEOUT_MS = 15000L
 
         fun getIntent(
             context: Context,

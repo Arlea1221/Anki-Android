@@ -26,13 +26,13 @@ import androidx.fragment.app.commit
 import com.google.android.material.button.MaterialButton
 import com.ichi2.anki.AnkiActivity
 import com.ichi2.anki.R
+import com.ichi2.anki.compat.CompatHelper.Companion.getSerializableCompat
+import com.ichi2.anki.compat.CompatHelper.Companion.getSerializableExtraCompat
 import com.ichi2.anki.databinding.ActivityMultimediaBinding
 import com.ichi2.anki.multimediacard.IMultimediaEditableNote
 import com.ichi2.anki.multimediacard.fields.IField
 import com.ichi2.anki.snackbar.BaseSnackbarBuilderProvider
 import com.ichi2.anki.snackbar.SnackbarBuilder
-import com.ichi2.compat.CompatHelper.Companion.getSerializableCompat
-import com.ichi2.compat.CompatHelper.Companion.getSerializableExtraCompat
 import com.ichi2.themes.setTransparentStatusBar
 import com.ichi2.utils.FragmentFactoryUtils
 import dev.androidbroadcast.vbpd.viewBinding
@@ -122,9 +122,6 @@ class MultimediaActivity :
     companion object {
         const val MULTIMEDIA_ARGS_EXTRA = "fragmentArgs"
         const val MULTIMEDIA_FRAGMENT_NAME_EXTRA = "fragmentName"
-
-        const val MULTIMEDIA_RESULT = "multimedia_result"
-        const val MULTIMEDIA_RESULT_FIELD_INDEX = "multimedia_result_index"
 
         /** used in case a fragment supports more than media operations **/
         const val EXTRA_MEDIA_OPTIONS = "extra_media_options"

@@ -34,8 +34,8 @@ import anki.scheduler.CardAnswer
 import com.ichi2.anki.AnkiDroidApp
 import com.ichi2.anki.BuildConfig
 import com.ichi2.anki.CollectionManager
-import com.ichi2.anki.CrashReportService
 import com.ichi2.anki.FlashCardsContract
+import com.ichi2.anki.common.crashreporting.CrashReportService
 import com.ichi2.anki.common.time.TimeManager
 import com.ichi2.anki.common.utils.annotation.KotlinCleanup
 import com.ichi2.anki.libanki.Card
@@ -56,7 +56,6 @@ import com.ichi2.anki.libanki.TemplateManager.TemplateRenderContext.TemplateRend
 import com.ichi2.anki.libanki.Utils
 import com.ichi2.anki.libanki.exception.ConfirmModSchemaException
 import com.ichi2.anki.libanki.exception.EmptyMediaException
-import com.ichi2.anki.libanki.exception.InvalidSearchException
 import com.ichi2.anki.libanki.sched.DeckNode
 import com.ichi2.utils.FileUtil
 import com.ichi2.utils.FileUtil.internalizeUri
@@ -1179,11 +1178,28 @@ class CardContentProvider : ContentProvider() {
                 FlashCardsContract.Card.CARD_ORD -> rb.add(currentCard.ord)
                 FlashCardsContract.Card.CARD_NAME -> rb.add(cardName)
                 FlashCardsContract.Card.DECK_ID -> rb.add(currentCard.did)
+                FlashCardsContract.Card.REPS -> rb.add(currentCard.reps)
+                FlashCardsContract.Card.LAPSES -> rb.add(currentCard.lapses)
+                FlashCardsContract.Card.TYPE -> rb.add(currentCard.type.code)
+                FlashCardsContract.Card.ORIGINAL_DECK_ID -> rb.add(currentCard.oDid)
                 FlashCardsContract.Card.QUESTION -> rb.add(question)
                 FlashCardsContract.Card.ANSWER -> rb.add(answer)
                 FlashCardsContract.Card.QUESTION_SIMPLE -> rb.add(currentCard.renderOutput(col).questionText)
                 FlashCardsContract.Card.ANSWER_SIMPLE -> rb.add(currentCard.renderOutput(col, false).answerText)
                 FlashCardsContract.Card.ANSWER_PURE -> rb.add(currentCard.pureAnswer(col))
+                FlashCardsContract.Card.RAW_QUEUE -> rb.add(currentCard.queue.code)
+                FlashCardsContract.Card.RAW_DUE -> rb.add(currentCard.due)
+                FlashCardsContract.Card.RAW_ORIGINAL_DUE -> rb.add(currentCard.oDue)
+                FlashCardsContract.Card.INTERVAL -> rb.add(currentCard.ivl)
+                FlashCardsContract.Card.RAW_SM2_FACTOR -> rb.add(currentCard.factor)
+                FlashCardsContract.Card.RAW_LEFT -> rb.add(currentCard.left)
+                FlashCardsContract.Card.ORIGINAL_POSITION -> rb.add(currentCard.originalPosition)
+                FlashCardsContract.Card.RAW_CUSTOM_DATA -> rb.add(currentCard.customData)
+                FlashCardsContract.Card.FSRS_STABILITY -> rb.add(currentCard.memoryStateStability)
+                FlashCardsContract.Card.FSRS_DIFFICULTY -> rb.add(currentCard.memoryStateDifficulty)
+                FlashCardsContract.Card.FSRS_DESIRED_RETENTION -> rb.add(currentCard.fsrsDesiredRetention)
+                FlashCardsContract.Card.FSRS_DECAY -> rb.add(currentCard.decay)
+                FlashCardsContract.Card.LAST_REVIEW_TIME_SECONDS -> rb.add(currentCard.lastReviewTimeSecs)
                 else -> throw UnsupportedOperationException("Queue \"$column\" is unknown")
             }
         }
@@ -1454,3 +1470,12 @@ private fun NotetypeJson.getEmptyCardIds(col: Collection): List<CardId> {
         .filter { noteIdsOfType.contains(it.noteId) }
         .flatMap { it.cardIdsList }
 }
+
+private val Card.memoryStateStability: Float?
+    get() = memoryState?.stability
+
+private val Card.memoryStateDifficulty: Float?
+    get() = memoryState?.difficulty
+
+private val Card.fsrsDesiredRetention: Float?
+    get() = desiredRetention

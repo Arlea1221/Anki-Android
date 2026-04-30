@@ -46,7 +46,7 @@ import com.ichi2.anki.R
 import com.ichi2.anki.common.utils.annotation.KotlinCleanup
 import com.ichi2.anki.databinding.ActivityInstantNoteEditorBinding
 import com.ichi2.anki.databinding.DialogInstantEditorBinding
-import com.ichi2.anki.databinding.InstantEditorFieldLayoutBinding
+import com.ichi2.anki.databinding.ViewInstantEditorFieldBinding
 import com.ichi2.anki.dialogs.DeckSelectionDialog
 import com.ichi2.anki.dialogs.DiscardChangesDialog
 import com.ichi2.anki.launchCatchingTask
@@ -263,7 +263,7 @@ class InstantNoteEditorActivity :
         var clozeFieldsSet = false
 
         for (field in notetypeJson!!.fields) {
-            val fieldBinding = InstantEditorFieldLayoutBinding.inflate(LayoutInflater.from(context))
+            val fieldBinding = ViewInstantEditorFieldBinding.inflate(LayoutInflater.from(context))
 
             val name = field.name
             fieldBinding.editTextLayout.hint = name
@@ -510,10 +510,12 @@ class InstantNoteEditorActivity :
     private fun savingErrorDialog(message: String) {
         AlertDialog.Builder(this).show {
             message(text = message)
-            positiveButton(R.string.dialog_cancel) {
+            positiveButton(R.string.try_again) {
+                checkAndSave()
+            }
+            negativeButton(R.string.dialog_cancel) {
                 instantAlertDialog.dismiss()
             }
-            negativeButton(R.string.try_again)
         }
     }
 
@@ -574,7 +576,7 @@ class InstantNoteEditorActivity :
                     convertSelectedTextToCloze(
                         textBox,
                         selectedText,
-                        viewModel.currentClozeNumber,
+                        viewModel.currentClozeNumber.value,
                     )
 
                     mode.finish()

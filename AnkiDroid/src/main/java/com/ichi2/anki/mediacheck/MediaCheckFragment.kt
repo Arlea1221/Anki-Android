@@ -38,6 +38,7 @@ import com.ichi2.anki.R
 import com.ichi2.anki.SingleFragmentActivity
 import com.ichi2.anki.databinding.FragmentMediaCheckBinding
 import com.ichi2.anki.launchCatchingTask
+import com.ichi2.anki.ui.internationalization.sentenceCase
 import com.ichi2.anki.ui.internationalization.toSentenceCase
 import com.ichi2.anki.withProgress
 import com.ichi2.utils.cancelable
@@ -66,7 +67,7 @@ class MediaCheckFragment : Fragment(R.layout.fragment_media_check) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.toolbar.apply {
-            setTitle(TR.mediaCheckCheckMediaAction().toSentenceCase(R.string.check_media))
+            setTitle(TR.sentenceCase.checkMediaTitle)
             setNavigationOnClickListener {
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
@@ -105,7 +106,7 @@ class MediaCheckFragment : Fragment(R.layout.fragment_media_check) {
                     menuInflater.inflate(R.menu.media_check_menu, menu)
                     menu.findItem(R.id.action_restore_trash).apply {
                         isVisible = true
-                        title = TR.mediaCheckRestoreTrash().toSentenceCase(R.string.sentence_restore_deleted)
+                        title = TR.sentenceCase.restoreDeleted
                     }
                     menu.findItem(R.id.action_empty_trash).apply {
                         isVisible = true

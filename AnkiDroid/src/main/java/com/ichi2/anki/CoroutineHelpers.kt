@@ -22,6 +22,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.database.sqlite.SQLiteDatabaseCorruptException
 import android.net.Uri
+import android.text.format.Formatter
 import android.view.WindowManager
 import android.view.WindowManager.BadTokenException
 import androidx.annotation.StringRes
@@ -39,8 +40,11 @@ import com.ichi2.anki.CrashReportData.Companion.toCrashReportData
 import com.ichi2.anki.CrashReportData.HelpAction
 import com.ichi2.anki.CrashReportData.HelpAction.AnkiBackendLink
 import com.ichi2.anki.CrashReportData.HelpAction.OpenDeckOptions
+import com.ichi2.anki.android.AnkiBroadcastReceiver
 import com.ichi2.anki.common.annotations.UseContextParameter
+import com.ichi2.anki.common.crashreporting.CrashReportService
 import com.ichi2.anki.dialogs.DatabaseErrorDialog
+import com.ichi2.anki.dialogs.DatabaseErrorDialog.DatabaseErrorDialogType
 import com.ichi2.anki.exception.StorageAccessException
 import com.ichi2.anki.pages.DeckOptionsDestination
 import com.ichi2.anki.snackbar.showSnackbar
@@ -78,6 +82,7 @@ import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 /** Overridable reference to [Dispatchers.IO]. Useful if tests can't use it */
 // COULD_BE_BETTER: this shouldn't be necessary, but TestClass::runWith needs it
@@ -207,7 +212,11 @@ suspend fun <T> FragmentActivity.runCatching(
                 Timber.e(exc, errorMessage)
                 DatabaseErrorDialog.databaseCorruptFlag = true
                 if (callerTrace != null) Timber.e(callerTrace)
-                DatabaseErrorDialog.ShowDatabaseErrorDialog.fromMessage(CollectionLoadingErrorDialog().toMessage())
+                (this as? AnkiActivity)
+                    ?.showDatabaseErrorDialog(
+                        errorDialogType = DatabaseErrorDialogType.DIALOG_LOAD_FAILED,
+                        exceptionData = DatabaseErrorDialog.CustomExceptionData.fromException(exc),
+                    )
             }
             else -> {
                 Timber.e(exc, errorMessage)
@@ -333,6 +342,7 @@ suspend fun HelpAction.execute(context: Context): Boolean {
  * progress UI.
  */
 suspend fun <T> Backend.withProgress(
+    progressContext: ProgressContext,
     extractProgress: ProgressContext.() -> Unit,
     updateUi: ProgressContext.() -> Unit,
     block: suspend CoroutineScope.() -> T,
@@ -340,7 +350,7 @@ suspend fun <T> Backend.withProgress(
     coroutineScope {
         val monitor =
             launch {
-                monitorProgress(this@withProgress, extractProgress, updateUi)
+                progressContext.monitorProgress(this@withProgress, extractProgress, updateUi)
             }
         try {
             block()
@@ -357,6 +367,7 @@ suspend fun <T> Backend.withProgress(
  * flashes of a dialog.
  */
 suspend fun <T> FragmentActivity.withProgress(
+    progressContext: ProgressContext = ProgressContext(),
     extractProgress: ProgressContext.() -> Unit,
     onCancel: ((Backend) -> Unit)? = { it.setWantsAbort() },
     @StringRes manualCancelButton: Int? = null,
@@ -376,6 +387,7 @@ suspend fun <T> FragmentActivity.withProgress(
         manualCancelButton = manualCancelButton,
     ) { dialog ->
         backend.withProgress(
+            progressContext = progressContext,
             extractProgress = extractProgress,
             updateUi = { updateDialog(dialog) },
         ) {
@@ -436,6 +448,7 @@ suspend fun <T> withProgressDialog(
                 setCancelable(onCancel != null)
                 if (manualCancelButton != null) {
                     setCancelable(false)
+                    setCanceledOnTouchOutside(false)
                     setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(manualCancelButton)) { _, _ ->
                         Timber.i("Progress dialog cancelled via cancel button")
                         onCancel?.let { it() }
@@ -507,12 +520,12 @@ private fun dismissDialogIfShowing(dialog: Dialog) {
  * [ProgressContext]. Calls updateUi() to update the UI with the extracted
  * progress.
  */
-private suspend fun monitorProgress(
+private suspend fun ProgressContext.monitorProgress(
     backend: Backend,
     extractProgress: ProgressContext.() -> Unit,
     updateUi: ProgressContext.() -> Unit,
 ) {
-    val state = ProgressContext(Progress.getDefaultInstance())
+    val state = this
     while (true) {
         state.progress =
             withContext(Dispatchers.IO) {
@@ -527,28 +540,56 @@ private suspend fun monitorProgress(
     }
 }
 
-/** Holds the current backend progress, and text/amount properties
+/**
+ * Holds the current backend progress, and text/amount properties
  * that can be written to in order to update the UI.
  */
 data class ProgressContext(
-    var progress: Progress,
-    var text: String = "",
-    /** If set, shows progress bar with a of b complete. */
-    var amount: Pair<Int, Int>? = null,
-)
-
-@Suppress("Deprecation") // ProgressDialog deprecation
-private fun ProgressContext.updateDialog(dialog: android.app.ProgressDialog) {
-    // ideally this would show a progress bar, but MaterialDialog does not support
-    // setting progress after starting with indeterminate progress, so we just use
-    // this for now
-    // this code has since been updated to ProgressDialog, and the above not rechecked
-    val progressText =
-        amount?.let {
-            " ${it.first}/${it.second}"
-        } ?: ""
+    var progress: Progress = Progress.getDefaultInstance(),
+    var text: String? = null,
+    /** If set, shows a progress bar with `current` of `max` complete. */
+    var amount: Amount? = null,
+    val formatAmount: (Amount) -> String = { (current, max) -> "$current/$max" },
+    /** Separator between [text] and [amount] */
+    val separator: String = " ",
+) {
     @Suppress("Deprecation") // ProgressDialog deprecation
-    dialog.setMessage(text + progressText)
+    fun updateDialog(dialog: android.app.ProgressDialog) {
+        val message =
+            listOfNotNull(
+                text,
+                amount?.let { formatAmount(it) },
+            ).joinToString(separator)
+        dialog.setMessage(message)
+    }
+
+    companion object {
+        /**
+         * A [com.ichi2.anki.ProgressContext] which formats progress as bytes:
+         *
+         * `28 MB/141 MB`
+         */
+        fun ofBytes(context: Context) =
+            ProgressContext(
+                formatAmount = { (current, max) ->
+                    // replace spaces with NBSP so newlines are handled better
+                    val curStr = Formatter.formatShortFileSize(context, current).replace(' ', '\u00A0')
+                    val maxStr = Formatter.formatShortFileSize(context, max).replace(' ', '\u00A0')
+                    context.getString(R.string.progress_amount_bytes, curStr, maxStr)
+                },
+            )
+    }
+
+    /**
+     * Represents a progress value and a maximum limit.
+     *
+     * @see ProgressContext
+     */
+    // values are 'Long' as this can represent bytes.
+    data class Amount(
+        val current: Long,
+        val max: Long,
+    )
 }
 
 /**
@@ -574,21 +615,48 @@ private fun Activity.showError(
 ) = showError(throwable.toString(), throwable.toCrashReportData(context = this, reportException))
 
 /**
- * Launches a coroutine which is guaranteed to terminate within the [timeout] duration, which means
- * it is safe to call on the global coroutine scope. We handle the global scope carefully here to ensure
- * that the coroutine eventually terminates and does not cause a memory leak.
+ * Since AnkiBroadcastReceiver's `onReceiveBroadcast` methods is expected to finish quickly, this
+ * helper function is required to run a suspending function from an `onReceiveBroadcast` method.
+ * [AnkiBroadcastReceiver.goAsync] extends the lifetime of the `onReceiveBroadcast` method and tells
+ * the OS not to kill the process prematurely.
+ *
+ * Do not call [AnkiBroadcastReceiver.goAsync] directly before calling this function.
+ *
+ * @param timeout Just in case the block hangs. Cannot exceed 8 seconds, because an ANR may occur if
+ * an AnkiBroadcastReceiver's onReceiveBroadcast method runs for longer than 10 seconds.
+ * See [the docs](https://developer.android.com/reference/android/content/BroadcastReceiver#goAsync()).
+ * @param block The suspending function to run.
+ *
+ * @see AnkiBroadcastReceiver.goAsync
+ * @see AnkiBroadcastReceiver.onReceiveBroadcast
  */
-fun runGloballyWithTimeout(
+fun AnkiBroadcastReceiver.runGloballyWithTimeout(
     timeout: Duration,
     block: suspend () -> Unit,
 ) {
+    val pendingResult = goAsync()
+    if (pendingResult == null) {
+        // pendingResult should never be null, so this should never happen.
+        // According to the implementation of goAsync, if it is, that indicates goAsync was called twice for the same onReceiveBroadcast.
+        Timber.w("goAsync returned null, cannot run block")
+        CrashReportService.sendExceptionReport(
+            message =
+                "goAsync returned null for BroadcastReceiver: " +
+                    "This should never happen and indicates goAsync was called twice for the same onReceiveBroadcast",
+            origin = "CoroutineHelpers:BroadcastReceiver.runGloballyWithTimeout",
+        )
+        return
+    }
+
     AnkiDroidApp.applicationScope.launch {
         try {
-            withTimeout(timeout) {
+            withTimeout(minOf(timeout, 8.seconds)) {
                 block()
             }
         } catch (e: TimeoutCancellationException) {
             Timber.w(e, "runGloballyWithTimeout timed out after $timeout")
+        } finally {
+            pendingResult.finish()
         }
     }
 }

@@ -226,7 +226,7 @@
         Jeśli nie jest ustawiony, zamiast tego zostanie użyty domyślny serwer AnkiWeb.
         <a href="%s">Dowiedz się więcej</a>
         ]]></string>
-    <string name="custom_sync_server_base_url_title" maxLength="41">Adres url synchronizacji</string>
+    <string name="custom_sync_server_base_url_title" maxLength="41">Sync URL</string>
     <string name="custom_sync_certificate_title" maxLength="41">Własny certyfikat główny (PEM)</string>
     <!-- Key Bindings -->
     <string name="keyboard">Klawiatura</string>
@@ -246,16 +246,7 @@
     <string name="studyoptions_limit_select_tags">Wybierz tagi</string>
     <!-- Deck configurations -->
     <string name="deck_conf_general" maxLength="41" comment="Label of the submenu for the general options of new deck">Ogólne</string>
-    <string name="deck_conf_cram_filter" maxLength="41">Filtrowanie</string>
     <string name="deck_conf_cram_search" maxLength="41" comment="Label of a text field that contains a search query.">Szukaj</string>
-    <string name="deck_conf_cram_limit" maxLength="41">Ogranicz do</string>
-    <string name="deck_conf_cram_order" maxLength="41">Karty wybrane przez</string>
-    <string name="deck_conf_cram_reschedule" maxLength="41" comment="Title of the box labelled by deck_conf_cram_reschedule_summ">Zmień plan</string>
-    <string name="deck_conf_cram_reschedule_summ">Zmień plan kart bazując na odpowiedziach w tej talii</string>
-    <string name="deck_conf_cram_filter_2_check">Włącz drugi filtr</string>
-    <string name="deck_conf_cram_steps_summ" maxLength="41">Zdefiniuj własne kroki</string>
-    <string name="deck_conf_cram_preview_delays" maxLength="41">Podgląd przerw</string>
-    <string name="deck_conf_cram_preview_delays_summ">Przerwy podane są w sekundach. 0 zwraca kartę do oryginalnej talii.</string>
     <!-- analytics options -->
     <string name="analytics_dialog_title">Pomóż ulepszyć AnkiDroid!</string>
     <string name="analytics_title" maxLength="41">Udostępnij użycie aplikacji</string>
@@ -399,4 +390,5 @@
     <string name="flip_and_answer" maxLength="41" comment="Configuration of the \'Answer\' commands to answer the card if on the answer side, and flip it if on the question side">Odwróć i odpowiedz</string>
     <!--Keyboard shortcuts dialog-->
     <string name="open_settings" comment="Description of the shortcut that opens the app settings">Otwórz ustawienia</string>
+    <string name="related_settings_title" comment="Title of the section for related settings">Related settings</string>
 </resources>

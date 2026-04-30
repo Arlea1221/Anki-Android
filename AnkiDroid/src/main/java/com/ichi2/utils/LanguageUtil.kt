@@ -23,9 +23,11 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.ConfigurationCompat
 import androidx.fragment.app.Fragment
 import com.ichi2.anki.AnkiDroidApp
+import com.ichi2.anki.R
+import com.ichi2.anki.compat.CompatHelper
 import com.ichi2.anki.preferences.sharedPrefs
-import com.ichi2.compat.CompatHelper
 import net.ankiweb.rsdroid.BackendFactory
+import timber.log.Timber
 import java.util.Locale
 
 /**
@@ -362,6 +364,31 @@ object LanguageUtil {
         return createConfigurationContext(configuration).resources.getString(stringRes, *formatArgs)
     }
 
+    /**
+     * Returns a [Context] with resources using the app language.
+     *
+     * Needed for resources accessed outside an Activity (e.g. from a [BroadcastReceiver][android.content.BroadcastReceiver]
+     * or [Service][android.app.Service]):
+     *
+     * On API < 33, [AppCompatDelegate.setApplicationLocales] only applies to Activity contexts, so
+     *  resources resolve in the system locale.
+     *
+     * Returns [this] unchanged (System language) when no in-app language is set.
+     *
+     * This method will not throw.
+     */
+    fun Context.withAppLocale(): Context =
+        try {
+            val tag = getCurrentLocaleTag()
+            if (tag.isEmpty()) return this
+            val configuration = Configuration(resources.configuration)
+            configuration.setLocale(Locale.forLanguageTag(tag))
+            return createConfigurationContext(configuration)
+        } catch (e: Exception) {
+            Timber.w(e, "withAppLocale")
+            return this
+        }
+
     /** @return string defined with [stringRes] on the specified [locale] */
     fun Fragment.getStringByLocale(
         @StringRes stringRes: Int,
@@ -379,5 +406,6 @@ object LanguageUtil {
      * Returns the character to use when separating a list; `, ` in English
      * Uses ListFormatter on API 26+ to dynamically get the locale-specific separator
      */
-    fun getListSeparator(context: Context): String = CompatHelper.compat.getListSeparator(context)
+    fun getListSeparator(context: Context): String =
+        CompatHelper.compat.getListSeparator(context, context.getString(R.string.list_separator))
 }

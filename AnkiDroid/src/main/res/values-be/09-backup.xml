@@ -44,13 +44,14 @@
 ~ this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <string name="backup_deck_no_storage_left">Рэзервовая копія  не захавана. У сховішчы не засталося вольнага месца. Паменшыце глыбіню рэзервавання або выдаліце непатрэбныя файлы.</string>
+    <string name="backup_deck_no_storage_left">Рэзервовая копія не захавана. У сховішчы не засталося вольнага месца. Паменшыце глыбіню рэзервавання або выдаліце непатрэбныя файлы.</string>
     <string name="storage_warning" comment="Consider keeping the unbreakable space after the digit">У вашым сховішчы засталося менш за %d МБ.\nВызваліце крыху месца, каб пазбегнуць страты даных.</string>
     <string name="backup_restore" maxLength="28">Аднавіць з рэзервовай копіі</string>
     <string name="backup_new_collection">Новая калекцыя</string>
     <string name="backup_del_collection">Выдаліць калекцыю і стварыць новую</string>
     <string name="backup_del_collection_question">Выдаліць калекцыю і стварыць новую? Вы згубіце ўсе звесткі пра вашы дасягненні і выдаліце ўсе карткі.</string>
     <string name="backup_one_way_sync_from_server">Аднабаковая сінхранізацыя з сервера</string>
+    <string name="backup_use_default_folder">Выкарыстоўваць прадвызначаную папку з калекцыяй</string>
     <string name="backup_full_sync_from_server_question">Перазапісаць вашу калекцыю той, якая атрымана з AnkiWeb? Вы згубіце ўсе звесткі пра свае дасягненні і час апошняй сінхранізацыі.</string>
     <string name="error_handling_title">Апрацоўка памылак</string>
     <string name="error_handling_options" comment="In a warning message, the label of the suggested action that the user should take">Параметры</string>

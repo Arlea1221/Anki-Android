@@ -218,7 +218,7 @@
     <string name="custom_sync_server_title" maxLength="41">Propra servilo de samtempigo</string>
     <string name="custom_sync_server_summary_none_of_the_two_servers_used" comment="This summary is shown when neither of the two custom sync servers are used,         which is the default.">Ne uzata</string>
     <string name="custom_sync_server_help2"><![CDATA[Alternative al samtempigi kun AnkiWeb, vi povas uzi vian propran samtempigan servilon. Se nenio estas agordita, la implicita servilo de AnkiWeb estos uzata.<a href="%s">Pliaj informoj</a>]]></string>
-    <string name="custom_sync_server_base_url_title" maxLength="41">Samtempiga servilo</string>
+    <string name="custom_sync_server_base_url_title" maxLength="41">Sync URL</string>
     <string name="custom_sync_certificate_title" maxLength="41">Propra radika atestilo (PEM)</string>
     <!-- Key Bindings -->
     <string name="keyboard">Klavaro</string>
@@ -238,16 +238,7 @@
     <string name="studyoptions_limit_select_tags">Elekti etikedojn</string>
     <!-- Deck configurations -->
     <string name="deck_conf_general" maxLength="41" comment="Label of the submenu for the general options of new deck">Ĝeneralaj</string>
-    <string name="deck_conf_cram_filter" maxLength="41">Filtri</string>
     <string name="deck_conf_cram_search" maxLength="41" comment="Label of a text field that contains a search query.">Serĉi</string>
-    <string name="deck_conf_cram_limit" maxLength="41">Limigi al</string>
-    <string name="deck_conf_cram_order" maxLength="41">Kartoj elektitaj laŭ</string>
-    <string name="deck_conf_cram_reschedule" maxLength="41" comment="Title of the box labelled by deck_conf_cram_reschedule_summ">Replani</string>
-    <string name="deck_conf_cram_reschedule_summ">Replani karton surbaze de miaj respondoj en tiu ĉi kartaro</string>
-    <string name="deck_conf_cram_filter_2_check">Aktivigi duan filtrilon</string>
-    <string name="deck_conf_cram_steps_summ" maxLength="41">Difini proprajn paŝojn</string>
-    <string name="deck_conf_cram_preview_delays" maxLength="41">Intertempoj por antaŭripeto</string>
-    <string name="deck_conf_cram_preview_delays_summ">Intertempoj estas en sekundoj. La valoro “0” movas karton reen al originala kartaro.</string>
     <!-- analytics options -->
     <string name="analytics_dialog_title">Helpu, ke AnkiDroid fariĝos pli bona!</string>
     <string name="analytics_title" maxLength="41">Kunhavigi uzadon de eblaĵoj</string>
@@ -385,4 +376,5 @@ Vi povas restarigi el sekurkopio aŭ elporti vian kolekton per la menuo de listo
     <string name="flip_and_answer" maxLength="41" comment="Configuration of the \'Answer\' commands to answer the card if on the answer side, and flip it if on the question side">Inversigi kaj respondi</string>
     <!--Keyboard shortcuts dialog-->
     <string name="open_settings" comment="Description of the shortcut that opens the app settings">Malfermi agordojn</string>
+    <string name="related_settings_title" comment="Title of the section for related settings">Related settings</string>
 </resources>

@@ -47,8 +47,8 @@
     <string name="model_browser_delete">Elimina tipo di nota</string>
     <string name="model_browser_template">Modifica le carte</string>
     <!--Rename-->
-    <string name="rename_model">Rinoma il tipo di nota</string>
-    <string name="rename_card_type">Rinomina il tipo di carta</string>
+    <string name="rename_model">Rinomina il tipo di nota</string>
+    <string name="rename_card_type" maxLength="28">Rinomina il tipo di carta</string>
     <!--Language Hint-->
     <string name="model_field_editor_language_hint_dialog_success_result">Imposta suggerimento lingua a %s</string>
     <!--Field Editing-->
@@ -59,6 +59,9 @@
     <string name="model_field_editor_reposition_menu">Riposiziona il campo</string>
     <string name="model_field_editor_changing">Aggiornamento dei campi</string>
     <string name="model_field_editor_sort_field">Ordina per questo campo</string>
+    <!-- Card type -->
+    <string name="delete_card_type" maxLength="28">Delete card type</string>
+    <string name="add_card_type" maxLength="28">Add card type</string>
     <!--Warnings-->
     <string name="model_delete_warning">Sei sicuro/a di voler eliminare questo tipo di nota?</string>
     <!--
@@ -66,7 +69,7 @@
         Delete the note types below?
         Basic, Basic (and reversed card), Cloze
      -->
-    <string name="model_delete_multiple_warning">Delete the note types below?\n %s</string>
+    <string name="model_delete_multiple_warning">Eliminare i tipi di nota qui sotto?\n %s</string>
     <string name="field_delete_warning">Sei sicuro di voler eliminare questo campo?</string>
     <!--Model Add Suffixes-->
     <string name="model_browser_add_add">Aggiungi: %1$s</string>
@@ -76,7 +79,7 @@
     <string name="card_template_browser_appearance_summary">Inserisci il modello che il browser delle carte userà per visualizzare le tue carte. Usa questo per visualizzare una risposta più concisa.\n\nUn modello iniziale di\n«La capitale di {{Country}} è:»\npotrebbe essere compresso nel browser delle carte a\n«Capitale: {{Country}}»</string>
     <string name="card_template_browser_appearance_question_format">Formato della domanda</string>
     <string name="card_template_browser_appearance_answer_format">Formato della risposta</string>
-    <string name="card_template_browser_appearance_restore_default_dialog">Ripristinare i valori predefiniti?</string>
+    <string name="card_template_browser_appearance_restore_default_dialog">Sei sicuro di voler ripristinare l\'aspetto predefinito del browser?</string>
     <string name="card_template_browser_appearance_saving_note">Queste modifiche vengono applicate quando il modello della carta viene salvato</string>
     <!-- Deck Override -->
     <string name="card_template_editor_deck_override_on">Sovrascrivi Mazzo (on)</string>

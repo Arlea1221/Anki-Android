@@ -113,6 +113,7 @@
     <string name="menu_unmark_note">取消标记</string>
     <string name="menu_enable_voice_playback" maxLength="28">启用语音播放</string>
     <string name="menu_disable_voice_playback">禁用语音播放</string>
+    <string name="menu_create_backup" maxLength="28">创建备份</string>
     <string name="new_deck">创建牌组</string>
     <string name="new_dynamic_deck">创建筛选牌组</string>
     <string name="directory_inaccessible">无法访问AnkiDroid目录</string>
@@ -141,7 +142,6 @@
     <string name="syncing_media">同步媒体中</string>
     <string name="export_deck" maxLength="28">导出牌组</string>
     <string name="export_collection">导出集合</string>
-    <string name="nothing">无</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">卡片类型</string>
     <string name="card_template_editor_front">正面</string>
@@ -207,6 +207,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">删除账户</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">即时卡片</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">互联网</string>
+    <string name="permission_access_summary">应用正常工作所必需</string>
+    <string name="permission_required_message">请授予 AnkiDroid “%s” 权限以继续</string>
     <!-- Multiple profile -->
     <string name="add_profile">添加配置文件</string>
 </resources>

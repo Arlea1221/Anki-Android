@@ -122,6 +122,7 @@
     <string name="menu_unmark_note">Atžymėti užrašą</string>
     <string name="menu_enable_voice_playback" maxLength="28">Leisti balso atkartojimą</string>
     <string name="menu_disable_voice_playback">Neleisti garso atkartojimo</string>
+    <string name="menu_create_backup" maxLength="28">Create backup</string>
     <string name="new_deck">Kurti rinkinį</string>
     <string name="new_dynamic_deck">Kurti rinktinį rinkinį</string>
     <string name="directory_inaccessible">„AnkiDroid“ katalogas yra nepasiekiamas</string>
@@ -135,7 +136,7 @@
     <string name="empty_cram_label" maxLength="28">Išvalyti</string>
     <string name="create_subdeck">Kurkite vidinį rinkinį</string>
     <string name="empty_filtered_deck">Išvalomas filtruotas rinkinys&#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">Rinkinio paieška</string>
+    <string name="search_deck" comment="Deck search for selecting it">Deck search</string>
     <string name="empty_deck">Šis rinkinys yra tuščias</string>
     <string name="invalid_deck_name">Blogas rinkinio vardas</string>
     <string name="studyoptions_congrats_finished">Sveikiname! Jūs šiandienai jau baigėte.</string>
@@ -150,7 +151,6 @@
     <string name="syncing_media">Įrašai sinchronizuojami</string>
     <string name="export_deck" maxLength="28">Eksportuoti rinkinį</string>
     <string name="export_collection">Eksportuoti kolekciją</string>
-    <string name="nothing">Nieko</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">Kortelių tipai</string>
     <string name="card_template_editor_front">Priekinė pusė</string>
@@ -222,6 +222,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">Pašalinti paskyrą</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">Momentinė kortelė</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Internet</string>
+    <string name="permission_access_summary">Required for the app to work</string>
+    <string name="permission_required_message">Please grant AnkiDroid the ‘%s’ permission to continue</string>
     <!-- Multiple profile -->
     <string name="add_profile">Add profile</string>
 </resources>

@@ -22,4 +22,14 @@ dependencyResolutionManagement {
     }
 }
 
-include(":lint-rules", ":api", ":AnkiDroid", ":testlib", ":common", ":libanki", ":libanki:testutils", ":vbpd")
+// alphabetical ordering rather than dependency-tree ordering to avoid bikeshedding
+include(
+    ":api",
+    ":AnkiDroid",
+    ":common",
+    ":common:android",
+    ":compat",
+    ":libanki",
+    ":lint-rules",
+    ":vbpd",
+)

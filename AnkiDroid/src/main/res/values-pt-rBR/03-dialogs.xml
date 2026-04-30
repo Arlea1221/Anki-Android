@@ -44,8 +44,7 @@
 ~ this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="check_db_title">Verificar banco de dados?</string>
-    <string name="check_db_warning">Isto pode levar bastante tempo</string>
+    <string name="check_db_warning">Isso pode levar muito tempo. Prosseguir?</string>
     <string name="contextmenu_deckpicker_delete_deck" maxLength="28">Excluir baralho</string>
     <string name="delete_deck_title">Excluir baralho?</string>
     <plurals name="delete_deck_message">
@@ -83,11 +82,14 @@
     <string name="restore_backup_choose_another">Procurar</string>
     <string name="dialog_cancel">Cancelar</string>
     <string name="dialog_ok">OK</string>
+    <string name="dialog_add" comment="Positive dialog action button label to add \'something\'">Adicionar</string>
+    <string name="restore">Restaurar</string>
     <string name="dialog_confirm" tools:ignore="UnusedResources">Confirmar</string>
     <string name="dialog_no">Não</string>
     <string name="dialog_yes">Sim</string>
     <string name="dialog_keep">Manter</string>
     <string name="dialog_remove">Remover</string>
+    <string name="dialog_exit" comment="Label for a button which will exit/finish the current screen">Sair</string>
     <string name="dialog_continue">Continuar</string>
     <string name="dialog_processing">Processando&#8230;</string>
     <string name="dialog_positive_create" comment="Create a new collection, probably erasing the previous one, may be necessary in case of error.">Criar</string>
@@ -102,8 +104,7 @@
     <string name="dialog_invalid_custom_certificate_title">Erro na análise do certificado.</string>
     <string name="dialog_updated_custom_certificate">Certificado atualizado</string>
     <!-- Media checking -->
-    <string name="check_media_title">Verificar mídia?</string>
-    <string name="check_media_warning">Isto pode demorar muito tempo para coleções com grande quantidade de mídia</string>
+    <string name="check_media_warning">Coleções de mídias grandes podem levar muito tempo. Prosseguir?</string>
     <string name="check_media_message">Verificando mídia&#8230;</string>
     <string name="check_media_adding_missing_tag">Adicionando tags&#8230;</string>
     <string name="check_media_tags_added">Tags adiciondas</string>
@@ -127,8 +128,6 @@
     <string name="permission_denied">Permissão negada</string>
     <string name="recording_permission_denied_message">A permissão do microfone é necessária para o recurso \"Gravar voz\". Por favor, conceda a permissão nas configurações do aplicativo.</string>
     <!-- Database Integrity Check -->
-    <string name="integrity_check_startup_title">AnkiDroid Atualizado</string>
-    <string name="integrity_check_startup_content">AnkiDroid foi atualizado. Esta atualização inclui correções para possíveis problemas de banco de dados, e recomendamos que você execute a verificação de banco de dados agora.</string>
     <string name="integrity_check_continue_anyway">Continuar assim mesmo</string>
     <string name="integrity_check_insufficient_space">Verificar a Base de Dados usa uma grande quantidade de armazenamento temporário.\n\nÉ altamente recomendável que você tenha pelo menos %s espaço livre no seu dispositivo antes de continuar.</string>
     <string name="integrity_check_insufficient_space_extra_content">\n\nVocê tem atualmente %s livre.</string>
@@ -213,8 +212,6 @@
     <string name="dismiss_backup_warning_title">Aviso de perda de dados</string>
     <string name="dismiss_backup_warning_new_user">Devido às alterações de privacidade do Android, seus dados e backups automáticos serão excluídos do seu telefone se o aplicativo for desinstalado</string>
     <string name="dismiss_backup_warning_upgrade">Devido às alterações de privacidade do Android, seus dados e backups automáticos serão inacessíveis se o aplicativo for desinstalado</string>
-    <string name="deck_already_exists">Baralho já existe</string>
-    <string name="empty_deck_name">O nome do deck não pode estar vazio</string>
     <string name="create_deck_numeric_hint">Se você tem problemas com a ordem dos baralhos (ex: ‘10’ aparecendo antes de ‘2’), troque o ‘2’ por ‘02’</string>
     <!-- Set Due Date -->
     <string name="set_due_date_match_interval" comment="when setting a card\'s due date, this checkbox also changes the interval of the card">Definir intervalo para o mesmo valor</string>
@@ -269,5 +266,17 @@
     <string name="extra_cloze_deletions_removed">If changing to a regular note type, and there are more cloze deletions than available card templates, any extra cards will be removed.</string>
     <string name="different_note_types_selected">Selecione notas de apenas um tipo de nota</string>
     <string name="error_no_changes_to_save">Nenhuma alteração para salvar</string>
-    <string name="choose_color">Choose color</string>
+    <string name="choose_color">Escolher Cor</string>
+    <!-- Special Fields -->
+    <string name="standard_fields_tab_header" comment="Tab header for inserting non-special fields: {{Front}}">Fields</string>
+    <string name="special_fields_tab_header" comment="Tab header for inserting special fields: {{Deck}}">Special</string>
+    <string name="special_field_example_suffix"><![CDATA[: ‘<b>%1$s</b>\']]></string>
+    <string name="special_field_front_side_help">O conteúdo do modelo inicial. O áudio não é reproduzido automaticamente.</string>
+    <string name="special_field_deck_help" comment="%s: either blank or \' %s\'">The full deck of the card, including parent decks%s</string>
+    <string name="special_field_subdeck_help" comment="%s: either blank or \' %s\'">The current deck of the card, excluding parent decks%s</string>
+    <string name="special_field_flag_help">Outputs ‘%1$s’, where %2$s is the flag code (%3$s\–%4$s\)</string>
+    <string name="special_field_tags_help" comment="%s: either blank or \' %s\'">The tags of the note%s</string>
+    <string name="special_field_card_id_help" comment="%s: either blank or \' %s\'">The ID of the card%s</string>
+    <string name="special_field_card_help" comment="%s: either blank or \' %s\'">The name of the card template%s</string>
+    <string name="special_field_type_help" comment="%s: either blank or \' %s\'">The name of the note type%s</string>
 </resources>

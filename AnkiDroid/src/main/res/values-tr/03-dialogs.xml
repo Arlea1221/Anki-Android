@@ -44,8 +44,7 @@
 ~ this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="check_db_title">Veritabanını denetle?</string>
-    <string name="check_db_warning">Bu uzun sürebilir</string>
+    <string name="check_db_warning">Bu uzun sürebilir. Devam etmek ister misin?</string>
     <string name="contextmenu_deckpicker_delete_deck" maxLength="28">Desteyi sil</string>
     <string name="delete_deck_title">Deste silinsin mi?</string>
     <plurals name="delete_deck_message">
@@ -83,11 +82,14 @@
     <string name="restore_backup_choose_another">Başka seç</string>
     <string name="dialog_cancel">İptal</string>
     <string name="dialog_ok">Tamam</string>
+    <string name="dialog_add" comment="Positive dialog action button label to add \'something\'">Ekle</string>
+    <string name="restore">Geri yükle</string>
     <string name="dialog_confirm" tools:ignore="UnusedResources">Onayla</string>
     <string name="dialog_no">Hayır</string>
     <string name="dialog_yes">Evet</string>
     <string name="dialog_keep">Bırak</string>
     <string name="dialog_remove">Kaldır</string>
+    <string name="dialog_exit" comment="Label for a button which will exit/finish the current screen">Çık</string>
     <string name="dialog_continue">Devam Et</string>
     <string name="dialog_processing">İşlem yapılıyor&#8230;</string>
     <string name="dialog_positive_create" comment="Create a new collection, probably erasing the previous one, may be necessary in case of error.">Oluştur</string>
@@ -102,8 +104,7 @@
     <string name="dialog_invalid_custom_certificate_title">Sertifika çözümlemesinde hata</string>
     <string name="dialog_updated_custom_certificate">Sertifika güncellendi</string>
     <!-- Media checking -->
-    <string name="check_media_title">Medya kontrol edilsin mi?</string>
-    <string name="check_media_warning">Bu, büyük medya koleksiyonlarıyla uzun sürebilir.</string>
+    <string name="check_media_warning">Bu, büyük medya koleksiyonlarıyla uzun zaman alabilir. Devam edilsin mi?</string>
     <string name="check_media_message">Medya kontrol ediliyor&#8230;</string>
     <string name="check_media_adding_missing_tag">Etiketler ekleniyor&#8230;</string>
     <string name="check_media_tags_added">Etiketler eklendi</string>
@@ -127,8 +128,6 @@
     <string name="permission_denied">İzin reddedildi</string>
     <string name="recording_permission_denied_message">\"Ses kaydetme\" özelliği için mikrofon izni gereklidir. Lütfen uygulama ayarlarından erişim izni verin.</string>
     <!-- Database Integrity Check -->
-    <string name="integrity_check_startup_title">AnkiDroid Güncellendi</string>
-    <string name="integrity_check_startup_content">AnkiDroid yükseltildi. Bu yükseltme, olası veritabanı sorunları için düzeltmeleri içerir ve veritabanını şimdi kontrol etmenizi öneririz.</string>
     <string name="integrity_check_continue_anyway">Yine de devam et</string>
     <string name="integrity_check_insufficient_space">Veritabanı Kontrolü büyük miktarda geçici depolama alanı kullanıyor.\n\nDevam etmeden önce cihazınızda en az %s boş alanın olması şiddetle önerilir.</string>
     <string name="integrity_check_insufficient_space_extra_content">\n\nŞu anda %s boş alanınız var.</string>
@@ -213,8 +212,6 @@
     <string name="dismiss_backup_warning_title">Veri kaybı uyarısı</string>
     <string name="dismiss_backup_warning_new_user">Android gizlilik değişikliklerinden dolayı, uygulama kaldırılırsa veriniz ve otomatik yedekleriniz telefonunuzdan silinecek</string>
     <string name="dismiss_backup_warning_upgrade">Android gizlilik değişikliklerinden dolayı, uygulama kaldırılırsa veriniz ve otomatik yedekleriniz erişilemez hâle gelecek</string>
-    <string name="deck_already_exists">Deste hâlihazırda var</string>
-    <string name="empty_deck_name">Deste adı boş olamaz</string>
     <string name="create_deck_numeric_hint">Deste sıralamanızda sorun olursa (örn. \"10\"un \"2\"den önce gelmesi), \"2\" yerine \"02\" yazın</string>
     <!-- Set Due Date -->
     <string name="set_due_date_match_interval" comment="when setting a card\'s due date, this checkbox also changes the interval of the card">Aralığı aynı değere ayarla</string>
@@ -261,13 +258,25 @@
     <string name="import_error_resolution_copy_to_device">Dosyayı cihazınıza kopyalayıp yerel dosyayla yeniden deneyin</string>
     <string name="import_error_resolution_select_file">Dosyayı cihazınızın dosya gezgini uygulamasıyla açın</string>
     <!-- Post-login dialog -->
-    <string name="login_successful">Login successful</string>
-    <string name="sync_now">Sync now?</string>
+    <string name="login_successful">Giriş başarılı</string>
+    <string name="sync_now">Şimdi senkronize edilsin mi?</string>
     <!--Change Note Type Dialog Fragment-->
-    <string name="card_numbers_unchanged">Card numbers will remain unchanged</string>
+    <string name="card_numbers_unchanged">Kart numaraları sabit kalacak</string>
     <!-- Subset of TR.changeNotetypeToFromCloze -->
     <string name="extra_cloze_deletions_removed">If changing to a regular note type, and there are more cloze deletions than available card templates, any extra cards will be removed.</string>
-    <string name="different_note_types_selected">Please select notes from only one notetype.</string>
-    <string name="error_no_changes_to_save">No changes to save</string>
-    <string name="choose_color">Choose color</string>
+    <string name="different_note_types_selected">Lütfen sadece bir tür not seçin</string>
+    <string name="error_no_changes_to_save">Kaydedilecek değişiklik yok</string>
+    <string name="choose_color">Renk seç</string>
+    <!-- Special Fields -->
+    <string name="standard_fields_tab_header" comment="Tab header for inserting non-special fields: {{Front}}">Fields</string>
+    <string name="special_fields_tab_header" comment="Tab header for inserting special fields: {{Deck}}">Special</string>
+    <string name="special_field_example_suffix"><![CDATA[: ‘<b>%1$s</b>’]]></string>
+    <string name="special_field_front_side_help">The front template content. Audio is not automatically played</string>
+    <string name="special_field_deck_help" comment="%s: either blank or \' %s\'">Bütün deste, üst desteler de dahil %s</string>
+    <string name="special_field_subdeck_help" comment="%s: either blank or \' %s\'">The current deck of the card, excluding parent decks%s</string>
+    <string name="special_field_flag_help">Outputs ‘%1$s’, where %2$s is the flag code (%3$s\–%4$s\)</string>
+    <string name="special_field_tags_help" comment="%s: either blank or \' %s\'">Notun etiketleri%s</string>
+    <string name="special_field_card_id_help" comment="%s: either blank or \' %s\'">Kartın ID\'si%s</string>
+    <string name="special_field_card_help" comment="%s: either blank or \' %s\'">Kart şablonunun adı%s</string>
+    <string name="special_field_type_help" comment="%s: either blank or \' %s\'">Not türünün adı%s</string>
 </resources>

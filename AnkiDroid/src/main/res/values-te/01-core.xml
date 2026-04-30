@@ -116,6 +116,7 @@
     <string name="menu_unmark_note">గమనిక నుండి గుర్తు తీసివేయండి</string>
     <string name="menu_enable_voice_playback" maxLength="28">వాయిస్ ప్లేబ్యాక్‌ని ప్రారంభించండి</string>
     <string name="menu_disable_voice_playback">వాయిస్ ప్లేబ్యాక్‌ని నిలిపివేయండి</string>
+    <string name="menu_create_backup" maxLength="28">Create backup</string>
     <string name="new_deck">ఒక డెక్ సృష్టించండి</string>
     <string name="new_dynamic_deck">ఫిల్టర్ డెక్ను సృష్టించండి</string>
     <string name="directory_inaccessible">AnkiDroid డైరెక్టరీ అందుబాటులో లేదు</string>
@@ -129,7 +130,7 @@
     <string name="empty_cram_label" maxLength="28">ఖాళీ</string>
     <string name="create_subdeck">సబ్‌డెక్‌ను సృష్టించండి</string>
     <string name="empty_filtered_deck">ఫిల్టర్ చేసిన డెక్‌ను ఖాళీ చేస్తోంది&#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">డెక్ శోధన</string>
+    <string name="search_deck" comment="Deck search for selecting it">Deck search</string>
     <string name="empty_deck">ఈ డెక్ ఖాళీగా ఉంది</string>
     <string name="invalid_deck_name">చెల్లని డెక్ పేరు</string>
     <string name="studyoptions_congrats_finished">Congratulations! You have finished for today.</string>
@@ -144,7 +145,6 @@
     <string name="syncing_media">మీడియాను సమకాలీకరించడం</string>
     <string name="export_deck" maxLength="28">ఎగుమతి డెక్</string>
     <string name="export_collection">ఎగుమతి సేకరణ</string>
-    <string name="nothing">ఏమీ</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">కార్డ్ రకాలు</string>
     <string name="card_template_editor_front">ముందు టెంప్లేట్</string>
@@ -212,6 +212,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">ఖాతాను తీసివేయండి</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">తక్షణ కార్డ్</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Internet</string>
+    <string name="permission_access_summary">Required for the app to work</string>
+    <string name="permission_required_message">Please grant AnkiDroid the ‘%s’ permission to continue</string>
     <!-- Multiple profile -->
     <string name="add_profile">Add profile</string>
 </resources>

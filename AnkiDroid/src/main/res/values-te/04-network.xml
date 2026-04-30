@@ -66,7 +66,6 @@
     <string name="lost_mail_instructions">ఇమెయిల్ మర్చిపోయారా?</string>
     <string name="sign_in">సైన్ ఇన్ చేయండి</string>
     <!-- AndroidManifest.xml -->
-    <string name="deckpreferences_title">XXX కోసం ఎంపికలు</string>
     <string name="sync_title">సమకాలీకరణ</string>
     <string name="sync_log_uploading_message">స్థానికం నుండి పూర్తి సమకాలీకరణ</string>
     <string name="sync_database_acknowledge">సేకరణ సమకాలీకరించబడింది</string>
@@ -78,7 +77,6 @@
     <string name="one_way_sync_title" maxLength="41">వన్-వే సింక్</string>
     <string name="one_way_sync_confirmation">వన్ వే సింక్రొనైజేషన్ అభ్యర్థించబడింది</string>
     <string name="full_sync_confirmation">మీ సేకరణ సమకాలీకరించినప్పుడు అభ్యర్థించిన మార్పుకు మీ డేటాబేస్ యొక్క పూర్తి అప్లోడ్ అవసరం అవుతుంది. ఇప్పటికీ సమీక్షలు లేదా ఇతర మార్పులు ఇప్పటికీ ఇక్కడ సమకాలీకరించబడకపోతే, అవి పోతాయి. కొనసాగించు?</string>
-    <string name="full_sync_confirmation_upgrade">AnkiDroid గతంలో సంస్థాపించిన సంస్కరణలో బగ్, ఇది పూర్తి సమకాలీకరణను బలపరచటానికి మద్దతిస్తుంది.</string>
     <!-- Deck Picker Sync Icon -->
     <string name="sync_menu_title_one_way_sync">సమకాలీకరణ (వన్-వే)</string>
     <string name="sync_menu_title_no_account">సమకాలీకరణ (లాగిన్)</string>

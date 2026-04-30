@@ -66,7 +66,6 @@
     <string name="lost_mail_instructions">Pamiršote elektroninį paštą?</string>
     <string name="sign_in">Vyksta prisijungimas</string>
     <!-- AndroidManifest.xml -->
-    <string name="deckpreferences_title">XXX parinktys</string>
     <string name="sync_title">Sinchronizavimas</string>
     <string name="sync_log_uploading_message">Išsamus sinchronizavimas iš įrenginio</string>
     <string name="sync_database_acknowledge">Kolekcija susinchronizuota</string>
@@ -78,7 +77,6 @@
     <string name="one_way_sync_title" maxLength="41">Vienpusė sinchronizacija</string>
     <string name="one_way_sync_confirmation">Prašoma vienpusės sinchronizacijos</string>
     <string name="full_sync_confirmation">Norint atlikti pageidaujamą pakeitimą, sekantį kartą sinchronizuojant jūsų kolekciją, reikės įkelti visą duomenų bazę. Jei kitame įrenginyje turite dar nesusinchronizuotų peržiūrų ar kitokių pakeitimų, jie bus panaikinti. Ar norite tęsti?</string>
-    <string name="full_sync_confirmation_upgrade">Kadangi praeitą kartą įdiegtoje „AnkiDroid“ versijoje atsirado pranešimas apie klaidą, rekomenduojame atlikti išsamų sinchronizavimą.</string>
     <!-- Deck Picker Sync Icon -->
     <string name="sync_menu_title_one_way_sync">Sinchronizavimas (vienpusis)</string>
     <string name="sync_menu_title_no_account">Sinchronizuojamas prisijungimas</string>

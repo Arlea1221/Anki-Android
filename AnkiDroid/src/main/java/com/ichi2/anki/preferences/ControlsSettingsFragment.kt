@@ -35,6 +35,7 @@ import com.ichi2.anki.reviewer.CardSide
 import com.ichi2.anki.reviewer.MappableAction
 import com.ichi2.anki.reviewer.MappableBinding.Companion.toPreferenceString
 import com.ichi2.anki.settings.Prefs
+import com.ichi2.anki.ui.internationalization.sentenceCase
 import com.ichi2.anki.ui.internationalization.toSentenceCase
 import com.ichi2.anki.utils.ext.sharedPrefs
 import com.ichi2.preferences.ControlPreference
@@ -124,6 +125,7 @@ class ControlsSettingsFragment :
         setControlPreferencesDefaultValues(screen)
         setDynamicTitle()
         setupNewStudyScreenSettings()
+        setupAnswerCommands()
     }
 
     @NeedsTest("Only the tab elements are removed")
@@ -139,7 +141,7 @@ class ControlsSettingsFragment :
 
     private fun setDynamicTitle() {
         findPreference<ControlPreference>(getString(R.string.reschedule_command_key))?.let {
-            val preferenceTitle = TR.actionsSetDueDate().toSentenceCase(R.string.sentence_set_due_date)
+            val preferenceTitle = TR.sentenceCase.setDueDate
             it.title = preferenceTitle
             it.dialogTitle = preferenceTitle
         }
@@ -176,6 +178,10 @@ class ControlsSettingsFragment :
         if (!Prefs.isNewStudyScreenEnabled) {
             findPreference<Preference>(R.string.gestures_corner_touch_preference)?.dependency = getString(R.string.gestures_preference)
             findPreference<Preference>(R.string.pref_swipe_sensitivity_key)?.dependency = getString(R.string.gestures_preference)
+            findPreference<Preference>(R.string.pref_key_whiteboard_undo)?.isVisible = false
+            findPreference<Preference>(R.string.pref_key_whiteboard_toggle_eraser)?.isVisible = false
+            findPreference<Preference>(R.string.pref_key_whiteboard_redo)?.isVisible = false
+            findPreference<Preference>(R.string.pref_key_whiteboard_clear)?.isVisible = false
             return
         }
         for (keyRes in legacyStudyScreenSettings) {

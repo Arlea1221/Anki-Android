@@ -56,7 +56,6 @@
     <string name="CardEditorCards">Картки: %1$s</string>
     <string name="edit_occlusions">Редагувати оклюзії</string>
     <string name="paste_from_clipboard" maxLength="28">Вставити з буферу обміну</string>
-    <string name="tag_name">Назва позначки</string>
     <string name="add_new_filter_tags">Додати/фільтрувати теги</string>
     <string name="add_tag" maxLength="28">Додати позначку</string>
     <string name="check_all_tags" maxLength="28">Обрати/прибрати всі позначки</string>
@@ -85,7 +84,7 @@
     <string name="disable_eraser" maxLength="28">Вимкнути гумку</string>
     <string name="hide_whiteboard" maxLength="28">Сховати дошку</string>
     <string name="clear_whiteboard" maxLength="28">Очистити дошку</string>
-    <string name="hide_toolbar" maxLength="28">Hide toolbar</string>
+    <string name="hide_toolbar" maxLength="28">Приховати панель інструментів</string>
     <string name="replay_media" maxLength="28">Відтворити медіафайл</string>
     <string name="leech_suspend_notification">Картку позначено як набридливу і призупинено</string>
     <string name="leech_notification">Картку позначено як набридливу</string>
@@ -99,6 +98,10 @@
     <string name="webview_crash_loop_dialog_content">Системою WebView не вдалося показати картку \'%1$s\'.\n %2$s</string>
     <string name="slide_to_cancel" comment="Message shown when pressing the record button">Проведіть, щоб скасувати</string>
     <string name="filter_by_flags" maxLength="41">Прапорці</string>
+    <!-- filtered deck options -->
+    <string name="filtered_option_delay_again">Затримка для «Знову»</string>
+    <string name="filtered_option_delay_hard">Затримка для «Важко»</string>
+    <string name="filtered_option_delay_good">Затримка для «Добре»</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">Створюється список тегів&#8230;</string>
     <!-- Study options -->
@@ -122,7 +125,6 @@
     <string name="close">Закрити</string>
     <string name="select">Вибрати</string>
     <string name="field_remapping">%1$s (з\"%2$s\")</string>
-    <string name="confirm_map_cards_to_nothing">Картки, які не прив\'язані, будуть видалені. Якщо запис не має жодної картки, то запис буде втрачено. Ви хочете продовжити?</string>
     <string name="missing_note_type">Жодного типу записів не знайдено</string>
     <string name="card_previewer_empty_front_indicator" comment="Extra text appended onto a tab title in the card previewer so that the user can see at a glance whether a card has no front.">%1$s (порожня)</string>
     <!-- Image cropper -->
@@ -155,8 +157,6 @@
     <string name="preview_progress_bar_text" comment="What card we are on out of how many in card previewer progress bar">%1$d з %2$d</string>
     <string name="rename" comment="Confirm that the renaming action should be processed." maxLength="28">Перейменувати</string>
     <string name="checks_action" maxLength="28">Перевірити</string>
-    <string name="check_db" maxLength="28">Перевірити базу даних</string>
-    <string name="check_media" maxLength="28">Перевірити медіафайли</string>
     <string name="empty_cards" maxLength="28">Порожні картки</string>
     <string name="unknown_type_field_warning">Введіть відповідь: невідоме поле %s</string>
     <string name="delete_deck" comment="Message on a progress bar starting a deck is being deleted.">Видалення колоди&#8230;\n Будь ласка, зачекайте.</string>
@@ -169,7 +169,7 @@
     <string name="import_log_no_apkg">Це не файл пакету Anki</string>
     <string name="import_title_error" comment="Title of error dialog">Помилка</string>
     <string name="import_error_handle_exception">Не вдалося імпортувати пакет\n\n%s</string>
-    <string name="import_error_not_apkg_extension">Ім\'я пакету “%s” не містить закінчення .apkg чи .colpkg</string>
+    <string name="import_error_not_apkg_extension">Назва пакету “%s” не містить закінчення .apkg або .colpkg</string>
     <string name="import_error_load_imported_database">Заміна Anki Database (.anki2) ще не підтримується. Перегляньте у посібнику інструкцію по заміні.</string>
     <string name="import_error_content_provider">Вибраний файл не вдалося імпортувати автоматично до AnkiDroid. Будь ласка, перегляньте посібник користувача для того аби вручну імпортувати Anki файли: \n%s</string>
     <string name="import_error_copy_to_cache_title">Не вдалося зберегти файл в кеш</string>
@@ -199,6 +199,7 @@
     <string name="dyn_deck_desc">Це спеціальна колода для навчання поза межами нормального графіку. Картки будуть автоматично повернуті до своїх колод після повторення. Видалення цієї колоди поверне всі карточки до своїх колод.</string>
     <string name="tag_editor_add_feedback">Натисніть \"%2$s\", аби підтвердити додавання \"%1$s\"</string>
     <string name="tag_editor_add_feedback_existing">Обрано наявну позначку \"%1$s\"</string>
+    <string name="tag_already_exists">Тег уже існує</string>
     <!-- Time spans -->
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">Помилка поширення файлу apkg</string>
@@ -212,13 +213,17 @@
     <string name="background_image_title" maxLength="41">Фон</string>
     <string name="choose_an_image" maxLength="41">Оберіть зображення</string>
     <string name="remove_wallpaper_image" maxLength="41">Видалити фон</string>
-    <string name="remove_background_image">Видалити задній фон?</string>
+    <string name="remove_background_image">Ви впевнені, що хочете видалити фон?</string>
     <!-- Card Template Browser Appearance -->
-    <string name="restore_default" maxLength="28">Відновити «Типове»</string>
+    <string name="restore_default" maxLength="28">Відновити налаштування за замовчуванням</string>
     <string name="reviewer_tts_cloze_spoken_replacement">Порожня</string>
     <!-- Whiteboard eraser mode toggle message in Reviewer -->
     <string name="white_board_eraser_enabled">Режим гумки активовано</string>
     <string name="white_board_eraser_disabled">Режим гумки деактивовано</string>
+    <string comment="Progress amount e.g. \'28 MB/141 MB\'. %1$s is the current amount, %2$s is the max." name="progress_amount_bytes">%1$s/%2$s</string>
+    <string name="media_file_size_warning_title">Медіафайл занадто великий</string>
+    <string name="media_file_size_warning_message" comment="1$s: File name, 2$s: File size, 3$s: The size limit (e.g. 100MB)">Файл \"%1$s\" (%2$s) перевищує ліміт AnkiWeb (до %3$s) і не може бути синхронізований. Додати все одно?</string>
+    <string name="media_file_size_add_anyway">Все одно додати</string>
     <!-- Whiteboard save image message in the Study Screen -->
     <string name="white_board_image_save_failed">Не вдалося зберегти зображення дошки. %s</string>
     <string name="white_board_image_saved">Зображення дошки збережено до %s</string>
@@ -267,6 +272,9 @@
     <string name="create_shortcut_error">Помилка при створенні ярлика: %s</string>
     <string name="note_editor_capitalize" comment="This is for a switch with a checkbox - on: enabled" maxLength="28">Підняти регістр речень</string>
     <string name="menu_scroll_toolbar" comment="Checkbox stating whether note editor toolbar is scrollable or stacked. Checked: Scroll" maxLength="28">Панель прокручування</string>
+    <!-- Dialog hints -->
+    <string name="dialog_hint_url">URL</string>
+    <string name="dialog_hint_certificate">Сертифікат</string>
     <!-- IncrementNumberRangePreference -->
     <string name="plus_sign" comment="Label for increment button in IncrementerNumberRangePreference">+</string>
     <string name="minus_sign" comment="Label for decrement button in IncrementerNumberRangePreference">-</string>
@@ -276,7 +284,7 @@
     <!-- Used for credential empty warning message -->
     <string name="invalid_email">Введіть правильну адресу електронної пошти</string>
     <string name="password_empty">Поле «Пароль» обов\'язкове до заповнення</string>
-    <string name="back_pressed_once">Натисніть ще раз, щоб вийти</string>
+    <string name="back_pressed_once">Go back again to exit</string>
     <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
     <string name="percentage">%s%%</string>
     <string name="download_deck">Завантажити колоду</string>
@@ -332,7 +340,7 @@
     <string name="app_not_initialized_new">AnkiDroid ще не ініціалізовано. Будь ласка, відкрийте AnkiDroid і спробуйте знову</string>
     <!-- Deck Creation -->
     <string name="deck_created">Створена колода</string>
-    <string name="deck_renamed">Перейменовано колоду</string>
+    <string name="deck_renamed">Колоду перейменовано</string>
     <!-- Deck Deletion -->
     <string name="deck_shortcut_doesnt_exist">Колоду було видалено. Будь ласка, видаліть ярлик</string>
     <!-- Browser Options Dialog -->
@@ -394,4 +402,7 @@
     <string name="scheduler_upgrade_required_dialog_title" comment="Shown in a dialog when user has imported a collection using a very old version of the Anki spaced repetition scheduler">Потрібне оновлення планувальника</string>
     <!-- Whitespace is OK -->
     <string name="list_separator" comment="The character and spacing to display between elements of a list, for example \', \' in \'Apple, Banana, Cherry" tools:ignore="TranslationTypo">, </string>
+    <!-- Other errors -->
+    <!-- Similar to TR.qtMiscNameExists(): "Name exists." -->
+    <string name="error_name_exists">Назва вже існує</string>
 </resources>

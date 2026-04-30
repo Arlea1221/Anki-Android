@@ -37,6 +37,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.ichi2.anki.R
 import com.ichi2.anki.ViewerResourceHandler
+import com.ichi2.anki.compat.CompatHelper.Companion.resolveActivityCompat
 import com.ichi2.anki.dialogs.TtsVoicesDialogFragment
 import com.ichi2.anki.localizedErrorMessage
 import com.ichi2.anki.snackbar.showSnackbar
@@ -46,7 +47,6 @@ import com.ichi2.anki.utils.openUrl
 import com.ichi2.anki.workarounds.OnWebViewRecreatedListener
 import com.ichi2.anki.workarounds.SafeWebViewClient
 import com.ichi2.anki.workarounds.SafeWebViewLayout
-import com.ichi2.compat.CompatHelper.Companion.resolveActivityCompat
 import com.ichi2.themes.Themes
 import com.ichi2.utils.show
 import kotlinx.coroutines.flow.launchIn
@@ -146,6 +146,12 @@ abstract class CardViewerFragment(
 
     protected open fun onCreateWebChromeClient() = CardViewerWebChromeClient()
 
+    /**
+     * Reconfigures the [WebView] after a render process crash by calling [setupWebView].
+     *
+     * Subclasses that override this method must call `super.onWebViewRecreated(webView)`,
+     * as the base implementation reapplies all clients, settings, and content.
+     */
     override fun onWebViewRecreated(webView: WebView) {
         setupWebView(null)
     }

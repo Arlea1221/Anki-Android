@@ -222,7 +222,7 @@
         Jos tämä jätetään tyhjäksi, AnkiWebin palvelinta käytetään.
         <a href="%s">Lue lisää</a>
         ]]></string>
-    <string name="custom_sync_server_base_url_title" maxLength="41">Synkronointiosoite</string>
+    <string name="custom_sync_server_base_url_title" maxLength="41">Sync URL</string>
     <string name="custom_sync_certificate_title" maxLength="41">Oma root-sertifikaatti (PEM)</string>
     <!-- Key Bindings -->
     <string name="keyboard">Näppäimistö</string>
@@ -242,16 +242,7 @@
     <string name="studyoptions_limit_select_tags">Valitse tunnisteet</string>
     <!-- Deck configurations -->
     <string name="deck_conf_general" maxLength="41" comment="Label of the submenu for the general options of new deck">Yleistä</string>
-    <string name="deck_conf_cram_filter" maxLength="41">Suodatin</string>
     <string name="deck_conf_cram_search" maxLength="41" comment="Label of a text field that contains a search query.">Haku</string>
-    <string name="deck_conf_cram_limit" maxLength="41">Rajoita</string>
-    <string name="deck_conf_cram_order" maxLength="41">Valitse kortit käyttäen sääntöä</string>
-    <string name="deck_conf_cram_reschedule" maxLength="41" comment="Title of the box labelled by deck_conf_cram_reschedule_summ">Aikatauluta uudelleen</string>
-    <string name="deck_conf_cram_reschedule_summ">Aikatauluta kortit tämän pakan vastausten perusteella</string>
-    <string name="deck_conf_cram_filter_2_check">Ota käyttöön toinen suodatin</string>
-    <string name="deck_conf_cram_steps_summ" maxLength="41">Määritä mukautetut oppimisaskeleet</string>
-    <string name="deck_conf_cram_preview_delays" maxLength="41">Esikatselujen viiveet</string>
-    <string name="deck_conf_cram_preview_delays_summ">Viivästykset ovat sekunneissa. 0 palauttaa kortin alkuperäiseen pakkaan.</string>
     <!-- analytics options -->
     <string name="analytics_dialog_title">Auta parantamaan AnkiDroidia!</string>
     <string name="analytics_title" maxLength="41">Jaa tietoja käyttämistäsi ominaisuuksista</string>
@@ -393,4 +384,5 @@
     <string name="flip_and_answer" maxLength="41" comment="Configuration of the \'Answer\' commands to answer the card if on the answer side, and flip it if on the question side">Flip and answer</string>
     <!--Keyboard shortcuts dialog-->
     <string name="open_settings" comment="Description of the shortcut that opens the app settings">Avaa asetukset</string>
+    <string name="related_settings_title" comment="Title of the section for related settings">Related settings</string>
 </resources>

@@ -402,13 +402,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FilteredDeckOptions"
-            android:label="@string/deckpreferences_title"
-            android:exported="false"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@style/Theme_Light"
-            />
-        <activity
             android:name="com.ichi2.anki.Info"
             android:label="@string/pref_cat_about_title"
             android:exported="false"
@@ -469,6 +462,10 @@
             android:name="com.ichi2.anki.SingleFragmentActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize"
+            />
+        <activity
+            android:name="com.ichi2.anki.utils.ConfigAwareSingleFragmentActivity"
+            android:exported="false"
             />
         <activity
             android:name="com.ichi2.anki.NoteEditorActivity"
@@ -612,6 +609,16 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="com.ichi2.widget.UPDATE_WIDGET" />
+            </intent-filter>
+        </receiver>
+
+        <!-- #14372: Handles updates after the day rollover (04:00). -->
+        <receiver android:name="com.ichi2.widget.DayRolloverAlarm"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.ichi2.widget.ACTION_ROLLOVER" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
             </intent-filter>
         </receiver>
 

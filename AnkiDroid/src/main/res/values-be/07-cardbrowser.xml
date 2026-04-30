@@ -69,7 +69,7 @@
     <string name="card_browser_show_marked" maxLength="28">Фільтраваць пазначаныя</string>
     <string name="card_browser_show_suspended" maxLength="28">Фільтраваць прыпыненыя</string>
     <string name="card_browser_search_by_tag" maxLength="28">Фільтраваць па метках</string>
-    <string name="card_browser_search_by_flag" maxLength="28">Фільтраваць па пазнаках</string>
+    <string name="card_browser_search_by_flag" maxLength="28">Фільтраваць па пазнацы</string>
     <string name="card_browser_list_my_searches" maxLength="28">Мае запыты пошуку</string>
     <string name="card_browser_list_my_searches_save" maxLength="28">Захаваць запыты пошуку</string>
     <string name="card_browser_list_my_searches_title">Выберыце захаваны запыт пошуку</string>
@@ -77,6 +77,7 @@
     <string name="card_browser_list_my_searches_new_search_error_empty_name">Нельга захаваць пошук без назвы</string>
     <string name="card_browser_list_my_searches_new_search_error_dup">Такая назва ўжо існуе</string>
     <string name="card_browser_list_my_searches_successful_save">Пошук захаваны</string>
+    <string name="card_browser_list_my_searches_successful_deleted">Search deleted</string>
     <string name="no_note_to_edit">Няма нататак для рэдагавання</string>
     <string name="card_browser_list_my_searches_remove_content">Выдаліць \"%1$s\"?</string>
     <string name="card_browser_change_display_order" maxLength="28">Змяніць парадак адлюстравання</string>

@@ -56,7 +56,6 @@
     <string name="CardEditorCards">カード: %1$s</string>
     <string name="edit_occlusions">画像穴埋め問題を編集</string>
     <string name="paste_from_clipboard" maxLength="28">クリップボードから貼り付け</string>
-    <string name="tag_name">タグ名</string>
     <string name="add_new_filter_tags">タグフィルター / 新規タグ追加</string>
     <string name="add_tag" maxLength="28">タグを追加</string>
     <string name="check_all_tags" maxLength="28">すべて選択 / 選択をすべて解除</string>
@@ -99,6 +98,10 @@
     <string name="webview_crash_loop_dialog_content">AndroidシステムのWebViewがカード \'%1$s\' のレンダリングに失敗しました。\n %2$s</string>
     <string name="slide_to_cancel" comment="Message shown when pressing the record button">左にｽﾗｲﾄﾞでｷｬﾝｾﾙ</string>
     <string name="filter_by_flags" maxLength="41">フラグ</string>
+    <!-- filtered deck options -->
+    <string name="filtered_option_delay_again">Delay for again</string>
+    <string name="filtered_option_delay_hard">Delay for hard</string>
+    <string name="filtered_option_delay_good">Delay for good</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">タグのリストを作成しています&#8230;</string>
     <!-- Study options -->
@@ -119,7 +122,6 @@
     <string name="close">閉じる</string>
     <string name="select">選択</string>
     <string name="field_remapping">%1$s (\'%2$s\'から)</string>
-    <string name="confirm_map_cards_to_nothing">カードタイプ数がより少ないノートタイプに変更する場合、変更先がないカードタイプのカードは削除されます（たとえば、「基本（裏表反転カード付き）」から「基本」に変更する場合、裏表反転カードは削除されます）。続行してもよろしいですか？</string>
     <string name="missing_note_type">ノートタイプが見つかりませんでした</string>
     <string name="card_previewer_empty_front_indicator" comment="Extra text appended onto a tab title in the card previewer so that the user can see at a glance whether a card has no front.">%1$s (空)</string>
     <!-- Image cropper -->
@@ -146,8 +148,6 @@
     <string name="preview_progress_bar_text" comment="What card we are on out of how many in card previewer progress bar">%1$d / %2$d</string>
     <string name="rename" comment="Confirm that the renaming action should be processed." maxLength="28">名前を変更</string>
     <string name="checks_action" maxLength="28">チェック</string>
-    <string name="check_db" maxLength="28">データベースをチェック</string>
-    <string name="check_media" maxLength="28">メディアをチェック</string>
     <string name="empty_cards" maxLength="28">白紙カードをチェック</string>
     <string name="unknown_type_field_warning">タイピングして答えを入力: 不明なフィールド %s</string>
     <string name="delete_deck" comment="Message on a progress bar starting a deck is being deleted.">デッキを削除しています&#8230;</string>
@@ -190,6 +190,7 @@
     <string name="dyn_deck_desc">これは標準のスケジュールから外れて学習する特別なデッキです。 復習が終わったカードは自動的に元のデッキに戻ります。 このデッキを削除すると、残りのカードもすべて元のデッキに戻ります。</string>
     <string name="tag_editor_add_feedback">「%1$s」の追加を確定するには「%2$s」をタップしてください</string>
     <string name="tag_editor_add_feedback_existing">既存のタグ「%1$s」を選択しました</string>
+    <string name="tag_already_exists">この名前のタグがすでに存在します</string>
     <!-- Time spans -->
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">Ankiファイル（*.apkg）の共有中にエラーが発生しました</string>
@@ -203,13 +204,17 @@
     <string name="background_image_title" maxLength="41">デッキリスト画面の背景</string>
     <string name="choose_an_image" maxLength="41">画像を選択</string>
     <string name="remove_wallpaper_image" maxLength="41">画像を背景から削除</string>
-    <string name="remove_background_image">背景画像を削除しますか？</string>
+    <string name="remove_background_image">デッキリスト画面に設定した背景画像を削除してもよろしいですか？</string>
     <!-- Card Template Browser Appearance -->
-    <string name="restore_default" maxLength="28">既定値に戻す</string>
+    <string name="restore_default" maxLength="28">デフォルトに戻す</string>
     <string name="reviewer_tts_cloze_spoken_replacement">空白</string>
     <!-- Whiteboard eraser mode toggle message in Reviewer -->
     <string name="white_board_eraser_enabled">消しゴム機能をオンにしました</string>
     <string name="white_board_eraser_disabled">消しゴム機能をオフにしました</string>
+    <string comment="Progress amount e.g. \'28 MB/141 MB\'. %1$s is the current amount, %2$s is the max." name="progress_amount_bytes">%1$s/%2$s</string>
+    <string name="media_file_size_warning_title">メディアが大きすぎます</string>
+    <string name="media_file_size_warning_message" comment="1$s: File name, 2$s: File size, 3$s: The size limit (e.g. 100MB)">ファイル \"%1$s\" (%2$s) はAnkiWebで対応可能なファイルサイズの上限 (%3$s) を超えているため、このファイルをAnkiWebと同期することはできません。それでもこのファイルをノートに添付しますか？</string>
+    <string name="media_file_size_add_anyway">それでも添付</string>
     <!-- Whiteboard save image message in the Study Screen -->
     <string name="white_board_image_save_failed">ホワイトボード画像の保存に失敗しました。 %s</string>
     <string name="white_board_image_saved">ホワイトボードの画像を \"%s\" に保存しました</string>
@@ -238,10 +243,10 @@
     <string name="format_insert_bold">太字</string>
     <string name="format_insert_italic">斜体</string>
     <string name="format_insert_underline">下線</string>
-    <string name="insert_horizontal_line">横罫線</string>
+    <string name="insert_horizontal_line">横罫線を挿入</string>
     <string name="insert_heading">見出し</string>
-    <string name="format_font_size">フォントサイズ変更</string>
-    <string name="insert_mathjax">MathJax式を挿入</string>
+    <string name="format_font_size">フォントサイズを変更</string>
+    <string name="insert_mathjax">MathJax式</string>
     <string name="note_editor_toolbar_icon">ボタンに表示する文字</string>
     <string name="before_text">選択文字列の前のHTML</string>
     <string name="after_text">選択文字列の後のHTML</string>
@@ -258,16 +263,19 @@
     <string name="create_shortcut_error">ショートカット追加のエラー: %s</string>
     <string name="note_editor_capitalize" comment="This is for a switch with a checkbox - on: enabled" maxLength="28">英語入力の際に文頭を大文字</string>
     <string name="menu_scroll_toolbar" comment="Checkbox stating whether note editor toolbar is scrollable or stacked. Checked: Scroll" maxLength="28">ツールバーをスクロール表示</string>
+    <!-- Dialog hints -->
+    <string name="dialog_hint_url">URL</string>
+    <string name="dialog_hint_certificate">Certificate</string>
     <!-- IncrementNumberRangePreference -->
     <string name="plus_sign" comment="Label for increment button in IncrementerNumberRangePreference">+</string>
     <string name="minus_sign" comment="Label for decrement button in IncrementerNumberRangePreference">-</string>
     <string name="invalid_value" comment="Error message in IncrementerNumberRangePreference when input is not a valid number">無効な値です</string>
-    <string name="maximum_value_is" comment="Error message in IncrementerNumberRangePreference. %d is the maximum allowed value">Maximum value is %d</string>
-    <string name="minimum_value_is" comment="Error message in IncrementerNumberRangePreference. %d is the minimum allowed value">Minimum value is %d</string>
+    <string name="maximum_value_is" comment="Error message in IncrementerNumberRangePreference. %d is the maximum allowed value">最大値は %d です</string>
+    <string name="minimum_value_is" comment="Error message in IncrementerNumberRangePreference. %d is the minimum allowed value">最小値は %d です</string>
     <!-- Used for credential empty warning message -->
     <string name="invalid_email">有効なメールアドレスを入力してください</string>
     <string name="password_empty">パスワードが必要です</string>
-    <string name="back_pressed_once">もう一度押すと終了します</string>
+    <string name="back_pressed_once">Go back again to exit</string>
     <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
     <string name="percentage">%s%%</string>
     <string name="download_deck">デッキをダウンロード</string>
@@ -323,7 +331,7 @@
     <!-- Browser Options Dialog -->
     <string name="show_cards" comment="Label for toggle cards button in BrowserOptionsDialog">カード</string>
     <string name="show_notes" comment="Label for toggle notes button in BrowserOptionsDialog">ノート</string>
-    <string name="toggle_cards_notes">カード /ノート の切り替え</string>
+    <string name="toggle_cards_notes">表示対象の切り替え</string>
     <string name="truncate_content_help">リスト画面において、カードまたはノートの内容の表示を１件につき３行までに制限します</string>
     <string name="browser_options_dialog_heading">ブラウザ オプション</string>
     <string name="audio_saved">録音を保存しました</string>
@@ -376,4 +384,7 @@
     <string name="scheduler_upgrade_required_dialog_title" comment="Shown in a dialog when user has imported a collection using a very old version of the Anki spaced repetition scheduler">スケジューラをアップグレードする必要があります</string>
     <!-- Whitespace is OK -->
     <string name="list_separator" comment="The character and spacing to display between elements of a list, for example \', \' in \'Apple, Banana, Cherry" tools:ignore="TranslationTypo">, </string>
+    <!-- Other errors -->
+    <!-- Similar to TR.qtMiscNameExists(): "Name exists." -->
+    <string name="error_name_exists">この名前のデッキがすでに存在します</string>
 </resources>

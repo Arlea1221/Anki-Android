@@ -54,9 +54,8 @@
     <string name="CardEditorModel">प्रकार:</string>
     <string name="CardEditorTags">टैग: %1$s</string>
     <string name="CardEditorCards">पत्ते: %1$s</string>
-    <string name="edit_occlusions">निष्कर्ष को एडिट   करें</string>
+    <string name="edit_occlusions">Edit occlusions</string>
     <string name="paste_from_clipboard" maxLength="28">Paste from clipboard</string>
-    <string name="tag_name">टैग नाम</string>
     <string name="add_new_filter_tags">टैग को जोड़ें/छानें</string>
     <string name="add_tag" maxLength="28">टैग जोड़ें</string>
     <string name="check_all_tags" maxLength="28">सभी टैग चयनित/अचयनित करें</string>
@@ -99,6 +98,10 @@
     <string name="webview_crash_loop_dialog_content">सिस्टम WebView कार्ड रेंडर करने में विफल रहा \'%1$s\'.\n %2$s</string>
     <string name="slide_to_cancel" comment="Message shown when pressing the record button">Slide to cancel</string>
     <string name="filter_by_flags" maxLength="41">झंडे</string>
+    <!-- filtered deck options -->
+    <string name="filtered_option_delay_again">Delay for again</string>
+    <string name="filtered_option_delay_hard">Delay for hard</string>
+    <string name="filtered_option_delay_good">Delay for good</string>
     <!-- Custom study options -->
     <string name="custom_study_loading_tags">Building list of tags&#8230;</string>
     <!-- Study options -->
@@ -120,7 +123,6 @@
     <string name="close">बंद करें</string>
     <string name="select">का चयन करें</string>
     <string name="field_remapping">%1$s (\"%2$s\" से)</string>
-    <string name="confirm_map_cards_to_nothing">कुछ नहीं के लिए मैप किए गए किसी भी कार्ड को हटा दिया जाएगा । यदि किसी नोट में कोई शेष कार्ड नहीं है, तो वह खो जाएगा । क्या आप निश्चयपूर्वक जारी रखना चाहते हैं?</string>
     <string name="missing_note_type">कोई नोट प्रकार नहीं मिला</string>
     <string name="card_previewer_empty_front_indicator" comment="Extra text appended onto a tab title in the card previewer so that the user can see at a glance whether a card has no front.">%1$s (खाली)</string>
     <!-- Image cropper -->
@@ -149,8 +151,6 @@
     <string name="preview_progress_bar_text" comment="What card we are on out of how many in card previewer progress bar">%1$d का %2$d</string>
     <string name="rename" comment="Confirm that the renaming action should be processed." maxLength="28">का नाम बदलें</string>
     <string name="checks_action" maxLength="28">जांचें</string>
-    <string name="check_db" maxLength="28">डेटाबेस की जाँच करें</string>
-    <string name="check_media" maxLength="28">मीडिया जांचें</string>
     <string name="empty_cards" maxLength="28">खाली कार्ड</string>
     <string name="unknown_type_field_warning">उत्तर टाइप करें: अज्ञात फ़ील्ड %s</string>
     <string name="delete_deck" comment="Message on a progress bar starting a deck is being deleted.">हटाने deck&#8230;\nPlease रुको।</string>
@@ -193,6 +193,7 @@
     <string name="dyn_deck_desc">यह सामान्य समय के बाहर अध्ययन करने के लिए एक विशेष डेक है। तुम उन की समीक्षा करने के बाद कार्ड स्वचालित रूप से उनके मूल डेक को लौट जाएगा। इस डेक डेक सूची से हटाने के सभी शेष कार्ड उनके मूल डेक करने के लिए वापस आ जाएगी।</string>
     <string name="tag_editor_add_feedback">\"%1$s\" जोड़ने की पुष्टि करने के लिए \"%2$s\" स्पर्श करें</string>
     <string name="tag_editor_add_feedback_existing">मौजूदा टैग \"%1$s\" चयनित</string>
+    <string name="tag_already_exists">Tag already exists</string>
     <!-- Time spans -->
     <!-- Currently only used if exporting APKG fails -->
     <string name="apk_share_error">Apkg फ़ाइल साझा करने में त्रुटि</string>
@@ -206,13 +207,17 @@
     <string name="background_image_title" maxLength="41">पृष्ठभूमि</string>
     <string name="choose_an_image" maxLength="41">चित्र चुनें</string>
     <string name="remove_wallpaper_image" maxLength="41">Remove background</string>
-    <string name="remove_background_image">पृष्ठभूमि निकालें?</string>
+    <string name="remove_background_image">Are you sure you wish to remove the background?</string>
     <!-- Card Template Browser Appearance -->
-    <string name="restore_default" maxLength="28">पहले जैसा कर देना</string>
+    <string name="restore_default" maxLength="28">Restore default</string>
     <string name="reviewer_tts_cloze_spoken_replacement">रिक्त</string>
     <!-- Whiteboard eraser mode toggle message in Reviewer -->
     <string name="white_board_eraser_enabled">Eraser mode activated</string>
     <string name="white_board_eraser_disabled">Eraser mode deactivated</string>
+    <string comment="Progress amount e.g. \'28 MB/141 MB\'. %1$s is the current amount, %2$s is the max." name="progress_amount_bytes">%1$s/%2$s</string>
+    <string name="media_file_size_warning_title">Media too large</string>
+    <string name="media_file_size_warning_message" comment="1$s: File name, 2$s: File size, 3$s: The size limit (e.g. 100MB)">The file \"%1$s\" (%2$s) exceeds the AnkiWeb limit of %3$s and cannot be synced. Add anyway?</string>
+    <string name="media_file_size_add_anyway">Add anyway</string>
     <!-- Whiteboard save image message in the Study Screen -->
     <string name="white_board_image_save_failed">श्वेतपट्ट छवि को सहेजने में विफल। %s</string>
     <string name="white_board_image_saved">श्वेतपट्ट छवि %s में सहेजी गई</string>
@@ -238,20 +243,20 @@
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
     <string name="menu_font_size" maxLength="28">फ़ॉन्ट आकार</string>
     <string name="menu_show_toolbar" comment="Checkable item stating whether the note editor toolbar should be shown" maxLength="28">टूलबार दिखाएं</string>
-    <string name="format_insert_bold">बोल्ड के रूप में प्रारूपित करें</string>
-    <string name="format_insert_italic">इटैलिक के रूप में प्रारूपित करें</string>
-    <string name="format_insert_underline">रेखांकन के रूप में प्रारूपित करें</string>
-    <string name="insert_horizontal_line">क्षैतिज रेखा डालें</string>
-    <string name="insert_heading">शीर्षक डालें</string>
-    <string name="format_font_size">फॉण्ट आकार बदलें</string>
-    <string name="insert_mathjax">MathJax समीकरण सम्मिलित करें</string>
+    <string name="format_insert_bold">Format as bold</string>
+    <string name="format_insert_italic">Format as italic</string>
+    <string name="format_insert_underline">Format as underline</string>
+    <string name="insert_horizontal_line">Insert horizontal line</string>
+    <string name="insert_heading">Insert heading</string>
+    <string name="format_font_size">Change font size</string>
+    <string name="insert_mathjax">Insert MathJax equation</string>
     <string name="note_editor_toolbar_icon">बटन टेक्स्ट</string>
-    <string name="before_text">चयन से पहले का HTML</string>
-    <string name="after_text">चयन के बाद का HTML</string>
-    <string name="add_toolbar_item">टूलबार आइटम बनाएं</string>
-    <string name="edit_toolbar_item">टूलबार आइटम संपादित करें</string>
+    <string name="before_text">HTML before selection</string>
+    <string name="after_text">HTML after selection</string>
+    <string name="add_toolbar_item">Create toolbar item</string>
+    <string name="edit_toolbar_item">Edit toolbar item</string>
     <string name="toolbar_item_explain_edit_or_remove">चयनित टेक्स्ट के पहले और बाद में डालने के लिए हटम्ल दर्ज करें\n\nकिसी टूलबार आइटम को संपादित करने या हटाने के लिए उसे देर तक दबाएँ.</string>
-    <string name="remove_toolbar_item">टूलबार आइटम हटाएं?</string>
+    <string name="remove_toolbar_item">Remove toolbar item?</string>
     <string name="note_editor_image_too_large">छवि बहुत बड़ी है, कृपया छवि को मैन्युअल रूप से डालें</string>
     <string name="note_editor_video_too_large">वीडियो फ़ाइल बहुत बड़ी है, कृपया वीडियो को मैन्युअल रूप से डालें</string>
     <string name="note_editor_audio_too_large">ऑडियो फ़ाइल बहुत बड़ी है, कृपया ऑडियो मैन्युअल रूप से डालें</string>
@@ -261,6 +266,9 @@
     <string name="create_shortcut_error">शॉर्टकट जोड़ने में त्रुटि: %s</string>
     <string name="note_editor_capitalize" comment="This is for a switch with a checkbox - on: enabled" maxLength="28">वाक्यों को बड़े अक्षरों में लिखें</string>
     <string name="menu_scroll_toolbar" comment="Checkbox stating whether note editor toolbar is scrollable or stacked. Checked: Scroll" maxLength="28">स्क्रॉल टूलबार</string>
+    <!-- Dialog hints -->
+    <string name="dialog_hint_url">URL</string>
+    <string name="dialog_hint_certificate">Certificate</string>
     <!-- IncrementNumberRangePreference -->
     <string name="plus_sign" comment="Label for increment button in IncrementerNumberRangePreference">+</string>
     <string name="minus_sign" comment="Label for decrement button in IncrementerNumberRangePreference">-</string>
@@ -270,7 +278,7 @@
     <!-- Used for credential empty warning message -->
     <string name="invalid_email">एक मान्य ईमेल दर्ज करें।</string>
     <string name="password_empty">पासवर्ड की आवश्यकता है</string>
-    <string name="back_pressed_once">बाहर निकलने के लिए फिर से दबाएं</string>
+    <string name="back_pressed_once">Go back again to exit</string>
     <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
     <string name="percentage">%s%%</string>
     <string name="download_deck">डेक डाउनलोड करें</string>
@@ -328,7 +336,7 @@
     <!-- Browser Options Dialog -->
     <string name="show_cards" comment="Label for toggle cards button in BrowserOptionsDialog">कार्ड्ज़</string>
     <string name="show_notes" comment="Label for toggle notes button in BrowserOptionsDialog">नोट्स</string>
-    <string name="toggle_cards_notes">टॉगल कार्ड्ज़/नोट्स</string>
+    <string name="toggle_cards_notes">Toggle cards/notes</string>
     <string name="truncate_content_help">Truncate the height of each row of the Browser to show only first 3 lines of content</string>
     <string name="browser_options_dialog_heading">Browser options</string>
     <string name="audio_saved">रिकॉर्डिंग को सहेजा गया</string>
@@ -344,7 +352,7 @@
     <string name="shared_decks_login_required">कृपया अधिक डेक डाउनलोड करने के लिए लॉग इन करें</string>
     <string name="deck_description_field_hint">विवरण</string>
     <string name="deck_description_saved">Description updated</string>
-    <string name="format_deck_description_as_markdown">Format as Markdown</string>
+    <string name="format_deck_description_as_markdown">Format as markdown</string>
     <string name="help_button_content_description">Open help for ‘%s’</string>
     <string name="failed_to_copy">प्रतिलिपि बनाने में विफल</string>
     <plurals name="unbury_cards_feedback">
@@ -359,7 +367,7 @@
     <string name="play_recording">खेल</string>
     <string name="next_recording" comment="Description of a button to go to the next recording">अगला</string>
     <!--  AlertDialog in the deleteCardTemplate  -->
-    <string name="orphan_note_title">कार्ड प्रकार को हटाया नहीं जा सकता</string>
+    <string name="orphan_note_title">Cannot delete card type</string>
     <string name="orphan_note_message">इस कार्ड प्रकार को हटाने से कुछ नोट बिना किसी कार्ड के रह जाएंगे।</string>
     <string name="voice_not_supported">आवाज़ समर्थित नहीं है. दूसरा प्रयास करें या ध्वनि इंजन स्थापित करें।</string>
     <!--Keyboard shortcuts dialog-->
@@ -382,4 +390,7 @@
     <string name="scheduler_upgrade_required_dialog_title" comment="Shown in a dialog when user has imported a collection using a very old version of the Anki spaced repetition scheduler">Scheduler upgrade required</string>
     <!-- Whitespace is OK -->
     <string name="list_separator" comment="The character and spacing to display between elements of a list, for example \', \' in \'Apple, Banana, Cherry" tools:ignore="TranslationTypo">, </string>
+    <!-- Other errors -->
+    <!-- Similar to TR.qtMiscNameExists(): "Name exists." -->
+    <string name="error_name_exists">Name already exists</string>
 </resources>

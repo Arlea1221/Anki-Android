@@ -51,15 +51,30 @@ open class PageWebViewClient : SafeWebViewClient() {
             if (path.startsWith("/_app/")) {
                 "backend/sveltekit/app/${path.substring(6)}"
             } else if (isSvelteKitPage(path.substring(1))) {
-                "backend/sveltekit/index.html"
+                SVELTEKIT_INDEX_ASSET_PATH
             } else {
                 return null
             }
 
         try {
-            val mimeType = guessMimeType(assetPath)
-            val inputStream = view.context.assets.open(assetPath)
-            val response = WebResourceResponse(mimeType, null, inputStream)
+            val response =
+                if (assetPath == SVELTEKIT_INDEX_ASSET_PATH) {
+                    val html =
+                        view.context.assets
+                            .open(assetPath)
+                            .bufferedReader(Charsets.UTF_8)
+                            .use { it.readText() }
+                    val patchedHtml = injectLegacyWebViewPolyfills(html)
+                    WebResourceResponse(
+                        "text/html",
+                        "utf-8",
+                        ByteArrayInputStream(patchedHtml.toByteArray(Charsets.UTF_8)),
+                    )
+                } else {
+                    val mimeType = guessMimeType(assetPath)
+                    val inputStream = view.context.assets.open(assetPath)
+                    WebResourceResponse(mimeType, null, inputStream)
+                }
             if ("immutable" in path) {
                 response.responseHeaders = mapOf("Cache-Control" to "max-age=31536000")
             }
@@ -82,7 +97,33 @@ open class PageWebViewClient : SafeWebViewClient() {
                 """document.body.style.setProperty("background-color", "$bgColor", "important");
                     console.log("Background color set");""",
             )
+            if (url?.contains("#night") == true) {
+                injectDarkModeFormFix(webView)
+            }
         }
+    }
+
+    /**
+     * Legacy WebViews don't support `color-scheme: dark`, so native form controls
+     * can become unreadable in night mode without an explicit fallback style.
+     */
+    private fun injectDarkModeFormFix(webView: WebView) {
+        webView.evaluateAfterDOMContentLoaded(
+            """
+            if (!document.getElementById('anki-dark-form-fix')) {
+                var s = document.createElement('style');
+                s.id = 'anki-dark-form-fix';
+                s.textContent =
+                    'input:not([type=checkbox]):not([type=radio]):not([type=range]),' +
+                    'select, textarea, .form-control, .form-select {' +
+                    '  background-color: #2b3035 !important;' +
+                    '  color: #dee2e6 !important;' +
+                    '  border-color: #495057 !important;' +
+                    '}';
+                document.head.appendChild(s);
+            }
+            """.trimIndent(),
+        )
     }
 
     /**
@@ -145,4 +186,42 @@ fun WebView.evaluateAfterDOMContentLoaded(
         """.trimIndent(),
         resultCallback,
     )
+}
+
+private const val SVELTEKIT_INDEX_ASSET_PATH = "backend/sveltekit/index.html"
+
+private val legacyWebViewPolyfillScript =
+    """
+    <script>
+    (function() {
+      if (!String.prototype.replaceAll) {
+        String.prototype.replaceAll = function(searchValue, replaceValue) {
+          if (searchValue instanceof RegExp) {
+            if (!searchValue.global) {
+              throw new TypeError("replaceAll called with a non-global RegExp argument");
+            }
+            return this.replace(searchValue, replaceValue);
+          }
+          var escaped = String(searchValue).replace(/[.*+?^${'$'}{}()|[\]\\]/g, "\\$&");
+          return this.replace(new RegExp(escaped, "g"), replaceValue);
+        };
+      }
+    })();
+    </script>
+    """.trimIndent()
+
+fun injectLegacyWebViewPolyfills(indexHtml: String): String {
+    if (indexHtml.contains("String.prototype.replaceAll")) {
+        return indexHtml
+    }
+    val firstScriptTagIndex = indexHtml.indexOf("<script>")
+    if (firstScriptTagIndex < 0) {
+        return legacyWebViewPolyfillScript + "\n" + indexHtml
+    }
+    return buildString(indexHtml.length + legacyWebViewPolyfillScript.length + 1) {
+        append(indexHtml, 0, firstScriptTagIndex)
+        append(legacyWebViewPolyfillScript)
+        append('\n')
+        append(indexHtml.substring(firstScriptTagIndex))
+    }
 }

@@ -71,6 +71,7 @@
     <string name="card_browser_list_my_searches_new_search_error_empty_name">Qidiruvni nomsiz saqlab boʻlmaydi</string>
     <string name="card_browser_list_my_searches_new_search_error_dup">Bu nom allaqachon mavjud</string>
     <string name="card_browser_list_my_searches_successful_save">Qidiruv saqlandi</string>
+    <string name="card_browser_list_my_searches_successful_deleted">Qidiruv oʻchirildi</string>
     <string name="no_note_to_edit">Tahrirlash uchun qayd yoʻq</string>
     <string name="card_browser_list_my_searches_remove_content">“%1$s” oʻchirilsinmi?</string>
     <string name="card_browser_change_display_order" maxLength="28">Koʻrsatish tartibini oʻzgartirish</string>
@@ -80,12 +81,12 @@
     <string name="card_details_tags">Teglar</string>
     <string-array name="card_browser_order_labels">
         <item>Tartibsiz (tezroq)</item>
-        <item>Saralash maydoni boʻyicha</item>
+        <item>Tartiblash maydoni boʻyicha</item>
         <item>Yaratilgan vaqti boʻyicha</item>
         <item>Qayd oʻzgartirilgan vaqti boʻyicha</item>
         <item>Karta oʻzgartirilgan vaqti boʻyicha</item>
         <item>Muddati boʻyicha</item>
-        <item>Vaqt oraligʻi boʻyicha</item>
+        <item>Interval boʻyicha</item>
         <item>Osonligi boʻyicha</item>
         <item>Takrorlashlar boʻyicha</item>
         <item>Unitilishlar boʻyicha</item>

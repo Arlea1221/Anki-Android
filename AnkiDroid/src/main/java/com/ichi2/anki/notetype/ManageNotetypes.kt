@@ -25,6 +25,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -33,8 +34,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.ichi2.anki.AnkiActivity
-import com.ichi2.anki.CrashReportService
+import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.R
+import com.ichi2.anki.common.crashreporting.CrashReportService
 import com.ichi2.anki.databinding.ActivityManageNoteTypesBinding
 import com.ichi2.anki.dialogs.dismissLoadingDialog
 import com.ichi2.anki.dialogs.showLoadingDialog
@@ -45,6 +47,7 @@ import com.ichi2.anki.sync.userAcceptsSchemaChange
 import com.ichi2.anki.utils.Destination
 import com.ichi2.ui.AccessibleSearchView
 import com.ichi2.utils.getInputField
+import com.ichi2.utils.getInputTextLayout
 import com.ichi2.utils.input
 import com.ichi2.utils.message
 import com.ichi2.utils.negativeButton
@@ -96,6 +99,10 @@ class ManageNotetypes : AnkiActivity(R.layout.activity_manage_note_types) {
             launchCatchingTask { addNewNotesType.showAddNewNotetypeDialog() }
         }
         binding.btnClearSelection.setOnClickListener { viewModel.clearSelection() }
+
+        binding.selectionToolbar.setOnClickListener {
+            // Consume touch events to prevent tap-through
+        }
         binding.btnDeleteSelection.setOnClickListener {
             launchCatchingTask {
                 val deleteMessage =
@@ -217,7 +224,8 @@ class ManageNotetypes : AnkiActivity(R.layout.activity_manage_note_types) {
         return true
     }
 
-    private fun renameNotetype(state: NoteTypeItemState) {
+    @VisibleForTesting
+    internal fun renameNotetype(state: NoteTypeItemState) {
         launchCatchingTask {
             val allNotetypes = viewModel.state.value.noteTypes
             val dialog =
@@ -226,19 +234,41 @@ class ManageNotetypes : AnkiActivity(R.layout.activity_manage_note_types) {
                     .show {
                         title(R.string.rename_model)
                         positiveButton(R.string.rename) {
-                            val userInput = (it as AlertDialog).getInputField().text.toString()
+                            val userInput =
+                                (it as AlertDialog)
+                                    .getInputField()
+                                    .text
+                                    .toString()
+                                    .trim()
+                            if (userInput.isEmpty()) return@positiveButton
                             viewModel.rename(state.id, userInput)
                         }
                         negativeButton(R.string.dialog_cancel)
                         setView(R.layout.dialog_generic_text_input)
                     }.input(
+                        hint = TR.deckConfigNamePrompt(),
                         prefill = state.name,
                         waitForPositiveButton = false,
                         displayKeyboard = true,
                         callback = { dialog, text ->
-                            val isNotADuplicate =
-                                !allNotetypes.map { it.name }.contains(text.toString())
-                            dialog.positiveButton.isEnabled = text.isNotEmpty() && isNotADuplicate
+                            val inputStr = text.toString().trim()
+
+                            val isDuplicate = allNotetypes.any { it.name.equals(inputStr, ignoreCase = true) }
+
+                            val isUnchanged = inputStr == state.name
+
+                            if (inputStr.isBlank()) {
+                                dialog.getInputTextLayout().error = null
+                                dialog.positiveButton.isEnabled = false
+                                return@input
+                            } else if (isDuplicate && !isUnchanged) {
+                                dialog.getInputTextLayout().error = getString(R.string.error_name_exists)
+                                dialog.positiveButton.isEnabled = false
+                                return@input
+                            }
+
+                            dialog.getInputTextLayout().error = null
+                            dialog.positiveButton.isEnabled = !isUnchanged
                         },
                     )
             // start with the button disabled as dialog shows the initial name
@@ -246,7 +276,8 @@ class ManageNotetypes : AnkiActivity(R.layout.activity_manage_note_types) {
         }
     }
 
-    private fun deleteNotetype(state: NoteTypeItemState) {
+    @VisibleForTesting
+    internal fun deleteNotetype(state: NoteTypeItemState) {
         launchCatchingTask {
             @StringRes val messageResourceId: Int? =
                 if (userAcceptsSchemaChange()) {

@@ -20,8 +20,8 @@ import android.app.Activity
 import android.os.Bundle
 import android.os.Process
 import com.ichi2.anki.AnkiDroidApp
-import com.ichi2.anki.CrashReportService
 import com.ichi2.anki.R
+import com.ichi2.anki.common.crashreporting.CrashReportService
 import com.ichi2.anki.exception.ManuallyReportedException
 import com.ichi2.anki.showThemedToast
 import com.ichi2.themes.Themes
@@ -48,6 +48,7 @@ object AppLoadedFromBackupWorkaround {
         if (AnkiDroidApp.isInitialized) {
             return false
         }
+        // TODO: Timber likely does not work on this path - maybe add a check in IntentHandler
 
         // #7630: Can be triggered with `adb shell bmgr restore com.ichi2.anki` after AnkiDroid settings are changed.
         // Application.onCreate() is not called if:
@@ -73,7 +74,10 @@ object AppLoadedFromBackupWorkaround {
         Themes.setTheme(this)
         // Avoids a SuperNotCalledException
         activitySuperOnCreate(savedInstanceState)
-        finish()
+        // Process.killProcess is a hard kill. I suspect that some Android OSes leave has the app in
+        // an invalid state after this occurs (meaning Application.onCreate is not called).
+        // Before killProcess, gracefully kill the app, removing it from the recents list
+        finishAndRemoveTask()
 
         // If we don't kill the process, the backup is not "done" and reopening the app show the same message.
         Thread {

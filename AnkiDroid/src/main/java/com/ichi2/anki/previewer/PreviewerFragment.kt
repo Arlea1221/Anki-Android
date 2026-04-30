@@ -17,6 +17,7 @@ package com.ichi2.anki.previewer
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.Menu
@@ -24,6 +25,8 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
+import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -34,7 +37,7 @@ import com.ichi2.anki.Flag
 import com.ichi2.anki.R
 import com.ichi2.anki.browser.IdsFile
 import com.ichi2.anki.common.annotations.NeedsTest
-import com.ichi2.anki.databinding.PreviewerBinding
+import com.ichi2.anki.databinding.FragmentPreviewerBinding
 import com.ichi2.anki.previewer.PreviewerFragment.Companion.CARD_IDS_FILE_ARG
 import com.ichi2.anki.reviewer.BindingMap
 import com.ichi2.anki.reviewer.BindingProcessor
@@ -42,6 +45,7 @@ import com.ichi2.anki.reviewer.MappableBinding
 import com.ichi2.anki.snackbar.BaseSnackbarBuilderProvider
 import com.ichi2.anki.snackbar.SnackbarBuilder
 import com.ichi2.anki.utils.ext.collectIn
+import com.ichi2.anki.utils.ext.setIconRes
 import com.ichi2.anki.utils.ext.sharedPrefs
 import com.ichi2.anki.workarounds.SafeWebViewLayout
 import com.ichi2.utils.performClickIfEnabled
@@ -50,13 +54,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class PreviewerFragment :
-    CardViewerFragment(R.layout.previewer),
+    CardViewerFragment(R.layout.fragment_previewer),
     Toolbar.OnMenuItemClickListener,
     BaseSnackbarBuilderProvider,
     DispatchKeyEventListener,
     BindingProcessor<MappableBinding, PreviewerAction> {
     override val viewModel: PreviewerViewModel by viewModels()
-    private val binding by viewBinding(PreviewerBinding::bind)
+    private val binding by viewBinding(FragmentPreviewerBinding::bind)
     override val webViewLayout: SafeWebViewLayout get() = binding.webViewLayout
 
     override val baseSnackbarBuilder: SnackbarBuilder
@@ -133,9 +137,15 @@ class PreviewerFragment :
 
         binding.slider.apply {
             valueTo = cardsCount.toFloat()
+            doOnLayout {
+                updateSliderGestureExclusion(this)
+            }
+            addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+                updateSliderGestureExclusion(this)
+            }
             addOnSliderTouchListener(
                 object : Slider.OnSliderTouchListener {
-                    override fun onStartTrackingTouch(slider: Slider) {}
+                    override fun onStartTrackingTouch(slider: Slider) = Unit
 
                     override fun onStopTrackingTouch(slider: Slider) {
                         viewModel.onSliderChange(slider.value.toInt())
@@ -182,6 +192,13 @@ class PreviewerFragment :
         binding.webviewContainer.setFrameStyle()
 
         bindingMap = BindingMap(sharedPrefs(), PreviewerAction.entries, this)
+    }
+
+    private fun updateSliderGestureExclusion(slider: Slider) {
+        ViewCompat.setSystemGestureExclusionRects(
+            slider,
+            listOf(Rect(0, 0, slider.width, slider.height)),
+        )
     }
 
     private fun setupFlagMenu(menu: Menu) {
@@ -244,7 +261,7 @@ class PreviewerFragment :
                 setIcon(R.drawable.ic_card_answer)
                 setTitle(R.string.card_side_answer)
             } else {
-                setIcon(R.drawable.ic_card_question)
+                setIconRes(requireContext(), R.drawable.ic_card_question)
                 setTitle(R.string.card_side_both)
             }
         }

@@ -116,6 +116,7 @@
     <string name="menu_unmark_note">Desmarcar nota</string>
     <string name="menu_enable_voice_playback" maxLength="28">Ativar reprodução de voz</string>
     <string name="menu_disable_voice_playback">Desativar reprodução de voz</string>
+    <string name="menu_create_backup" maxLength="28">Create backup</string>
     <string name="new_deck">Criar baralho</string>
     <string name="new_dynamic_deck">Criar baralho filtrado</string>
     <string name="directory_inaccessible">A diretoria AnkiDroid está inacessível</string>
@@ -129,7 +130,7 @@
     <string name="empty_cram_label" maxLength="28">Esvaziar</string>
     <string name="create_subdeck">Criar sub-baralho</string>
     <string name="empty_filtered_deck">A esvaziar baralho filtrado&#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">Pesquisar baralhos</string>
+    <string name="search_deck" comment="Deck search for selecting it">Deck search</string>
     <string name="empty_deck">Este baralho está vazio</string>
     <string name="invalid_deck_name">Nome de baralho inválido</string>
     <string name="studyoptions_congrats_finished">Parabéns! Por hoje, acabou.</string>
@@ -144,7 +145,6 @@
     <string name="syncing_media">A sincronizar ficheiros de multimédia</string>
     <string name="export_deck" maxLength="28">Exportar baralho</string>
     <string name="export_collection">Exportar Colecção</string>
-    <string name="nothing">Nada</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">Tipos de ficha</string>
     <string name="card_template_editor_front">Modelo da frente</string>
@@ -212,6 +212,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">Eliminar conta</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">Cartão instantâneo</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Internet</string>
+    <string name="permission_access_summary">Required for the app to work</string>
+    <string name="permission_required_message">Please grant AnkiDroid the ‘%s’ permission to continue</string>
     <!-- Multiple profile -->
     <string name="add_profile">Add profile</string>
 </resources>

@@ -116,6 +116,7 @@
     <string name="menu_unmark_note">குறிப்பு குறிக்கப்படாது</string>
     <string name="menu_enable_voice_playback" maxLength="28">குரல் பின்னணியை இயக்கு</string>
     <string name="menu_disable_voice_playback">குரல் பின்னணியை முடக்கு</string>
+    <string name="menu_create_backup" maxLength="28">Create backup</string>
     <string name="new_deck">டெக் உருவாக்கவும்</string>
     <string name="new_dynamic_deck">வடிகட்டப்பட்ட டெக் உருவாக்கவும்</string>
     <string name="directory_inaccessible">AnkiDroid அடைவு அணுகக்கூடியதாக</string>
@@ -129,7 +130,7 @@
     <string name="empty_cram_label" maxLength="28">காலி</string>
     <string name="create_subdeck">துணைத் தளத்தை உருவாக்கவும்</string>
     <string name="empty_filtered_deck">வடிகட்டிய தளத்தைக் காலி செய்கிறது&#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">டெக் தேடல்</string>
+    <string name="search_deck" comment="Deck search for selecting it">Deck search</string>
     <string name="empty_deck">இந்த கட்டு காலியாக உள்ளது</string>
     <string name="invalid_deck_name">தவறான தளத்தின் பெயர்</string>
     <string name="studyoptions_congrats_finished">Congratulations! You have finished for today.</string>
@@ -144,7 +145,6 @@
     <string name="syncing_media">மீடியாவை ஒத்திசைக்கிறது</string>
     <string name="export_deck" maxLength="28">ஏற்றுமதி டெக்</string>
     <string name="export_collection">ஏற்றுமதி சேகரிப்பு</string>
-    <string name="nothing">எதுவும் இல்லை</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">அட்டை வகைகள்</string>
     <string name="card_template_editor_front">முன் வார்ப்புரு</string>
@@ -212,6 +212,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">கணக்கை அகற்று</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">உடனடி அட்டை</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Internet</string>
+    <string name="permission_access_summary">Required for the app to work</string>
+    <string name="permission_required_message">Please grant AnkiDroid the ‘%s’ permission to continue</string>
     <!-- Multiple profile -->
     <string name="add_profile">Add profile</string>
 </resources>

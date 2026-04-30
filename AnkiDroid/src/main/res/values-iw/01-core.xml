@@ -123,6 +123,7 @@
     <string name="menu_unmark_note">הסר סימון רשומה</string>
     <string name="menu_enable_voice_playback" maxLength="28">אפשר הפעלה קולית</string>
     <string name="menu_disable_voice_playback">השבת השמעה קולית</string>
+    <string name="menu_create_backup" maxLength="28">Create backup</string>
     <string name="new_deck">יצירת חפיסה</string>
     <string name="new_dynamic_deck">יצירת חפיסה מסוננת</string>
     <string name="directory_inaccessible">הספרייה של AnkiDroid אינה נגישה</string>
@@ -136,7 +137,7 @@
     <string name="empty_cram_label" maxLength="28">ריקון</string>
     <string name="create_subdeck">צור חפיסת משנה</string>
     <string name="empty_filtered_deck">מרוקן חפיסה מסוננת&#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">חיפוש חפיסה</string>
+    <string name="search_deck" comment="Deck search for selecting it">Deck search</string>
     <string name="empty_deck">החפיסה ריקה</string>
     <string name="invalid_deck_name">שם חפיסה לא חוקי</string>
     <string name="studyoptions_congrats_finished">כל הכבוד! סיימת להיום.</string>
@@ -151,7 +152,6 @@
     <string name="syncing_media">מסנכרן מדיה</string>
     <string name="export_deck" maxLength="28">ייצוא חפיסה</string>
     <string name="export_collection">ייצא אוסף</string>
-    <string name="nothing">ריק</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">סוגי כרטיסים</string>
     <string name="card_template_editor_front">תבנית קדמית</string>
@@ -223,6 +223,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">הסר חשבון</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">כרטיס מיידי</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Internet</string>
+    <string name="permission_access_summary">Required for the app to work</string>
+    <string name="permission_required_message">Please grant AnkiDroid the ‘%s’ permission to continue</string>
     <!-- Multiple profile -->
     <string name="add_profile">הוסף פרופיל</string>
 </resources>

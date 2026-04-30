@@ -84,6 +84,7 @@ import com.ichi2.anki.Whiteboard.OnPaintColorChangeListener
 import com.ichi2.anki.cardviewer.Gesture
 import com.ichi2.anki.cardviewer.ViewerCommand
 import com.ichi2.anki.common.annotations.NeedsTest
+import com.ichi2.anki.common.crashreporting.CrashReportService
 import com.ichi2.anki.common.time.TimeManager
 import com.ichi2.anki.libanki.Card
 import com.ichi2.anki.libanki.CardId
@@ -130,7 +131,7 @@ import com.ichi2.anki.servicelayer.NoteService.toggleMark
 import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.settings.enums.DayTheme
 import com.ichi2.anki.snackbar.showSnackbar
-import com.ichi2.anki.ui.internationalization.toSentenceCase
+import com.ichi2.anki.ui.internationalization.sentenceCase
 import com.ichi2.anki.ui.windows.reviewer.ReviewerFragment
 import com.ichi2.anki.utils.ext.cardStatsNoCardClean
 import com.ichi2.anki.utils.ext.currentCardStudy
@@ -258,8 +259,6 @@ open class Reviewer :
             ActivityResultContracts.StartActivityForResult(),
             FlashCardViewerResultCallback(),
         )
-
-    private val flagItemIds = mutableSetOf<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (showedActivityFailedScreen(savedInstanceState)) {
@@ -405,9 +404,9 @@ open class Reviewer :
 
     override fun getContentViewAttr(fullscreenMode: FullScreenMode): Int =
         when (fullscreenMode) {
-            FullScreenMode.BUTTONS_ONLY -> R.layout.reviewer_fullscreen
-            FullScreenMode.FULLSCREEN_ALL_GONE -> R.layout.reviewer_fullscreen_noanswers
-            FullScreenMode.BUTTONS_AND_MENU -> R.layout.reviewer
+            FullScreenMode.BUTTONS_ONLY -> R.layout.activity_reviewer_fullscreen
+            FullScreenMode.FULLSCREEN_ALL_GONE -> R.layout.activity_reviewer_fullscreen_noanswers
+            FullScreenMode.BUTTONS_AND_MENU -> R.layout.activity_reviewer
         }
 
     public override fun fitsSystemWindows(): Boolean = !fullscreenMode.isFullScreenReview()
@@ -1088,8 +1087,7 @@ open class Reviewer :
         }
 
         // Anki Desktop Translations
-        menu.findItem(R.id.action_reschedule_card).title =
-            CollectionManager.TR.actionsSetDueDate().toSentenceCase(R.string.sentence_set_due_date)
+        menu.findItem(R.id.action_reschedule_card).title = TR.sentenceCase.setDueDate
 
         // Undo button
         @DrawableRes val undoIconId: Int
@@ -1262,7 +1260,6 @@ open class Reviewer :
         lifecycleScope.launch {
             for ((flag, displayName) in Flag.queryDisplayNames()) {
                 subMenu.findItem(flag.id).title = displayName
-                flagItemIds.add(flag.id)
             }
         }
     }
@@ -2046,6 +2043,8 @@ open class Reviewer :
 
         /** Default (500ms) time for action snackbars, such as undo, bury and suspend */
         const val ACTION_SNACKBAR_TIME = 500
+
+        private val flagItemIds: Set<Int> = Flag.entries.map { it.id }.toSet()
 
         fun getIntent(context: Context): Intent =
             if (Prefs.isNewStudyScreenEnabled) {

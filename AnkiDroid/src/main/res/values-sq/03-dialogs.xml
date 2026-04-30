@@ -44,8 +44,7 @@
 ~ this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="check_db_title">Kontrolloni bazën e të dhënave?</string>
-    <string name="check_db_warning">Kjo mund të marrë një kohë të gjatë</string>
+    <string name="check_db_warning">This may take a long time. Proceed?</string>
     <string name="contextmenu_deckpicker_delete_deck" maxLength="28">Fshi kuvertën</string>
     <string name="delete_deck_title">Të fshihet kuverta?</string>
     <plurals name="delete_deck_message">
@@ -83,11 +82,14 @@
     <string name="restore_backup_choose_another">Zgjidhni një tjetër</string>
     <string name="dialog_cancel">Anulo</string>
     <string name="dialog_ok">Ne rregull</string>
+    <string name="dialog_add" comment="Positive dialog action button label to add \'something\'">Add</string>
+    <string name="restore">Restore</string>
     <string name="dialog_confirm" tools:ignore="UnusedResources">Konfirmo</string>
     <string name="dialog_no">Jo</string>
     <string name="dialog_yes">Po</string>
     <string name="dialog_keep">Ruaj</string>
     <string name="dialog_remove">Hiqe</string>
+    <string name="dialog_exit" comment="Label for a button which will exit/finish the current screen">Exit</string>
     <string name="dialog_continue">Vazhdo</string>
     <string name="dialog_processing">Po procesohet&#8230;</string>
     <string name="dialog_positive_create" comment="Create a new collection, probably erasing the previous one, may be necessary in case of error.">Krijoni</string>
@@ -102,8 +104,7 @@
     <string name="dialog_invalid_custom_certificate_title">Error parsing certificate</string>
     <string name="dialog_updated_custom_certificate">Certificate updated</string>
     <!-- Media checking -->
-    <string name="check_media_title">Kontrolloni median?</string>
-    <string name="check_media_warning">Kjo mund të zgjasë shumë me koleksionet e mëdha mediatike</string>
+    <string name="check_media_warning">This may take a long time with large media collections. Proceed?</string>
     <string name="check_media_message">Po kontrollon median&#8230;</string>
     <string name="check_media_adding_missing_tag">Adding tags&#8230;</string>
     <string name="check_media_tags_added">Tags added</string>
@@ -127,8 +128,6 @@
     <string name="permission_denied">Permission denied</string>
     <string name="recording_permission_denied_message">Microphone permission is necessary for the “Record voice” feature. Please grant it in the app settings.</string>
     <!-- Database Integrity Check -->
-    <string name="integrity_check_startup_title">AnkiDroid i përmirësuar</string>
-    <string name="integrity_check_startup_content">AnkiDroid është përmirësuar. Ky përditësim përfshin rregullime për problemet e mundshme të bazës së të dhënave dhe ne ju këshillojmë të ekzekutoni kontrollin e bazës së të dhënave tani.</string>
     <string name="integrity_check_continue_anyway">Vazhdoni Gjithsesi</string>
     <string name="integrity_check_insufficient_space">Kontrollo Baza e të dhënave përdor një sasi të madhe ruajtjeje të përkohshme.\n\nRekomandohet fuqimisht që të kesh të paktën %s hapësirë ​​të lirë në pajisjen tënde përpara se të vazhdosh.</string>
     <string name="integrity_check_insufficient_space_extra_content">\n\nAktualisht keni %s falas.</string>
@@ -213,8 +212,6 @@
     <string name="dismiss_backup_warning_title">Data loss warning</string>
     <string name="dismiss_backup_warning_new_user">Due to Android privacy changes, your data and automated backups will be deleted from your phone if the app is uninstalled</string>
     <string name="dismiss_backup_warning_upgrade">Due to Android privacy changes, your data and automated backups will be inaccessible if the app is uninstalled</string>
-    <string name="deck_already_exists">Deck already exists</string>
-    <string name="empty_deck_name">Deck name cannot be empty</string>
     <string name="create_deck_numeric_hint">If you have deck ordering issues (e.g. ‘10’ appears before ‘2’), replace ‘2’ with ‘02’</string>
     <!-- Set Due Date -->
     <string name="set_due_date_match_interval" comment="when setting a card\'s due date, this checkbox also changes the interval of the card">Set interval to same value</string>
@@ -270,4 +267,16 @@
     <string name="different_note_types_selected">Please select notes from only one notetype.</string>
     <string name="error_no_changes_to_save">No changes to save</string>
     <string name="choose_color">Choose color</string>
+    <!-- Special Fields -->
+    <string name="standard_fields_tab_header" comment="Tab header for inserting non-special fields: {{Front}}">Fields</string>
+    <string name="special_fields_tab_header" comment="Tab header for inserting special fields: {{Deck}}">Special</string>
+    <string name="special_field_example_suffix"><![CDATA[: ‘<b>%1$s</b>’]]></string>
+    <string name="special_field_front_side_help">The front template content. Audio is not automatically played</string>
+    <string name="special_field_deck_help" comment="%s: either blank or \' %s\'">The full deck of the card, including parent decks%s</string>
+    <string name="special_field_subdeck_help" comment="%s: either blank or \' %s\'">The current deck of the card, excluding parent decks%s</string>
+    <string name="special_field_flag_help">Outputs ‘%1$s’, where %2$s is the flag code (%3$s\–%4$s\)</string>
+    <string name="special_field_tags_help" comment="%s: either blank or \' %s\'">The tags of the note%s</string>
+    <string name="special_field_card_id_help" comment="%s: either blank or \' %s\'">The ID of the card%s</string>
+    <string name="special_field_card_help" comment="%s: either blank or \' %s\'">The name of the card template%s</string>
+    <string name="special_field_type_help" comment="%s: either blank or \' %s\'">The name of the note type%s</string>
 </resources>

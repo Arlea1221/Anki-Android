@@ -116,6 +116,7 @@
     <string name="menu_unmark_note">नोट अचिह्नित करें</string>
     <string name="menu_enable_voice_playback" maxLength="28">ध्वनि प्लेबैक सक्षम करें</string>
     <string name="menu_disable_voice_playback">ध्वनि प्लेबैक अक्षम करें</string>
+    <string name="menu_create_backup" maxLength="28">Create backup</string>
     <string name="new_deck">डेक बनाने</string>
     <string name="new_dynamic_deck">फ़िल्टर्ड डेक बनाएं</string>
     <string name="directory_inaccessible">AnkiDroid निर्देशिका पहुंच योग्य नहीं है</string>
@@ -129,7 +130,7 @@
     <string name="empty_cram_label" maxLength="28">खाली</string>
     <string name="create_subdeck">सबडेक बनाऐं</string>
     <string name="empty_filtered_deck">फ़िल्टर किए गए डेक को खाली करना &#8230;</string>
-    <string name="search_deck" comment="Deck search for selecting it">डेक खोज</string>
+    <string name="search_deck" comment="Deck search for selecting it">Deck search</string>
     <string name="empty_deck">इस डेक खाली है</string>
     <string name="invalid_deck_name">अमान्य डेक नाम</string>
     <string name="studyoptions_congrats_finished">मुबारक! आपने आज का काम पूरा कर दिया है.</string>
@@ -144,7 +145,6 @@
     <string name="syncing_media">सिंकिंग मीडिया</string>
     <string name="export_deck" maxLength="28">निर्यात डेक</string>
     <string name="export_collection">निर्यात संग्रह</string>
-    <string name="nothing">कुछ नहीं</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">कार्ड के प्रकार</string>
     <string name="card_template_editor_front">फ्रंट टेम्पलेट</string>
@@ -214,6 +214,10 @@ Back - बैक</string>
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">खाता हटाएं</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">तत्काल कार्ड</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Internet</string>
+    <string name="permission_access_summary">Required for the app to work</string>
+    <string name="permission_required_message">Please grant AnkiDroid the ‘%s’ permission to continue</string>
     <!-- Multiple profile -->
     <string name="add_profile">Add profile</string>
 </resources>

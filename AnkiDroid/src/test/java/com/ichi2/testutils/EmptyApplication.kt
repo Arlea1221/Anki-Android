@@ -18,6 +18,22 @@ package com.ichi2.testutils
 import android.app.Application
 import com.ichi2.anki.AnkiDroidApp
 
+/**
+ * A performance improvement to be used to avoid the startup cost of [AnkiDroidApp].
+ *
+ * usage:
+ *
+ * ```kt
+ * @Config(application = EmptyApplication::class)
+ * @Category(EmptyApplicationCategory::class)
+ * ```
+ *
+ * test with:
+ *
+ * ```bash
+ * ./gradlew testFullDebugUnitTest -PemptyApplication
+ * ```
+ */
 class EmptyApplication : Application() {
     override fun onCreate() {
         super.onCreate()

@@ -66,7 +66,6 @@
     <string name="lost_mail_instructions">שכחת את הדוא\"ל?</string>
     <string name="sign_in">מתחבר</string>
     <!-- AndroidManifest.xml -->
-    <string name="deckpreferences_title">אפשרויות עבור XXX</string>
     <string name="sync_title">סנכרון</string>
     <string name="sync_log_uploading_message">סנכרון מלא מהמקומי</string>
     <string name="sync_database_acknowledge">האוסף סונכרן</string>
@@ -78,7 +77,6 @@
     <string name="one_way_sync_title" maxLength="41">סנכרון בכיוון אחד</string>
     <string name="one_way_sync_confirmation">נדרש סנכרון בכיוון אחד</string>
     <string name="full_sync_confirmation">השינוי שביקשת לבצע יחייב העלאה של כל מסד הנתונים בסנכרון הבא של אוסף החפיסות. אם יש שינונים או שינויים אחרים במכשיר אחר שלא סונכרנו עדיין, הם יאבדו. להמשיך?</string>
-    <string name="full_sync_confirmation_upgrade">עקב באג בגרסת AnkiDroid קודמת שהותקנה מומלץ לבצע סינכרון מלא.</string>
     <!-- Deck Picker Sync Icon -->
     <string name="sync_menu_title_one_way_sync">סנכרון (בכיוון אחד)</string>
     <string name="sync_menu_title_no_account">סנכרון (מתחבר)</string>

@@ -1,18 +1,16 @@
 
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.extension.impl.AndroidComponentsExtensionImpl
+import com.ichi2.anki.gradle.GitHubActionsTestListener
+import com.ichi2.anki.gradle.TestSummaryService
 import com.slack.keeper.optInToKeeper
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.internal.jvm.Jvm
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.file.StandardOpenOption
 import java.util.Properties
 import kotlin.math.max
 import kotlin.system.exitProcess
-import kotlin.time.Duration.Companion.milliseconds
 
 
 // Top-level build file where you can add configuration options common to all subprojects/modules.
@@ -34,7 +32,15 @@ if (project.rootProject.file("local.properties").exists()) {
 val fatalWarnings = localProperties["fatal_warnings"] != "false"
 
 // can't be obtained inside 'subprojects'
-val ktlintVersion: String? = libs.versions.ktlint.get()
+val ktlintVersion: String = libs.versions.ktlint.get()
+
+// Shared state for the GitHub Actions test summary listener.
+// Only registered when running under GitHub Actions; null otherwise.
+val testSummaryService = System.getenv("GITHUB_STEP_SUMMARY")?.let { path ->
+    gradle.sharedServices.registerIfAbsent("testSummaryService", TestSummaryService::class) {
+        parameters.path.set(path)
+    }
+}
 
 // Here we extract per-module "best practices" settings to a single top-level evaluation
 subprojects {
@@ -45,7 +51,7 @@ subprojects {
 
     afterEvaluate {
         plugins.withType<com.android.build.gradle.BasePlugin> {
-            val androidExtension = extensions.getByName("android") as CommonExtension<*, *, *, *, *, *>
+            val androidExtension = extensions.getByName("android") as CommonExtension
             androidExtension.testOptions.unitTests {
                 isIncludeAndroidResources = true
             }
@@ -63,13 +69,10 @@ subprojects {
                     exceptionFormat = TestExceptionFormat.FULL
                 }
 
-                // CI: Log the test results
-                it.afterSuite(KotlinClosure2<TestDescriptor, TestResult, Unit>({ desc, result ->
-                    if (desc.parent != null) {
-                        return@KotlinClosure2 // only log for the root suite
-                    }
-                    logTestResultsToGitHubActions(desc, result)
-                }))
+                // CI: Log test results to the GitHub Actions step summary.
+                testSummaryService?.let { service ->
+                    it.addTestListener(GitHubActionsTestListener(service))
+                }
 
                 it.maxParallelForks = gradleTestMaxParallelForks
                 it.forkEvery = 40
@@ -95,15 +98,31 @@ subprojects {
         (see https://youtrack.jetbrains.com/issue/KT-28777/Using-experimental-coroutines-api-causes-unresolved-dependency)
          */
         tasks.withType(KotlinCompile::class.java).configureEach {
+            // We use `isInIdeaSync` to resolve a mismatch between Android Studio's code analyzer
+            // and the Kotlin 2.3 compiler regarding Explicit Backing Fields. The IDE requires
+            // the unsafe '-XXLanguage' flag to clear false syntax errors, but the actual compiler
+            // crashes if it receives this flag due to our strict 'warnings as errors'.
+            // This workaround safely feeds the unsafe flag *only* to the IDE during Gradle sync,
+            // while passing the standard, crash-free flag to the compiler during the actual build.
+            val isInIdeaSync = System.getProperty("idea.sync.active").toBoolean()
+
             compilerOptions {
                 allWarningsAsErrors = fatalWarnings
                 val compilerArgs = mutableListOf(
                     // https://youtrack.jetbrains.com/issue/KT-73255
                     // Apply @StringRes to both constructor params and generated properties
-                    "-Xannotation-default-target=param-property"
+                    "-Xannotation-default-target=param-property",
+                    "-Xexplicit-backing-fields"
                 )
-                if (project.name != "api") {
+
+                if (isInIdeaSync) {
+                    compilerArgs += "-XXLanguage:+ExplicitBackingFields"
+                }
+
+                if (project.path !in listOf(":api", ":common", ":common:android")) {
                     compilerArgs += "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+                }
+                if (project.path != ":api") {
                     compilerArgs += "-Xcontext-parameters"
                 }
                 freeCompilerArgs = compilerArgs
@@ -113,7 +132,7 @@ subprojects {
 }
 
 val jvmVersion = Jvm.current().javaVersion?.majorVersion.parseIntOrDefault(defaultValue = 0)
-val minSdk: String? = libs.versions.minSdk.get()
+val minSdk: String = libs.versions.minSdk.get()
 val jvmVersionLowerBound = 21
 val jvmVersionUpperBound = 25
 if (jvmVersion !in jvmVersionLowerBound..jvmVersionUpperBound) {
@@ -168,36 +187,3 @@ val gradleTestMaxParallelForks by extra(
 )
 
 private fun String?.parseIntOrDefault(defaultValue: Int): Int = this?.toIntOrNull() ?: defaultValue
-
-private fun logTestResultsToGitHubActions(desc: TestDescriptor, result: TestResult) {
-    if (!ciBuild) return
-
-    val elapsed = (result.endTime - result.startTime).milliseconds
-
-    val tests = result.testCount
-    val passed = result.successfulTestCount
-    val failed = result.failedTestCount
-    val skipped = result.skippedTestCount
-
-    // Gradle Test Run :AnkiDroid:testPlayDebugUnitTest returned SUCCESS in 5m 30s
-    val markdownSummary = """
-                        |${desc.displayName} returned **${result.resultType}** in $elapsed
-                        || Tests | Passed | Failed | Skipped |
-                        ||-------|--------|--------|---------|
-                        || $tests| $passed| $failed| $skipped|
-                        |----
-                    """.trimMargin()
-
-    appendToGitHubActionsSummary(markdownSummary)
-}
-
-private fun appendToGitHubActionsSummary(message: String) {
-    if (!ciBuild) return
-    val summaryPath = System.getenv("GITHUB_STEP_SUMMARY") ?: return
-    Files.writeString(
-        Paths.get(summaryPath),
-        message,
-        StandardOpenOption.CREATE,
-        StandardOpenOption.APPEND
-    )
-}

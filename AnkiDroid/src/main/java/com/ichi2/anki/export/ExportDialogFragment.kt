@@ -23,7 +23,6 @@ import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AlertDialog
-import androidx.core.os.BundleCompat
 import androidx.core.os.bundleOf
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
@@ -36,11 +35,12 @@ import anki.import_export.exportLimit
 import anki.notes.noteIds
 import com.ichi2.anki.ALL_DECKS_ID
 import com.ichi2.anki.CollectionManager
+import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.CollectionManager.withCol
 import com.ichi2.anki.R
-import com.ichi2.anki.common.annotations.NeedsTest
 import com.ichi2.anki.common.time.TimeManager
 import com.ichi2.anki.common.time.getTimestamp
+import com.ichi2.anki.compat.CompatHelper.Companion.getSerializableCompat
 import com.ichi2.anki.databinding.DialogExportOptionsBinding
 import com.ichi2.anki.exportApkgPackage
 import com.ichi2.anki.exportCollectionPackage
@@ -50,7 +50,6 @@ import com.ichi2.anki.libanki.DeckId
 import com.ichi2.anki.libanki.DeckNameId
 import com.ichi2.anki.requireAnkiActivity
 import com.ichi2.anki.ui.BasicItemSelectedListener
-import com.ichi2.compat.CompatHelper.Companion.getSerializableCompat
 import com.ichi2.utils.negativeButton
 import com.ichi2.utils.positiveButton
 import kotlinx.coroutines.launch
@@ -88,7 +87,7 @@ class ExportDialogFragment : DialogFragment() {
             .Builder(requireActivity())
             .setView(binding.root)
             .negativeButton(R.string.dialog_cancel)
-            .positiveButton(R.string.dialog_ok) {
+            .positiveButton(text = TR.actionsExport()) {
                 val selectedIndex = binding.exportTypeSelector.selectedItemPosition
                 // just to be safe, if not exporting a collection and the decks spinner is not
                 // enabled(the user was really fast or fetching the decks is delayed for some
@@ -185,7 +184,6 @@ class ExportDialogFragment : DialogFragment() {
     /**
      * Initializes the views representing the extra options available when exporting a collection.
      */
-    @NeedsTest("Checkbox value is provided to the correct export functions (true/false)")
     private fun DialogExportOptionsBinding.initializeCollectionExportUi() =
         with(CollectionManager.TR) {
             collectionIncludeMedia.text = exportingIncludeMedia()
@@ -195,7 +193,6 @@ class ExportDialogFragment : DialogFragment() {
     /**
      * Initializes the views representing the extra options available when exporting an Anki package.
      */
-    @NeedsTest("Checkbox value is provided to the correct export functions (true/false)")
     private fun DialogExportOptionsBinding.initializeApkgExportUi() =
         with(CollectionManager.TR) {
             apkgIncludeMedia.text = exportingIncludeMedia()
@@ -331,18 +328,16 @@ class ExportDialogFragment : DialogFragment() {
         when (arguments?.getSerializableCompat<ExportType>(ARG_TYPE)) {
             ExportType.Notes -> {
                 val selectedNotesIds =
-                    arguments?.let {
-                        BundleCompat.getParcelableArrayList(it, ARG_EXPORTED_IDS, Long::class.java)
-                    } ?: error("Requested export for selected notes but no notes ids were passed in!")
+                    arguments?.getLongArray(ARG_EXPORTED_IDS)
+                        ?: error("Requested export for selected notes but no notes ids were passed in!")
                 exportLimit { noteIds = noteIds { this.noteIds.addAll(selectedNotesIds.toList()) } }
             }
 
             ExportType.Cards -> {
                 val selectedCardIds =
-                    arguments?.let {
-                        BundleCompat.getParcelableArrayList(it, ARG_EXPORTED_IDS, Long::class.java)
-                    } ?: error("Requested export for selected cards but no cards ids were passed in!")
-                exportLimit { cardIds = cardIds { this.cids.addAll(selectedCardIds) } }
+                    arguments?.getLongArray(ARG_EXPORTED_IDS)
+                        ?: error("Requested export for selected cards but no cards ids were passed in!")
+                exportLimit { cardIds = cardIds { this.cids.addAll(selectedCardIds.toList()) } }
             }
             // notes/cards weren't selected so export the chosen decks
             null -> {
@@ -449,10 +444,10 @@ class ExportDialogFragment : DialogFragment() {
             ids: List<Long>,
         ) = ExportDialogFragment().apply {
             arguments =
-                bundleOf(
-                    ARG_TYPE to type,
-                    ARG_EXPORTED_IDS to ids,
-                )
+                Bundle().apply {
+                    putSerializable(ARG_TYPE, type)
+                    putLongArray(ARG_EXPORTED_IDS, ids.toLongArray())
+                }
         }
     }
 }

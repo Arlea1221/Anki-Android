@@ -17,7 +17,6 @@
 
 package com.ichi2.anki.dialogs
 
-import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -42,7 +41,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.color.MaterialColors
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -52,10 +50,10 @@ import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.CrashReportData.Companion.toCrashReportData
 import com.ichi2.anki.R
 import com.ichi2.anki.analytics.AnalyticsDialogFragment
-import com.ichi2.anki.databinding.ChangeNoteTypeDialogBinding
+import com.ichi2.anki.databinding.DialogChangeNoteTypeBinding
 import com.ichi2.anki.databinding.DialogFieldsBinding
 import com.ichi2.anki.databinding.DialogTemplatesBinding
-import com.ichi2.anki.databinding.TabLayoutIconOnEndBinding
+import com.ichi2.anki.databinding.ViewTabLayoutIconOnEndBinding
 import com.ichi2.anki.dialogs.ChangeNoteTypeDialog.SelectTemplateFragment.Layout.Standard
 import com.ichi2.anki.dialogs.ChangeNoteTypeDialog.SelectTemplateFragment.Layout.WithWarning
 import com.ichi2.anki.dialogs.ConversionType.CLOZE_TO_CLOZE
@@ -68,17 +66,13 @@ import com.ichi2.anki.libanki.NoteTypeId
 import com.ichi2.anki.requireAnkiActivity
 import com.ichi2.anki.showError
 import com.ichi2.anki.snackbar.showSnackbar
-import com.ichi2.anki.sync.launchCatchingRequiringOneWaySyncDiscardUndo
+import com.ichi2.anki.sync.launchCatchingRequiringOneWaySync
 import com.ichi2.anki.ui.BasicItemSelectedListener
-import com.ichi2.anki.ui.internationalization.toSentenceCase
+import com.ichi2.anki.ui.internationalization.sentenceCase
 import com.ichi2.anki.utils.InitStatus
 import com.ichi2.anki.withProgress
 import com.ichi2.utils.LanguageUtil
 import com.ichi2.utils.boldList
-import com.ichi2.utils.create
-import com.ichi2.utils.negativeButton
-import com.ichi2.utils.positiveButton
-import com.ichi2.utils.title
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -101,72 +95,70 @@ import timber.log.Timber
  *
  * @see ChangeNoteTypeViewModel
  */
-class ChangeNoteTypeDialog : AnalyticsDialogFragment() {
+class ChangeNoteTypeDialog : AnalyticsDialogFragment(R.layout.dialog_change_note_type) {
     private val viewModel: ChangeNoteTypeViewModel by viewModels { defaultViewModelProviderFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setStyle(STYLE_NO_TITLE, R.style.ThemeOverlay_AnkiDroid_AlertDialog_FullScreen)
         setupFlows()
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val binding = ChangeNoteTypeDialogBinding.inflate(LayoutInflater.from(requireContext()))
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
+        super.onViewCreated(view, savedInstanceState)
+        val binding = DialogChangeNoteTypeBinding.bind(view)
 
-        return MaterialAlertDialogBuilder(requireContext())
-            .create {
-                title(
-                    text = TR.browsingChangeNotetype().toSentenceCase(R.string.sentence_change_note_type),
-                )
-                positiveButton(R.string.dialog_ok)
-                negativeButton(R.string.dialog_cancel)
-                setView(binding.root)
-            }.apply {
-                show()
-                positiveButton.setOnClickListener {
-                    requireAnkiActivity().changeNoteType(viewModel)
-                    // dismiss() is handled via closeDialogFlow
-                }
-                launchCatchingTask {
-                    viewModel.flowOfInitStatus.collect {
-                        Timber.i("dialog init: %s", it)
-                        when (it) {
-                            InitStatus.Pending, InitStatus.InProgress -> {
-                                binding.changeNoteTypeLayout.isVisible = false
-                                binding.changeNoteTypeLoadingLayout.isVisible = true
-                                positiveButton.isEnabled = false
-                            }
-                            InitStatus.Completed -> {
-                                binding.changeNoteTypeLayout.isVisible = true
-                                binding.changeNoteTypeLoadingLayout.isVisible = false
-                                positiveButton.isEnabled = true
-                                setupChangeNoteTypeDialog(binding = binding)
-                            }
-                            is InitStatus.Failed -> {
-                                requireContext().showError(it.exception.toString(), it.exception.toCrashReportData(requireContext()))
-                                dismiss()
-                            }
-                        }
+        binding.toolbar.title = TR.sentenceCase.changeNoteType
+        binding.toolbar.setNavigationOnClickListener { dismiss() }
+        binding.btnSave.setOnClickListener {
+            requireAnkiActivity().changeNoteType(viewModel)
+            // dismiss() is handled via closeDialogFlow
+        }
+
+        launchCatchingTask {
+            viewModel.flowOfInitStatus.collect {
+                Timber.i("dialog init: %s", it)
+                when (it) {
+                    InitStatus.Pending, InitStatus.InProgress -> {
+                        binding.changeNoteTypeLayout.isVisible = false
+                        binding.changeNoteTypeLoadingLayout.isVisible = true
+                        binding.btnSave.isVisible = false
+                    }
+                    InitStatus.Completed -> {
+                        binding.changeNoteTypeLayout.isVisible = true
+                        binding.changeNoteTypeLoadingLayout.isVisible = false
+                        binding.btnSave.isVisible = true
+                        setupChangeNoteTypeDialog(binding = binding)
+                    }
+                    is InitStatus.Failed -> {
+                        requireContext().showError(it.exception.toString(), it.exception.toCrashReportData(requireContext()))
+                        dismiss()
                     }
                 }
             }
+        }
     }
 
     private fun setupFlows() {
         launchCatchingTask {
             viewModel.closeDialogFlow.filterNotNull().collect {
                 Timber.i("Dismissing dialog")
+                parentFragmentManager.setFragmentResult(REQUEST_KEY_NOTE_TYPE_CHANGED, bundleOf())
                 dismiss()
             }
         }
     }
 
-    private fun setupChangeNoteTypeDialog(binding: ChangeNoteTypeDialogBinding) {
+    private fun setupChangeNoteTypeDialog(binding: DialogChangeNoteTypeBinding) {
         Timber.d("setting up dialog")
         setupNoteTypeSpinner(binding)
         setupViewPagerAndTabs(binding)
     }
 
-    private fun setupNoteTypeSpinner(binding: ChangeNoteTypeDialogBinding) {
+    private fun setupNoteTypeSpinner(binding: DialogChangeNoteTypeBinding) {
         binding.destNoteTypeSpinner.apply {
             adapter = createNoteTypeAdapter()
 
@@ -224,11 +216,11 @@ class ChangeNoteTypeDialog : AnalyticsDialogFragment() {
         }.apply {
             // The resource passed to the constructor is normally used for both the spinner view
             // and the dropdown list. This keeps the former and overrides the latter.
-            setDropDownViewResource(R.layout.spinner_dropdown_item_with_radio)
+            setDropDownViewResource(R.layout.item_spinner_dropdown_with_radio)
         }
     }
 
-    private fun setupViewPagerAndTabs(binding: ChangeNoteTypeDialogBinding) {
+    private fun setupViewPagerAndTabs(binding: DialogChangeNoteTypeBinding) {
         val viewPager = binding.changeNoteTypePager
         viewPager.adapter = ChangeNoteTypeStateAdapter(this@ChangeNoteTypeDialog)
         viewPager.registerOnPageChangeCallback(
@@ -252,7 +244,7 @@ class ChangeNoteTypeDialog : AnalyticsDialogFragment() {
         viewPager: ViewPager2,
     ): TabLayoutMediator =
         TabLayoutMediator(tabLayout, viewPager) { tab: TabLayout.Tab, position: Int ->
-            val binding = TabLayoutIconOnEndBinding.inflate(LayoutInflater.from(tabLayout.context), tabLayout, false)
+            val binding = ViewTabLayoutIconOnEndBinding.inflate(LayoutInflater.from(tabLayout.context), tabLayout, false)
             when (position) {
                 0 -> {
                     binding.tabIcon.setImageResource(R.drawable.ic_mode_edit_white)
@@ -277,6 +269,9 @@ class ChangeNoteTypeDialog : AnalyticsDialogFragment() {
 
     companion object {
         const val ARG_NOTE_IDS = "ARG_NOTE_IDS"
+
+        /** Result key emitted via `setFragmentResult` when note type change completes successfully */
+        const val REQUEST_KEY_NOTE_TYPE_CHANGED = "ChangeNoteTypeDialog::noteTypeChanged"
 
         @CheckResult
         fun newInstance(noteIds: List<NoteId>) =
@@ -326,12 +321,6 @@ class ChangeNoteTypeDialog : AnalyticsDialogFragment() {
                     }
                 }
             }
-        }
-
-        override fun onResume() {
-            super.onResume()
-            // update ViewPager2 height
-            binding.root.requestLayout()
         }
 
         fun setupFlows() {
@@ -403,7 +392,7 @@ class ChangeNoteTypeDialog : AnalyticsDialogFragment() {
                             ).apply {
                                 // The resource passed to the constructor is normally used for both the spinner view
                                 // and the dropdown list. This keeps the former and overrides the latter.
-                                this.setDropDownViewResource(R.layout.spinner_dropdown_item_with_radio)
+                                this.setDropDownViewResource(R.layout.item_spinner_dropdown_with_radio)
                             }
 
                         val selectionIndex = viewModel.fieldChangeMap[spinnerIndex] ?: fieldSpinnerOptions.lastIndex
@@ -467,16 +456,17 @@ class ChangeNoteTypeDialog : AnalyticsDialogFragment() {
             }
         }
 
-        override fun onResume() {
-            super.onResume()
-            // update ViewPager2 height
-            binding.root.requestLayout()
-        }
-
         fun setupFlows() {
             // show/hide cloze info layout based on note type
             lifecycleScope.launch {
                 viewModel.outputNoteTypeFlow.collect {
+                    createTemplateSpinner()
+                }
+            }
+
+            // Updates to (Nothing) if the map changes
+            lifecycleScope.launch {
+                viewModel.templateChangeMapFlow.collect {
                     createTemplateSpinner()
                 }
             }
@@ -590,7 +580,7 @@ class ChangeNoteTypeDialog : AnalyticsDialogFragment() {
                             ).apply {
                                 // The resource passed to the constructor is normally used for both the spinner view
                                 // and the dropdown list. This keeps the former and overrides the latter.
-                                setDropDownViewResource(R.layout.spinner_dropdown_item_with_radio)
+                                setDropDownViewResource(R.layout.item_spinner_dropdown_with_radio)
                             }
 
                         val selectionIndex = viewModel.templateChangeMap[spinnerIndex] ?: templateSpinnerOptions.lastIndex
@@ -637,7 +627,7 @@ class ChangeNoteTypeDialog : AnalyticsDialogFragment() {
  * Changes note type of multiple notes, displaying a message on success
  */
 private fun AnkiActivity.changeNoteType(viewModel: ChangeNoteTypeViewModel) =
-    this.launchCatchingRequiringOneWaySyncDiscardUndo {
+    this.launchCatchingRequiringOneWaySync {
         try {
             val notesUpdated =
                 withProgress {

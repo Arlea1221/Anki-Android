@@ -23,6 +23,7 @@ import androidx.annotation.CheckResult
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import com.ichi2.anki.AnkiActivity
+import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.ConflictResolution
 import com.ichi2.anki.R
 import com.ichi2.anki.dialogs.SyncErrorDialog.Type.DIALOG_CONNECTION_ERROR
@@ -36,8 +37,10 @@ import com.ichi2.anki.dialogs.SyncErrorDialog.Type.DIALOG_SYNC_SANITY_ERROR
 import com.ichi2.anki.dialogs.SyncErrorDialog.Type.DIALOG_SYNC_SANITY_ERROR_CONFIRM_KEEP_LOCAL
 import com.ichi2.anki.dialogs.SyncErrorDialog.Type.DIALOG_SYNC_SANITY_ERROR_CONFIRM_KEEP_REMOTE
 import com.ichi2.anki.dialogs.SyncErrorDialog.Type.DIALOG_USER_NOT_LOGGED_IN_SYNC
+import com.ichi2.anki.ui.internationalization.sentenceCase
 import com.ichi2.anki.utils.ext.dismissAllDialogFragments
 import com.ichi2.anki.utils.openUrl
+import com.ichi2.utils.titleWithHelpIcon
 
 class SyncErrorDialog : AsyncDialogFragment() {
     interface SyncErrorDialogListener {
@@ -93,8 +96,12 @@ class SyncErrorDialog : AsyncDialogFragment() {
             DIALOG_SYNC_CONFLICT_RESOLUTION -> {
                 // Sync conflict; allow user to cancel, or choose between local and remote versions
                 dialog
-                    .setIcon(R.drawable.ic_sync_problem)
-                    .setPositiveButton(R.string.sync_conflict_keep_local_new) { _, _ ->
+                    .titleWithHelpIcon(
+                        text = getString(R.string.sync_conflict_title_new),
+                        startIcon = R.drawable.ic_sync_problem,
+                    ) {
+                        requireContext().openUrl(getString(R.string.link_sync_conflict_help))
+                    }.setPositiveButton(R.string.sync_conflict_keep_local_new) { _, _ ->
                         requireSyncErrorDialogListener().showSyncErrorDialog(DIALOG_SYNC_CONFLICT_CONFIRM_KEEP_LOCAL)
                     }.setNegativeButton(R.string.sync_conflict_keep_remote_new) { _, _ ->
                         requireSyncErrorDialogListener().showSyncErrorDialog(DIALOG_SYNC_CONFLICT_CONFIRM_KEEP_REMOTE)
@@ -148,7 +155,7 @@ class SyncErrorDialog : AsyncDialogFragment() {
             }
             DIALOG_MEDIA_SYNC_ERROR -> {
                 dialog
-                    .setPositiveButton(R.string.check_media) { _, _ ->
+                    .setPositiveButton(TR.sentenceCase.checkMediaAction) { _, _ ->
                         requireSyncErrorDialogListener().mediaCheck()
                         activity?.dismissAllDialogFragments()
                     }.setNegativeButton(R.string.dialog_cancel) { _, _ -> }
@@ -164,7 +171,7 @@ class SyncErrorDialog : AsyncDialogFragment() {
             }
             DIALOG_SYNC_BASIC_CHECK_ERROR -> {
                 dialog
-                    .setPositiveButton(R.string.check_db) { _, _ ->
+                    .setPositiveButton(TR.sentenceCase.checkDatabase) { _, _ ->
                         requireSyncErrorDialogListener().integrityCheck()
                         activity?.dismissAllDialogFragments()
                     }.setNegativeButton(R.string.dialog_cancel) { _, _ -> }

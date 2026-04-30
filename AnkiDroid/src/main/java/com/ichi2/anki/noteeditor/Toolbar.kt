@@ -51,8 +51,8 @@ import com.ichi2.anki.AnkiDroidApp
 import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.NoteEditorFragment
 import com.ichi2.anki.R
+import com.ichi2.anki.compat.CompatHelper
 import com.ichi2.anki.preferences.sharedPrefs
-import com.ichi2.compat.CompatHelper
 import com.ichi2.utils.AndroidUiUtils.showSoftInput
 import com.ichi2.utils.ViewGroupUtils
 import com.ichi2.utils.ViewGroupUtils.getAllChildrenRecursive
@@ -98,7 +98,7 @@ class Toolbar : FrameLayout {
     ) : super(context, attrs, defStyleAttr, defStyleRes)
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.note_editor_toolbar, this, true)
+        LayoutInflater.from(context).inflate(R.layout.view_note_editor_toolbar, this, true)
         stringPaint =
             Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 textSize = 24.dp.toPx(context).toFloat()

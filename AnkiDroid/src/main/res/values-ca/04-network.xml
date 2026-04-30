@@ -66,7 +66,6 @@
     <string name="lost_mail_instructions">Heu oblidat el correu electrònic?</string>
     <string name="sign_in">S\'està iniciant la sessió</string>
     <!-- AndroidManifest.xml -->
-    <string name="deckpreferences_title">Opcions per XXX</string>
     <string name="sync_title">Sincronització</string>
     <string name="sync_log_uploading_message">Sincronització completa dels paquets locals</string>
     <string name="sync_database_acknowledge">Col·lecció sincronitzada</string>
@@ -78,7 +77,6 @@
     <string name="one_way_sync_title" maxLength="41">Sincronització en un sol sentit</string>
     <string name="one_way_sync_confirmation">S\'ha demanat sincronitzar en un sol sentit</string>
     <string name="full_sync_confirmation">El canvi sol·licitat requerirà una càrrega completa de la base de dades quan sincronitzeu la col·lecció. Si teniu revisions o altres canvis esperant a un altre dispositiu que encara no s\'han sincronitzat aquí encara, estaran perduts. Voleu continuar?</string>
-    <string name="full_sync_confirmation_upgrade">Per un error en la versió anteriorment instal·lada de AnkiDroid, es recomana forçar una sincronització completa.</string>
     <!-- Deck Picker Sync Icon -->
     <string name="sync_menu_title_one_way_sync">Sincronitza (en un sol sentit)</string>
     <string name="sync_menu_title_no_account">Sincronització (entrada)</string>

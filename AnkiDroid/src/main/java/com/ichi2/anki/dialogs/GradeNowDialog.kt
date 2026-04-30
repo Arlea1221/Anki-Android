@@ -28,7 +28,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.R
 import com.ichi2.anki.common.annotations.NeedsTest
-import com.ichi2.anki.databinding.GradeNowListItemBinding
+import com.ichi2.anki.databinding.ItemGradeNowBinding
 import com.ichi2.anki.launchCatchingTask
 import com.ichi2.anki.libanki.CardId
 import com.ichi2.anki.observability.undoableOp
@@ -52,8 +52,6 @@ import timber.log.Timber
  * @see net.ankiweb.rsdroid.Backend.gradeNow
  */
 // TODO: handle rotation, via a DialogFragment with IdsFile handling or Fragment Result API
-@NeedsTest("UI test for this dialog")
-@NeedsTest("Menu only displayed if cards selected")
 @NeedsTest("Suspended card handling")
 object GradeNowDialog {
     fun showDialog(
@@ -99,21 +97,26 @@ object GradeNowDialog {
 private class GradeNowListAdapter(
     context: Context,
     grades: List<Grade>,
-) : ArrayAdapter<Grade>(context, R.layout.grade_now_list_item, grades) {
+) : ArrayAdapter<Grade>(context, R.layout.item_grade_now, grades) {
     override fun getView(
         position: Int,
         convertView: View?,
         parent: ViewGroup,
-    ): View =
-        convertView ?: GradeNowListItemBinding
-            .inflate(LayoutInflater.from(context), parent, false)
-            .also { binding ->
-                val grade = getItem(position)!!
-                binding.gradeTextView.apply {
-                    text = grade.getLabel()
-                    setCompoundDrawablesRelativeWithIntrinsicBoundsKt(start = grade.iconRes)
-                }
-            }.root
+    ): View {
+        val binding =
+            if (convertView != null) {
+                ItemGradeNowBinding.bind(convertView)
+            } else {
+                ItemGradeNowBinding.inflate(LayoutInflater.from(context), parent, false)
+            }
+
+        val grade = getItem(position)!!
+        binding.gradeTextView.apply {
+            text = grade.getLabel()
+            setCompoundDrawablesRelativeWithIntrinsicBoundsKt(start = grade.iconRes)
+        }
+        return binding.root
+    }
 }
 
 private enum class Grade(

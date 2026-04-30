@@ -28,9 +28,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.ichi2.anki.AnkiDroidApp
 import com.ichi2.anki.R
+import com.ichi2.anki.analytics.AnalyticsConstants.Actions
+import com.ichi2.anki.analytics.AnalyticsConstants.Category
 import com.ichi2.anki.analytics.UsageAnalytics
-import com.ichi2.anki.analytics.UsageAnalytics.Actions
-import com.ichi2.anki.analytics.UsageAnalytics.Category
 import com.ichi2.anki.ankiActivity
 import com.ichi2.anki.databinding.DialogHelpBinding
 import com.ichi2.anki.databinding.FragmentHelpPageBinding

@@ -48,7 +48,7 @@
     <string name="model_browser_template">Kartalarni tahrirlash</string>
     <!--Rename-->
     <string name="rename_model">Qayd turi nomini oʻzgartirish</string>
-    <string name="rename_card_type">Karta turi nomini oʻzgartirish</string>
+    <string name="rename_card_type" maxLength="28">Karta turi nomini oʻzgartirish</string>
     <!--Language Hint-->
     <string name="model_field_editor_language_hint_dialog_success_result">Til tavsiyasi %sga sozlandi</string>
     <!--Field Editing-->
@@ -58,7 +58,10 @@
     <string name="model_field_editor_language_hint">Klaviatura tili tavsiyasini sozlash</string>
     <string name="model_field_editor_reposition_menu">Maydon oʻrnini oʻzgartirish</string>
     <string name="model_field_editor_changing">Maydonlar yangilanmoqda</string>
-    <string name="model_field_editor_sort_field">Bu maydon boʻyicha saralash</string>
+    <string name="model_field_editor_sort_field">Bu maydon boʻyicha tartiblash</string>
+    <!-- Card type -->
+    <string name="delete_card_type" maxLength="28">Karta turini oʻchirish</string>
+    <string name="add_card_type" maxLength="28">Karta turini qoʻshish</string>
     <!--Warnings-->
     <string name="model_delete_warning">Rostdan ham bu qayd turini oʻchirib tashlamoqchimisiz?</string>
     <!--
@@ -76,7 +79,7 @@
     <string name="card_template_browser_appearance_summary">Karta brauzeri kartalaringizni koʻrsatish uchun foydalanadigan shablonni kiriting. Qisqaroq javob koʻsatish uchun bundan foydalaning.\n\n“{{Mamlakat}}ning poytaxti:”ning oldi taraf shabloni\nkarta brauzerida\n“Poytaxti: {{Mamlakat}}” qilib qisqartirish mumkin.</string>
     <string name="card_template_browser_appearance_question_format">Savol formati</string>
     <string name="card_template_browser_appearance_answer_format">Javob formati</string>
-    <string name="card_template_browser_appearance_restore_default_dialog">Birlamchi qiymatlar qayta tiklansinmi?</string>
+    <string name="card_template_browser_appearance_restore_default_dialog">Rostan ham brauzer koʻrinishini birlamchiga qaytarmoqchimisiz?</string>
     <string name="card_template_browser_appearance_saving_note">Ushbu oʻzgarishlar karta shabloni oʻzgarganda qoʻllanadi</string>
     <!-- Deck Override -->
     <string name="card_template_editor_deck_override_on">Dastani oʻzgartirish (yoniq)</string>

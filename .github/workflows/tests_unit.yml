@@ -48,7 +48,7 @@ jobs:
       matrix: ${{ steps.build-matrix.outputs.result }}
     steps:
       - id: build-matrix
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             // by default, we will include all 3 platforms we test on
@@ -139,16 +139,18 @@ jobs:
           java-version: "21"  # also change jitpack.yml
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
         timeout-minutes: 10
         with:
+          # Use open source provider: https://github.com/gradle/actions/blob/main/docs/setup-gradle.md#basic-caching
+          cache-provider: basic
           # Only write to the cache for builds on the 'main' branches, stops branches evicting main cache
           # Builds on other branches will only read from main branch cache writes
           # Comment this and the with: above out for performance testing on a branch
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
 
       - name: Gradle Dependency Download
-        uses: nick-invision/retry@v3
+        uses: nick-fields/retry@v4
         with:
           timeout_minutes: 10
           retry_wait_seconds: 60
@@ -159,11 +161,21 @@ jobs:
       - name: Run Unit Tests
         run: ./gradlew jacocoUnitTestReport --daemon
 
+
+      # Only runs:
+      # - on a scheduled run
+      # - on a manually dispatched run
+      # This is not run on the 'happy' CI path as it's a rare de-flake, and would unnecessarily slow
+      #  down CI
+      - name: De-flake EmptyApplication Tests (schedule/manual run only)
+        if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && matrix.iteration == 1 && matrix.os == 'ubuntu-latest'
+        run: ./gradlew testFullDebugUnitTest -PemptyApplication --daemon
+
       - name: Store Logcat as Artifact
         # cancelled() handles test timeouts
         # remove when test timeouts cause a failure()
         if: failure() || cancelled()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: logcat-${{ matrix.name }}-${{ matrix.iteration }}
           # look for the `<system-out>` element in the XML files in `test-results`
@@ -181,7 +193,7 @@ jobs:
         if: contains(matrix.os, 'windows')
         run: ./gradlew --stop
 
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@v6
         with:
           verbose: true
           fail_ci_if_error: ${{ github.repository == 'ankidroid/Anki-Android' }} # optional (default = false)

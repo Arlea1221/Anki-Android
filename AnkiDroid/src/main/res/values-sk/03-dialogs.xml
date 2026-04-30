@@ -44,8 +44,7 @@
 ~ this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="check_db_title">Skontrolovať databázu?</string>
-    <string name="check_db_warning">Toto môže chvíľu trvať</string>
+    <string name="check_db_warning">Môže to chvíľu trvať. Pokračovať?</string>
     <string name="contextmenu_deckpicker_delete_deck" maxLength="28">Vymazať balíček</string>
     <string name="delete_deck_title">Vymazať balíček?</string>
     <plurals name="delete_deck_message">
@@ -87,11 +86,14 @@
     <string name="restore_backup_choose_another">Ďalšie zálohy</string>
     <string name="dialog_cancel">Zrušiť</string>
     <string name="dialog_ok">Ok</string>
+    <string name="dialog_add" comment="Positive dialog action button label to add \'something\'">Add</string>
+    <string name="restore">Restore</string>
     <string name="dialog_confirm" tools:ignore="UnusedResources">Potvrdiť</string>
     <string name="dialog_no">Nie</string>
     <string name="dialog_yes">Áno</string>
     <string name="dialog_keep">Ponechať</string>
     <string name="dialog_remove">Odstrániť</string>
+    <string name="dialog_exit" comment="Label for a button which will exit/finish the current screen">Exit</string>
     <string name="dialog_continue">Pokračovať</string>
     <string name="dialog_processing">Spracovanie&#8230;</string>
     <string name="dialog_positive_create" comment="Create a new collection, probably erasing the previous one, may be necessary in case of error.">Vytvoriť</string>
@@ -106,8 +108,7 @@
     <string name="dialog_invalid_custom_certificate_title">Error parsing certificate</string>
     <string name="dialog_updated_custom_certificate">Certificate updated</string>
     <!-- Media checking -->
-    <string name="check_media_title">Skontrolovať multimédiá?</string>
-    <string name="check_media_warning">Toto môže trvať dlhšie pri veľkých multimediálnych zbierkach</string>
+    <string name="check_media_warning">This may take a long time with large media collections. Proceed?</string>
     <string name="check_media_message">Kontrola multimédií&#8230;</string>
     <string name="check_media_adding_missing_tag">Adding tags&#8230;</string>
     <string name="check_media_tags_added">Tags added</string>
@@ -133,8 +134,6 @@
     <string name="permission_denied">Permission denied</string>
     <string name="recording_permission_denied_message">Microphone permission is necessary for the “Record voice” feature. Please grant it in the app settings.</string>
     <!-- Database Integrity Check -->
-    <string name="integrity_check_startup_title">AnkiDroid aktualizovaný</string>
-    <string name="integrity_check_startup_content">AnkiDroid bol aktualizovaný. Táto aktualizácia zahŕňa opravy súvisiace s možnými databázovými problémami, a preto teraz odporúčame vykonať kontrolu databázy.</string>
     <string name="integrity_check_continue_anyway">Napriek tomu pokračovať</string>
     <string name="integrity_check_insufficient_space">Kontrola databázy využíva veľké množstvo dočasného úložiska.\n\nPredtým než budete pokračovať, odporúčame, aby ste mali aspoň %s voľného miesta vo vašom zariadení.</string>
     <string name="integrity_check_insufficient_space_extra_content">\n\nMomentálne máte %s voľného miesta.</string>
@@ -221,8 +220,6 @@
     <string name="dismiss_backup_warning_title">Možná strata údajov!</string>
     <string name="dismiss_backup_warning_new_user">Due to Android privacy changes, your data and automated backups will be deleted from your phone if the app is uninstalled</string>
     <string name="dismiss_backup_warning_upgrade">Due to Android privacy changes, your data and automated backups will be inaccessible if the app is uninstalled</string>
-    <string name="deck_already_exists">Tento balíček už existuje</string>
-    <string name="empty_deck_name">Deck name cannot be empty</string>
     <string name="create_deck_numeric_hint">Pri problémoch s poradím balíčkov (napr. „10\" v poradí pred „2\") zmeňte názov z „2\" na „02\".</string>
     <!-- Set Due Date -->
     <string name="set_due_date_match_interval" comment="when setting a card\'s due date, this checkbox also changes the interval of the card">Nastaviť interval na rovnakú hodnotu</string>
@@ -286,4 +283,16 @@
     <string name="different_note_types_selected">Please select notes from only one notetype.</string>
     <string name="error_no_changes_to_save">No changes to save</string>
     <string name="choose_color">Choose color</string>
+    <!-- Special Fields -->
+    <string name="standard_fields_tab_header" comment="Tab header for inserting non-special fields: {{Front}}">Fields</string>
+    <string name="special_fields_tab_header" comment="Tab header for inserting special fields: {{Deck}}">Special</string>
+    <string name="special_field_example_suffix"><![CDATA[: ‘<b>%1$s</b>’]]></string>
+    <string name="special_field_front_side_help">The front template content. Audio is not automatically played</string>
+    <string name="special_field_deck_help" comment="%s: either blank or \' %s\'">The full deck of the card, including parent decks%s</string>
+    <string name="special_field_subdeck_help" comment="%s: either blank or \' %s\'">The current deck of the card, excluding parent decks%s</string>
+    <string name="special_field_flag_help">Outputs ‘%1$s’, where %2$s is the flag code (%3$s\–%4$s\)</string>
+    <string name="special_field_tags_help" comment="%s: either blank or \' %s\'">The tags of the note%s</string>
+    <string name="special_field_card_id_help" comment="%s: either blank or \' %s\'">The ID of the card%s</string>
+    <string name="special_field_card_help" comment="%s: either blank or \' %s\'">The name of the card template%s</string>
+    <string name="special_field_type_help" comment="%s: either blank or \' %s\'">The name of the note type%s</string>
 </resources>

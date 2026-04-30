@@ -35,12 +35,13 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import anki.collection.OpChanges
 import com.ichi2.anki.AnkiDroidApp.Companion.sharedPreferencesTestingOverride
-import com.ichi2.anki.CrashReportService.sendExceptionReport
 import com.ichi2.anki.analytics.UsageAnalytics
 import com.ichi2.anki.browser.SharedPreferencesLastDeckIdRepository
 import com.ichi2.anki.common.annotations.LegacyNotifications
 import com.ichi2.anki.common.annotations.NeedsTest
+import com.ichi2.anki.common.crashreporting.CrashReportService.sendExceptionReport
 import com.ichi2.anki.common.utils.annotation.KotlinCleanup
+import com.ichi2.anki.compat.CompatHelper
 import com.ichi2.anki.contextmenu.AnkiCardContextMenu
 import com.ichi2.anki.contextmenu.CardBrowserContextMenu
 import com.ichi2.anki.exception.StorageAccessException
@@ -58,14 +59,16 @@ import com.ichi2.anki.services.AlarmManagerService
 import com.ichi2.anki.services.NotificationService
 import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.ui.dialogs.ActivityAgnosticDialogs
-import com.ichi2.compat.CompatHelper
 import com.ichi2.utils.AdaptionUtil
 import com.ichi2.utils.ExceptionUtil
 import com.ichi2.utils.LanguageUtil
+import com.ichi2.utils.LanguageUtil.withAppLocale
 import com.ichi2.utils.Permissions
 import com.ichi2.utils.setWebContentsDebuggingEnabled
+import com.ichi2.widget.DayRolloverAlarm
 import com.ichi2.widget.cardanalysis.CardAnalysisWidget
 import com.ichi2.widget.deckpicker.DeckPickerWidget
+import com.ichi2.widget.restoreRecurringAlarms
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -134,7 +137,7 @@ open class AnkiDroidApp :
         // Ensures any change is propagated to widgets
         ChangeManager.subscribe(this)
 
-        CrashReportService.initialize(this)
+        initializeAcraCrashReporter()
         val logType = LogType.value
         when (logType) {
             LogType.DEBUG -> Timber.plant(DebugTree())
@@ -165,7 +168,7 @@ open class AnkiDroidApp :
         }
 
         // Stop after analytics and logging are initialised.
-        if (CrashReportService.isProperServiceProcess()) {
+        if (isAcraSenderProcess()) {
             Timber.d("Skipping AnkiDroidApp.onCreate from ACRA sender process")
             return
         }
@@ -190,8 +193,8 @@ open class AnkiDroidApp :
 
         makeBackendUsable(this)
 
-        // Configure WebView to allow file scheme pages to access cookies.
-        if (!acceptFileSchemeCookies()) {
+        // Probe WebView availability before any other init touches it (#5794).
+        if (!checkWebViewAvailable()) {
             return
         }
 
@@ -201,17 +204,21 @@ open class AnkiDroidApp :
 
         initializeAnkiDroidDirectory()
 
+        val context = this.withAppLocale()
         if (Prefs.newReviewRemindersEnabled) {
             Timber.i("Setting review reminder notifications if they have not already been set")
-            AlarmManagerService.scheduleAllNotifications(applicationContext)
+            AlarmManagerService.scheduleAllNotifications(context)
         } else {
             // Register for notifications
             Timber.i("AnkiDroidApp: Starting Services")
-            notifications.observeForever { NotificationService.triggerNotificationFor(this) }
+            notifications.observeForever { NotificationService.triggerNotificationFor(context) }
         }
 
         // listen for day rollover: time + timezone changes
         DayRolloverHandler.listenForRolloverEvents(this)
+        DayRolloverAlarm.scheduleNext(this)
+
+        restoreRecurringAlarms(this)
 
         registerActivityLifecycleCallbacks(
             object : ActivityLifecycleCallbacks {
@@ -331,18 +338,20 @@ open class AnkiDroidApp :
         notifications.postValue(null)
     }
 
-    @Suppress("deprecation") // 7109: setAcceptFileSchemeCookies
-    protected fun acceptFileSchemeCookies(): Boolean =
+    /**
+     * Checks that [android.webkit.WebView] is usable.
+     */
+    protected fun checkWebViewAvailable(): Boolean =
         try {
-            CookieManager.setAcceptFileSchemeCookies(true)
+            CookieManager.getInstance()
             true
         } catch (e: Throwable) {
             // 5794: Errors occur if the WebView fails to load
             // android.webkit.WebViewFactory.MissingWebViewPackageException.MissingWebViewPackageException
             // Error may be excessive, but I expect a UnsatisfiedLinkError to be possible here.
             fatalInitializationError = FatalInitializationError.WebViewError(e)
-            sendExceptionReport(e, "setAcceptFileSchemeCookies")
-            Timber.e(e, "setAcceptFileSchemeCookies")
+            sendExceptionReport(e, "checkWebViewAvailable")
+            Timber.e(e, "checkWebViewAvailable")
             false
         }
 
@@ -423,13 +432,6 @@ open class AnkiDroidApp :
          * This was added to avoid code churn
          */
         fun sharedPrefs() = sharedPreferencesTestingOverride ?: instance.sharedPrefs()
-
-        /**
-         * The latest package version number that included important changes to the database integrity check routine. All
-         * collections being upgraded to (or after) this version must run an integrity check as it will contain fixes that
-         * all collections should have.
-         */
-        const val CHECK_DB_AT_VERSION = 21000172
 
         /** HACK: Whether an exception report has been thrown - TODO: Rewrite an ACRA Listener to do this  */
         @VisibleForTesting

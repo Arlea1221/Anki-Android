@@ -31,7 +31,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import anki.collection.OpChanges
 import anki.collection.OpChangesWithCount
-import anki.config.ConfigKey
 import anki.search.BrowserColumns
 import anki.search.BrowserRow
 import com.ichi2.anki.ALL_DECKS_ID
@@ -39,7 +38,6 @@ import com.ichi2.anki.AnkiDroidApp
 import com.ichi2.anki.CollectionManager
 import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.CollectionManager.withCol
-import com.ichi2.anki.CrashReportService
 import com.ichi2.anki.Flag
 import com.ichi2.anki.PreviewerDestination
 import com.ichi2.anki.browser.CardBrowserViewModel.ChangeMultiSelectMode.MultiSelectCause
@@ -51,13 +49,18 @@ import com.ichi2.anki.browser.FindAndReplaceDialogFragment.Companion.TAGS_AS_FIE
 import com.ichi2.anki.browser.RepositionCardsRequest.RepositionData
 import com.ichi2.anki.browser.search.SavedSearch
 import com.ichi2.anki.browser.search.SavedSearches
+import com.ichi2.anki.browser.search.SearchFilters
+import com.ichi2.anki.browser.search.SearchRequest
+import com.ichi2.anki.browser.search.SearchString
 import com.ichi2.anki.common.annotations.NeedsTest
+import com.ichi2.anki.common.crashreporting.CrashReportService
 import com.ichi2.anki.common.utils.ext.indexOfOrNull
 import com.ichi2.anki.export.ExportDialogFragment.ExportType
 import com.ichi2.anki.launchCatchingIO
 import com.ichi2.anki.libanki.Card
 import com.ichi2.anki.libanki.CardId
 import com.ichi2.anki.libanki.CardType
+import com.ichi2.anki.libanki.Collection
 import com.ichi2.anki.libanki.DeckId
 import com.ichi2.anki.libanki.NoteId
 import com.ichi2.anki.libanki.QueueType
@@ -68,6 +71,7 @@ import com.ichi2.anki.model.CardStateFilter
 import com.ichi2.anki.model.CardsOrNotes
 import com.ichi2.anki.model.CardsOrNotes.CARDS
 import com.ichi2.anki.model.CardsOrNotes.NOTES
+import com.ichi2.anki.model.LegacySortType
 import com.ichi2.anki.model.SelectableDeck
 import com.ichi2.anki.model.SortType
 import com.ichi2.anki.observability.ChangeManager
@@ -77,7 +81,8 @@ import com.ichi2.anki.preferences.SharedPreferencesProvider
 import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.settings.PrefsRepository
 import com.ichi2.anki.utils.ext.currentCardBrowse
-import com.ichi2.anki.utils.ext.normalizeForSearch
+import com.ichi2.anki.utils.ext.getCardOrNull
+import com.ichi2.anki.utils.ext.ignoreAccentsInSearch
 import com.ichi2.anki.utils.ext.setUserFlagForCards
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
@@ -155,15 +160,6 @@ class CardBrowserViewModel(
 
     val flowOfSearchState = MutableSharedFlow<SearchState>()
 
-    val flowOfSearchTerms = MutableStateFlow("")
-
-    val searchTerms: String
-        get() = flowOfSearchTerms.value
-
-    @VisibleForTesting
-    var restrictOnDeck: String = ""
-        private set
-
     /** text in the search box (potentially unsubmitted) */
     // this does not currently bind to the value in the UI and is only used for posting
     val flowOfFilterQuery = MutableSharedFlow<String>()
@@ -198,10 +194,10 @@ class CardBrowserViewModel(
 
     val flowOfScrollRequest = MutableSharedFlow<RowSelection>()
 
-    private val sortTypeFlow = MutableStateFlow(SortType.NO_SORTING)
+    private val sortTypeFlow = MutableStateFlow(LegacySortType.NO_SORTING)
     val order get() = sortTypeFlow.value
 
-    private val reverseDirectionFlow = MutableStateFlow(ReverseDirection(orderAsc = false))
+    val reverseDirectionFlow = MutableStateFlow(ReverseDirection(orderAsc = false))
     val orderAsc get() = reverseDirectionFlow.value.orderAsc
 
     /**
@@ -309,6 +305,28 @@ class CardBrowserViewModel(
 
     suspend fun queryAllSelectedNoteIds() = selectedRows.queryNoteIds(this.cardsOrNotes)
 
+    /**
+     * Returns the list of Card IDs that should be updated.
+     *
+     * In 'Notes' mode, this includes all cards of the current note (sibling cards).
+     * In 'Cards' mode, this returns only the selected cards.
+     */
+    suspend fun getCardIdsForNoteEditor(): List<CardId> {
+        val cardId = currentCardId ?: return emptyList()
+
+        return if (cardsOrNotes == NOTES) {
+            withCol {
+                getCard(cardId).note(this).cardIds(this)
+            }
+        } else {
+            if (isInMultiSelectMode) {
+                queryAllSelectedCardIds()
+            } else {
+                listOf(cardId)
+            }
+        }
+    }
+
     fun requestChangeNoteType() =
         viewModelScope.launch {
             val noteIds = queryAllSelectedNoteIds()
@@ -330,40 +348,45 @@ class CardBrowserViewModel(
     val lastDeckId: DeckId?
         get() = lastDeckIdRepository.lastDeckId
 
-    suspend fun setSelectedDeck(deck: SelectableDeck) =
-        when (deck) {
-            is SelectableDeck.AllDecks -> setSelectedDeck(ALL_DECKS_ID)
-            is SelectableDeck.Deck -> setSelectedDeck(deck.deckId)
-        }
+    fun setSelectedDeck(deck: SelectableDeck) {
+        Timber.i("setting deck: %s", deck)
 
-    // TODO: Replace with setSelectedDeck(selectableDeck)
-    suspend fun setSelectedDeck(deckId: DeckId) {
-        Timber.i("setting deck: %d", deckId)
-        lastDeckIdRepository.lastDeckId = deckId
-        restrictOnDeck =
-            if (deckId == ALL_DECKS_ID) {
-                ""
-            } else {
-                val deckName = withCol { decks.name(deckId) }
-                // Escape any quotes in the deck name to prevent search syntax errors
-                val escapedDeckName = deckName.replace("\"", "\\\"")
-                "deck:\"$escapedDeckName\""
+        lastDeckIdRepository.lastDeckId =
+            when (deck) {
+                is SelectableDeck.AllDecks -> ALL_DECKS_ID
+                is SelectableDeck.Deck -> deck.deckId
             }
-        flowOfDeckId.update { deckId }
+
+        val deckFilter =
+            when (deck) {
+                is SelectableDeck.AllDecks -> emptyList()
+                is SelectableDeck.Deck -> listOf(deck.toDeckNameId())
+            }
+
+        val updatedFilter = searchRequestFlow.value.copyFilters { it.copy(decks = deckFilter) }
+        launchSearchForCards(updatedFilter, forceRefresh = false)
     }
 
-    // TODO: replace with flowOfDeckSelection
-    val flowOfDeckId = MutableStateFlow(lastDeckId)
-    val deckId get() = flowOfDeckId.value
+    val searchRequestFlow = MutableStateFlow(SearchRequest(query = ""))
 
-    val flowOfDeckSelection =
-        flowOfDeckId.map { did ->
-            when (did) {
-                ALL_DECKS_ID -> return@map SelectableDeck.AllDecks
-                null -> return@map null
-                else -> return@map SelectableDeck.Deck.fromId(did)
-            }
+    var searchTerms
+        get() = searchRequestFlow.value.query
+        private set(value) {
+            searchRequestFlow.value = searchRequestFlow.value.copy(query = value)
         }
+
+    val flowOfDeckId =
+        searchRequestFlow.map {
+            it.filters.decks
+                .firstOrNull()
+                ?.id
+        }
+
+    val deckId: DeckId?
+        get() =
+            searchRequestFlow.value.filters.decks
+                .firstOrNull()
+                ?.id
 
     suspend fun queryCardInfoDestination(): CardInfoDestination? {
         val firstSelectedCard = selectedRows.firstOrNull()?.toCardId(cardsOrNotes) ?: return null
@@ -416,7 +439,7 @@ class CardBrowserViewModel(
      * A search should be triggered if these properties change
      */
     private val searchRequested =
-        flowOf(flowOfCardsOrNotes, flowOfDeckId)
+        flowOf(flowOfCardsOrNotes)
             .flattenMerge()
 
     /**
@@ -438,14 +461,14 @@ class CardBrowserViewModel(
         var selectAllDecks = false
         when (options) {
             is CardBrowserLaunchOptions.SystemContextMenu -> {
-                flowOfSearchTerms.value = options.search.toString()
+                searchTerms = options.search.toString()
             }
             is CardBrowserLaunchOptions.SearchQueryJs -> {
-                flowOfSearchTerms.value = options.search
+                searchTerms = options.search
                 selectAllDecks = options.allDecks
             }
             is CardBrowserLaunchOptions.DeepLink -> {
-                flowOfSearchTerms.value = options.search
+                searchTerms = options.search
             }
             is CardBrowserLaunchOptions.ScrollToCard -> {
                 cardIdToBeScrolledTo = options.cardId
@@ -455,6 +478,7 @@ class CardBrowserViewModel(
 
         performSearchFlow
             .onEach {
+                Timber.d("performSearchFlow -> launching search")
                 launchSearchForCards()
             }.launchIn(viewModelScope)
 
@@ -475,7 +499,7 @@ class CardBrowserViewModel(
             }.launchIn(viewModelScope)
 
         viewModelScope.launch {
-            shouldIgnoreAccents = withCol { config.getBool(ConfigKey.Bool.IGNORE_ACCENTS_IN_SEARCH) }
+            shouldIgnoreAccents = withCol { config.ignoreAccentsInSearch }
 
             val initialDeckId = if (selectAllDecks) SelectableDeck.AllDecks else getInitialDeck()
             // PERF: slightly inefficient if the source was lastDeckId
@@ -486,7 +510,7 @@ class CardBrowserViewModel(
             flowOfCardsOrNotes.update { cardsOrNotes }
 
             withCol {
-                sortTypeFlow.update { SortType.fromCol(config, cardsOrNotes, prefs) }
+                sortTypeFlow.update { LegacySortType.fromCol(config, cardsOrNotes, prefs) }
                 reverseDirectionFlow.update { ReverseDirection.fromConfig(config) }
             }
             Timber.i("initCompleted")
@@ -654,14 +678,12 @@ class CardBrowserViewModel(
      */
     @NeedsTest("Deleting the focused row is properly handled;#18639")
     suspend fun deleteSelectedNotes(): Int {
-        // PERF: use `undoableOp(this)` & notify CardBrowser of changes
-        // this does a double search
         val cardIds = queryAllSelectedCardIds()
         // reset focused row if that row is about to be deleted
         if (focusedRow?.cardOrNoteId in cardIds) {
             focusedRow = null
         }
-        return undoableOp { removeNotes(cardIds = cardIds) }
+        return undoableOp(this@CardBrowserViewModel) { removeNotes(cardIds = cardIds) }
             .count
             .also {
                 endMultiSelectMode(SingleSelectCause.Other)
@@ -692,7 +714,7 @@ class CardBrowserViewModel(
         Timber.d("Setting ignore accent in search to: $value")
         viewModelScope.launch {
             shouldIgnoreAccents = value
-            withCol { config.setBool(ConfigKey.Bool.IGNORE_ACCENTS_IN_SEARCH, value) }
+            withCol { config.ignoreAccentsInSearch = value }
         }
     }
 
@@ -821,14 +843,34 @@ class CardBrowserViewModel(
 
     suspend fun selectedNoteCount() = selectedRows.queryNoteIds(cardsOrNotes).distinct().size
 
-    fun hasSelectedAllDecks(): Boolean = lastDeckId == ALL_DECKS_ID
+    fun hasSelectedAllDecks(): Boolean =
+        searchRequestFlow.value.filters.decks
+            .isEmpty()
 
-    fun changeCardOrder(which: SortType) {
+    /**
+     * Updates the [SortType] and updates the search results
+     */
+    fun setSortType(sortType: SortType) =
+        viewModelScope.launch {
+            Timber.i("setting sort type: %s", sortType)
+
+            // Temporarily update legacy flows
+            sortTypeFlow.update { sortType.toLegacy() }
+            sortType.toLegacyReverse()?.let { newValue ->
+                reverseDirectionFlow.update { newValue }
+            }
+
+            sortType.save(cardsOrNotes)
+
+            launchSearchForCards()
+        }
+
+    fun changeCardOrder(which: LegacySortType) {
         val changeType =
             when {
                 which != order -> ChangeCardOrder.OrderChange(which)
                 // if the same element is selected again, reverse the order
-                which != SortType.NO_SORTING -> ChangeCardOrder.DirectionChange
+                which != LegacySortType.NO_SORTING -> ChangeCardOrder.DirectionChange
                 else -> null
             } ?: return
 
@@ -973,10 +1015,23 @@ class CardBrowserViewModel(
     @NeedsTest("verify behavior for repositioning with 'Randomize order'")
     suspend fun prepareToRepositionCards(): RepositionCardsRequest {
         val selectedCardIds = queryAllSelectedCardIds()
-        // Only new cards may be repositioned (If any non-new found show error dialog and return false)
-        if (selectedCardIds.any { withCol { getCard(it).queue != QueueType.New } }) {
-            return RepositionCardsRequest.ContainsNonNewCardsError
+
+        // Separate repositionable and non-repositionable cards.
+        // TODO: Add a timeout for this card-by-card scan on very large selections.
+        val (repositionableIds, skippedIds) =
+            withCol {
+                selectedCardIds.partition { cardId ->
+                    canRepositionCard(getCard(cardId))
+                }
+            }
+
+        // If no cards can be repositioned, return error
+        if (repositionableIds.isEmpty()) {
+            return RepositionCardsRequest.NoRepositionableCardsError
         }
+
+        // The full partition already ran, so this value is exact for now.
+        val unsupportedCardCount = UnsupportedCardCount.Count(skippedIds.size)
 
         // query obtained from Anki Desktop
         // https://github.com/ankitects/anki/blob/1fb1cbbf85c48a54c05cb4442b1b424a529cac60/qt/aqt/operations/scheduling.py#L117
@@ -995,6 +1050,7 @@ class CardBrowserViewModel(
                     max = max,
                     random = defaults.random,
                     shift = defaults.shift,
+                    unsupportedCardCount = unsupportedCardCount,
                 )
             }
         } catch (e: Exception) {
@@ -1004,6 +1060,7 @@ class CardBrowserViewModel(
             return RepositionData(
                 min = null,
                 max = null,
+                unsupportedCardCount = unsupportedCardCount,
             )
         }
     }
@@ -1019,6 +1076,7 @@ class CardBrowserViewModel(
         shift: Boolean,
     ): Int {
         val ids = queryAllSelectedCardIds()
+
         Timber.d("repositioning %d cards to %d", ids.size, position)
         return undoableOp {
             sched.sortCards(cids = ids, position, step = step, shuffle = shuffle, shift = shift)
@@ -1046,9 +1104,30 @@ class CardBrowserViewModel(
     /** Ignores any values before [initCompleted] is set */
     private fun <T> Flow<T>.ignoreValuesFromViewModelLaunch(): Flow<T> = this.filter { initCompleted }
 
+    /**
+     * Sets the filter query (legacy): 'is:suspended'
+     */
     private suspend fun setFilterQuery(filterQuery: String) {
         this.flowOfFilterQuery.emit(filterQuery)
-        launchSearchForCards(filterQuery)
+        this.searchRequestFlow.value =
+            searchRequestFlow.value.copy(
+                query = filterQuery,
+            )
+        launchSearchForCards()
+    }
+
+    fun setQuery(
+        query: String,
+        forceRefresh: Boolean = true,
+    ) = viewModelScope.launch {
+        val newValue = searchRequestFlow.value.copy(query = query)
+        if (!forceRefresh && withCol { searchRequestFlow.value.toSearchString() == newValue.toSearchString() }) {
+            Timber.i("skipped duplicate search launch")
+            return@launch
+        }
+
+        searchRequestFlow.value = newValue
+        launchSearchForCards()
     }
 
     /**
@@ -1087,13 +1166,15 @@ class CardBrowserViewModel(
         selectedTags: List<String>,
         cardState: CardStateFilter,
     ) {
-        val sb = StringBuilder(cardState.toSearch)
-        // join selectedTags as "tag:$tag" with " or " between them
-        val tagsConcat = selectedTags.joinToString(" or ") { tag -> "\"tag:$tag\"" }
-        if (selectedTags.isNotEmpty()) {
-            sb.append("($tagsConcat)") // Only if we added anything to the tag list
-        }
-        setFilterQuery(sb.toString())
+        val searchString =
+            withCol {
+                SearchRequest(
+                    query = cardState.toSearch,
+                    filters = SearchFilters.EMPTY.copy(tags = selectedTags),
+                ).toSearchString()
+            }.getOrThrow()
+
+        setFilterQuery(searchString.value)
     }
 
     /** Previewing */
@@ -1138,6 +1219,7 @@ class CardBrowserViewModel(
     }
 
     fun removeUnsubmittedInput() {
+        Timber.i("clearing unsubmitted input")
         searchQueryInputFlow.update { null }
     }
 
@@ -1169,23 +1251,31 @@ class CardBrowserViewModel(
      * @param forceRefresh if `true`, perform a search even if the search query is unchanged
      */
     fun launchSearchForCards(
-        searchQuery: String,
+        query: String,
         forceRefresh: Boolean = true,
-    ) {
-        if (!forceRefresh && searchTerms == searchQuery) {
-            Timber.d("skipping duplicate search: forceRefresh is false")
-            return
-        }
-        flowOfSearchTerms.value =
-            if (shouldIgnoreAccents) {
-                searchQuery.normalizeForSearch()
-            } else {
-                searchQuery
-            }
+    ) = launchSearchForCards(
+        searchRequestFlow.value.copy(query = query),
+        forceRefresh,
+    )
 
-        viewModelScope.launch {
-            launchSearchForCards()
+    /**
+     * @param forceRefresh if `true`, perform a search even if the search query is unchanged
+     */
+    fun launchSearchForCards(
+        searchRequest: SearchRequest,
+        forceRefresh: Boolean,
+    ) = viewModelScope.launch {
+        Timber.d("launching search [new syntax]: '%s'", searchRequest)
+
+        context(_: Collection)
+        fun SearchRequest.asSearchString(): SearchString? = this.toSearchString().getOrNull()
+        if (!forceRefresh && withCol { searchRequestFlow.value.asSearchString() == searchRequest.asSearchString() }) {
+            Timber.d("skipping duplicate search: forceRefresh is false")
+            return@launch
         }
+
+        searchRequestFlow.value = searchRequest
+        launchSearchForCards()
     }
 
     /**
@@ -1195,7 +1285,6 @@ class CardBrowserViewModel(
      * @see com.ichi2.anki.searchForRows
      */
     @NeedsTest("Invalid searches are handled. For instance: 'and'")
-    @NeedsTest("card id is scrolled")
     fun launchSearchForCards(cardOrNoteIdsToSelect: List<CardOrNoteId> = emptyList()) {
         if (!initCompleted) return
 
@@ -1203,22 +1292,16 @@ class CardBrowserViewModel(
             // update the UI while we're searching
             clearCardsList()
 
-            val query: String =
-                if (searchTerms.contains("deck:")) {
-                    "($searchTerms)"
-                } else {
-                    if ("" != searchTerms) "$restrictOnDeck($searchTerms)" else restrictOnDeck
-                }
-
             searchJob?.cancel()
             searchJob =
                 launchCatchingIO(
                     errorMessageHandler = { error -> flowOfSearchState.emit(SearchState.Error(error)) },
                 ) {
+                    val searchString = withCol { searchRequestFlow.value.toSearchString().getOrThrow() }
                     flowOfSearchState.emit(SearchState.Searching)
                     val sortOrder = order.toSortOrder()
-                    Timber.d("performing search: '%s'; order: %s", query, sortOrder)
-                    val cards = com.ichi2.anki.searchForRows(query, sortOrder, cardsOrNotes)
+                    Timber.d("performing search: '%s'; order: %s", searchString, sortOrder)
+                    val cards = com.ichi2.anki.searchForRows(searchString, sortOrder, cardsOrNotes)
                     Timber.d("Search returned %d card(s)", cards.size)
 
                     ensureActive()
@@ -1228,17 +1311,17 @@ class CardBrowserViewModel(
                 }
 
             viewModelScope.launch {
+                val targetId = cardIdToBeScrolledTo ?: return@launch
                 searchJob?.join()
-                cardIdToBeScrolledTo?.let { targetId ->
-                    val rowId =
-                        if (cardsOrNotes == CARDS) {
-                            CardOrNoteId(targetId)
-                        } else {
-                            val nid = withCol { getCard(targetId) }.nid
-                            CardOrNoteId(nid)
-                        }
-                    flowOfScrollRequest.emit(RowSelection(rowId, topOffset = 0))
-                }
+                cardIdToBeScrolledTo = null
+                // validate targetId, even if in cards mode
+                val card =
+                    withCol { getCardOrNull(targetId) } ?: run {
+                        Timber.w("Unable to find card %d", targetId)
+                        return@launch
+                    }
+                val rowId = CardOrNoteId.fromCard(card, cardsOrNotes)
+                flowOfScrollRequest.emit(RowSelection(rowId, topOffset = 0))
             }
         }
     }
@@ -1397,7 +1480,7 @@ class CardBrowserViewModel(
 
     private sealed interface ChangeCardOrder {
         data class OrderChange(
-            val sortType: SortType,
+            val sortType: LegacySortType,
         ) : ChangeCardOrder
 
         data object DirectionChange : ChangeCardOrder
@@ -1515,16 +1598,41 @@ class IdsFile(
     }
 }
 
-sealed class RepositionCardsRequest {
-    /** Only new cards may be repositioned */
-    data object ContainsNonNewCardsError : RepositionCardsRequest()
+/**
+ * Determines if a card can be repositioned.
+ *
+ * Mirrors Anki upstream logic in `set_new_position()`: https://github.com/ankitects/anki/blob/967992304627bb2bc690afd70b28760f09c2a021/rslib/src/scheduler/new.rs#L65-L80
+ * - if `card.type == CardType.New`, it's repositionable
+ * - otherwise, if `card.queue == QueueType.New`, it's repositionable
+ *
+ * @param card The card to check
+ * @return true if the card can be repositioned, false otherwise
+ */
+private fun canRepositionCard(card: Card): Boolean = card.type == CardType.New || card.queue == QueueType.New
 
-    /** Should contain queue top & bottom positions. Null on error */
+/** Count of selected cards that cannot be repositioned. */
+sealed interface UnsupportedCardCount {
+    data class Count(
+        val value: Int,
+    ) : UnsupportedCardCount
+
+    /** Used when we short-circuit the scan (for example, after timeout). */
+    data object Undetermined : UnsupportedCardCount
+}
+
+sealed class RepositionCardsRequest {
+    /** None of the selected cards can be repositioned */
+    data object NoRepositionableCardsError : RepositionCardsRequest()
+
+    /** Should contain queue top & bottom positions. Null on error.
+     * `unsupportedCardCount` uses [UnsupportedCardCount.Undetermined] when scan is short-circuited.
+     */
     class RepositionData(
         val min: Int?,
         val max: Int?,
         val random: Boolean = false,
         val shift: Boolean = false,
+        val unsupportedCardCount: UnsupportedCardCount = UnsupportedCardCount.Count(0),
     ) : RepositionCardsRequest() {
         val queueTop: Int?
         val queueBottom: Int?

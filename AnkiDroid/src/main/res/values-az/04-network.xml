@@ -66,7 +66,6 @@
     <string name="lost_mail_instructions">E-poçtunu unutmusan?</string>
     <string name="sign_in">Qeydiyyatdan keçilir</string>
     <!-- AndroidManifest.xml -->
-    <string name="deckpreferences_title">XXX seçimləri</string>
     <string name="sync_title">Sinxronizasiya</string>
     <string name="sync_log_uploading_message">Yerli tam sinxronizasiya</string>
     <string name="sync_database_acknowledge">Kolleksiya sinxronizasiya olunmuşdur</string>
@@ -78,7 +77,6 @@
     <string name="one_way_sync_title" maxLength="41">Bir tərəfli Sinxronizasiya</string>
     <string name="one_way_sync_confirmation">One way sync requested</string>
     <string name="full_sync_confirmation">İstənilən dəyişiklik sonradan kolleksiyanı sinxronlaşdırdığınız zaman bazanın tam yüklənməsini tələb edəcək.Hal hazirda buradakı sinxronizasiya edilməmiş başqa bir cihazda gözdən keçirmə və ya digər dəyişiklikləriniz varsa, onlar itirilmiş olacaq.Davam?</string>
-    <string name="full_sync_confirmation_upgrade">Daha əvvəl quraşdırılmış AnkiDroid versiyasında bir səhv səbəbiylə,tam bir sinxronlaşdırma məcburiyyətindədir.</string>
     <!-- Deck Picker Sync Icon -->
     <string name="sync_menu_title_one_way_sync">Sinxronizasiya (bir tərəfli)</string>
     <string name="sync_menu_title_no_account">Sinxronizasiya (giriş)</string>

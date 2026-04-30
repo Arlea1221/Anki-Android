@@ -67,7 +67,10 @@ import timber.log.Timber
 class NoteTypeNameID(
     val name: String,
     val id: NoteTypeId,
-)
+) {
+    // support extension
+    companion object
+}
 
 class Notetypes(
     val col: Collection,
@@ -561,10 +564,12 @@ class Notetypes(
      *
      * Each value represents the index in the previous notetype.
      * -1 indicates the original value will be discarded.
+     *
+     * **This method updates the schema without confirmation**
      */
     @LibAnkiAlias("change_notetype_of_notes")
     fun changeNotetypeOfNotes(input: ChangeNotetypeRequest): OpChanges {
-        val opBytes = this.col.backend.changeNotetypeRaw(input.toByteArray())
+        val opBytes = col.backend.changeNotetypeRaw(input.toByteArray())
         return OpChanges.parseFrom(opBytes)
     }
 

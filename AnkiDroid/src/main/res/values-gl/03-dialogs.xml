@@ -44,8 +44,7 @@
 ~ this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="check_db_title">Comprobar a base de datos?</string>
-    <string name="check_db_warning">Isto pode levar moito tempo</string>
+    <string name="check_db_warning">Isto pode levar moito tempo. Queres continuar?</string>
     <string name="contextmenu_deckpicker_delete_deck" maxLength="28">Eliminar baralla</string>
     <string name="delete_deck_title">Eliminar baralla?</string>
     <plurals name="delete_deck_message">
@@ -83,11 +82,14 @@
     <string name="restore_backup_choose_another">Escoller outro</string>
     <string name="dialog_cancel">Cancelar</string>
     <string name="dialog_ok">Aceptar</string>
+    <string name="dialog_add" comment="Positive dialog action button label to add \'something\'">Engadir</string>
+    <string name="restore">Restaurar</string>
     <string name="dialog_confirm" tools:ignore="UnusedResources">Confirmar</string>
     <string name="dialog_no">Non</string>
     <string name="dialog_yes">Si</string>
     <string name="dialog_keep">Manter</string>
     <string name="dialog_remove">Retirar</string>
+    <string name="dialog_exit" comment="Label for a button which will exit/finish the current screen">Saír</string>
     <string name="dialog_continue">Continuar</string>
     <string name="dialog_processing">Procesando&#8230;</string>
     <string name="dialog_positive_create" comment="Create a new collection, probably erasing the previous one, may be necessary in case of error.">Crear</string>
@@ -102,8 +104,7 @@
     <string name="dialog_invalid_custom_certificate_title">Erro na análise do certificado</string>
     <string name="dialog_updated_custom_certificate">Certificado actualizado</string>
     <!-- Media checking -->
-    <string name="check_media_title">Comprobar multimedia?</string>
-    <string name="check_media_warning">Isto pode levar moito tempo con coleccións grandes</string>
+    <string name="check_media_warning">Isto pode levar moito tempo con coleccións multimedia grandes. Queres continuar?</string>
     <string name="check_media_message">Verificando multimedia&#8230;</string>
     <string name="check_media_adding_missing_tag">Engadindo etiquetas&#8230;</string>
     <string name="check_media_tags_added">Etiquetas engadidas</string>
@@ -123,12 +124,10 @@
     <string name="multimedia_editor_audio_permission_refused">Non se puido obter permiso para usar o micrófono.</string>
     <string name="multimedia_editor_failed">Non se puido abrir o editor multimedia</string>
     <!-- Multimedia - Audio View -->
-    <string name="multimedia_editor_audio_permission_denied">Denegouse o permiso para gravar audio</string>
+    <string name="multimedia_editor_audio_permission_denied">Denegouse o permiso para gravar son</string>
     <string name="permission_denied">Permiso denegado</string>
     <string name="recording_permission_denied_message">O permiso de micrófono é necesario para a funcionalidade de \"Gravar voz\". Concédeo nos axustes da aplicación.</string>
     <!-- Database Integrity Check -->
-    <string name="integrity_check_startup_title">AnkiDroid actualizado</string>
-    <string name="integrity_check_startup_content">AnkiDroid foi actualizado. Esta actualización inclúe correccións para posíbeis problemas na base de datos, polo que recomendamos que comprobes a base de datos agora.</string>
     <string name="integrity_check_continue_anyway">Continuar igualmente</string>
     <string name="integrity_check_insufficient_space">Comprobar a base de datos usa unha gran cantidade de espazo temporal.\n\nRecoméndase que teñas polo menos %s de espazo libre no teu dispositivo antes de continuar.</string>
     <string name="integrity_check_insufficient_space_extra_content">\n\nActualmente tes %s libre.</string>
@@ -158,7 +157,7 @@
     <string name="boot_service_failed_to_schedule_notifications">Erro ao programar recordatorios</string>
     <string name="boot_service_too_many_notifications">Demasiados recordatorios programados. Algúns non aparecerán</string>
     <!-- Locale Selection Dialog -->
-    <string name="locale_selection_dialog_title_new">Establecer Idioma</string>
+    <string name="locale_selection_dialog_title_new">Estabelecer Idioma</string>
     <string name="locale_selection_dialog_summary">Algúns teclados multilingües, como GBoard, permiten cambiar o idioma mentres se edita o texto.\n\nSe o teu teclado non cambia o idioma, solicita a función \"setImeHintLocales\" ao fabricante.</string>
     <!-- Help Dialog -->
     <string name="help_title_using_ankidroid">Empregar o AnkiDroid</string>
@@ -213,11 +212,9 @@
     <string name="dismiss_backup_warning_title">Aviso de perda de datos</string>
     <string name="dismiss_backup_warning_new_user">Debido aos cambios de privacidade do Android, eliminaranse do teu teléfono os teus datos e as copias de seguranza automáticas se desinstalas a aplicación</string>
     <string name="dismiss_backup_warning_upgrade">Debido aos cambios de privacidade do Android, perderás o acceso aos teus datos e as copias de seguranza automáticas se desinstalas a aplicación</string>
-    <string name="deck_already_exists">A baralla xa existe</string>
-    <string name="empty_deck_name">O nome da baralla non pode estar baleiro</string>
     <string name="create_deck_numeric_hint">Se tes problemas ao arranxar a baralla (por exemplo, \'10\' aparece antes que \'2\'), substitúe \'2\' por \'02\'</string>
     <!-- Set Due Date -->
-    <string name="set_due_date_match_interval" comment="when setting a card\'s due date, this checkbox also changes the interval of the card">Establecer intervalo ao mesmo valor</string>
+    <string name="set_due_date_match_interval" comment="when setting a card\'s due date, this checkbox also changes the interval of the card">Estabelecer intervalo ao mesmo valor</string>
     <plurals name="set_due_date_single_day_label" comment="a date control is provided afterwards">
         <item quantity="one">Amosar tarxeta en</item>
         <item quantity="other">Amosar tarxetas en</item>
@@ -270,4 +267,16 @@
     <string name="different_note_types_selected">Selecciona notas pertencentes a un só tipo de nota</string>
     <string name="error_no_changes_to_save">Non hai cambios a gardar</string>
     <string name="choose_color">Escoller cor</string>
+    <!-- Special Fields -->
+    <string name="standard_fields_tab_header" comment="Tab header for inserting non-special fields: {{Front}}">Campos</string>
+    <string name="special_fields_tab_header" comment="Tab header for inserting special fields: {{Deck}}">Especial</string>
+    <string name="special_field_example_suffix"><![CDATA[ : «<b>%1$s</b>»]]></string>
+    <string name="special_field_front_side_help">O contido do anverso do modelo. O son non se reproducirá automaticamente</string>
+    <string name="special_field_deck_help" comment="%s: either blank or \' %s\'">A baralla da tarxeta, incluíndo barallas principais%s</string>
+    <string name="special_field_subdeck_help" comment="%s: either blank or \' %s\'">A baralla da tarxeta, excluíndo barallas principais%s</string>
+    <string name="special_field_flag_help">Amosa «%1$s», onde %2$s é o código da etiqueta (%3$s\–%4$s\)</string>
+    <string name="special_field_tags_help" comment="%s: either blank or \' %s\'">A etiqueda da nota%s</string>
+    <string name="special_field_card_id_help" comment="%s: either blank or \' %s\'">O ID da tarxeta%s</string>
+    <string name="special_field_card_help" comment="%s: either blank or \' %s\'">O nome do modelo de tarxeta%s</string>
+    <string name="special_field_type_help" comment="%s: either blank or \' %s\'">O nome do tipo de nota%s</string>
 </resources>

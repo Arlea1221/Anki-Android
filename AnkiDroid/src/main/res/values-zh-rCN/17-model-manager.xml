@@ -46,7 +46,7 @@
     <string name="model_browser_template">编辑卡片</string>
     <!--Rename-->
     <string name="rename_model">重命名笔记模板</string>
-    <string name="rename_card_type">重命名卡牌类型</string>
+    <string name="rename_card_type" maxLength="28">重命名卡牌类型</string>
     <!--Language Hint-->
     <string name="model_field_editor_language_hint_dialog_success_result">设置语言提示为 %s</string>
     <!--Field Editing-->
@@ -57,6 +57,9 @@
     <string name="model_field_editor_reposition_menu">修改字段位置</string>
     <string name="model_field_editor_changing">更新字段</string>
     <string name="model_field_editor_sort_field">按此字段排序</string>
+    <!-- Card type -->
+    <string name="delete_card_type" maxLength="28">删除卡片类型</string>
+    <string name="add_card_type" maxLength="28">添加卡片类型</string>
     <!--Warnings-->
     <string name="model_delete_warning">是否确定要删除此笔记模板？</string>
     <!--
@@ -74,7 +77,7 @@
     <string name="card_template_browser_appearance_summary">请输入卡牌浏览器用于显示您卡牌的模板。用此来显示更简洁的答案。\n\n一个前置模板\n“{{Country}} 的首都是：”\n可以被卡牌浏览器压缩为\n“首都：{{Country}}”</string>
     <string name="card_template_browser_appearance_question_format">问题格式</string>
     <string name="card_template_browser_appearance_answer_format">答案格式</string>
-    <string name="card_template_browser_appearance_restore_default_dialog">还原默认值？</string>
+    <string name="card_template_browser_appearance_restore_default_dialog">您确定要恢复浏览器外观为默认吗？</string>
     <string name="card_template_browser_appearance_saving_note">保存卡牌模板时应用这些更改</string>
     <!-- Deck Override -->
     <string name="card_template_editor_deck_override_on">牌组覆盖（开启）</string>

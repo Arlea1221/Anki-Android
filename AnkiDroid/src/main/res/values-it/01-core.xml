@@ -116,6 +116,7 @@
     <string name="menu_unmark_note">Rimuovi contrassegno nota</string>
     <string name="menu_enable_voice_playback" maxLength="28">Abilita riproduzione vocale</string>
     <string name="menu_disable_voice_playback">Disabilita riproduzione vocale</string>
+    <string name="menu_create_backup" maxLength="28">Crea backup</string>
     <string name="new_deck">Crea mazzo</string>
     <string name="new_dynamic_deck">Crea mazzo filtrato</string>
     <string name="directory_inaccessible">La directory AnkiDroid è inaccessibile</string>
@@ -144,7 +145,6 @@
     <string name="syncing_media">Sincronizzazione media in corso</string>
     <string name="export_deck" maxLength="28">Esporta il mazzo</string>
     <string name="export_collection">Esporta collezione</string>
-    <string name="nothing">Niente</string>
     <!-- Card template editor -->
     <string name="title_activity_template_editor">Tipi di carte</string>
     <string name="card_template_editor_front">Modello fronte</string>
@@ -212,6 +212,10 @@
     <string name="remove_account" comment="open a website to start the deletion of an AnkiWeb account">Rimuovi account</string>
     <!-- Instant Note Editor -->
     <string name="instant_card" comment="Used in the Android system context menu/share dialog to quickly create a note. This does not need to be translated literally, translate the concept of quickly adding a Cloze note with a popup. ">Carta istantanea</string>
+    <!-- Internet Permissions -->
+    <string name="internet_access_title" comment="used for notifying user to unable internet access">Internet</string>
+    <string name="permission_access_summary">Necessario per il funzionamento dell\'app</string>
+    <string name="permission_required_message">Si prega di concedere ad AnkiDroid il permesso ‘%s’ per avanzare</string>
     <!-- Multiple profile -->
     <string name="add_profile">Aggiungi profilo</string>
 </resources>

@@ -1,3 +1,4 @@
+import com.ichi2.anki.gradle.ReportOpener
 import groovy.transform.Memoized
 import groovy.xml.XmlParser
 
@@ -27,33 +28,8 @@ Properties getLocalProperties() {
     return properties
 }
 
-def openReport(htmlOutDir) {
-    final reportPath = "$htmlOutDir/index.html"
-
-    println "HTML Report: file://$reportPath"
-
-    if (!project.hasProperty("open-report")) {
-        println "to open the report automatically in your default browser add '-Popen-report' cli argument"
-        return
-    }
-
-    def os = org.gradle.internal.os.OperatingSystem.current()
-    if (os.isWindows()) {
-        new ProcessBuilder('cmd', '/c', "start $reportPath")
-    } else if (os.isMacOsX()) {
-        new ProcessBuilder('open', "$reportPath").start()
-    } else if (os.isLinux()) {
-        try {
-            new ProcessBuilder('xdg-open', "$reportPath" )
-        } catch (Exception ignored) {
-            if (localProperties.containsKey("linux-html-cmd")) {
-                new ProcessBuilder(properties.get("linux-html-cmd"), "$reportPath")
-            } else {
-                println "'linux-html-cmd' property could not be found in 'local.properties'"
-            }
-        }
-    }
-}
+def openReportRequested = project.hasProperty("open-report")
+def linuxHtmlCmd = localProperties["linux-html-cmd"]?.toString()
 
 tasks.withType(Test).configureEach {
     jacoco.includeNoLocationClasses = true
@@ -92,22 +68,20 @@ def fileFilter = [
         '**/*$Result$*.*'
 ]
 
-def flavorClassDir = 'tmp/kotlin-classes/play'
-def moduleClassDir = 'tmp/kotlin-classes/'
-if (rootProject.testReleaseBuild) {
-    flavorClassDir += "Release"
-    moduleClassDir += "release"
-} else {
-    flavorClassDir += "Debug"
-    moduleClassDir += "debug"
+static def builtInKotlincClassDir(String variant) {
+    // AGP9 built-in Kotlin compiler writes classes to
+    // build/intermediates/built_in_kotlinc/<variant>/compile<Variant>Kotlin/classes
+    "intermediates/built_in_kotlinc/${variant}/compile${variant.capitalize()}Kotlin/classes"
 }
+def flavorClassDir = builtInKotlincClassDir("play${rootProject.androidTestVariantName}")
+def moduleClassDir = builtInKotlincClassDir(rootProject.androidTestVariantName.toLowerCase())
 
 // Our merge report task
 tasks.register('jacocoTestReport', JacocoReport) {
     def htmlOutDir = project.layout.buildDirectory.dir("reports/jacoco/$name/html").get().asFile
 
     doLast {
-        openReport htmlOutDir
+        ReportOpener.open(htmlOutDir, openReportRequested, linuxHtmlCmd)
     }
 
     reports {
@@ -128,15 +102,17 @@ tasks.register('jacocoTestReport', JacocoReport) {
     dependsOn("connectedPlay${rootProject.androidTestVariantName}AndroidTest")
 }
 
-// modules do not yet support flavors (play/full)
-def modulesToUnitTest = [":common", ":libanki"]
+// Android library modules (do not yet support flavors play/full)
+def androidModulesToUnitTest = [":common:android", ":libanki", ":compat"]
+// JVM modules: use 'test' task and 'classes/kotlin/main' class dir
+def jvmModulesToUnitTest = [":common"]
 
 // A unit-test only report task
 tasks.register('jacocoUnitTestReport', JacocoReport) {report ->
     def htmlOutDir = layout.buildDirectory.dir("reports/jacoco/$name/html").get().asFile
 
     doLast {
-        openReport htmlOutDir
+        ReportOpener.open(htmlOutDir, openReportRequested, linuxHtmlCmd)
     }
 
     reports {
@@ -147,20 +123,33 @@ tasks.register('jacocoUnitTestReport', JacocoReport) {report ->
     includeUnitTestCoverage(report, getProject(), flavorClassDir)
     dependsOn('testPlayDebugUnitTest')
 
-    for (module in modulesToUnitTest) {
+    for (module in androidModulesToUnitTest) {
         includeUnitTestCoverage(report, project(module), moduleClassDir)
         dependsOn("${module}:testDebugUnitTest")
+    }
+
+    for (module in jvmModulesToUnitTest) {
+        includeUnitTestCoverage(report, project(module), 'classes/kotlin/main')
+        dependsOn("${module}:test")
     }
 }
 
 gradle.projectsEvaluated {
     // ensure test results aren't cached
-    tasks.named('testPlayDebugUnitTest') {task ->
-        task.outputs.upToDateWhen { false }
-        task.outputs.cacheIf { false }
+    tasks.configureEach { task ->
+        if (task.name == 'testPlayDebugUnitTest') {
+            task.outputs.upToDateWhen { false }
+            task.outputs.cacheIf { false }
+        }
     }
-    for (module in modulesToUnitTest) {
+    for (module in androidModulesToUnitTest) {
         project(module).tasks.named('testDebugUnitTest')?.configure {task ->
+            task.outputs.upToDateWhen { false }
+            task.outputs.cacheIf { false }
+        }
+    }
+    for (module in jvmModulesToUnitTest) {
+        project(module).tasks.named('test')?.configure {task ->
             task.outputs.upToDateWhen { false }
             task.outputs.cacheIf { false }
         }
@@ -186,7 +175,7 @@ tasks.register('jacocoAndroidTestReport', JacocoReport) {
     def htmlOutDir = layout.buildDirectory.dir("reports/jacoco/$name/html").get().asFile
 
     doLast {
-        openReport htmlOutDir
+        ReportOpener.open(htmlOutDir, openReportRequested, linuxHtmlCmd)
     }
 
     reports {
@@ -207,8 +196,10 @@ tasks.register('jacocoAndroidTestReport', JacocoReport) {
 
 // Issue 16640 - some emulators run, but register zero coverage
 tasks.register('assertNonzeroAndroidTestCoverage') {
+    // Resolve the file at configuration time, which is Gradle Configuration Cache compatible
+    def jacocoReportFile = layout.buildDirectory.file("reports/jacoco/jacocoAndroidTestReport/jacocoAndroidTestReport.xml")
     doLast {
-        File jacocoReport = layout.buildDirectory.dir("reports/jacoco/jacocoAndroidTestReport/jacocoAndroidTestReport.xml").get().asFile
+        File jacocoReport = jacocoReportFile.get().asFile
 
         if (!jacocoReport.exists())
             throw new FileNotFoundException("jacocoAndroidTestReport.xml was not found after running jacocoAndroidTestReport")
