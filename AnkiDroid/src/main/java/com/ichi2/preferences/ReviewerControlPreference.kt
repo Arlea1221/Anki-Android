@@ -1,22 +1,10 @@
-/*
- *  Copyright (c) 2024 Brayan Oliveira <brayandso.dev@gmail.com>
- *
- *  This program is free software; you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software
- *  Foundation; either version 3 of the License, or (at your option) any later
- *  version.
- *
- *  This program is distributed in the hope that it will be useful, but WITHOUT ANY
- *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- *  PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License along with
- *  this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 package com.ichi2.preferences
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.fragment.app.DialogFragment
 import com.ichi2.anki.R
 import com.ichi2.anki.cardviewer.GestureProcessor
 import com.ichi2.anki.common.annotations.NeedsTest
@@ -24,13 +12,15 @@ import com.ichi2.anki.dialogs.CardSideSelectionDialog
 import com.ichi2.anki.preferences.allPreferences
 import com.ichi2.anki.reviewer.Binding
 import com.ichi2.anki.reviewer.CardSide
+import com.ichi2.anki.reviewer.MappableBinding
 import com.ichi2.anki.reviewer.MappableBinding.Companion.toPreferenceString
 import com.ichi2.anki.reviewer.ReviewerBinding
 import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.utils.ext.usingStyledAttributes
 
 open class ReviewerControlPreference : ControlPreference {
-    protected open var side: CardSide? = null
+    open var side: CardSide? = null
+        protected set
 
     @Suppress("unused")
     constructor(context: Context) : this(context, null)
@@ -69,6 +59,8 @@ open class ReviewerControlPreference : ControlPreference {
     override val areGesturesEnabled: Boolean
         get() = Prefs.isNewStudyScreenEnabled || sharedPreferences?.getBoolean(GestureProcessor.PREF_KEY, false) ?: false
 
+    override fun makeDialogFragment(): DialogFragment = ReviewerControlPreferenceDialogFragment()
+
     override fun getMappableBindings(): List<ReviewerBinding> = ReviewerBinding.fromPreferenceString(value).toList()
 
     @Suppress("UNCHECKED_CAST")
@@ -79,7 +71,6 @@ open class ReviewerControlPreference : ControlPreference {
                 it::class == ReviewerControlPreference::class
             } as List<ReviewerControlPreference>
 
-    @NeedsTest("Ensure correct preference is returned for side-specific binding")
     override fun getPreferenceAssignedTo(binding: Binding): ControlPreference? {
         val cardSide = side ?: return super.getPreferenceAssignedTo(binding)
         val reviewerBinding = ReviewerBinding(binding, cardSide)
@@ -153,6 +144,17 @@ open class ReviewerControlPreference : ControlPreference {
             callback(cardSide)
         } else {
             CardSideSelectionDialog.displayInstance(context, callback)
+        }
+    }
+}
+
+class ReviewerControlPreferenceDialogFragment : ControlPreferenceDialogFragment() {
+    override fun getDisplayString(mappableBinding: MappableBinding): String {
+        val side = (preference as? ReviewerControlPreference)?.side
+        return if (side != null) {
+            mappableBinding.binding.toDisplayString(requireContext())
+        } else {
+            super.getDisplayString(mappableBinding)
         }
     }
 }

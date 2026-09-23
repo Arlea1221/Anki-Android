@@ -1,25 +1,12 @@
-/*
- *  Copyright (c) 2024 Brayan Oliveira <brayandso.dev@gmail.com>
- *
- *  This program is free software; you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software
- *  Foundation; either version 3 of the License, or (at your option) any later
- *  version.
- *
- *  This program is distributed in the hope that it will be useful, but WITHOUT ANY
- *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- *  PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License along with
- *  this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 package com.ichi2.anki.ui.windows.reviewer
 
 import android.content.Context
 import android.content.Intent
-import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Bundle
+import android.text.InputType
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
@@ -27,6 +14,7 @@ import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
@@ -49,26 +37,25 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import anki.scheduler.CardAnswer.Rating
-import com.google.android.material.snackbar.Snackbar
 import com.ichi2.anki.CollectionManager
 import com.ichi2.anki.DispatchKeyEventListener
 import com.ichi2.anki.Flag
 import com.ichi2.anki.R
-import com.ichi2.anki.android.back.doubleBackPressCallback
+import com.ichi2.anki.android.AnkiShakeDetector
 import com.ichi2.anki.cardviewer.Gesture
 import com.ichi2.anki.common.annotations.NeedsTest
+import com.ichi2.anki.common.destinations.DeckOptionsDestination
+import com.ichi2.anki.common.destinations.navigate
 import com.ichi2.anki.common.utils.android.isRobolectric
-import com.ichi2.anki.compat.CompatHelper.Companion.compat
 import com.ichi2.anki.databinding.FragmentReviewerBinding
 import com.ichi2.anki.dialogs.showDeckOptionsSelectionDialog
-import com.ichi2.anki.dialogs.tags.TagsDialog
 import com.ichi2.anki.dialogs.tags.TagsDialogFactory
 import com.ichi2.anki.dialogs.tags.TagsDialogListener
 import com.ichi2.anki.model.CardStateFilter
-import com.ichi2.anki.pages.DeckOptionsDestination
 import com.ichi2.anki.preferences.reviewer.ViewerAction
 import com.ichi2.anki.previewer.CardViewerActivity
 import com.ichi2.anki.previewer.CardViewerFragment
+import com.ichi2.anki.previewer.TypeAnswer
 import com.ichi2.anki.previewer.setFrameStyle
 import com.ichi2.anki.previewer.stdHtml
 import com.ichi2.anki.reviewer.BindingMap
@@ -119,8 +106,7 @@ class ReviewerFragment :
 
     override val webViewLayout: SafeWebViewLayout get() = binding.webViewLayout
     private lateinit var bindingMap: BindingMap<ReviewerBinding, ViewerAction>
-    private var shakeDetector: ShakeDetector? = null
-    private val sensorManager get() = ContextCompat.getSystemService(requireContext(), SensorManager::class.java)
+    private var shakeDetector: AnkiShakeDetector? = null
     private val whiteboardFragment get() = childFragmentManager.findFragmentByTag(WhiteboardFragment::class.jvmName) as? WhiteboardFragment
     private val isBigScreen: Boolean get() = resources.configuration.smallestScreenWidthDp >= 720
 
@@ -145,17 +131,15 @@ class ReviewerFragment :
 
     override fun onStart() {
         super.onStart()
-        if (!requireActivity().isChangingConfigurations) {
-            shakeDetector?.start(sensorManager, SensorManager.SENSOR_DELAY_UI)
-        }
+        shakeDetector?.start()
     }
 
     override fun onStop() {
         super.onStop()
         if (!requireActivity().isChangingConfigurations) {
             viewModel.stopAutoAdvance()
-            shakeDetector?.stop()
         }
+        shakeDetector?.stop()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -170,7 +154,7 @@ class ReviewerFragment :
         super.onViewCreated(view, savedInstanceState)
 
         binding.backButton.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            requireActivity().finish()
         }
 
         setupBindings()
@@ -196,8 +180,13 @@ class ReviewerFragment :
         }
 
         viewModel.statesMutationEvalFlow.collectIn(lifecycleScope) { eval ->
-            webViewLayout.evaluateJavascript(eval) {
-                viewModel.onStateMutationCallback()
+            // Completion is signaled by `statesMutated`
+            webViewLayout.evaluateJavascript(eval) { result ->
+                // eval failed, usually a syntax error
+                // Note: this is `"null"`, not null
+                if ("null" == result) {
+                    viewModel.onStateMutationCallback()
+                }
             }
         }
 
@@ -208,20 +197,20 @@ class ReviewerFragment :
             binding.rootLayout.requestFocus()
         }
 
-        viewModel.destinationFlow.collectIn(lifecycleScope) { destination ->
+        viewModel.navigateFlow.collectIn(lifecycleScope) { destination ->
             if (destination is DeckOptionsDestination && destination.options.size > 1) {
                 requireContext().showDeckOptionsSelectionDialog(destination.options) { selectedOption ->
                     Timber.i("Deck options target selected: ${selectedOption.deckId}")
-                    val updatedDestination =
+                    navigate(
                         destination.copy(
                             deckId = selectedOption.deckId,
                             isFiltered = selectedOption.isFiltered,
-                        )
-                    startActivity(updatedDestination.toIntent(requireContext()))
+                        ),
+                    )
                 }
                 return@collectIn
             }
-            startActivity(destination.toIntent(requireContext()))
+            navigate(destination)
         }
 
         binding.webViewContainer.setFrameStyle()
@@ -270,6 +259,31 @@ class ReviewerFragment :
         val isHtmlTypeAnswerEnabled = Prefs.isHtmlTypeAnswerEnabled
         lifecycleScope.launch {
             val autoFocusTypeAnswer = Prefs.autoFocusTypeAnswer
+            // Default `inputType` from the layout, restored when `{{nosuggest}}` is unused (#10352)
+            val defaultInputType = binding.typeAnswerEditText.inputType
+
+            /**
+             * Sync `inputType` and `imeHintLocales` on the answer `EditText` to match
+             * [typeInAnswer]. Returns `true` if anything changed (caller should `restartInput()`).
+             */
+            fun EditText.syncTypeAnswerProperties(typeInAnswer: TypeAnswer): Boolean {
+                // #10352: TYPE_NULL is used by 'Reword' to remove all suggestions. This works better
+                // than a password as the keyboard won't suggest to open the password manager
+                // other methods did not work for GBoard
+                val targetInputType =
+                    if (typeInAnswer.noSuggest) InputType.TYPE_NULL else defaultInputType
+                var changed = false
+                if (inputType != targetInputType) {
+                    inputType = targetInputType
+                    changed = true
+                }
+                if (imeHintLocales != typeInAnswer.imeHintLocales) {
+                    imeHintLocales = typeInAnswer.imeHintLocales
+                    changed = true
+                }
+                return changed
+            }
+
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.typeAnswerFlow.collect { typeInAnswer ->
                     if (typeInAnswer == null) {
@@ -288,8 +302,7 @@ class ReviewerFragment :
 
                     binding.typeAnswerContainer.isVisible = true
                     binding.typeAnswerEditText.apply {
-                        if (imeHintLocales != typeInAnswer.imeHintLocales) {
-                            imeHintLocales = typeInAnswer.imeHintLocales
+                        if (syncTypeAnswerProperties(typeInAnswer)) {
                             context?.getSystemService<InputMethodManager>()?.restartInput(this)
                         }
                         if (autoFocusTypeAnswer) {
@@ -346,6 +359,12 @@ class ReviewerFragment :
 
     @NeedsTest("Whiteboard takes priority on shake events")
     override fun hearShake() {
+        // Sensor events still arrive while a dialog or another window covers the reviewer.
+        if (view?.hasWindowFocus() != true) {
+            Timber.d("Ignoring shake: reviewer window does not have focus")
+            return
+        }
+
         if (whiteboardFragment?.onScreenShake() != true) {
             bindingMap.onGesture(Gesture.SHAKE)
         }
@@ -357,8 +376,7 @@ class ReviewerFragment :
             bindingMap.onGenericMotionEvent(event)
         }
         if (bindingMap.isBound(Gesture.SHAKE)) {
-            shakeDetector = ShakeDetector(this)
-            shakeDetector?.start(sensorManager, SensorManager.SENSOR_DELAY_UI)
+            shakeDetector = AnkiShakeDetector.createInstance(requireContext(), this)
         }
     }
 
@@ -545,27 +563,20 @@ class ReviewerFragment :
             },
             false,
         )
-        val isUsingGesturesNavigation = compat.isUsingSystemGestureNavigation(requireContext())
-        val doubleBackCallback =
-            doubleBackPressCallback(
-                enabled = false,
-                onFirstBack = { showSnackbar(R.string.back_pressed_once, Snackbar.LENGTH_SHORT) },
-                shouldReEnable = {
-                    viewModel.whiteboardEnabledFlow.value && isUsingGesturesNavigation
-                },
-            )
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, doubleBackCallback)
+
         viewModel.whiteboardEnabledFlow.flowWithLifecycle(lifecycle).collectIn(lifecycleScope) { isEnabled ->
-            binding.whiteboardContainer.isVisible = isEnabled
-            doubleBackCallback.isEnabled =
-                isEnabled && compat.isUsingSystemGestureNavigation(requireContext())
-            if (whiteboardFragment == null && isEnabled) {
-                val whiteboardFragment = WhiteboardFragment()
-                whiteboardFragment.gestureFallbackListener = { gesture ->
-                    bindingMap.onGesture(gesture)
-                }
-                childFragmentManager.commit {
-                    add(R.id.whiteboard_container, whiteboardFragment, WhiteboardFragment::class.jvmName)
+            val existingFragment = whiteboardFragment
+            childFragmentManager.commit {
+                if (isEnabled) {
+                    if (existingFragment != null) {
+                        show(existingFragment)
+                    } else {
+                        val newFragment = WhiteboardFragment()
+                        newFragment.gestureFallbackListener = { gesture -> bindingMap.onGesture(gesture) }
+                        add(R.id.web_view_container, newFragment, WhiteboardFragment::class.jvmName)
+                    }
+                } else {
+                    existingFragment?.let { hide(it) }
                 }
             }
         }
@@ -607,18 +618,11 @@ class ReviewerFragment :
             }
 
         viewModel.editNoteTagsFlow.collectIn(lifecycleScope) { noteId ->
-            val dialogFragment =
-                tagsDialogFactory.newTagsDialog().withArguments(
-                    requireContext(),
-                    TagsDialog.DialogType.EDIT_TAGS,
-                    listOf(noteId),
-                )
-            showDialogFragment(dialogFragment)
+            tagsDialogFactory.show(requireActivity(), noteIds = listOf(noteId))
         }
 
         viewModel.setDueDateFlow.collectIn(lifecycleScope) { cardId ->
-            val dialogFragment = SetDueDateDialog.newInstance(listOf(cardId))
-            showDialogFragment(dialogFragment)
+            SetDueDateDialog.show(requireActivity(), listOf(cardId))
         }
 
         viewModel.pageUpFlow.flowWithLifecycle(lifecycle).collectIn(lifecycleScope) {

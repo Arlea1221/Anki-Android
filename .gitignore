@@ -84,3 +84,6 @@ AnkiDroid/full/
 
 # Replay log files
 replay_pid*.log
+
+# Claude Code related
+/.claude/worktrees/

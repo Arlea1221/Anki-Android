@@ -1,18 +1,5 @@
-/*
- *  Copyright (c) 2020 David Allison <davidallisongithub@gmail.com>
- *
- *  This program is free software; you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software
- *  Foundation; either version 3 of the License, or (at your option) any later
- *  version.
- *
- *  This program is distributed in the hope that it will be useful, but WITHOUT ANY
- *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- *  PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License along with
- *  this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 package com.ichi2.anki.noteeditor
 
 import android.annotation.SuppressLint
@@ -36,23 +23,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
 import android.widget.FrameLayout
+import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.children
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
-import com.ichi2.anki.AnkiDroidApp
-import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.NoteEditorFragment
 import com.ichi2.anki.R
+import com.ichi2.anki.common.android.appContext
+import com.ichi2.anki.common.preferences.sharedPrefs
 import com.ichi2.anki.compat.CompatHelper
-import com.ichi2.anki.preferences.sharedPrefs
 import com.ichi2.utils.AndroidUiUtils.showSoftInput
 import com.ichi2.utils.ViewGroupUtils
 import com.ichi2.utils.ViewGroupUtils.getAllChildrenRecursive
@@ -81,6 +70,9 @@ class Toolbar : FrameLayout {
     private val toolbar: LinearLayout
     private val toolbarLayout: LinearLayout
 
+    @VisibleForTesting
+    internal val scrollView: HorizontalScrollView
+
     /** A list of buttons, typically user-defined which modify text + selection */
     private val customButtons: MutableList<View> = ArrayList()
     private val rows: MutableList<LinearLayout> = ArrayList()
@@ -107,7 +99,19 @@ class Toolbar : FrameLayout {
             }
         toolbar = findViewById(R.id.editor_toolbar_internal)
         toolbarLayout = findViewById(R.id.toolbar_layout)
+        scrollView = findViewById(R.id.toolbar_scrollview)
         setupDefaultButtons()
+    }
+
+    /**
+     * Insets the ends of the button row, keeping buttons which rest there clear of the bottom
+     *  rounded display corners; buttons scroll beneath the clearance.
+     */
+    fun setSideClearance(
+        left: Int,
+        right: Int,
+    ) {
+        scrollView.updatePadding(left = left, right = right)
     }
 
     /** Sets up the "standard" buttons to insert bold, italics etc... */
@@ -225,7 +229,7 @@ class Toolbar : FrameLayout {
         button.setPaddingRelative(twoDp, twoDp, twoDp, twoDp)
         // end apply style
         val shouldScroll =
-            AnkiDroidApp.instance
+            appContext
                 .sharedPrefs()
                 .getBoolean(NoteEditorFragment.PREF_NOTE_EDITOR_SCROLL_TOOLBAR, true)
         if (shouldScroll) {
@@ -322,22 +326,11 @@ class Toolbar : FrameLayout {
      * Displays a dialog that allows the user to insert a MathJax equation in different formats.
      */
     private fun displayInsertMathJaxEquationsDialog() {
-        data class MathJaxOption(
-            val label: String,
-            val prefix: String,
-            val suffix: String,
-        ) {
-            fun toTextWrapper() = TextWrapper(prefix = this.prefix, suffix = this.suffix)
-        }
-
-        val mathjaxOptions =
-            arrayOf(
-                MathJaxOption(TR.editingMathjaxBlock(), prefix = "\\[\\", suffix = "\\]"),
-                MathJaxOption(TR.editingMathjaxChemistry(), prefix = "\\( \\ce{", suffix = "} \\)"),
-            )
+        val options = MathJaxFormat.entries
+        val labels = options.map { it.label() }.toTypedArray()
         AlertDialog.Builder(context).show {
-            setItems(mathjaxOptions.map(MathJaxOption::label).toTypedArray()) { _, index ->
-                onFormat(mathjaxOptions[index].toTextWrapper())
+            setItems(labels) { _, index ->
+                onFormat(options[index].toTextWrapper())
             }
             title(R.string.insert_mathjax)
         }
@@ -429,8 +422,8 @@ class Toolbar : FrameLayout {
 
     /**
      * A [TextFormatter] which wraps the selected string with [prefix] and [suffix]
-     * If there's no selected, the cursor is in the middle of the prefix and suffix
-     * If there is text selected, the whole string is selected
+     * If there's no selection, the cursor is placed in the middle of the prefix and suffix
+     * If text is selected and wrapped, the whole string is selected
      */
     class TextWrapper(
         private val prefix: String,

@@ -1,18 +1,4 @@
-/*
- *  Copyright (c) 2021 David Allison <davidallisongithub@gmail.com>
- *
- *  This program is free software; you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software
- *  Foundation; either version 3 of the License, or (at your option) any later
- *  version.
- *
- *  This program is distributed in the hope that it will be useful, but WITHOUT ANY
- *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- *  PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License along with
- *  this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package com.ichi2.anki.dialogs
 
@@ -26,14 +12,14 @@ import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.BundleCompat
-import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.ichi2.anki.AnkiActivity
+import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.R
 import com.ichi2.anki.TextContentImportActivity
-import com.ichi2.anki.analytics.AnalyticsConstants
-import com.ichi2.anki.analytics.UsageAnalytics
-import com.ichi2.anki.common.annotations.NeedsTest
+import com.ichi2.anki.common.analytics.Analytics
+import com.ichi2.anki.common.analytics.AnalyticsEvent.LinkClicked
+import com.ichi2.anki.common.analytics.LinkAction
 import com.ichi2.anki.libanki.DeckId
 import com.ichi2.anki.requireAnkiActivity
 import com.ichi2.anki.snackbar.showSnackbar
@@ -47,15 +33,12 @@ class ImportFileSelectionFragment : DialogFragment() {
         val entries = buildImportEntries()
         return AlertDialog
             .Builder(requireActivity())
-            .title(R.string.menu_import)
+            .title(text = TR.actionsImport())
             .setItems(
                 entries.map { requireActivity().getString(it.titleRes) }.toTypedArray(),
             ) { _, position ->
                 val entry = entries[position]
-                UsageAnalytics.sendAnalyticsEvent(
-                    AnalyticsConstants.Category.LINK_CLICKED,
-                    entry.analyticsId,
-                )
+                Analytics.send(LinkClicked(entry.analyticsId))
                 openImportFilePicker(
                     activity = requireAnkiActivity(),
                     fileType = entry.type,
@@ -77,7 +60,7 @@ class ImportFileSelectionFragment : DialogFragment() {
                     add(
                         ImportEntry(
                             R.string.import_deck_package,
-                            AnalyticsConstants.Actions.IMPORT_APKG_FILE,
+                            LinkAction.IMPORT_APKG_FILE,
                             ImportFileType.APKG,
                         ),
                     )
@@ -86,7 +69,7 @@ class ImportFileSelectionFragment : DialogFragment() {
                     add(
                         ImportEntry(
                             R.string.import_collection_package,
-                            AnalyticsConstants.Actions.IMPORT_COLPKG_FILE,
+                            LinkAction.IMPORT_COLPKG_FILE,
                             ImportFileType.COLPKG,
                         ),
                     )
@@ -95,7 +78,7 @@ class ImportFileSelectionFragment : DialogFragment() {
                     add(
                         ImportEntry(
                             R.string.import_csv,
-                            AnalyticsConstants.Actions.IMPORT_CSV_FILE,
+                            LinkAction.IMPORT_CSV_FILE,
                             ImportFileType.CSV,
                             multiple = false,
                             mimeType = "*/*",
@@ -107,7 +90,7 @@ class ImportFileSelectionFragment : DialogFragment() {
                     add(
                         ImportEntry(
                             R.string.import_text_content,
-                            AnalyticsConstants.Actions.IMPORT_TEXT_INPUT,
+                            LinkAction.IMPORT_TEXT_INPUT,
                             ImportFileType.TEXT_CONTENT,
                         ),
                     )
@@ -118,7 +101,7 @@ class ImportFileSelectionFragment : DialogFragment() {
 
     private class ImportEntry(
         @StringRes val titleRes: Int,
-        val analyticsId: String,
+        val analyticsId: LinkAction,
         val type: ImportFileType,
         val multiple: Boolean = false,
         val mimeType: String = "*/*",
@@ -153,7 +136,7 @@ class ImportFileSelectionFragment : DialogFragment() {
 
         fun newInstance(options: ImportOptions) =
             ImportFileSelectionFragment().apply {
-                arguments = bundleOf(ARG_IMPORT_OPTIONS to options)
+                arguments = Bundle().apply { putParcelable(ARG_IMPORT_OPTIONS, options) }
             }
 
         /**

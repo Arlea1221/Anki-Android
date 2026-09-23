@@ -1,18 +1,4 @@
-/*
- *  Copyright (c) 2024 David Allison <davidallisongithub@gmail.com>
- *
- *  This program is free software; you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software
- *  Foundation; either version 3 of the License, or (at your option) any later
- *  version.
- *
- *  This program is distributed in the hope that it will be useful, but WITHOUT ANY
- *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- *  PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License along with
- *  this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package com.ichi2.anki.browser
 
@@ -45,6 +31,7 @@ import com.ichi2.anki.common.utils.ext.replaceWith
 import com.ichi2.anki.databinding.ItemCardBrowserBinding
 import com.ichi2.anki.databinding.ViewBrowserColumnCellBinding
 import com.ichi2.themes.Themes
+import com.ichi2.utils.dp
 import com.ichi2.utils.removeChildren
 import net.ankiweb.rsdroid.BackendException
 import timber.log.Timber
@@ -169,10 +156,7 @@ class BrowserMultiColumnAdapter(
             require(pressedColor != color)
             val rippleDrawable =
                 RippleDrawable(
-                    ColorStateList(
-                        arrayOf(intArrayOf(android.R.attr.state_pressed)),
-                        intArrayOf(pressedColor),
-                    ),
+                    ColorStateList.valueOf(pressedColor),
                     color.toDrawable(),
                     null,
                 )
@@ -263,12 +247,21 @@ class BrowserMultiColumnAdapter(
                 )
             holder.numberOfColumns = row.cellsCount
 
+            val edgePadding = 8.dp.toPx(context)
+            val innerPadding = 4.dp.toPx(context)
+
             for (i in 0 until row.cellsCount) {
-                holder.columnViews[i].text = renderColumn(i)
+                holder.columnViews[i].apply {
+                    text = renderColumn(i)
+                    val startPadding = if (i == 0) edgePadding else innerPadding
+                    val endPadding = if (i == row.cellsCount - 1) edgePadding else innerPadding
+                    setPaddingRelative(startPadding, paddingTop, endPadding, paddingBottom)
+                }
             }
             holder.setIsSelected(isSelected)
             val rowColor =
-                if (viewModel.focusedRow == id) {
+                // This only highlights in fragmented mode
+                if (viewModel.paneRow == id) {
                     ThemeUtils.getThemeAttrColor(context, R.attr.focusedRowBackgroundColor)
                 } else {
                     backendColorToColor(row.color)

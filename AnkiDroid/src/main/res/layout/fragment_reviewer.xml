@@ -9,6 +9,7 @@
     android:background="?attr/alternativeBackgroundColor"
     android:fitsSystemWindows="true"
     android:focusableInTouchMode="true"
+    android:defaultFocusHighlightEnabled="false"
     tools:context=".ui.windows.reviewer.ReviewerFragment">
 
     <LinearLayout
@@ -95,11 +96,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:backgroundTint="@color/white" />
-
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/whiteboard_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

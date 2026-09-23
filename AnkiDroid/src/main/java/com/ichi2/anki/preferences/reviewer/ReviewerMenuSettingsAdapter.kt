@@ -1,18 +1,5 @@
-/*
- *  Copyright (c) 2024 Brayan Oliveira <brayandso.dev@gmail.com>
- *
- *  This program is free software; you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software
- *  Foundation; either version 3 of the License, or (at your option) any later
- *  version.
- *
- *  This program is distributed in the hope that it will be useful, but WITHOUT ANY
- *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- *  PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License along with
- *  this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 package com.ichi2.anki.preferences.reviewer
 
 import android.view.LayoutInflater
@@ -22,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ichi2.anki.R
 import com.ichi2.anki.databinding.ItemReviewerMenuBinding
 import com.ichi2.anki.databinding.ItemReviewerMenuDisplayTypeBinding
+import java.util.Objects
 
 /**
  * Provides bindings from menu items and display types (headings) to [RecyclerView] views
@@ -37,8 +25,12 @@ import com.ichi2.anki.databinding.ItemReviewerMenuDisplayTypeBinding
  * @see ReviewerMenuSettingsRecyclerItem
  */
 class ReviewerMenuSettingsAdapter(
-    private val items: List<ReviewerMenuSettingsRecyclerItem>,
+    private val items: MutableList<ReviewerMenuSettingsRecyclerItem>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    init {
+        setHasStableIds(true)
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -71,6 +63,11 @@ class ReviewerMenuSettingsAdapter(
     override fun getItemCount(): Int = items.size
 
     override fun getItemViewType(position: Int): Int = items[position].viewType
+
+    override fun getItemId(position: Int): Long {
+        val item = items[position]
+        return Objects.hash(item.viewType, item).toLong()
+    }
 
     private var onDragHandleTouchedListener: ((RecyclerView.ViewHolder) -> Unit)? = null
 

@@ -1,18 +1,4 @@
-/*
- *  Copyright (c) 2026 David Allison <davidallisongithub@gmail.com>
- *
- *  This program is free software; you can redistribute it and/or modify it under
- *  the terms of the GNU General Public License as published by the Free Software
- *  Foundation; either version 3 of the License, or (at your option) any later
- *  version.
- *
- *  This program is distributed in the hope that it will be useful, but WITHOUT ANY
- *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- *  PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License along with
- *  this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package com.ichi2.anki.browser
 
@@ -29,6 +15,7 @@ import com.ichi2.anki.settings.Prefs
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.empty
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -54,7 +41,20 @@ class CardBrowserFragmentTest : RobolectricTest() {
                 expectMostRecentItem()
             }
         }
+
+    @Test
+    fun `shortcut labels use Sentence case`() =
+        withCardBrowserFragment {
+            val offenders = shortcuts.shortcuts.map { it.label }.filterNot { it.isSentenceCase }
+            assertThat("shortcut labels should be Sentence case, not Title Case", offenders, empty())
+        }
 }
+
+private val capitalizedFollowingWord = Regex("""\s\p{Lu}\p{Ll}""")
+
+// Material Design sentence case: the first word is capitalized; later words are not
+private val String.isSentenceCase: Boolean
+    get() = first().isUpperCase() && !capitalizedFollowingWord.containsMatchIn(this)
 
 context(test: RobolectricTest)
 fun withCardBrowserFragment(

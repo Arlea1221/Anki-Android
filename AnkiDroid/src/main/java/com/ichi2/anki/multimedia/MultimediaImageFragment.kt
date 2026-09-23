@@ -1,19 +1,5 @@
-/*
- * Copyright (c) 2024 Ashish Yadav <mailtoashish693@gmail.com>
- *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 3 of the License, or (at your option) any later
- * version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Copyright (c) 2024 Ashish Yadav <mailtoashish693@gmail.com>
 
 package com.ichi2.anki.multimedia
 
@@ -23,6 +9,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -31,10 +18,10 @@ import android.view.View
 import android.webkit.WebView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.core.content.IntentCompat
 import androidx.core.os.BundleCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -42,6 +29,7 @@ import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.DrawingFragment
 import com.ichi2.anki.R
 import com.ichi2.anki.common.annotations.NeedsTest
+import com.ichi2.anki.common.utils.ext.getParcelableExtraCompat
 import com.ichi2.anki.compat.CompatHelper.Companion.getSerializableCompat
 import com.ichi2.anki.databinding.FragmentMultimediaImageBinding
 import com.ichi2.anki.multimedia.MultimediaActivity.Companion.EXTRA_MEDIA_OPTIONS
@@ -53,6 +41,9 @@ import com.ichi2.anki.multimedia.MultimediaUtils.createNewCacheImageFile
 import com.ichi2.anki.snackbar.showSnackbar
 import com.ichi2.anki.utils.ext.convertToString
 import com.ichi2.anki.utils.ext.toBase64Png
+import com.ichi2.anki.workarounds.OnWebViewRecreatedListener
+import com.ichi2.anki.workarounds.SafeWebViewClient
+import com.ichi2.anki.workarounds.SafeWebViewLayout
 import com.ichi2.imagecropper.ImageCropper
 import com.ichi2.imagecropper.ImageCropper.Companion.CROP_IMAGE_RESULT
 import com.ichi2.utils.BitmapUtil
@@ -64,8 +55,11 @@ import com.ichi2.utils.openInputStreamSafe
 import com.ichi2.utils.positiveButton
 import com.ichi2.utils.show
 import dev.androidbroadcast.vbpd.viewBinding
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
@@ -76,8 +70,14 @@ import java.text.NumberFormat
 private const val SVG_IMAGE = "image/svg+xml"
 
 @NeedsTest("Ensure correct option is executed i.e. gallery or camera")
-class MultimediaImageFragment : MultimediaFragment(R.layout.fragment_multimedia_image) {
-    private val binding by viewBinding(FragmentMultimediaImageBinding::bind)
+class MultimediaImageFragment :
+    MultimediaFragment(R.layout.fragment_multimedia_image),
+    OnWebViewRecreatedListener {
+    @VisibleForTesting
+    internal val binding by viewBinding(FragmentMultimediaImageBinding::bind)
+
+    /** The image on screen, re-rendered if the WebView's render process dies */
+    private var previewedImage: Uri? = null
 
     override val title: String
         get() = resources.getString(R.string.multimedia_editor_popup_image)
@@ -96,9 +96,7 @@ class MultimediaImageFragment : MultimediaFragment(R.layout.fragment_multimedia_
             hasStartedImageSelection = false
             when (result.resultCode) {
                 Activity.RESULT_CANCELED -> {
-                    if (viewModel.currentMultimediaUri.value == null) {
-                        setMultimediaResultAndFinish(MultimediaResult.Cancelled(indexValue))
-                    }
+                    cancelIfEmpty()
                 }
 
                 Activity.RESULT_OK -> {
@@ -109,7 +107,11 @@ class MultimediaImageFragment : MultimediaFragment(R.layout.fragment_multimedia_
                         return@registerForActivityResult
                     }
 
-                    val selectedImage = getImageUri(data)
+                    val selectedImage = PickedImage(data).trustedUri
+                    if (selectedImage == null) {
+                        showSnackbar(getString(R.string.select_image_failed))
+                        return@registerForActivityResult
+                    }
                     handleSelectImageIntent(selectedImage)
                 }
             }
@@ -123,9 +125,7 @@ class MultimediaImageFragment : MultimediaFragment(R.layout.fragment_multimedia_
             when (result.resultCode) {
                 Activity.RESULT_CANCELED -> {
                     // If user didn't draw, return the indexValue as a result and finish the activity
-                    if (viewModel.currentMultimediaUri.value == null) {
-                        setMultimediaResultAndFinish(MultimediaResult.Cancelled(indexValue))
-                    }
+                    cancelIfEmpty()
                 }
 
                 Activity.RESULT_OK -> {
@@ -146,7 +146,7 @@ class MultimediaImageFragment : MultimediaFragment(R.layout.fragment_multimedia_
             hasStartedImageSelection = false
             when {
                 !isPictureTaken && viewModel.currentMultimediaUri.value == null -> {
-                    setMultimediaResultAndFinish(MultimediaResult.Cancelled(indexValue))
+                    cancelIfEmpty()
                 }
 
                 isPictureTaken -> {
@@ -169,11 +169,7 @@ class MultimediaImageFragment : MultimediaFragment(R.layout.fragment_multimedia_
                 Activity.RESULT_OK -> {
                     result.data?.let {
                         val cropResultData =
-                            IntentCompat.getParcelableExtra(
-                                it,
-                                CROP_IMAGE_RESULT,
-                                ImageCropper.CropResultData::class.java,
-                            )
+                            it.getParcelableExtraCompat<ImageCropper.CropResultData>(CROP_IMAGE_RESULT)
                         Timber.d("Cropped image data: $cropResultData")
 
                         if (cropResultData?.uriPath == null || cropResultData.uriContent == null) return@registerForActivityResult
@@ -265,8 +261,25 @@ class MultimediaImageFragment : MultimediaFragment(R.layout.fragment_multimedia_
         super.onViewCreated(view, savedInstanceState)
         setupMenu(multimediaMenu)
 
+        setupWebView()
         handleImageUri()
         setupDoneButton()
+    }
+
+    @NeedsTest("Verify the webview background color is transparent and matches the app theme")
+    private fun setupWebView() {
+        binding.multimediaWebView.setWebViewClient(SafeWebViewClient())
+        binding.multimediaWebView.setBackgroundColor(Color.TRANSPARENT)
+    }
+
+    /**
+     * [SafeWebViewLayout] only replaces the crashed [WebView], so the client and the preview
+     * have to be applied again.
+     */
+    override fun onWebViewRecreated(webView: WebView) {
+        Timber.i("restoring the image preview after a render process crash")
+        setupWebView()
+        previewedImage?.let { previewImage(it) }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -275,11 +288,9 @@ class MultimediaImageFragment : MultimediaFragment(R.layout.fragment_multimedia_
     }
 
     private fun handleImageUri() {
-        fun processExternalImage(uri: Uri): Uri? = internalizeUri(uri)?.let { Uri.fromFile(it) }
-
         if (imageUri != null) {
-            val internalUri = imageUri?.let { processExternalImage(it) }
-            handleSelectImageIntent(internalUri)
+            // a content:// or a file:// already in our cache; resolveUriToFile handles both
+            handleSelectImageIntent(imageUri)
         } else {
             handleSelectedImageOptions()
         }
@@ -325,9 +336,7 @@ class MultimediaImageFragment : MultimediaFragment(R.layout.fragment_multimedia_
     }
 
     private fun finishAddingImage() {
-        field.mediaFile = viewModel.currentMultimediaPath.value
-        field.hasTemporaryMedia = true
-        setMultimediaResultAndFinish(MultimediaResult.Success(indexValue, field))
+        finishWithMedia()
     }
 
     private fun openGallery() {
@@ -512,19 +521,34 @@ class MultimediaImageFragment : MultimediaFragment(R.layout.fragment_multimedia_
         updateAndDisplayImageSize(imagePath)
     }
 
-    /**
-     * Resolves a [Uri] to a [File] on internal storage.
-     *
-     * If the URI is a content URI, it is internalized by copying its contents to internal storage.
-     * If the URI is already a file URI, it is directly converted to a [File] object.
-     *
-     * @param uri The URI to resolve.
-     * @return The corresponding [File], or `null` if the URI is invalid or unsupported.
-     */
-    private fun resolveUriToFile(uri: Uri): File? {
-        return when (uri.scheme) {
-            ContentResolver.SCHEME_FILE -> File(uri.path ?: return null)
+    /** Resolves [uri] to a local [File], internalizing content URIs but accepting file URIs only
+     *  from our own cache. */
+    @VisibleForTesting
+    internal fun resolveUriToFile(uri: Uri): File? =
+        when (uri.scheme) {
+            ContentResolver.SCHEME_FILE -> cachedFileOrNull(uri)
             else -> internalizeUri(uri)
+        }
+
+    /** The [File] for a `file://` [uri], but only when it's inside our own cache. A picked or shared
+     *  file:// is otherwise untrusted: we'd read it with our UID and attach it as media. */
+    private fun cachedFileOrNull(uri: Uri): File? {
+        val file = uri.path?.let(::File) ?: return null
+        if (!file.isInsideAppCache()) {
+            Timber.w("rejected file:// outside the cache")
+            return null
+        }
+        return file
+    }
+
+    /** Canonical-path check so a `..` in the URI can't climb out of the cache. */
+    private fun File.isInsideAppCache(): Boolean {
+        val cacheRoot = context?.cacheDir?.canonicalFile ?: return false
+        return try {
+            generateSequence(canonicalFile) { it.parentFile }.any { it == cacheRoot }
+        } catch (e: IOException) {
+            Timber.w(e, "isInsideAppCache() failed to canonicalize %s", this)
+            false
         }
     }
 
@@ -535,6 +559,7 @@ class MultimediaImageFragment : MultimediaFragment(R.layout.fragment_multimedia_
      * @param imageUri The URI of the selected image.
      */
     private fun previewImage(imageUri: Uri) {
+        previewedImage = imageUri
         val mimeType = context?.contentResolver?.getType(imageUri)
 
         // Get the WebView and set it visible
@@ -556,15 +581,24 @@ class MultimediaImageFragment : MultimediaFragment(R.layout.fragment_multimedia_
      *
      * @param imageUri The URI of the SVG image.
      */
-    private fun WebView.loadSvgImage(imageUri: Uri) {
-        val svgData = loadSvgFromUri(imageUri)
-        if (svgData != null) {
-            Timber.i("Selected image is an SVG.")
+    private fun SafeWebViewLayout.loadSvgImage(imageUri: Uri) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val svgData = withContext(Dispatchers.IO) { loadSvgFromUri(imageUri) }
+                if (svgData != null) {
+                    Timber.i("Selected image is an SVG.")
 
-            loadDataWithBaseURL(null, svgData, SVG_IMAGE, "UTF-8", null)
-        } else {
-            Timber.w("Failed to load SVG from URI")
-            showErrorInWebView()
+                    loadDataWithBaseURL(null, svgData, SVG_IMAGE, "UTF-8", null)
+                } else {
+                    Timber.w("Failed to load SVG from URI")
+                    showErrorInWebView()
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Timber.w(e, "Error loading SVG preview")
+                showErrorInWebView()
+            }
         }
     }
 
@@ -573,7 +607,7 @@ class MultimediaImageFragment : MultimediaFragment(R.layout.fragment_multimedia_
      *
      * @param imageUri The URI of the non-SVG image.
      */
-    private fun WebView.loadImage(imageUri: Uri) {
+    private fun SafeWebViewLayout.loadImage(imageUri: Uri) {
         Timber.i("Loading non-SVG image using WebView")
 
         try {
@@ -653,9 +687,11 @@ class MultimediaImageFragment : MultimediaFragment(R.layout.fragment_multimedia_
      */
     private fun loadSvgFromUri(uri: Uri): String? =
         try {
-            context?.contentResolver?.openInputStreamSafe(uri)?.use { inputStream ->
-                inputStream.convertToString()
-            }
+            // our own cache file reads directly; openInputStreamSafe blocks /data
+            val inputStream =
+                cachedFileOrNull(uri)?.inputStream()
+                    ?: context?.contentResolver?.openInputStreamSafe(uri)
+            inputStream?.use { it.convertToString() }
         } catch (e: Exception) {
             Timber.w(e, "Error reading SVG from URI")
             null
@@ -750,15 +786,6 @@ class MultimediaImageFragment : MultimediaFragment(R.layout.fragment_multimedia_
             showSomethingWentWrong()
             null
         }
-    }
-
-    private fun getImageUri(data: Intent): Uri? {
-        Timber.d("getImageUri for data %s", data)
-        val uri = data.data
-        if (uri == null) {
-            showSnackbar(getString(R.string.select_image_failed))
-        }
-        return uri
     }
 
     companion object {

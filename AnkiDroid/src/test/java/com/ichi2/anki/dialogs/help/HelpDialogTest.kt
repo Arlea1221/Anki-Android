@@ -1,19 +1,8 @@
-/*
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 3 of the License, or (at your option) any later
- * version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 package com.ichi2.anki.dialogs.help
 
-import androidx.core.os.bundleOf
+import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragment
 import androidx.lifecycle.Lifecycle
 import androidx.test.espresso.Espresso.onView
@@ -25,6 +14,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.ichi2.anki.AnkiDroidApp
+import com.ichi2.anki.BuildConfig
 import com.ichi2.anki.R
 import com.ichi2.anki.dialogs.help.HelpItem.Action.Rate
 import io.mockk.mockk
@@ -65,8 +55,8 @@ class HelpDialogTest {
     fun `Help contains the expected items at start`() {
         // checking the support menu
         val expectedSupportItems =
-            listOf(
-                R.string.help_item_support_opencollective_donate,
+            listOfNotNull(
+                R.string.help_item_support_opencollective_donate.takeIf { BuildConfig.SHOW_DONATE_LINKS },
                 R.string.multimedia_editor_trans_translate,
                 R.string.help_item_support_develop_ankidroid,
                 R.string.help_item_support_rate_ankidroid,
@@ -122,16 +112,7 @@ class HelpDialogTest {
 
     @Test
     fun `Help menu handles submenus correctly`() {
-        // simulate a help menu start
-        launchFragment<HelpDialog>(
-            fragmentArgs =
-                bundleOf(
-                    HelpDialog.ARG_MENU_TITLE to R.string.help,
-                    ARG_MENU_ITEMS to mainHelpMenuItems,
-                ),
-            themeResId = R.style.Theme_Light,
-            initialState = Lifecycle.State.RESUMED,
-        ).onFragment {
+        withHelpDialog {
             onView(withText(R.string.help_title_community)).inRoot(isDialog()).perform(click())
             // check that the expected six children are shown
             onView(withText(R.string.help_item_discord))
@@ -171,18 +152,36 @@ class HelpDialogTest {
     }
 
     @Test
+    fun `Help menu survives recreating its view`() {
+        withHelpDialog { scenario ->
+            onView(withText(R.string.help_title_community)).inRoot(isDialog()).check(matches(isDisplayed()))
+
+            scenario.moveToState(Lifecycle.State.CREATED)
+            scenario.moveToState(Lifecycle.State.RESUMED)
+
+            onView(withText(R.string.help_title_community)).inRoot(isDialog()).check(matches(isDisplayed()))
+        }
+    }
+
+    @Test
+    fun `Help submenu and back navigation survive recreating the view`() {
+        withHelpDialog { scenario ->
+            onView(withText(R.string.help_title_community)).inRoot(isDialog()).perform(click())
+            onView(withText(R.string.help_item_discord)).inRoot(isDialog()).check(matches(isDisplayed()))
+
+            scenario.moveToState(Lifecycle.State.CREATED)
+            scenario.moveToState(Lifecycle.State.RESUMED)
+
+            onView(withText(R.string.help_item_discord)).inRoot(isDialog()).check(matches(isDisplayed()))
+            pressBackUnconditionally()
+            onView(withText(R.string.help_title_community)).inRoot(isDialog()).check(matches(isDisplayed()))
+        }
+    }
+
+    @Test
     fun `Help menu item executes expected action on menu item selection`() {
-        // simulate a help menu start
-        launchFragment<HelpDialog>(
-            fragmentArgs =
-                bundleOf(
-                    HelpDialog.ARG_MENU_TITLE to R.string.help,
-                    ARG_MENU_ITEMS to mainHelpMenuItems,
-                ),
-            themeResId = R.style.Theme_Light,
-            initialState = Lifecycle.State.RESUMED,
-        ).onFragment { fragment ->
-            fragment.actionsDispatcher = mockActionDispatcher
+        withHelpDialog { scenario ->
+            scenario.onFragment { it.actionsDispatcher = mockActionDispatcher }
             // start the first submenu
             onView(withText(R.string.help_title_using_ankidroid))
                 .inRoot(isDialog())
@@ -207,5 +206,12 @@ class HelpDialogTest {
                 .perform(click())
             verify(exactly = 1) { mockActionDispatcher.onSendReport() }
         }
+    }
+
+    private fun withHelpDialog(block: (FragmentScenario<HelpDialog>) -> Unit) {
+        launchFragment<HelpDialog>(
+            fragmentArgs = HelpDialog.newHelpInstance().arguments,
+            themeResId = R.style.Theme_Light,
+        ).use(block)
     }
 }

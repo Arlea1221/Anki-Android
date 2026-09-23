@@ -1,19 +1,5 @@
-/*
- * Copyright (c) 2024 Ashish Yadav <mailtoashish693@gmail.com>
- *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 3 of the License, or (at your option) any later
- * version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Copyright (c) 2024 Ashish Yadav <mailtoashish693@gmail.com>
 
 package com.ichi2.anki.multimedia
 
@@ -31,6 +17,9 @@ import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -44,6 +33,7 @@ import com.ichi2.anki.multimediacard.IMultimediaEditableNote
 import com.ichi2.anki.multimediacard.fields.IField
 import com.ichi2.anki.requireAnkiActivity
 import com.ichi2.anki.snackbar.showSnackbar
+import com.ichi2.anki.utils.bottomCornerClearance
 import com.ichi2.utils.show
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -80,15 +70,16 @@ abstract class MultimediaFragment(
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
+        setupEdgeToEdge(view)
 
-        requireAnkiActivity().setToolbarTitle(title)
+        requireAnkiActivity().setToolbarText(title = title)
 
         if (arguments != null) {
             Timber.d("Getting MultimediaActivityExtra values from arguments")
             @Suppress("USELESS_CAST")
             val multimediaActivityExtra =
                 arguments?.getSerializableCompat<MultimediaActivityExtra>(
-                    MultimediaActivity.MULTIMEDIA_ARGS_EXTRA,
+                    MultimediaActivity.EXTRA_FRAGMENT_ARGS,
                 )
 
             if (multimediaActivityExtra != null) {
@@ -121,6 +112,26 @@ abstract class MultimediaFragment(
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backCallback)
+    }
+
+    /**
+     * Applies edge-to-edge insets for the screen. [MultimediaActivity] is the only host, and it
+     * insets the app bar above this fragment, so no top inset is taken here.
+     */
+    private fun setupEdgeToEdge(view: View) {
+        ViewCompat.setOnApplyWindowInsetsListener(view) { root, insets ->
+            val bars =
+                insets.getInsets(
+                    WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout(),
+                )
+            root.updatePadding(
+                left = bars.left,
+                right = bars.right,
+                // 'action_done' is the bottom-most touch target, so it clears the corners too
+                bottom = maxOf(bars.bottom, insets.bottomCornerClearance(root)),
+            )
+            insets
+        }
     }
 
     /**
@@ -184,5 +195,26 @@ abstract class MultimediaFragment(
                 requireActivity().finish()
             }
         }
+    }
+
+    /**
+     * Finishes the activity with a [MultimediaResult.Cancelled] result when no media
+     * has been captured yet. Call from child-launcher cancel branches to propagate
+     * the cancellation without losing partial captures.
+     */
+    protected fun cancelIfEmpty() {
+        if (viewModel.currentMultimediaUri.value == null) {
+            setMultimediaResultAndFinish(MultimediaResult.Cancelled(indexValue))
+        }
+    }
+
+    /**
+     * Attaches the currently captured media to [field] and finishes the activity
+     * with a [MultimediaResult.Success]. Call from confirm/done actions.
+     */
+    protected fun finishWithMedia() {
+        field.mediaFile = viewModel.currentMultimediaPath.value
+        field.hasTemporaryMedia = true
+        setMultimediaResultAndFinish(MultimediaResult.Success(indexValue, field))
     }
 }
