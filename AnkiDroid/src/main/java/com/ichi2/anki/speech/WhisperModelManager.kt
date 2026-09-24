@@ -18,7 +18,7 @@ package com.ichi2.anki.speech
 
 import android.content.Context
 import com.ichi2.anki.R
-import com.ichi2.anki.preferences.sharedPrefs
+import com.ichi2.anki.common.preferences.sharedPrefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient

@@ -29,7 +29,7 @@ import com.ichi2.anki.common.storage.CollectionHelper
 import com.ichi2.anki.compat.CompatHelper
 import com.ichi2.anki.exception.StorageAccessException
 import com.ichi2.anki.launchCatchingTask
-import com.ichi2.anki.preferences.sharedPrefs
+import com.ichi2.anki.common.preferences.sharedPrefs
 import com.ichi2.anki.provider.CardContentProvider
 import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.snackbar.showSnackbar

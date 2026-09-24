@@ -30,7 +30,6 @@ import com.ichi2.anki.observability.undoableOp
 import com.ichi2.anki.settings.Prefs
 import com.ichi2.anki.utils.openUrl
 import com.ichi2.anki.withProgress
-import com.ichi2.utils.checkWebviewVersion
 import com.ichi2.utils.getWebViewInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -301,11 +300,6 @@ class DeckOptions : PageFragment() {
                 Timber.w("DeckOptions timed out waiting for deckOptionsReady callback. deckId=%d", deckId)
                 pageLoadingIndicator.isVisible = false
                 webViewLayout.isVisible = true
-
-                val hostActivity = activity
-                if (hostActivity is AnkiActivity) {
-                    checkWebviewVersion(hostActivity)
-                }
 
                 val webViewInfo = getWebViewInfo(requireContext())
                 Timber.w(
