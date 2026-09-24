@@ -128,7 +128,7 @@ android {
 
         externalNativeBuild {
             cmake {
-                cppFlags "-std-c++17"
+                cppFlags "-std=c++17"
             }
         }
         // GA4 Measurement Protocol api_secret. Sourced from `local.properties`
