@@ -8,19 +8,24 @@
 
 ## Build Commands
 
+## Default Build Flavor
+
+**Always build the `Full` flavor unless explicitly told otherwise.**
+This fork publishes Full-flavor APKs to GitHub Releases (e.g. v2.24.6).
+
 ### Debug (fast, no signing needed)
 ```
 $env:JAVA_HOME='C:\Program Files\Android\Android Studio\jbr'
-.\gradlew.bat :AnkiDroid:assemblePlayDebug -PabiFilter=arm64-v8a --console=plain
+.\gradlew.bat :AnkiDroid:assembleFullDebug -PabiFilter=arm64-v8a --console=plain
 ```
-APK output: `AnkiDroid/build/outputs/apk/play/debug/AnkiDroid-play-arm64-v8a-debug.apk`
+APK output: `AnkiDroid/build/outputs/apk/full/debug/AnkiDroid-full-arm64-v8a-debug.apk`
 
 ### Release (with fallback test keystore — no env vars needed)
 ```
 $env:JAVA_HOME='C:\Program Files\Android\Android Studio\jbr'
-.\gradlew.bat :AnkiDroid:assemblePlayRelease -PabiFilter=arm64-v8a --console=plain
+.\gradlew.bat :AnkiDroid:assembleFullRelease -PabiFilter=arm64-v8a --console=plain
 ```
-APK output: `AnkiDroid/build/outputs/apk/play/release/AnkiDroid-play-arm64-v8a-release.apk`
+APK output: `AnkiDroid/build/outputs/apk/full/release/AnkiDroid-full-arm64-v8a-release.apk`
 
 ### Release (with production signing — set env vars first)
 ```
@@ -29,7 +34,7 @@ $env:KEYSTOREPWD='your-store-password'   # or KSTOREPWD
 $env:KEYALIAS='your-key-alias'
 $env:KEYPWD='your-key-password'
 $env:JAVA_HOME='C:\Program Files\Android\Android Studio\jbr'
-.\gradlew.bat :AnkiDroid:assemblePlayRelease -PabiFilter=arm64-v8a --console=plain
+.\gradlew.bat :AnkiDroid:assembleFullRelease -PabiFilter=arm64-v8a --console=plain
 ```
 
 ## Fallback Keystore
@@ -41,10 +46,10 @@ When `KEYSTOREPATH` is not set, the build uses `tools/fallback-release-keystore.
 This produces a **test-signed** APK — fine for local use and sideloading, but **not publishable** to Play Store.
 
 ## Build Flavors
-- `Play` — Google Play variant (default)
+- `Play` — Google Play variant
 - `Amazon` — Amazon Appstore variant
-- `Full` — Full/unrestricted variant
-Always specify the flavor in the task name (e.g. `assemblePlayDebug`, not `assembleDebug`) — bare names are ambiguous.
+- `Full` — Full/unrestricted variant **(default for this fork — use this one)**
+Always specify the flavor in the task name (e.g. `assembleFullDebug`, not `assembleDebug`) — bare names are ambiguous.
 
 ## ABI Filter
 Use `-PabiFilter=arm64-v8a` to build one ABI only (faster). Omit it to build all 4 ABIs + universal APK (much slower, especially with whisper.cpp native compilation).
