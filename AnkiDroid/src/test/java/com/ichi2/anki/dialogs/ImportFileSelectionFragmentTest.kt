@@ -64,7 +64,7 @@ class ImportFileSelectionFragmentTest : RobolectricTest() {
     @Test
     fun `dialog with all import options shows three entries`() {
         showDialog(
-            ImportOptions(importColpkg = true, importApkg = true, importTextFile = true),
+            ImportOptions(importColpkg = true, importApkg = true, importTextFile = true, importTextContent = false),
         ) { dialog ->
             assertThat(dialog.listView.count, equalTo(3))
             assertThat(
@@ -83,7 +83,7 @@ class ImportFileSelectionFragmentTest : RobolectricTest() {
     @Test
     fun `dialog with only colpkg option shows only colpkg entry (restore backup scenario)`() {
         showDialog(
-            ImportOptions(importColpkg = true, importApkg = false, importTextFile = false),
+            ImportOptions(importColpkg = true, importApkg = false, importTextFile = false, importTextContent = false),
         ) { dialog ->
             assertThat(dialog.listView.count, equalTo(1))
             assertThat(
@@ -96,7 +96,7 @@ class ImportFileSelectionFragmentTest : RobolectricTest() {
     @Test
     fun `dialog with only apkg option shows only apkg entry`() {
         showDialog(
-            ImportOptions(importColpkg = false, importApkg = true, importTextFile = false),
+            ImportOptions(importColpkg = false, importApkg = true, importTextFile = false, importTextContent = false),
         ) { dialog ->
             assertThat(dialog.listView.count, equalTo(1))
             assertThat(dialog.listView.itemLabels(), equalTo(listOf(targetContext.getString(R.string.import_deck_package))))
@@ -106,7 +106,7 @@ class ImportFileSelectionFragmentTest : RobolectricTest() {
     @Test
     fun `dialog with only csv option shows only csv entry`() {
         showDialog(
-            ImportOptions(importColpkg = false, importApkg = false, importTextFile = true),
+            ImportOptions(importColpkg = false, importApkg = false, importTextFile = true, importTextContent = false),
         ) { dialog ->
             assertThat(dialog.listView.count, equalTo(1))
             assertThat(dialog.listView.itemLabels(), equalTo(listOf(importCsvLabel)))
