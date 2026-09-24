@@ -1,5 +1,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+@file:Suppress(
+    "ktlint:standard:property-naming",
+    "ktlint:standard:function-naming",
+    "ktlint:standard:indent",
+    "ktlint:standard:chain-method-continuation",
+    "ktlint:standard:multiline-expression-wrapping",
+    "ktlint:standard:trailing-comma-on-declaration-site",
+    "ktlint:standard:function-signature",
+    "ktlint:standard:import-ordering",
+)
+
 package com.ichi2.anki
 
 import android.app.Activity

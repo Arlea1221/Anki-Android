@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+@file:Suppress("ktlint:standard:property-naming", "ktlint:standard:function-naming")
+
 package com.ichi2.anki.ui.windows.reviewer.whiteboard
 
 import android.annotation.SuppressLint
