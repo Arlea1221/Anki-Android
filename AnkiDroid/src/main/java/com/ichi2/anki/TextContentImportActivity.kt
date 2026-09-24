@@ -2,6 +2,7 @@
     "ktlint:standard:property-naming",
     "ktlint:standard:function-naming",
     "ktlint:standard:chain-method-continuation",
+    "ktlint:standard:indent",
 )
 /* --------------------------------------------------------------------------------------
  * Copyright (c) 2015 Timothy Rae <perceptualchaos2@gmail.com>
@@ -25,7 +26,6 @@ import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -40,6 +40,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.FileProvider
+import androidx.core.graphics.toColorInt
 import com.ichi2.anki.CollectionManager.withCol
 import com.ichi2.anki.pages.CsvImporter
 import com.ichi2.anki.snackbar.showSnackbar
@@ -197,14 +198,14 @@ class TextContentImportActivity : AnkiActivity() {
                 text = "×"
                 textSize = 11f
                 gravity = Gravity.CENTER
-                setTextColor(Color.parseColor("#999999"))
+                setTextColor("#999999".toColorInt())
                 val size = dp(22)
                 layoutParams = LinearLayout.LayoutParams(size, size)
                 background =
                     GradientDrawable().apply {
                         shape = GradientDrawable.OVAL
-                        setColor(Color.parseColor("#F0F0F0"))
-                        setStroke(dp(1), Color.parseColor("#DDDDDD"))
+setColor("#F0F0F0".toColorInt())
+        setStroke(dp(1), "#DDDDDD".toColorInt())
                     }
                 isClickable = true
                 isFocusable = true
@@ -446,9 +447,9 @@ class TextContentImportActivity : AnkiActivity() {
 
     companion object {
         const val EXTRA_TARGET_DECK_ID = "extra_target_deck_id"
-        private val DUP_HIGHLIGHT_COLOR = Color.parseColor("#26FF4D4F")
-        private val NORMAL_TEXT_COLOR = Color.parseColor("#B0B0B0")
-        private val DUPLICATE_TEXT_COLOR = Color.parseColor("#FF4D4F")
-        private val LINE_DIVIDER_COLOR = Color.parseColor("#14000000")
+    private val DUP_HIGHLIGHT_COLOR = "#26FF4D4F".toColorInt()
+    private val NORMAL_TEXT_COLOR = "#B0B0B0".toColorInt()
+    private val DUPLICATE_TEXT_COLOR = "#FF4D4F".toColorInt()
+    private val LINE_DIVIDER_COLOR = "#14000000".toColorInt()
     }
 }

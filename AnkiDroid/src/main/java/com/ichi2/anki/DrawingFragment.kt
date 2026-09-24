@@ -21,7 +21,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Rect
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
@@ -30,6 +29,7 @@ import android.view.ScaleGestureDetector
 import android.view.View
 import android.widget.FrameLayout
 import androidx.core.graphics.createBitmap
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.os.BundleCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -153,7 +153,7 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
             layout_params.gravity = Gravity.CENTER
             whiteboard_view.layoutParams = layout_params
         }
-        whiteboard_view.background = BitmapDrawable(resources, source_bitmap)
+        whiteboard_view.background = source_bitmap.toDrawable(resources)
         has_background_image = true
     }
 
